@@ -34,7 +34,7 @@ $bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
               $th_box_body_font_color,$th_box_body_align);
 
 start_content();
-$page = "personal_ratings";
+$page = "personal_news";
 
 personal_news_long($auth->auth["uname"]);
 
