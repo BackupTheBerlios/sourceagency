@@ -1,8 +1,8 @@
 <?php
 
 ######################################################################
-# SourceAgency
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #                Gregorio Robles (grex@scouts-es.org)
@@ -10,7 +10,7 @@
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
-# This is the index file
+# This is the index file, i.e. the front page of the SourceAgency portal.
 #
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@ echo ( "<br>\n"
        . "<p>In SourceAgency you can sponsor projects if you commit as a "
        . "sponsor or let your projects be sponsored if you are an Open "
        . "Source developer.\n");
+echo html_link( "doco.php3", $t->translate( "More" ) . "..."
 
 $bx->box_begin();
 $bx->box_title($t->translate("News"));

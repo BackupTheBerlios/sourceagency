@@ -1,8 +1,8 @@
 <?php
 
 ######################################################################
-# SourceAgency:
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #             Gregorio Robles (grex@scouts-es.org)
@@ -10,7 +10,7 @@
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
-# This is the index file which shows the recent apps
+# TODO: description
 #
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,7 +45,8 @@ if (check_proid($proid)) {
     print "<p align=right>[ <b><a href=\""
         .$sess->url("sponsoring_edit.php3")
         .$sess->add_query(array("proid" => $proid))
-        ."\">Sponsor this project</a></b> ] &nbsp;<p>\n";
+        ."\">".$t->translate("Sponsor this project")
+        ."</a></b> ] &nbsp;<p>\n";
     
     show_sponsorings($proid);
     
