@@ -20,8 +20,8 @@
 function followup_devel_preview($proid) {
   global $t, $db, $bx, $auth, $milestone_number, $location, $time;
 
-	  $db->query("SELECT * FROM milestones WHERE proid='$proid' AND number='$milestone_number'");
-	  $db->next_record();
+	$db->query("SELECT * FROM milestones WHERE proid='$proid' AND number='$milestone_number'");
+	$db->next_record();
 
 	$bx->box_begin();
 	$bx->box_title("<center><b>".$t->translate("PREVIEW")."</b></center>");
@@ -29,9 +29,6 @@ function followup_devel_preview($proid) {
 	$bx->box_body_begin();
    	$timestamp = time();
         echo "<b>";
-	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT email_usr FROM auth_user WHERE username='".$auth->auth["uname"]."'");
-	$db_local->next_record();
 	lib_pnick($auth->auth["uname"]);
         echo " - ".timestr($timestamp)."</b>\n";
    	echo "<p><b>Milestone number:</b> $milestone_number\n";
@@ -46,7 +43,10 @@ function followup_devel_preview($proid) {
 }
 
 function followup_referee_preview($proid) {
-  global $t, $bx, $auth, $milestone_number, $location, $time, $decision;
+  global $t, $bx, $db, $auth, $milestone_number, $location, $time, $decision;
+
+	$db->query("SELECT * FROM milestones WHERE proid='$proid' AND number='$milestone_number'");
+	$db->next_record();
 
 	$bx->box_begin();
 	$bx->box_title("<center><b>".$t->translate("PREVIEW")."</b></center>");
@@ -54,12 +54,13 @@ function followup_referee_preview($proid) {
 	$bx->box_body_begin();
    	$timestamp = time();
         echo "<b>";
-	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT email_usr FROM auth_user WHERE username='".$auth->auth["uname"]."'");
-	$db_local->next_record();
 	lib_pnick($auth->auth["uname"]);
         echo " - ".timestr($timestamp)."</b>\n";
    	echo "<p><b>Milestone number:</b> $milestone_number\n";
+   	echo "<br><b>Goals:</b> ".$db->f("goals")."\n";
+   	echo "<br><b>Release date:</b> ".timestr_middle(mktimestamp($db->f("release")))."\n";
+   	echo "<br><b>Product</b> ".$db->f("product")."\n";
+   	echo "<br><b>Payment</b> ".$db->f("payment")."\n";
     	echo "<br><b>Location:</b> ".html_link($location,array(),$location)."\n";
     	echo "<br><b>Time:</b> $time\n";
     	echo "<br><b>Decision:</b> $decision\n";
@@ -133,7 +134,10 @@ function followup_devel_form($proid) {
 }
 
 function followup_referee_form($proid) {
-  global $bx, $t, $milestone_number, $location, $time, $decision;
+  global $bx, $t, $db, $milestone_number, $location, $time, $decision;
+
+  $db->query("SELECT * FROM milestones WHERE proid='$proid' AND number='$milestone_number'");
+  $db->next_record();
 
   $bx->box_begin();
   $bx->box_title($t->translate("Milestone Delivery - Referee Decision"));
@@ -147,6 +151,30 @@ function followup_referee_form($proid) {
 
   $bx->box_next_row_of_columns();
 
+  $bx->box_column ("right","30%","","<b>".$t->translate("Goals")."</b>: ");
+  $bx->box_column ("left","70%","",$db->f("goals"));
+
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("Release date")."</b>: ");
+  $bx->box_column ("left","70%","",timestr_middle(mktimestamp($db->f("release"))));
+
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("Product")."</b>: ");
+  $bx->box_column ("left","70%","",$db->f("product"));
+
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("Payment")."</b>: ");
+  $bx->box_column ("left","70%","",$db->f("payment")."%");
+
+  $bx->box_next_row_of_columns();
+
+  $bx->box_colspan ("2","","white","&nbsp;");
+
+  $bx->box_next_row_of_columns();
+
   $bx->box_column ("right","30%","","<b>".$t->translate("Location")."</b>: ");
   $bx->box_column ("left","70%","",html_link($location,array(),$location));
 
@@ -154,6 +182,10 @@ function followup_referee_form($proid) {
 
   $bx->box_column ("right","30%","","<b>".$t->translate("Time")."</b>: ");
   $bx->box_column ("left","70%","",$time);
+
+  $bx->box_next_row_of_columns();
+
+  $bx->box_colspan ("2","","white","&nbsp;");
 
   $bx->box_next_row_of_columns();
 
@@ -202,7 +234,9 @@ function followup_location($proid,$milestone_number) {
 function followup_insert($proid,$milestone_number,$iteration,$location,$time) {
   global $db;
 
-  if ($milestone_number == 1 && $iteration == 0) {
+  if ($milestone_number == 1 && $iteration == 0 || $iteration == 0 && $time == 1) {
+	$db->query("UPDATE follow_up SET iteration='5' WHERE proid='$proid' AND milestone_number='$milestone_number'");
+	$milestone_number++;	
 	$db->query("INSERT follow_up SET proid='$proid',milestone_number='$milestone_number',iteration='$iteration',location='$location',time='$time'");
   } else {
 	$db->query("UPDATE follow_up SET iteration='$iteration', location='$location', time='$time' WHERE proid='$proid' AND milestone_number='$milestone_number'");

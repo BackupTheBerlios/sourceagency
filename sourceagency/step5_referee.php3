@@ -52,13 +52,13 @@ if (check_permission($proid,$page)) {
   } else {
 	switch ($decision) {
 		case "accept":
-			followup_insert($proid,$milestone_number,"2",$location,$time);
+			followup_insert($proid,$milestone_number,"0","","1");
 			break;
 		case "light":
 			followup_insert($proid,$milestone_number,"0","",$time+1);
 			break;
 		case "severe":
-			followup_insert($proid,$milestone_number,"4",$location,$time);
+			followup_insert($proid,$milestone_number,"3",$location,$time);
 			break;
 	}
   }

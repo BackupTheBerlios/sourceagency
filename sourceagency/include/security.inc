@@ -271,7 +271,7 @@ function check_permission($proid,$page) {
 		case "step5_sponsor":
 			if (is_accepted_sponsor($proid)) { 
 				if ($current_step == 5) {
-					if (step5_iteration($proid) == 1) return 1;
+					if (step5_iteration($proid) == 1 || step5_iteration($proid) == 3) return 1;
 					else return step5_not_your_iteration($proid,$page);
 				} else return step_not_open($proid,$page);
 			} else return permission_denied($proid,$page);
@@ -571,7 +571,7 @@ function step5_not_your_iteration($proid,$page) {
 		$message = "Sponsors have rejected the current milestone. The referee is studying it.";
 		break;
 	case '3':
-		$message = "Sponsors are deciding what to do";
+		$message = "The referee has decided that the milestone posted by the developer does not fulfill the promised goals. Sponsors are deciding what is going to happen to the project";
 		break;
 	case '5':
 		$message = "The follow_up process is finished";
