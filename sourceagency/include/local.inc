@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.2 2001/11/06 11:54:33 riessen Exp $
+ * $Id: local.inc,v 1.3 2001/11/06 11:56:47 riessen Exp $
  *
  */ 
 
@@ -21,10 +21,10 @@
 ######################################################################
 
 class DB_SourceAgency extends DB_Sql {
-  var $Host      = "localhost";
-  var $Database  = "sourceagency";
-  var $User      = "operator";
-  var $Password  = "password";
+  var $Host     = "localhost";
+  var $Database = "sourceagency";
+  var $User     = "operator";
+  var $Password = "password";
 
 
 }

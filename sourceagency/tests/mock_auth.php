@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: mock_auth.php,v 1.1 2001/10/30 14:49:24 riessen Exp $
+// $Id: mock_auth.php,v 1.2 2001/11/06 11:56:47 riessen Exp $
 
 // mock the Auth class of the PhpLib (??) library.
 class Auth 
@@ -26,7 +26,7 @@ class Auth
     }
 }
 
-$auth = new Auth();
+$auth = new Auth;
 global $auth;
 
 ?>
