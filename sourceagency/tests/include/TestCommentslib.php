@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestCommentslib.php,v 1.5 2002/05/28 08:58:28 riessen Exp $
+// $Id: TestCommentslib.php,v 1.6 2002/05/28 09:11:56 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -41,7 +41,7 @@ extends UnitTest
     }
 
     function testComments_form() {
-        global $bx, $t;
+      global $bx, $t, $sess;
         global $subject, $text, $number, $ref, $type;
         
         $proid = 'proid';
@@ -75,7 +75,7 @@ extends UnitTest
         $this->_testFor_html_form_submit( $txt, $t->translate( 'Submit' ),
                                                                    "submit");
 
-        $this->_testFor_captured_length( 2500 );
+        $this->_testFor_captured_length( 2500 + strlen( $sess->self_url() ));
     }
 
     function testComments_preview() {
@@ -102,7 +102,7 @@ extends UnitTest
         $this->_testFor_pattern( $txt, 
                            $this->_to_regexp("<p>".stripslashes($text)."\n"));
         $this->_check_db( $db_config );
-        $this->_testFor_captured_length( 1018 );
+        $this->_testFor_captured_length( 1020 );
     }
     function testComments_insert() {
         $this->_test_to_be_completed();

@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConsultantslib.php,v 1.6 2002/05/28 08:58:28 riessen Exp $
+// $Id: TestConsultantslib.php,v 1.7 2002/05/28 09:11:56 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -141,7 +141,7 @@ extends UnitTest
                          html_form_submit($t->translate('Submit'),'submit')),
                          '', 'left', '55%', '' );
         $this->_testFor_box_next_row_of_columns( $text );
-        $this->_testFor_captured_length( 2184 );
+        $this->_testFor_captured_length( 2184 + strlen( $sess->self_url() ));
     }
 
     function testConsultants_wanted() {

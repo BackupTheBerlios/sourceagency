@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestNewslib.php,v 1.17 2002/05/28 08:58:28 riessen Exp $
+# $Id: TestNewslib.php,v 1.18 2002/05/28 09:11:56 riessen Exp $
 #
 ######################################################################
 
@@ -124,8 +124,7 @@ extends UnitTest
         
         $this->_testFor_lib_nick( $txt, $auth->auth['uname'] );
 
-        $this->_testFor_captured_length( 947 + strlen(timestr(time()))
-                                         + strlen( $sess->self_url() ));
+        $this->_testFor_captured_length( 947 + strlen(timestr(time())));
     }
 
     function testNewsshow() {
