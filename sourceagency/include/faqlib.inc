@@ -1,73 +1,162 @@
 <?php
-
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ===============================================================
 #
-# Copyright (c) 2001 by
+# Copyright (c) 2001-2 by
 #                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
 #                Gregorio Robles (grex@scouts-es.org)
 #
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
-# Library with the functions for comments and faq
+# Library with the functions for the faqs
 #
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: faqlib.inc,v 1.2 2001/11/07 18:48:52 riessen Exp $
+# $Id: faqlib.inc,v 1.3 2002/04/18 14:56:19 grex Exp $
 #
 ######################################################################
 
-function faqform() {
-  global $sess, $bx, $t;
+/**
+ * This library contains functionality needed for the rating
+ * that has to be done once the project is finished (step6)
+ *
+ * This step handles data from the 'ratings' table in the database
+ * Table database contains following data:
+ *
+ *  faqid int(8) unsigned DEFAULT '0' NOT NULL auto_increment:
+ *       FAQ ID (Primary Key)
+ *  language varchar(24) NOT NULL:
+ *       (Human) language in which the FAQ is written
+ *  question blob NOT NULL:
+ *       Question
+ *  answer blob NOT NULL:
+ *       Answer
+ *
+ * @author  Gregorio Robles <grex@scouts-es.org>
+ * @access  public
+ * @see html, translate, box
+ */
 
-  $bx->box_begin();
-  $bx->box_title($t->translate("New Frequently Asked Question"));
-  $bx->box_body_begin();
-  echo "<form action=\"".$sess->self_url()."\" method=\"POST\">\n";
-  echo "<table border=0 align=center cellspacing=0 cellpadding=3>\n";
-  echo "<tr><td align=right>".$t->translate("Question")." (*):</td><td><textarea cols=40 rows=4 name=\"question\" wrap=\"virtual\" maxlength=1024></textarea></td></tr>\n";
-  echo "<tr><td align=right>".$t->translate("Answer")." (*):</td><td><textarea cols=40 rows=7 name=\"answer\" wrap=\"virtual\" maxlength=4096></textarea></td></tr>\n";
-  echo "<tr><td align=right>&nbsp;</td><td><input type=\"Submit\" value=\"".$t->translate("Create")."\"></td>\n";
-  echo "<input type=\"hidden\" name=\"create\" value=\"2\">\n";
-  echo "</tr></form>\n";
-  echo "</table>\n";
-  $bx->box_end();
+/**
+ * Box with the FAQ form
+ *
+ * @global  object    $sess          PHPLib session object
+ * @global  object    $bx            Box object
+ * @global  object    $t             Translation object
+ *
+ * @access  public
+ */
+function faqform()
+{
+    global $sess, $bx, $t;
+
+    $bx->box_begin();
+    $bx->box_title($t->translate('New Frequently Asked Question'));
+    $bx->box_body_begin();
+    htmlp_form_action('PHP_SELF');
+
+    $bx->box_columns_begin(2);
+
+    $bx->box_column ('right','30%','',
+                     '<b>'.$t->translate('Question').'</b> (*): ');
+    $bx->box_column ('left', '70%', '',
+                     html_textarea('question', 40, 4, 'virtual', 255, $question));
+
+    $bx->box_next_row_of_columns();
+
+    $bx->box_column ('right', '30%', '',
+                     '<b>'.$t->translate('Answer').'</b> (*): ');
+    $bx->box_column ('left','70%','',
+                     html_textarea('answer', 40, 7, 'virtual', 255, $answer));
+
+    $bx->box_next_row_of_columns();
+
+    htmlp_form_hidden('create', 2);
+    $bx->box_column ('right','30%','','&nbsp;');
+    $bx->box_column ('left','70%','',
+                     html_form_submit($t->translate('Create')));
+    htmlp_form_end();
+    $bx->box_columns_end();
+
+    $bx->box_body_end();
+    $bx->box_end();
 }
 
+/**
+ * Shows a FAQ
+ *
+ * WISH: it should be better to do not pass this as parameter
+ * @param   object    $db            PHPLib database abstraction object
+ *
+ * @global  object    $bx            Box object
+ * @global  object    $t             Translation object
+ *
+ * @access  public
+ */
+function faqshow($db)
+{
+    global $t, $bx;
 
-function faqshow($db) {
-  global $t, $bx;
-
-  $bx->box_begin();
-  $bx->box_title("<B>".$t->translate("Question")."</B>: ".$db->f("question"));
-  $bx->box_body_begin();
-  echo "<B>".$t->translate("Answer")."</B>: ".$db->f("answer")."\n";
-  $bx->box_body_end();
-  $bx->box_end();
+    $bx->box_begin();
+    $bx->box_title('<B>'.$t->translate('Question').'</B>: '.$db->f('question'));
+    $bx->box_body_begin();
+    echo '<b>'.$t->translate('Answer').'</b>: '.$db->f('answer')."\n";
+    $bx->box_body_end();
+    $bx->box_end();
 }
 
+/**
+ * Form for modifying FAQ
+ *
+ * WISH: it should be better to do not pass this as parameter
+ * @param   object    $db            PHPLib database abstraction object
+ *
+ * @global  object    $sess          PHPLib session object
+ * @global  object    $bx            Box object
+ * @global  object    $t             Translation object
+ *
+ * @access  public
+ */
+function faqmod($db)
+{
+    global $sess, $t, $bx;
 
-function faqmod($db) {
-  global $sess, $t, $bx;
+    $bx->box_begin();
+    $bx->box_title($t->translate('Modify a Frequently Asked Question'));
+    $bx->box_body_begin();
 
-  $bx->box_begin();
-  $bx->box_title($t->translate("Modify a Frequently Asked Question"));
-  $bx->box_body_begin();
-  echo "<form action=\"".$sess->self_url()."\" method=\"POST\">\n";
-  echo "<table border=0 align=center cellspacing=0 cellpadding=3>\n";
-  echo "<tr><td align=right>".$t->translate("Question")." (*):</td><td><textarea cols=60 rows=4 name=\"question\" wrap=\"virtual\" maxlength=1024>".$db->f("question")."</textarea></td></tr>\n";
-  echo "<tr><td align=right>".$t->translate("Answer")." (*):</td><td><textarea cols=60 rows=7 name=\"answer\" wrap=\"virtual\" maxlength=4096>".$db->f("answer")."</textarea></td></tr>\n";
-  echo "<input type=\"hidden\" name=\"faqid\" value=\"".$db->f("faqid")."\">\n";
-  echo "<input type=\"hidden\" name=\"modify\" value=\"2\">\n";
-  echo "<tr><td align=right>&nbsp;</td><td><input type=\"Submit\" value=\"".$t->translate("Modify")."\"></td>\n";
-  echo "</tr></form>\n";
-  echo "</table>\n";
-  $bx->box_body_end();
-  $bx->box_end();
+    htmlp_form_action('PHP_SELF');
+
+    $bx->box_columns_begin(2);
+
+    $bx->box_column ('right','30%','',
+                     '<b>'.$t->translate('Question').'</b> (*): ');
+    $bx->box_column ('left', '70%', '',
+                     html_textarea('question', 40, 4, 'virtual', 255, $db->f('question')));
+
+    $bx->box_next_row_of_columns();
+
+    $bx->box_column ('right', '30%', '',
+                     '<b>'.$t->translate('Answer').'</b> (*): ');
+    $bx->box_column ('left','70%','',
+                     html_textarea('answer', 40, 7, 'virtual', 255, $db->f('answer')));
+
+    $bx->box_next_row_of_columns();
+
+    htmlp_form_hidden('faqid', $db->f('faqid'));
+    htmlp_form_hidden('modify', 2);
+    $bx->box_column ('right','30%','','&nbsp;');
+    $bx->box_column ('left','70%','',
+                     html_form_submit($t->translate('Modify')));
+    htmlp_form_end();
+    $bx->box_columns_end();
+
+    $bx->box_body_end();
+    $bx->box_end();
 }
-
 ?>

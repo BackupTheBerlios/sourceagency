@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: html.inc,v 1.9 2002/04/18 10:58:11 grex Exp $
+# $Id: html.inc,v 1.10 2002/04/18 14:56:19 grex Exp $
 #
 ######################################################################
 
@@ -119,7 +119,7 @@ function html_form_action($file, $query='', $type='POST')
     }
     return($output);
 }
-function htmlp_form_action($file, $query, $type)
+function htmlp_form_action($file, $query='', $type='POST')
 {
     print html_form_action( $file, $query, $type );
 }
@@ -246,11 +246,11 @@ function htmlp_input_password($name, $size, $maxlength, $value)
  *
  * @access  public
  */
-function html_form_submit($value, $name)
+function html_form_submit($value, $name='')
 {
     return "<input type=\"submit\" value=\"".$value."\" name=\"".$name."\">\n";
 }
-function htmlp_form_submit($value, $name)
+function htmlp_form_submit($value, $name='')
 {
     print html_form_submit($value, $name);
 }
