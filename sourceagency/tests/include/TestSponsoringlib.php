@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSponsoringlib.php,v 1.6 2002/04/02 15:04:22 riessen Exp $
+# $Id: TestSponsoringlib.php,v 1.7 2002/04/12 14:38:16 riessen Exp $
 #
 ######################################################################
 
@@ -321,7 +321,7 @@ extends UnitTest
         $auth->set_uname( "this is the username" );
         $auth->set_perm( "this is the permission" );
 
-        $db_config = new mock_db_configure( 13 );
+        $db_config = new mock_db_configure( 14 );
         $db_q = array( 0 => ("SELECT COUNT(*) FROM sponsoring WHERE "
                              ."proid='%s'"),
                        1 => ("INSERT sponsoring SET proid='%s',sponsor='%s'"
@@ -336,9 +336,9 @@ extends UnitTest
                              ."sponsoring.creation ASC"),
                        5 => ("SELECT * FROM sponsoring WHERE proid='%s' AND "
                              . "sponsor='%s'"),
-                       6 => ("UPDATE sponsoring SET sponsoring_text='%s',"
+                       6 => ("UPDATE sponsoring SET sponsoring_text='%s', "
                              ."budget='%s', status='%s', valid='%s',"
-                             ."begin='%s',finish='%s' "
+                             ."begin='%s', finish='%s' "
                              ."WHERE proid='%s' AND sponsor='%s'"));
 
         $args = $this->_generate_records( array( "proid", "user", "s_text",
@@ -434,6 +434,7 @@ extends UnitTest
                                  $args[2]["user"]), 7 );
 
         // update query because user has already contributed
+        $args[2]["budget"] = 1;
         $db_config->add_query( sprintf( $db_q[6], $args[2]["s_text"], 
                $args[2]["budget"], "P", $v, $b, $f, $args[2]["proid"], 
                $args[2]["user"] ), 7 );
@@ -443,19 +444,22 @@ extends UnitTest
 
         // instance for the monitor_mail call
         $db_config->ignore_errors( MKDB_ALL_ERRORS, 8 );
+        $db_config->ignore_errors( MKDB_ALL_ERRORS, 9 );
         // instance created by the is_project_initiator
         $db_config->add_query( sprintf( $db_q[3], $args[2]["proid"],
-                                        $auth->auth["uname"]), 9 );
+                                        $auth->auth["uname"]), 10 );
 
         $rows[2]["COUNT(*)"] = 1; // status is 'P' (proposed)
+        $rows[2]["budget"] = 0; // old_budget should be less than new budget
+        $db_config->add_record( $rows[2], 7 ); // sponsoring_insert
         $db_config->add_record( $rows[2], 7 ); // sponsoring_insert
         $db_config->add_record( false, 7 ); // show_sponsorings
         $db_config->add_num_row( 1, 7 ); // user has already contributed
         $db_config->add_num_row( 1, 7 ); // show_sponsorings
-        $db_config->add_num_row( 0, 9 ); // call to is_project_initiator
+        $db_config->add_num_row( 0, 10 ); // call to is_project_initiator
         
         // fourth call, this time the user has more than one sponsorship
-        $db_config->add_query( sprintf( $db_q[0], $args[3]["proid"] ), 10 );
+        $db_config->add_query( sprintf( $db_q[0], $args[3]["proid"] ), 11 );
         $v = date_to_timestamp( $args[3]["v_day"], $args[3]["v_month"], 
                                 $args[3]["v_year"] );
         $b = date_to_timestamp( $args[3]["b_day"], $args[3]["b_month"],
@@ -464,24 +468,25 @@ extends UnitTest
                                 $args[3]["f_year"]);
         // query for checking the number of sponsoring the user has made
         $db_config->add_query( sprintf( $db_q[5], $args[3]["proid"],
-                                 $args[3]["user"]), 10 );
+                                 $args[3]["user"]), 11 );
 
         // query for the show_sponsorings call
-        $db_config->add_query( sprintf( $db_q[4], $args[3]["proid"]), 10 );
+        $db_config->add_query( sprintf( $db_q[4], $args[3]["proid"]), 11 );
 
         // instance for the monitor_mail call
         $db_config->ignore_errors( MKDB_ALL_ERRORS, 11 );
+        $db_config->ignore_errors( MKDB_ALL_ERRORS, 12 );
         // instance created by the is_project_initiator
         $db_config->add_query( sprintf( $db_q[3], $args[3]["proid"],
-                                        $auth->auth["uname"]), 12 );
+                                        $auth->auth["uname"]), 13 );
 
         $rows[3]["COUNT(*)"] = 1; // status is 'P' (proposed)
-        $db_config->add_record( $rows[3], 10 ); // sponsoring_insert
-        $db_config->add_record( false, 10 ); // show_sponsorings
-        $db_config->add_num_row( 2, 10 ); // user has already contributed
-        $db_config->add_num_row( 2, 10 ); // user has already contributed
-        $db_config->add_num_row( 1, 10 ); // show_sponsorings
-        $db_config->add_num_row( 0, 12 ); // call to is_project_initiator
+        $db_config->add_record( $rows[3], 11 ); // sponsoring_insert
+        $db_config->add_record( false, 11 ); // show_sponsorings
+        $db_config->add_num_row( 2, 11 ); // user has already contributed
+        $db_config->add_num_row( 2, 11 ); // user has already contributed
+        $db_config->add_num_row( 1, 11 ); // show_sponsorings
+        $db_config->add_num_row( 0, 13 ); // call to is_project_initiator
 
         // ********************************************************************
         // first call
