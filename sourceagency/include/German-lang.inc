@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: German-lang.inc,v 1.17 2002/05/06 21:58:27 grex Exp $
+# $Id: German-lang.inc,v 1.18 2002/05/07 09:06:13 riessen Exp $
 #
 ######################################################################
 
@@ -193,7 +193,7 @@ function translate_real($phrase) {
         case 'Steps': $tmp = 'Schritte'; break;
         case 'Submit News': $tmp = 'Neuigkeiten einreichen'; break;
         case 'Summary': $tmp = 'Zusammenfassung'; break;
-        case 'System Credits': $tmp = $phrase'; break;
+        case 'System Credits': $tmp = 'Systembeschreibung'; break;
         case 'Technical Content': $tmp = 'Technische Inhalte'; break;
         case 'Technical Specifications': $tmp = 'Technische Spezifikationen'; break;
         case 'There have not been posted any news by the project owner(s)': $tmp = 'Keine Neuigkeiten sind von die Projektbesitzer aufgegeben wurden'; break;
