@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.21 2002/06/04 10:57:52 riessen Exp $
+# $Id: unit_test.php,v 1.22 2002/06/06 08:18:16 riessen Exp $
 #
 ######################################################################
 
@@ -64,10 +64,10 @@ extends TestCase
     }
     function push_msg( $msg ) {
         $this->_msg_stack[ count( $this->_msg_stack ) ] = $this->test_msg;
-        $this->test_msg = $msg;
+        $this->set_msg( $msg );
     }
     function pop_msg() {
-        $this->test_msg = $this->_msg_stack[ count( $this->_msg_stack ) - 1 ];
+        $this->set_msg( $this->_msg_stack[ count( $this->_msg_stack ) - 1 ] );
         unset( $this->_msg_stack[ count( $this->_msg_stack ) - 1 ] );
     }
 
@@ -248,7 +248,7 @@ extends TestCase
     //              "title_bgcolor", "title_font_color", 
     //              "title_align", "body_bgcolor", "body_font_color",
     //              "body_align" );
-    function _create_default_box() {
+    function &_create_default_box() {
         return new box( "box_width", "frame_color", "frame_width",
                         "title_bgcolor", "title_font_color", 
                         "title_align", "body_bgcolor", "body_font_color",
