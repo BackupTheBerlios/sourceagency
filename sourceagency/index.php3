@@ -49,7 +49,6 @@ echo ( "<br>\n"
        . "<p>In SourceAgency you can sponsor projects if you commit as a "
        . "sponsor or let your projects be sponsored if you are an Open "
        . "Source developer.\n");
-echo html_link( "doco.php3", $t->translate( "More" ) . "..."
 
 $bx->box_begin();
 $bx->box_title($t->translate("News"));
