@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisionslib.inc,v 1.10 2002/04/20 13:07:50 grex Exp $
+# $Id: decisionslib.inc,v 1.11 2002/06/06 08:14:07 riessen Exp $
 #
 ######################################################################
 
@@ -67,12 +67,14 @@ function show_decision_consultants($proid)
 	$bx->box_body_begin();
 	$bx->box_columns_begin(6);
 
-	$bx->box_column("","","","<b>Number</b>");
-	$bx->box_column("","","","<b>Username</b>");
-	$bx->box_column("","","","<b>Status</b>");
-	$bx->box_column("","","","<b>Creation</b>");
-	$bx->box_column("center","","","<b>Percentage</b>");
-	$bx->box_column("center","","","<b>Your vote</b>");
+	$bx->box_column("","","","<b>".$t->translate("Number")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Username")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Status")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Creation")."</b>");
+	$bx->box_column("center","","","<b>".$t->translate("Percentage")
+                        ."</b>");
+	$bx->box_column("center","","","<b>".$t->translate("Your vote")
+                        ."</b>");
 
 	$i =0;
 
@@ -122,12 +124,16 @@ function show_decision_consultants($proid)
     }
 
     if ($flag) {
-	print "<p><b>This project is configured to have no consultants.</b>\n";
-	print "<br>You can reach the next step whenever you want.<p>\n";
+	print "<p><b>".$t->translate("This project is configured to have "
+                                     ."no consultants")."</b>\n";
+	print "<br>".$t->translate("You can reach the next step whenever "
+                                   ."you want").".<p>\n";
     } elseif ($db->num_rows() == 0) {
-	print "<p><b>No decision possible as there are no offerings.</b><p>\n";
+	print "<p><b>".$t->translate("No decision possible as there are "
+                                     ."no offerings").".</b><p>\n";
     } else {
-        lib_die('Error in decisionslib.inc function show_decision_consultants()');
+        lib_die('Error in decisionslib.inc function '
+                .'show_decision_consultants()');
     }
     return $return_value;
 }
@@ -157,14 +163,16 @@ function show_decision_contents($proid)
 	$bx->box_body_begin();
 	$bx->box_columns_begin(8);
 
-	$bx->box_column("","","","<b>Number</b>");
-	$bx->box_column("","","","<b>Platform</b>");
-	$bx->box_column("","","","<b>Architecture</b>");
-	$bx->box_column("","","","<b>Environment</b>");
-	$bx->box_column("","","","<b>Specification</b>");
-	$bx->box_column("","","","<b>Creation</b>");
-	$bx->box_column("center","","","<b>Percentage</b>");
-	$bx->box_column("center","","","<b>Your vote</b>");
+	$bx->box_column("","","","<b>".$t->translate("Number")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Platform")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Architecture")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Environment")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Specification")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Creation")."</b>");
+	$bx->box_column("center","","","<b>".$t->translate("Percentage")
+                        ."</b>");
+	$bx->box_column("center","","","<b>".$t->translate("Your vote")
+                        ."</b>");
 
 	$i =0;
 
@@ -216,7 +224,8 @@ function show_decision_contents($proid)
     }
 
     if ($db->num_rows() == 0) {
-	print "<p>There have not been posted any technical specification suggestion.\n";
+	print "<p>".$t->translate("There have not been posted any technical "
+                                  ."specification suggestion").".\n";
     }
     return $return_value;
 }
@@ -231,8 +240,11 @@ function show_decision_proposals($proid)
     $db->next_record();
     $decision_value = $db->f("quorum");
 
-    print "<p align=right>You can only vote for one of them\n";
-    print "<p align=right>You can only vote those proposals that have all their milestones accepted by you";
+    print "<p align=right>".$t->translate("You can only vote for one of them")
+        ."\n";
+    print "<p align=right>".$t->translate("You can only vote those proposals "
+                                          ."that have all their milestones "
+                                          ."accepted by you");
 
     $return_value = 0;
 
@@ -247,18 +259,20 @@ function show_decision_proposals($proid)
 	$bx->box_body_begin();
 	$bx->box_columns_begin(10);
 
-	$bx->box_column("","","","<b>Number</b>");
-	$bx->box_column("","","","<b>Developer</b>");
-	$bx->box_column("","","","<b>License</b>");
-	$bx->box_column("","","","<b>Cost</b>");
+	$bx->box_column("","","","<b>".$t->translate("Number")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Developer")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("License")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Cost")."</b>");
 	$bx->box_column("","","","<b>&nbsp;</b>");
-	$bx->box_column("","","","<b>Accepted</b>");
-	$bx->box_column("","","","<b>Start</b>");
-	$bx->box_column("","","","<b>Duration</b>");
-	$bx->box_column("","","","<b>Valid</b>");
-	$bx->box_column("","","","<b>Creation</b>");
-	$bx->box_column("center","","","<b>Percentage</b>");
-	$bx->box_column("center","","","<b>Your vote</b>");
+	$bx->box_column("","","","<b>".$t->translate("Accepted")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Start")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Duration")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Valid")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Creation")."</b>");
+	$bx->box_column("center","","","<b>".$t->translate("Percentage")
+                        ."</b>");
+	$bx->box_column("center","","","<b>".$t->translate("Your vote")
+                        ."</b>");
 
 	$i =0;
 
@@ -316,7 +330,8 @@ function show_decision_proposals($proid)
     }
 
     if ($db->num_rows() == 0) {
-	print "<p>There have not been posted any milestones by the project main developer.\n";
+	print "<p>".$t->translate("There have not been posted any milestones "
+                                  ."by the project main developer").".\n";
     }
     return $return_value;
 }
@@ -334,7 +349,8 @@ function show_decision_milestones($proid, $devid)
 
     $total_budget = project_budget($proid);
 
-    print "<p align=right>You can accept all of them if you want\n";
+    print "<p align=right>".$t->translate("You can accept all of them "
+                                          ."if you want")."\n";
 
     $query = "SELECT * FROM milestones WHERE proid='$proid' AND devid='$devid' ORDER BY number";
     $db->query($query);
@@ -346,14 +362,20 @@ function show_decision_milestones($proid, $devid)
 	$bx->box_body_begin();
 	$bx->box_columns_begin(8);
 
-	$bx->box_column("center","7%","","<b>Number</b>");
-	$bx->box_column("","43%","","<b>Goals</b>");
-	$bx->box_column("center","16%","","<b>Release Date</b>");
-	$bx->box_column("center","12%","","<b>Product</b>");
-	$bx->box_column("center","8%","","<b>Payment</b>");
-	$bx->box_column("center","14%","","<b>Status</b>");
-	$bx->box_column("center","5%","","<b>Percentage</b>");
-	$bx->box_column("center","5%","","<b>Your vote</b>");
+	$bx->box_column("center","7%","","<b".$t->translate(">Number")."</b>");
+	$bx->box_column("","43%","","<b>".$t->translate("Goals")."</b>");
+	$bx->box_column("center","16%","","<b>".$t->translate("Release Date")
+                        ."</b>");
+	$bx->box_column("center","12%","","<b>".$t->translate("Product")
+                        ."</b>");
+	$bx->box_column("center","8%","","<b>".$t->translate("Payment")
+                        ."</b>");
+	$bx->box_column("center","14%","","<b>".$t->translate("Status")
+                        ."</b>");
+	$bx->box_column("center","5%","","<b>".$t->translate("Percentage")
+                        ."</b>");
+	$bx->box_column("center","5%","","<b>".$t->translate("Your vote")
+                        ."</b>");
 
 	$i =0;
 
@@ -415,7 +437,8 @@ function show_decision_milestones($proid, $devid)
     }
 
     if ($db->num_rows() == 0) {
-	print "<p><b>No decision possible as there are no offerings.</b><p>\n";
+	print "<p><b>".$t->translate("No decision possible as there are "
+                                     ."no offerings").".</b><p>\n";
     }
     return $return_value;
 }
@@ -433,7 +456,8 @@ function show_decision_referees($proid)
 
     $return_value = 0;
 
-    print "<p align=right>You can only vote for one of them\n";
+    print "<p align=right>".$t->translate("You can only vote for one "
+                                          ."of them")."\n";
 
     $total_budget = project_budget($proid);
 
@@ -446,12 +470,14 @@ function show_decision_referees($proid)
 	$bx->box_body_begin();
 	$bx->box_columns_begin(6);
 
-	$bx->box_column("","","","<b>Number</b>");
-	$bx->box_column("","","","<b>Username</b>");
-	$bx->box_column("","","","<b>Status</b>");
-	$bx->box_column("","","","<b>Creation</b>");
-	$bx->box_column("center","","","<b>Percentage</b>");
-	$bx->box_column("center","","","<b>Your vote</b>");
+	$bx->box_column("","","","<b>".$t->translate("Number")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Username")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Status")."</b>");
+	$bx->box_column("","","","<b>".$t->translate("Creation")."</b>");
+	$bx->box_column("center","","","<b>".$t->translate("Percentage")
+                        ."</b>");
+	$bx->box_column("center","","","<b>".$t->translate("Your vote")
+                        ."</b>");
 
 	$i =0;
 
@@ -507,7 +533,8 @@ function show_decision_referees($proid)
     }
 
     if ($db->num_rows() == 0) {
-	print "<p>There have not been posted any milestones by the project main developer.\n";
+	print "<p>".$t->translate("There have not been posted any milestones "
+                                  ."by the project main developer").".\n";
     }
     return $return_value;
 }
@@ -538,45 +565,56 @@ function show_decision_step5($proid,$milestone_number,$count)
     $db->next_record();
 
     $bx->box_begin();
-    $bx->box_title("Decision on milestone number ".$milestone_number);
+    $bx->box_title($t->translate("Decision on milestone number ")
+                                .$milestone_number);
     $bx->box_body_begin();
     $bx->box_columns_begin(2);
 
-    $bx->box_column("right","40%","","<b>Release date</b>:");
-    $bx->box_column("left","","",timestr_middle(mktimestamp($db->f("release"))));
+    $bx->box_column("right","40%","","<b>".$t->translate("Release date")
+                    ."</b>:");
+    $bx->box_column("left","","",
+                    timestr_middle(mktimestamp($db->f("release"))));
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column("right","","","<b>Product</b>:");
+    $bx->box_column("right","","","<b>".$t->translate("Product")."</b>:");
     $bx->box_column("left","","",$db->f("product"));
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column("right","","","<b>Payment</b>:");
+    $bx->box_column("right","","","<b>".$t->translate("Payment")."</b>:");
     $bx->box_column("left","","",$db->f("payment")."%");
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column("right","","","<b>Goals</b>");
+    $bx->box_column("right","","","<b>".$t->translate("Goals")."</b>");
     $bx->box_column("left","","",$db->f("goals"));
 
     $bx->box_next_row_of_columns();
 
     $voting=decisions_step5_votes($proid,$milestone_number,$count,"accept");
-    $bx->box_column("right","","","<b>Accepted</b>");
+    $bx->box_column("right","","","<b>".$t->translate("Accepted")."</b>");
     $bx->box_column("left","","",$voting."%");
 
     $bx->box_next_row_of_columns();
 
     $voting+=decisions_step5_votes($proid,$milestone_number,$count,"minor");
-    $bx->box_column("right","","","<b>Minor modifications should be done</b>:");
-    $bx->box_column("left","","",decisions_step5_votes($proid,$milestone_number,$count,"minor")."%");
+    $bx->box_column("right","","","<b>"
+                    .$t->translate("Minor modifications should be done")
+                    ."</b>:");
+    $bx->box_column("left","","",
+                    decisions_step5_votes($proid,$milestone_number,$count,
+                    "minor")."%");
 
     $bx->box_next_row_of_columns();
 
     $voting+=decisions_step5_votes($proid,$milestone_number,$count,"severe");
-    $bx->box_column("right","","","<b>Severe modifications should be done</b>:");
-    $bx->box_column("left","","",decisions_step5_votes($proid,$milestone_number,$count,"severe")."%");
+    $bx->box_column("right","","","<b>"
+                    .$t->translate("Severe modifications should be done")
+                    ."</b>:");
+    $bx->box_column("left","","",
+                    decisions_step5_votes($proid,$milestone_number,$count,
+                    "severe")."%");
 
     if ($voting > $decision_value) {
         $return_value =1;
@@ -586,11 +624,13 @@ function show_decision_step5($proid,$milestone_number,$count)
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ("right","30%","","<b>".$t->translate("Decision")."</b>: ");
+    $bx->box_column ("right","30%","","<b>".$t->translate("Decision")
+                     ."</b>: ");
     $bx->box_column ("left","70%","",followup_referee_decision($decision));
 
     $bx->box_next_row_of_columns();
-    $bx->box_colspan (2,"center","white",html_form_submit("vote","vote"));
+    $bx->box_colspan (2,"center","white",
+                      html_form_submit($t->translate("vote"),"vote"));
     htmlp_form_end();
 
     $bx->box_columns_end();
@@ -604,7 +644,8 @@ function project_budget($proid)
 {
     global $db;
 
-    $query = "SELECT SUM(budget) FROM sponsoring WHERE proid='$proid' AND status='A'";
+    $query = ( "SELECT SUM(budget) FROM sponsoring WHERE proid='$proid' "
+               ."AND status='A'" );
     $db->query($query);
     $db->next_record();
     return $db->f("SUM(budget)");
@@ -614,11 +655,14 @@ function your_quota($proid)
 {
     global $db, $auth;
 
-    $query = "SELECT budget FROM sponsoring WHERE proid='$proid' AND status='A' AND sponsor='".$auth->auth["uname"]."'";
+    $query = ( "SELECT budget FROM sponsoring WHERE proid='$proid' AND "
+               ."status='A' AND sponsor='".$auth->auth["uname"]."'" );
     $db->query($query);
     $db->next_record();
 
-    print "<p>Your quota: <b>".$db->f("budget")."</b> euros (<b>".(round(($db->f("budget")/project_budget($proid))*10000)/100)."%</b> of the total project budget)\n";
+    print ( "<p>Your quota: <b>".$db->f("budget")."</b> euros (<b>"
+            .(round(($db->f("budget")/project_budget($proid))*10000)/100)
+            ."%</b> of the total project budget)\n" );
 }
 
 function put_decision_into_database($proid,$step,$your_vote,$what,$table)
@@ -684,28 +728,40 @@ function put_into_next_step($proid,$project_status,$what,$table)
 }
 
 function you_have_already_voted($proid,$step) {
-  global $db, $auth;
+    global $db, $auth, $t;
 
-  $db->query("SELECT * FROM decisions WHERE proid='$proid' AND step='$step' AND decision_user='".$auth->auth["uname"]."'");
-  if ($db->num_rows() == 1) print "You <b>have already</b> voted in this step.\n";
-  else print "You have <b>not voted</b> in this step yet.\n";
+    $db->query("SELECT * FROM decisions WHERE proid='$proid' AND step='$step' "
+               ."AND decision_user='".$auth->auth["uname"]."'");
+    if ($db->num_rows() == 1) {
+        print $t->translate("You <b>have already</b> voted in this step.")
+            ."\n";
+    } else {
+        print $t->translate("You have <b>not voted</b> in this step yet.")
+            ."\n";
+    }
 }
 
 function are_you_sure_message($proid) {
-  global $bx, $t;
+    global $bx, $t;
 
-	$bx->box_begin();
- 	$bx->box_title("<b>".$t->translate("Warning! The next step has been reached")."</b>");
-	$bx->box_body_begin();
-	$bx->box_columns_begin(2);
-
-	htmlp_form_action("PHP_SELF", array("proid" => $proid), "POST");
-	$bx->box_column("left","70%","",$t->translate("Are you sure you want to put the project into the next step?<br>Press <b>Yes</b> to put into the next step and <b>No</b> to stay in the current one."));
-	$bx->box_column("right","30%","",html_form_submit("Yes","Yes").html_form_submit("No","No"));
-	htmlp_form_end();	
-	$bx->box_columns_end();
-	$bx->box_body_end();
-	$bx->box_end();
+    $bx->box_begin();
+    $bx->box_title($t->translate("Warning! The next step has been reached"));
+    $bx->box_body_begin();
+    $bx->box_columns_begin(2);
+    
+    htmlp_form_action("PHP_SELF", array("proid" => $proid), "POST");
+    $bx->box_column("left","70%","",
+                    $t->translate("Are you sure you want to put the project "
+                                  ."into the next step?<br>Press <b>Yes</b> "
+                                  ."to put into the next step and <b>No</b> "
+                                  ."to stay in the current one."));
+    $bx->box_column("right","30%","",
+                    html_form_submit($t->translate("Yes"),"Yes")
+                    .html_form_submit($t->translate("No"),"No"));
+    htmlp_form_end();	
+    $bx->box_columns_end();
+    $bx->box_body_end();
+    $bx->box_end();
 }
 
 function decision_accepted_milestones($proid,$devid) {
