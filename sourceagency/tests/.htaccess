@@ -1,7 +1,8 @@
 #
-# $Id: .htaccess,v 1.1 2002/02/19 16:43:53 riessen Exp $
+# $Id: .htaccess,v 1.2 2002/02/19 16:54:03 riessen Exp $
 #
 
+SetEnv PHP_LIB_DIR /home/users/riessen/lib/php
 <Files RunAllTests.php>
 # Force apache to use PHP4 for RunAllTests
   ForceType application/x-httpd-php
