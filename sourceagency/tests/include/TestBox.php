@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestBox.php,v 1.7 2002/01/09 16:17:09 riessen Exp $
+# $Id: TestBox.php,v 1.8 2002/01/28 02:14:00 riessen Exp $
 #
 ######################################################################
 
@@ -30,7 +30,7 @@ extends UnitTest
     var $box;
 
     function UnitTestBox( $name ) {
-        $this->TestCase( $name );
+        $this->UnitTest( $name );
     }
 
     // this is called before each test method
@@ -93,7 +93,7 @@ extends UnitTest
         $this->assertRegexp( "/<font color=\"body_font_color\">" . $body
                              . "<\/font>/", $text, "box body mismatch");
     }
-    function _thisFor_box_columns_begin( $text, $nr_cols ) {
+    function _testFor_box_columns_begin( $text, $nr_cols ) {
         $this->assertRegexp( "/<!-- table with " . $nr_cols . " columns -->/",
                              $text, "(0) box columns begin mismatch" );
         $this->assertRegexp( "/<table border=\"0\" cellspacing=\"0\" "
@@ -243,7 +243,7 @@ extends UnitTest
 
         $text = capture_text_get();
         $this->_testFor_length( 161 );
-        $this->_thisFor_box_columns_begin( $text, $nr_cols );
+        $this->_testFor_box_columns_begin( $text, $nr_cols );
     }
 
     function testBox_column_start() {
