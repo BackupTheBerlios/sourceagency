@@ -18,10 +18,13 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: English-lang.inc,v 1.13 2002/04/02 12:43:44 grex Exp $
+# $Id: English-lang.inc,v 1.14 2002/04/02 15:04:22 riessen Exp $
 #
 ######################################################################
 
+if ( function_exists( "translate_real" ) ) {
+  return;
+}
 // Ins Englischen muessen wir nicht uebersetzen!
 // (es ist ja alles auf English bis jetzt!)
 function translate_real($phrase) {

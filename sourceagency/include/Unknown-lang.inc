@@ -19,25 +19,25 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: Unknown-lang.inc,v 1.2 2001/11/15 17:18:52 riessen Exp $
+# $Id: Unknown-lang.inc,v 1.3 2002/04/02 15:04:22 riessen Exp $
 #
 ######################################################################
 
 // php4 defines require_once
 if ( floor( phpversion() >= 4 ) ) {
-  require_once( "logger.inc" );
+    require_once( "logger.inc" );
 }
 
-// php3: ASSUME: that the class logger is defined
-$l = new Logger;
-$l->log( "translating '" . $phrase . "'" );
-
-switch($phrase) {
-    
-    default:   
-        // we mark the phrase as being translated by wrapping
-        // it with brackets
-        $tmp = "<b>[</b>". $phrase . "<b>]</b>";  
-        break;
+if ( isset( $l ) ) {
+    $l->log( "translating '" . $phrase . "'" );
 }
+
+if ( function_exists( "translate_real" ) ) {
+    return;
+}
+
+function translate_real( $phrase ) {
+    return ( "<b>[</b>". $phrase . "<b>]</b>" );
+}
+
 ?>

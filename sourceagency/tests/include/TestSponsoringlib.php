@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSponsoringlib.php,v 1.5 2002/04/02 12:52:40 riessen Exp $
+# $Id: TestSponsoringlib.php,v 1.6 2002/04/02 15:04:22 riessen Exp $
 #
 ######################################################################
 
@@ -321,7 +321,7 @@ extends UnitTest
         $auth->set_uname( "this is the username" );
         $auth->set_perm( "this is the permission" );
 
-        $db_config = new mock_db_configure( 10 );
+        $db_config = new mock_db_configure( 13 );
         $db_q = array( 0 => ("SELECT COUNT(*) FROM sponsoring WHERE "
                              ."proid='%s'"),
                        1 => ("INSERT sponsoring SET proid='%s',sponsor='%s'"
@@ -345,8 +345,8 @@ extends UnitTest
                                                 "budget", "v_day", "v_month",
                                                 "v_year", "b_day", "b_month",
                                                 "b_year", "f_day", "f_month",
-                                                "f_year"), 3 );
-        $rows = $this->_generate_records( array( "COUNT(*)" ), 3 );
+                                                "f_year"), 4 );
+        $rows = $this->_generate_records( array( "COUNT(*)" ), 4 );
 
         // first call
         $db_config->add_query( sprintf( $db_q[0], $args[0]["proid"] ), 0 );
@@ -454,6 +454,35 @@ extends UnitTest
         $db_config->add_num_row( 1, 7 ); // show_sponsorings
         $db_config->add_num_row( 0, 9 ); // call to is_project_initiator
         
+        // fourth call, this time the user has more than one sponsorship
+        $db_config->add_query( sprintf( $db_q[0], $args[3]["proid"] ), 10 );
+        $v = date_to_timestamp( $args[3]["v_day"], $args[3]["v_month"], 
+                                $args[3]["v_year"] );
+        $b = date_to_timestamp( $args[3]["b_day"], $args[3]["b_month"],
+                                $args[3]["b_year"]);
+        $f = date_to_timestamp( $args[3]["f_day"], $args[3]["f_month"], 
+                                $args[3]["f_year"]);
+        // query for checking the number of sponsoring the user has made
+        $db_config->add_query( sprintf( $db_q[5], $args[3]["proid"],
+                                 $args[3]["user"]), 10 );
+
+        // query for the show_sponsorings call
+        $db_config->add_query( sprintf( $db_q[4], $args[3]["proid"]), 10 );
+
+        // instance for the monitor_mail call
+        $db_config->ignore_errors( MKDB_ALL_ERRORS, 11 );
+        // instance created by the is_project_initiator
+        $db_config->add_query( sprintf( $db_q[3], $args[3]["proid"],
+                                        $auth->auth["uname"]), 12 );
+
+        $rows[3]["COUNT(*)"] = 1; // status is 'P' (proposed)
+        $db_config->add_record( $rows[3], 10 ); // sponsoring_insert
+        $db_config->add_record( false, 10 ); // show_sponsorings
+        $db_config->add_num_row( 2, 10 ); // user has already contributed
+        $db_config->add_num_row( 2, 10 ); // user has already contributed
+        $db_config->add_num_row( 1, 10 ); // show_sponsorings
+        $db_config->add_num_row( 0, 12 ); // call to is_project_initiator
+
         // ********************************************************************
         // first call
         $db = new DB_SourceAgency;
@@ -507,6 +536,25 @@ extends UnitTest
         $text = capture_stop_and_get();
         $this->_testFor_length( 0 );
 
+        // fourth call: user has made too many contributions
+        $db = new DB_SourceAgency;
+        capture_reset_and_start();
+        sponsoring_insert( $args[3]["proid"], $args[3]["user"],
+                           $args[3]["s_text"], $args[3]["budget"], 
+                           $args[3]["v_day"], $args[3]["v_month"],
+                           $args[3]["v_year"],
+                           $args[3]["b_day"], $args[3]["b_month"],
+                           $args[3]["b_year"],
+                           $args[3]["f_day"], $args[3]["f_month"],
+                           $args[3]["f_year"] );
+        $text = capture_stop_and_get();
+        $this->_testFor_length( 137 );
+        $this->_testFor_pattern( $text, ("<p><b>Database Failure:<\/b> it "
+                                         ."seems you have more than one "
+                                         ."sponsorship! Please advice the "
+                                         ."administrator and have the "
+                                         ."database corrected."));
+        
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
     }

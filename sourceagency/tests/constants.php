@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: constants.php,v 1.20 2002/02/21 13:07:40 riessen Exp $
+# $Id: constants.php,v 1.21 2002/04/02 15:04:22 riessen Exp $
 #
 ######################################################################
 
@@ -38,7 +38,19 @@ if ( !defined("BEING_INCLUDED" ) ) {
             ini_get('include_path') . ':'.getcwd().'/../../include' );
     ini_set('include_path', 
             ini_get('include_path') . ':'.getcwd().'/../' );
+
     include_once( "config.inc" );
+    include_once( "session.inc" );
+    $sess = new Session;
+    global $sess;
+    
+    include_once( "logger.inc" );
+    $l = new Logger;
+    global $l;
+    
+    global $lang;
+    $lang = "English";
+    include_once( "lang.inc" );
 }
 
 // php unit test framework
