@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.12 2002/02/11 18:11:26 riessen Exp $
+# $Id: TestLib.php,v 1.13 2002/03/28 13:15:59 riessen Exp $
 #
 ######################################################################
 
@@ -256,10 +256,13 @@ extends UnitTest
         $db_config->add_num_row( $dat["e3"], 3 );
 
         $row1 = $this->_generate_array(array("description_user", "volume",
-                                            "type","description_creation"),1);
+                                             "type","description_creation",
+                                             "perms"),1);
         $db_config->add_record( $row1, 0 );
         $row3 = $this->_generate_array(array("description_user", "volume",
-                                            "type","description_creation"),2);
+                                             "type","description_creation",
+                                             "perms"),2);
+        $row3["perms"] = "devel";
         $db_config->add_record( $row3, 2 );
         $row2 = array( "SUM(budget)" => "INCORRECT" );
         $db_config->add_record( $row2, 1 );
@@ -274,7 +277,7 @@ extends UnitTest
         capture_start();
         calendar_box( $dat["r0"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 2174 );
+        $this->_testFor_length( 2455 );
         $ps=array( 0=>("<b>Project Owner\(s\):<\/b><\/td>\n"
                        . $this->p_regexp_html_comment . "\n"
                        . $this->p_regexp_html_comment
@@ -292,22 +295,27 @@ extends UnitTest
                        .$this->p_regexp_html_comment
                        ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
                        ."&nbsp;".$row1["volume"]."<\/td>"),
-                   // TODO: this is wrong, 100 euro should not appear here ....
-                   3=>("<td align=\"left\" width=\"\" "
+                   3=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."<b>Project Nature:<\/b><\/td>\n"
+                       .$this->p_regexp_html_comment . "\n"
+                       .$this->p_regexp_html_comment
+                       ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."&nbsp;Unknown<\/td>"),
+                   4=>("<td align=\"left\" width=\"\" "
                        ."bgcolor=\"#FFFFFF\"><b>Current "
                        ."project budget:<\/b><\/td>\n"
                        .$this->p_regexp_html_comment . "\n"
                        .$this->p_regexp_html_comment . "\n"
                        ."<td align=\"left\" width=\"\" "
-                       ."bgcolor=\"#FFFFFF\">INCORRECT euro"
+                       ."bgcolor=\"#FFFFFF\">0 euro"
                        ."<\/td>"));
-        $this->_testFor_patterns( $text, $ps, 4);
+        $this->_testFor_patterns( $text, $ps, 5);
         //
         // This run has a budget and the budget value should be printed
         capture_reset_and_start();
         calendar_box( $dat["r2"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 2169 );
+        $this->_testFor_length( 2461 );
         $ps=array( 0=>("<b>Project Owner\(s\):<\/b><\/td>\n"
                        . $this->p_regexp_html_comment . "\n"
                        . $this->p_regexp_html_comment
@@ -325,14 +333,19 @@ extends UnitTest
                        .$this->p_regexp_html_comment 
                        ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF"
                        ."\">&nbsp;".$row3["volume"]."<\/td>"),
-                   // TODO: this is wrong, 100 euro should not appear here ....
                    3=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."<b>Project Nature:<\/b><\/td>\n"
+                       .$this->p_regexp_html_comment . "\n"
+                       .$this->p_regexp_html_comment
+                       ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."&nbsp;Developing<\/td>"),
+                   4=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
                        ."<b>Current project budget:<\/b><\/td>\n"
                        .$this->p_regexp_html_comment . "\n"
                        .$this->p_regexp_html_comment
                        ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
                        .$row4["SUM(budget)"]." euro<\/td>"));
-        $this->_testFor_patterns( $text, $ps, 4 );
+        $this->_testFor_patterns( $text, $ps, 5 );
         // check that the database component did not fail
         $this->_check_db( $db_config );
     }

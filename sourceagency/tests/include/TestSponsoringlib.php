@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSponsoringlib.php,v 1.3 2002/02/25 16:09:29 riessen Exp $
+# $Id: TestSponsoringlib.php,v 1.4 2002/03/28 13:15:59 riessen Exp $
 #
 ######################################################################
 
@@ -278,10 +278,6 @@ extends UnitTest
             $finish_day, $finish_month, $finish_year;
 
 
-        $db_config = new mock_db_configure( 1 );
-        $db_q = array( 0 => ("SELECT email_usr FROM auth_user WHERE "
-                             ."username='%s'"));
-
         $auth->set_uname("this is the username");
         $sponsoring_text = "this is the sponsoring text";
         $budget = "this is the budget";
@@ -290,13 +286,10 @@ extends UnitTest
         $valid_month = 4;   $begin_month = 5;   $finish_month = 6;
         $valid_year = 2001; $begin_year = 2002; $finish_year = 2003;
 
-        $db_config->add_query( sprintf( $db_q[0], $auth->auth["uname"]), 0 );
-        $db_config->add_record( false, 0 );
-
         capture_reset_and_start();
         sponsoring_preview( "dasdsa" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 974 + strlen( timestr( time() ) ) );
+        $this->_testFor_length( 975 + strlen( timestr( time() ) ) );
         $ps=array( 0=>("<font color=\"#000000\"><b><center><b>PREVIEW<\/b>"
                        ."<\/center><\/b><\/font>"),
                    1=>("<font color=\"#000000\"><b>Sponsor Involvement<\/b>"
@@ -320,9 +313,6 @@ extends UnitTest
                    8=>("<p><b>Comments to the involvement:<\/b> this is "
                        ."the sponsoring text"));
         $this->_testFor_patterns( $text, $ps, 9 );
-
-        // finally check that everything went smoothly with the DB
-        $this->_check_db( $db_config );
     }
 
     function testSponsoring_insert() {

@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: mock_database.php,v 1.15 2002/02/07 12:23:21 riessen Exp $
+# $Id: mock_database.php,v 1.16 2002/03/28 13:15:59 riessen Exp $
 #
 ######################################################################
 
@@ -286,9 +286,23 @@ class mock_db_configure
     }
 }
 
-// this called mock_database, because we want specific to define
-// the db_sourceagency class so that they can configure this class
-// to return specific values.
+// used to query what actually happens with the database when it's used.
+// this does not do any error checking. db_sourceagency uses this as
+// it's base class.
+class mock_database_query_only
+extends Assert
+{
+    function mock_database_query_only() {
+    }
+
+    function query( $query_string ) {
+    }
+    
+}
+
+// mock_database is the database configured by mock_db_configure and
+// should be used as the base class for the db_sourceagency class (see 
+// below for this extension of mock_database).
 class mock_database 
 extends Assert
 {
@@ -359,15 +373,19 @@ extends Assert
         return $this->cur_fetch_row[ $column_name ];
     }
 
+    function p( $col_name ) {
+        print $this->f( $col_name );
+    }
+
     function affected_rows() {
         // TODO: implement method 'affected_rows' which returns the number
         // TODO: of rows that were changed by an insert statement
     }
+
     function nf() {
-        // TODO: implement method 'nf' which appears to be an alias for
-        // TODO: num_rows ... Correction: it's probably the 'number of fields'
-        // TODO: function
+        // TODO: 'number of fields' for current query?
     }
+
     function num_rows() {
         global $g_mkdb_num_rows, $g_mkdb_cur_num_row_call;
 
