@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: doco.php3,v 1.1 2002/04/15 13:33:20 riessen Exp $
+# $Id: doco.php3,v 1.2 2002/04/15 15:53:06 riessen Exp $
 #
 ######################################################################
 
@@ -38,8 +38,15 @@ if ( is_not_set_or_empty( $page ) ) {
     generate_failed_box( "Page not Specified", "Page was not specified for "
                          ."documentation is required" );
 } else {
-    $basename = basename( $page, ".php3" );
+
+    $basename = basename( $page );
+    // remove any extensions that may be left over (inc, php, php3)
+    $basename = preg_replace( "/[.](inc|php).?$/", "", $basename );
+
     $page_name = $t->translate( $basename . "-page-name" );
+    if ( $page_name == $basename."-page-name" ) {
+        $page_name = $basename;
+    }
     $doco = $t->translate( $basename . "-doco" );
     
     require("config.inc");
@@ -56,7 +63,7 @@ if ( is_not_set_or_empty( $page ) ) {
                       $th_box_title_bgcolor,$th_box_title_font_color,
                       $th_box_title_align,$th_box_body_bgcolor,
                       $th_box_body_font_color,$th_box_body_align);
-        $be->box_full( $page_name, $text );
+        $be->box_full( $page_name, $doco );
     }
 }
 
