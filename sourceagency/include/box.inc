@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: box.inc,v 1.14 2002/05/07 20:08:58 grex Exp $
+# $Id: box.inc,v 1.15 2002/05/07 20:17:55 grex Exp $
 #
 ######################################################################
 
@@ -301,13 +301,15 @@ class box {
      * Prints the beginning tags for starting row(s) of columns
      *
      * @param    int         $number_of_columns     Number of columns
+     * Strictly speaking, the number of columns is not required
+     * It is used for making a better codification possible (it is easier to be read)
      * @access public
      */
     function box_columns_begin($number_of_columns, $valign = 'top')
     {
 	echo "\n   <!-- table with ".$number_of_columns." columns -->\n";
-	echo "   <table border=\"0\" cellspacing=\"0\" cellpadding=\"3\" align=\"center\" width=\"100%\" valign=\"top\">\n";
-	echo "      <tr colspan=\"$number_of_columns\" valign=\"$valign\">\n";
+	echo "   <table border=\"0\" cellspacing=\"0\" cellpadding=\"3\" align=\"center\" width=\"100%\">\n";
+	echo "      <tr valign=\"$valign\">\n";
     }
 
     /**

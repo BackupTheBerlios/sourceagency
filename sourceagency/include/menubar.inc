@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: menubar.inc,v 1.11 2002/05/07 20:03:01 grex Exp $
+# $Id: menubar.inc,v 1.12 2002/05/07 20:17:55 grex Exp $
 #
 ######################################################################
 
@@ -221,7 +221,7 @@ echo "<p><input TYPE=\"submit\" NAME=\"Search\" VALUE=\""
 <!-- Language menu -->
 <table border="0" cellspacing="0" cellpadding="3" width="100%">
 <tr bgcolor="<?php echo $th_navstrip_bgcolor;?>">
-<td align=CENTER><img src="images/blank.gif" height="1" width="135" border="0"><br>
+<td align=CENTER><img src="images/blank.gif" height="1" width="135" border="0" alt=""><br>
 <span class="titlebar"><font color="<?php echo $th_navstrip_font_color;?>"><?php echo $t->translate("Language");?></font></span></td>
 </tr>
 
