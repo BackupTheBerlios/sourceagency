@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMonitorlib.php,v 1.16 2002/07/02 10:40:59 riessen Exp $
+# $Id: TestMonitorlib.php,v 1.17 2002/07/09 11:15:33 riessen Exp $
 #
 ######################################################################
 
@@ -40,7 +40,33 @@ if ( !defined("BEING_INCLUDED" ) ) {
 class UnitTestMonitorlib
 extends UnitTest
 {
+    var $queries;
+
     function UnitTestMonitorlib( $name ) {
+        $this->queries = array(
+            'monitor_mail_1' =>
+            ("SELECT email_usr FROM auth_user,monitor WHERE monitor.username"
+             ."=auth_user.username AND proid='%s' AND importance='high'"),
+            'monitor_mail_2' =>
+            ("SELECT email_usr FROM auth_user,monitor WHERE monitor.username"
+             ."=auth_user.username AND proid='%s' AND (importance='middle' OR "
+             ."importance='high')"),
+            'monitor_mail_3' =>
+            ("SELECT email_usr FROM auth_user,monitor WHERE monitor.username"
+             ."=auth_user.username AND proid='%s' "),
+            'monitor_show' =>
+            ("SELECT * FROM monitor,auth_user WHERE proid='%s' AND monitor."
+             ."username=auth_user.username ORDER BY creation DESC"),
+            'mailuser' =>
+            ("SELECT email_usr FROM auth_user WHERE perms LIKE '%%%s%%'"),
+            'monitor_modify' =>
+            ("UPDATE monitor SET importance='%s' WHERE proid='%s' AND "
+             ."username='%s'"),
+            'monitor_insert_1' =>
+            ("SELECT * FROM monitor WHERE proid='%s' AND username='%s'"),
+            'monitor_insert_2' =>
+            ("INSERT monitor SET proid='%s',username='%s',importance='%s'")
+            );
         $this->UnitTest( $name );
     }
 
@@ -56,17 +82,11 @@ extends UnitTest
     function testMonitor_mail() {
         // ASSUME: this does not test the mail function, this is assumed to 
         // ASSUME: work
+        $fname = 'monitor_mail';
         $db_config = new mock_db_configure( 3 );
-        $db_q = array( 0 => ("SELECT email_usr FROM auth_user,monitor WHERE "
-                             ."monitor.username=auth_user.username AND "
-                             ."proid='%s' AND importance='high'"),
-                       2 => ("SELECT email_usr FROM auth_user,monitor WHERE "
-                             ."monitor.username=auth_user.username AND "
-                             ."proid='%s' "),
-                       1 => ("SELECT email_usr FROM auth_user,monitor WHERE "
-                             ."monitor.username=auth_user.username AND "
-                             ."proid='%s' AND (importance='middle' OR "
-                             ."importance='high')"));
+        $db_q = array( 0 => $this->queries[ $fname . '_1' ],
+                       1 => $this->queries[ $fname . '_2' ],
+                       2 => $this->queries[ $fname . '_3' ]);
 
         $row=$this->_generate_records( array( 'proid','type','subject',
                                               'message' ), 3 );
@@ -100,9 +120,7 @@ extends UnitTest
         $proid = array( 0 => "proid_0",
                         1 => "proid_1" );
 
-        $db_q = array( 0 => ("SELECT * FROM monitor,auth_user WHERE proid="
-                             ."'%s' AND monitor.username=auth_user.username "
-                             ."ORDER BY creation DESC"));
+        $db_q = array( 0 => $this->queries[ 'monitor_show' ]);
         
         $db_config->add_query( sprintf( $db_q[0], $proid[0] ), 0 );
         $db_config->add_query( sprintf( $db_q[0], $proid[1] ), 1 );
@@ -226,7 +244,7 @@ extends UnitTest
     function testMailuser() {
         global $db;
         
-        $q = "SELECT email_usr FROM auth_user WHERE perms LIKE '%%%s%%'";
+        $q = $this->queries[ 'mailuser' ];
         $db_config = new mock_db_configure( 1 );
         $args=$this->_generate_array( array( 'perms','subj','message' ), 10);
         $db_config->add_query( sprintf( $q, $args['perms']), 0 );
@@ -236,12 +254,84 @@ extends UnitTest
         $this->_check_db( $db_config );
     }
 
-    function testMonitor_insert() {
-        $this->_test_to_be_completed();
+    function testMonitor_modify() {
+        global $db, $t;
+
+        $fname = 'monitor_modify';
+        $qs = array( 0 => $this->queries[ $fname ],
+                     1 => $this->queries[ 'monitor_mail_3' ],
+                     2 => $this->queries[ 'monitor_show' ] );
+
+        $db_config = new mock_db_configure( 2 );
+        $args = $this->_generate_array( array( 'proid', 'username',
+                                               'importance', 'creation'), 10);
+        // test one
+        $db_config->add_query( sprintf( $qs[0], $args['importance'],
+                                       $args['proid'], $args['username'] ), 0);
+        $db_config->add_query( sprintf( $qs[1], $args['proid'] ), 1 );
+        $db_config->add_record( false, 1 );
+        $db_config->add_query( sprintf( $qs[2], $args['proid']), 0);
+        $db_config->add_num_row( 0, 0 );
+
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 41, $args );
+        $this->assertEquals( "<p>".$t->translate("Nobody is monitoring this "
+                                                 ."project").".<p>\n",
+                             $this->get_text() );
+        
+        $this->_check_db( $db_config );
     }
 
-    function testMonitor_modify() {
-        $this->_test_to_be_completed();
+    function testMonitor_insert() {
+        global $db, $t;
+
+        $fname = 'monitor_insert';
+        $qs = array( 0 => $this->queries[ $fname . '_1' ],
+                     1 => $this->queries[ $fname . '_2' ],
+                     2 => $this->queries[ 'monitor_modify' ],
+                     3 => $this->queries[ 'monitor_mail_3' ],
+                     4 => $this->queries[ 'monitor_show' ] );
+
+        $db_config = new mock_db_configure( 4 );
+        $args = $this->_generate_records( array( 'proid', 'username',
+                                                 'importance' ), 10 );
+        $creation = 'thisd ithe creation';
+        // test one: number of rows > 0 ==> monitor_modify called
+        $db_config->add_query( sprintf( $qs[0], $args[0]['proid'],
+                                              $args[0]['username']), 0 );
+        $db_config->add_num_row( 10, 0 );
+        $db_config->add_record( array( 'creation' => $creation ), 0 );
+
+        $db_config->add_query( sprintf( $qs[2], $args[0]['importance'],
+                                  $args[0]['proid'], $args[0]['username']), 0);
+        /** monitor mail call **/
+        $db_config->add_query( sprintf( $qs[3], $args[0]['proid'] ), 1 );
+        $db_config->add_record( false, 1 );
+        /** monitor show call **/
+        $db_config->add_query( sprintf( $qs[4], $args[0]['proid'] ), 0 );
+        $db_config->add_num_row( 0, 0 );
+
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 41, $args[0] );
+
+        // test two: number of rows == 0, insert and monitor_{mail,show} called
+        $db_config->add_query( sprintf( $qs[0], $args[1]['proid'],
+                                              $args[1]['username']), 2 );
+        $db_config->add_num_row( 0, 2 );
+        $db_config->add_query( sprintf( $qs[1], $args[1]['proid'],
+                             $args[1]['username'], $args[1]['importance']), 2);
+        
+        /** monitor mail call **/
+        $db_config->add_query( sprintf( $qs[3], $args[1]['proid'] ), 3 );
+        $db_config->add_record( false, 3 );
+        /** monitor show call **/
+        $db_config->add_query( sprintf( $qs[4], $args[1]['proid'] ), 2 );
+        $db_config->add_num_row( 0, 2 );
+
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 41, $args[1] );
+        
+        $this->_check_db( $db_config );
     }
 }
 

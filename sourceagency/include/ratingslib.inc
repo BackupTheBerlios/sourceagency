@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: ratingslib.inc,v 1.10 2002/07/04 13:04:01 riessen Exp $
+# $Id: ratingslib.inc,v 1.11 2002/07/09 11:15:33 riessen Exp $
 #
 ######################################################################
 
@@ -166,9 +166,9 @@ function ratings_form_full($proid, $username, $dev_or_spo, $id)
     /* WISH: config.inc should be only included once (and not here) */
     include('config.inc');
 
-    if ($dev_or_spo = 'sponsor') {
+    if ($dev_or_spo == 'sponsor') {
         $array = $developer_rates_sponsor;
-    } elseif ($dev_or_spo = 'developer') {
+    } elseif ($dev_or_spo == 'developer') {
         $array = $sponsor_rates_developer;
     }
 
@@ -462,7 +462,8 @@ function ratings_look_for_next_one($proid, $number)
 	$id = 'spoid';
  	$table = 'sponsoring';
 	break;
-    /** FIXME: no default case **/
+    /** FIXME: no default case, when dev_or_spo not correctly defined 
+        FIXME: then $id and $table are not defined **/
     }
 
     $db->query("SELECT $dev_or_spo,$id FROM $table WHERE proid='$proid' AND status='A' AND $dev_or_spo!='".$auth->auth["uname"]."' AND $id>'$number' ORDER BY $id");
@@ -476,10 +477,10 @@ function ratings_look_for_next_one($proid, $number)
 
     if(!strcmp($dev_or_spo,'developer')) {
 	$dev_or_spo = 'sponsor';
-        /** FIXME: should the '1' in the following be $number ??? **/
 	ratings_look_for_next_one($proid,1);
     } else {
 	$dev_or_spo = '';
+        /** FIXME: setting number here has no affect **/
 	$number = '';
     }
 }
@@ -520,7 +521,7 @@ function ratings_rated_yet($proid, $to_whom, $by_whom)
  */
 function show_participants_rating($proid, $participant_type)
 {
-    global $t, $db, $bx;
+    global $db, $bx, $t;
 
     $bx->box_begin();
     $bx->box_title($t->translate($participant_type));
@@ -536,6 +537,7 @@ function show_participants_rating($proid, $participant_type)
     case 'referee':
 	$table = 'referees';
         break;
+    /** FIXME: missing default case **/
     }
 
     $db->query("SELECT $participant_type FROM $table WHERE proid='$proid' AND status='A'");
@@ -562,7 +564,7 @@ function show_participants_rating($proid, $participant_type)
  */
 function show_personal_rating($proid, $username)
 {
-    global $t, $bx;
+    global $t;
 
     $db_local = new DB_SourceAgency;
     $db_local->query("SELECT rating FROM ratings WHERE proid='$proid' "

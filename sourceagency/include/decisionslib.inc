@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisionslib.inc,v 1.15 2002/06/26 10:29:52 riessen Exp $
+# $Id: decisionslib.inc,v 1.16 2002/07/09 11:15:33 riessen Exp $
 #
 ######################################################################
 
@@ -584,7 +584,7 @@ function show_decision_step5($proid,$milestone_number,$count)
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column("right","","","<b>".$t->translate("Goals")."</b>");
+    $bx->box_column("right","","","<b>".$t->translate("Goals")."</b>:");
     $bx->box_column("left","","",$db->f("goals"));
 
     $bx->box_next_row_of_columns();
@@ -704,34 +704,36 @@ function put_into_next_step($proid,$project_status,$what,$table)
 {
     $db_local = new DB_SourceAgency;
     $db_quota = new DB_SourceAgency;
-
-    $db_local->query("SELECT $what,creation FROM $table WHERE proid='$proid'");
+    
+    $db_local->query("SELECT $what,creation FROM $table WHERE proid='$proid'");/** 1 **/
     while ($db_local->next_record()) {
-	$db_quota->query("SELECT SUM(budget) FROM sponsoring,decisions WHERE sponsor=decision_user AND decision='".$db_local->f($what)."' AND sponsoring.proid='$proid' AND decisions.proid='$proid' AND step='$project_status'");
+	$db_quota->query("SELECT SUM(budget) FROM sponsoring,decisions WHERE sponsor=decision_user AND decision='".$db_local->f($what)."' AND sponsoring.proid='$proid' AND decisions.proid='$proid' AND step='$project_status'"); /** 2 **/
 	$db_quota->next_record();
 	if ($db_quota->f("SUM(budget)") > project_budget($proid)/2) { 
-		$db_quota->query("UPDATE $table SET status='A', creation='".$db_local->f("creation")."' WHERE $what='".$db_local->f($what)."' AND proid='$proid'");
+            $db_quota->query("UPDATE $table SET status='A', creation='".$db_local->f("creation")."' WHERE $what='".$db_local->f($what)."' AND proid='$proid'");/** 3 **/
 	} else {
-		$db_quota->query("UPDATE $table SET status='R', creation='".$db_local->f("creation")."' WHERE $what='".$db_local->f($what)."' AND proid='$proid'");
+            $db_quota->query("UPDATE $table SET status='R', creation='".$db_local->f("creation")."' WHERE $what='".$db_local->f($what)."' AND proid='$proid'");/** 4 **/
 	}
-  }
+    }
 
-  $db_local->query("SELECT status,description_creation FROM description WHERE proid='$proid'");
+    $db_local->query("SELECT status,description_creation FROM description WHERE proid='$proid'");/** 5 **/
   $db_local->next_record();
   $project_status = $db_local->f("status") + 1;
 
-  $db_local->query("UPDATE description SET status='$project_status',description_creation='".$db_local->f("description_creation")."' WHERE proid='$proid'");
+    $db_local->query("UPDATE description SET status='$project_status',description_creation='".$db_local->f("description_creation")."' WHERE proid='$proid'");/** 6 **/
 
-  $db_local->query("INSERT history SET proid='$proid', history_user='Project Owners', type='decision', action='Project is now in phase $project_status'");
+    $db_local->query("INSERT history SET proid='$proid', history_user='Project Owners', type='decision', action='Project is now in phase $project_status'");/** 7 **/
 
 	// If sponsored project and new step is 4
 	// we have to introduce the main developer in the configure table!
 
-  if ($project_status == 4) decision_insert_main_developer($proid);
+    if ($project_status == 4) decision_insert_main_developer($proid); /** 9 **/
 
-  include("monitorlib.inc");
+  if ( !function_exists( 'monitor_mail' ) ) {
+      include("monitorlib.inc");
+  }
   include("config.inc");
-  monitor_mail($proid,"next_step", "Next Step for project $proid", "The next step on project $proid has been reached\n\n");
+  monitor_mail($proid,"next_step", "Next Step for project $proid", "The next step on project $proid has been reached\n\n"); /** 8 **/
 
 }
 

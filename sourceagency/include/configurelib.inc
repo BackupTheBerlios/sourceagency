@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: configurelib.inc,v 1.8 2002/06/26 09:57:26 riessen Exp $
+# $Id: configurelib.inc,v 1.9 2002/07/09 11:15:33 riessen Exp $
 #
 ######################################################################
 
@@ -179,7 +179,7 @@ function configure_modify_form($proid) {
 
 function configure_insert($proid,$user) {
   global $db,$auth,$quorum,$consultants,$other_tech_contents,
-      $other_developing_proposals, $t, $sys_name;
+      $other_developing_proposals, $t;
 
   if(!configure_first_time($proid)) {
       configure_modify($proid,$user);
@@ -189,35 +189,35 @@ function configure_insert($proid,$user) {
                     ."other_tech_contents='$other_tech_contents',"
                     ."other_developing_proposals='Yes',sponsor='$user',"
                     ."developer=''");
-	} else {
-            $query =("consultants='No',other_tech_contents='"
-                     ."$other_tech_contents',other_developing_proposals="
-                     ."'$other_developing_proposals',developer='$user'");
-        }
-   	$db->query("INSERT configure SET proid='$proid',$query");
-   	configure_show($proid);
+      } else {
+          $query =("consultants='No',other_tech_contents='"
+                   ."$other_tech_contents',other_developing_proposals="
+                   ."'$other_developing_proposals',developer='$user'");
+      }
+      $db->query("INSERT configure SET proid='$proid',$query");
+      configure_show($proid);
 
-	// Insert into history
-  	$db->query("INSERT history SET proid='$proid', history_user='$user',"
-                   ." type='Configure', action='Project configuration'");
+      // Insert into history
+      $db->query("INSERT history SET proid='$proid', history_user='$user',"
+                 ." type='Configure', action='Project configuration'");
 
-        echo "<b>".$t->translate("Congratulations")."</b>. "
-            .$t->translate("You have just configured your project")
-            .".<p>\n";
+      echo "<b>".$t->translate("Congratulations")."</b>. "
+          .$t->translate("You have just configured your project")
+          .".<p>\n";
 
-        if (is_sponsor()) {
-            echo "<br>".
-                $t->translate("The last step before waiting to be "
-                              ."reviewed by an editor is to")
-                . " "
-                .html_link("sponsoring_edit.php3",array("proid" => $proid),
-                           $t->translate("Sponsor this project"));
-        } elseif (is_developer()) {
-            lib_insertion_finished();
-        }
-        echo "<p><br>\n";
-
-        lib_insertion_information();
+      if (is_sponsor()) {
+          echo "<br>".
+              $t->translate("The last step before waiting to be "
+                            ."reviewed by an editor is to")
+              . " "
+              .html_link("sponsoring_edit.php3",array("proid" => $proid),
+                         $t->translate("Sponsor this project"));
+      } elseif (is_developer()) {
+          lib_insertion_finished();
+      }
+      echo "<p><br>\n";
+      
+      lib_insertion_information();
   }
 }
 

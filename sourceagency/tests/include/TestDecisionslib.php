@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDecisionslib.php,v 1.10 2002/07/04 13:04:16 riessen Exp $
+// $Id: TestDecisionslib.php,v 1.11 2002/07/09 11:15:33 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -25,130 +25,156 @@ extends UnitTest
     function UnitTestDecisionslib( $name ) {
         $this->UnitTest( $name );
         
-        $this->queries =
-             array( 'project_budget' =>
-                    ("SELECT SUM(budget) FROM sponsoring WHERE proid='%s' "
-                     ."AND status='A'"),
-                    'your_quota' =>
-                    ("SELECT budget FROM sponsoring WHERE proid='%s' AND "
-                     ."status='A' AND sponsor='%s'"),
-                    'you_have_already_voted' =>
-                    ("SELECT * FROM decisions WHERE proid='%s' AND step='%s' "
-                     ."AND decision_user='%s'"),
-                    'decisions_milestone_into_db_select' =>
-                    ("SELECT creation,release FROM milestones WHERE proid='%s'"
-                     ." AND devid='%s' AND number='%s'"),
-                    'decisions_milestone_into_db_update' =>
-                    ("UPDATE milestones SET status='%s',creation='%s',"
-                     ."release='%s' WHERE proid='%s' AND devid='%s' AND "
-                     ."number='%s'"),
-                    'decision_accepted_milestones_1' =>
-                    ("SELECT number,payment FROM milestones WHERE proid='%s' "
-                     ."AND devid='%s'"),
-                    'decision_accepted_milestones_2' =>
-                    ("SELECT COUNT(*) FROM decisions_milestones WHERE proid="
-                     ."'%s' AND devid='%s' AND number='%s' AND decision='Yes'"
-                     ." AND decision_user='%s'"),
-                    'decision_milestone_insert_1' =>
-                    ("SELECT * FROM decisions_milestones WHERE proid='%s' "
-                     ."AND devid='%s' AND decision_user='%s' AND number='%s'"),
-                    'decision_milestone_insert_2' =>
-                    ("INSERT decisions_milestones SET proid='%s', devid='%s',"
-                     ." decision_user='%s', number='%s', decision='%s'"),
-                    'decision_milestone_insert_3' =>
-                    ("UPDATE decisions_milestones SET decision='%s' WHERE "
-                     ."proid='%s' AND devid='%s' AND decision_user='%s' AND "
-                     ."number='%s'"),
-                    'decisions_decision_met_1' =>
-                    ("SELECT status FROM description WHERE proid='%s'"),
-                    'decisions_decision_met_2' =>
-                    ("SELECT step FROM decisions WHERE proid='%s'"),
-                    'decisions_decision_met_3' =>
-                    ("SELECT consultants FROM configure WHERE proid='%s'"),
-                    'decisions_decision_met_on_step5' =>
-                    ("SELECT iteration FROM follow_up WHERE proid='%s' AND "
-                     ."milestone_number='%s'"),
-                    'decision_developer_voted_1' =>
-                    ("SELECT developer FROM developing WHERE proid='%s' AND "
-                     ."status='A'"),
-                    'decision_developer_voted_2' =>
-                    ("SELECT * FROM decisions WHERE proid='%s' AND decision="
-                     ."'%s' AND decision_user='%s'"),
-                    'decision_insert_main_developer_1' =>
-                    ("SELECT developer FROM configure WHERE proid='%s'"),
-                    'decision_insert_main_developer_2' =>
-                    ("SELECT developer FROM developing WHERE proid='%s' AND "
-                     ."status='A'"),
-                    'decision_insert_main_developer_3' =>
-                    ("UPDATE configure SET developer='%s' WHERE proid='%s'"),
-                    'decisions_step5_sponsors_1' =>
-                    ("SELECT quorum FROM configure WHERE proid='%s'"),
-                    'decisions_step5_sponsors_2' =>
-                    ("SELECT SUM(budget) FROM sponsoring,decisions_step5 "
-                     ."WHERE sponsor=decision_user AND decision='accept' "
-                     ."AND count='%s' AND sponsoring.proid='%s' "
-                     ."AND decisions_step5.proid='%s' AND "
-                     ."decisions_step5.number='%s'"),
-                    'decisions_step5_sponsors_3' =>
-                    ("UPDATE follow_up SET iteration='5' WHERE "
-                     ."proid='%s' AND milestone_number='%s'"),
-                    'decisions_step5_sponsors_4' =>
-                    ("SELECT MAX(number) FROM milestones WHERE proid='%s'"),
-                    'decisions_step5_sponsors_5' =>
-                    ("INSERT follow_up SET iteration='0',proid='%s',"
-                     ."milestone_number='%s',count='1'"),
-                    'decisions_step5_sponsors_6' =>
-                    ("UPDATE description SET status='6' WHERE proid='%s'"),
-                    'decisions_step5_sponsors_7' =>
-                    ("SELECT SUM(budget) FROM sponsoring,decisions_step5 "
-                     ."WHERE sponsor=decision_user AND decision='minor' "
-                     ."AND count='%s' AND sponsoring.proid='%s' AND "
-                     ."sponsoring.proid='%s' AND decisions_step5.number='%s'"),
-                    'decisions_step5_sponsors_8' =>
-                    ("SELECT * FROM follow_up WHERE proid='%s' "
-                     ."AND milestone_number='%s'"),
-                    'decisions_step5_sponsors_9' =>
-                    ("UPDATE follow_up SET iteration='0',count='%s',location"
-                     ."='' WHERE proid='%s' AND milestone_number='%s'"),
-                    'decisions_step5_sponsors_10' =>
-                    ("SELECT SUM(budget) FROM sponsoring,decisions_step5 "
-                     ."WHERE sponsor=decision_user AND decision='severe'  "
-                     ."AND count='%s' AND sponsoring.proid='%s' AND "
-                     ."sponsoring.proid='%s' AND decisions_step5.number='%s'"),
-                    'decisions_step5_sponsors_11' =>
-                    ("UPDATE follow_up SET iteration='2' WHERE proid='%s' AND "
-                     ."milestone_number='%s'"),
-                    'decisions_step5_votes' =>
-                    ("SELECT SUM(budget) AS sum_step5 FROM sponsoring,"
-                     ."decisions_step5 WHERE decisions_step5.proid='%s' AND "
-                     ."sponsoring.proid='%s' AND sponsoring.sponsor="
-                     ."decisions_step5.decision_user AND decisions_step5."
-                     ."number='%s' AND count='%s' AND decision='%s' GROUP "
-                     ."BY decision"),
-                    'put_decision_into_database_1' =>
-                    ("SELECT DISTINCT(%s) FROM %s"),
-                    'put_decision_into_database_2' =>
-                    ("SELECT * FROM decisions WHERE proid='%s' AND step = "
-                     ."'%s' AND decision_user='%s'"),
-                    'put_decision_into_database_3' =>
-                    ("INSERT decisions SET proid='%s', step ='%s', "
-                     ."decision_user='%s', decision='%s'"),
-                    'put_decision_into_database_4' =>
-                    ("UPDATE decisions SET  decision='%s' WHERE proid='%s' AND"
-                     ." step='%s' AND decision_user='%s'"),
-                    'monitor_mail' =>
-                    ("SELECT email_usr FROM auth_user,monitor WHERE "
-                     ."monitor.username=auth_user.username AND proid='%s' %s"),
-                    'put_decision_step5_into_database_1' =>
-                    ("SELECT * FROM decisions_step5 WHERE proid='%s' AND "
-                     ."decision_user='%s' AND number='%s' AND count='%s'"),
-                    'put_decision_step5_into_database_2' =>
-                    ("INSERT decisions_step5 SET proid='%s', decision_user="
-                     ."'%s', number='%s', count='%s', decision='%s'"),
-                    'put_decision_step5_into_database_3' =>
-                    ("UPDATE decisions_step5 SET  decision='%s' WHERE proid="
-                     ."'%s' AND decision_user='%s' AND number='%s' AND "
-                     ."count='%s'"));
+        $this->queries =array( 
+            'project_budget' =>
+            ("SELECT SUM(budget) FROM sponsoring WHERE proid='%s' "
+             ."AND status='A'"),
+            'your_quota' =>
+            ("SELECT budget FROM sponsoring WHERE proid='%s' AND "
+             ."status='A' AND sponsor='%s'"),
+            'you_have_already_voted' =>
+            ("SELECT * FROM decisions WHERE proid='%s' AND step='%s' "
+             ."AND decision_user='%s'"),
+            'decisions_milestone_into_db_select' =>
+            ("SELECT creation,release FROM milestones WHERE proid='%s'"
+             ." AND devid='%s' AND number='%s'"),
+            'decisions_milestone_into_db_update' =>
+            ("UPDATE milestones SET status='%s',creation='%s',"
+             ."release='%s' WHERE proid='%s' AND devid='%s' AND "
+             ."number='%s'"),
+            'decision_accepted_milestones_1' =>
+            ("SELECT number,payment FROM milestones WHERE proid='%s' "
+             ."AND devid='%s'"),
+            'decision_accepted_milestones_2' =>
+            ("SELECT COUNT(*) FROM decisions_milestones WHERE proid="
+             ."'%s' AND devid='%s' AND number='%s' AND decision='Yes'"
+             ." AND decision_user='%s'"),
+            'decision_milestone_insert_1' =>
+            ("SELECT * FROM decisions_milestones WHERE proid='%s' "
+             ."AND devid='%s' AND decision_user='%s' AND number='%s'"),
+            'decision_milestone_insert_2' =>
+            ("INSERT decisions_milestones SET proid='%s', devid='%s',"
+             ." decision_user='%s', number='%s', decision='%s'"),
+            'decision_milestone_insert_3' =>
+            ("UPDATE decisions_milestones SET decision='%s' WHERE "
+             ."proid='%s' AND devid='%s' AND decision_user='%s' AND "
+             ."number='%s'"),
+            'decisions_decision_met_1' =>
+            ("SELECT status FROM description WHERE proid='%s'"),
+            'decisions_decision_met_2' =>
+            ("SELECT step FROM decisions WHERE proid='%s'"),
+            'decisions_decision_met_3' =>
+            ("SELECT consultants FROM configure WHERE proid='%s'"),
+            'decisions_decision_met_on_step5' =>
+            ("SELECT iteration FROM follow_up WHERE proid='%s' AND "
+             ."milestone_number='%s'"),
+            'decision_developer_voted_1' =>
+            ("SELECT developer FROM developing WHERE proid='%s' AND "
+             ."status='A'"),
+            'decision_developer_voted_2' =>
+            ("SELECT * FROM decisions WHERE proid='%s' AND decision="
+             ."'%s' AND decision_user='%s'"),
+            'decision_insert_main_developer_1' =>
+            ("SELECT developer FROM configure WHERE proid='%s'"),
+            'decision_insert_main_developer_2' =>
+            ("SELECT developer FROM developing WHERE proid='%s' AND "
+             ."status='A'"),
+            'decision_insert_main_developer_3' =>
+            ("UPDATE configure SET developer='%s' WHERE proid='%s'"),
+            'decisions_step5_sponsors_1' =>
+            ("SELECT quorum FROM configure WHERE proid='%s'"),
+            'decisions_step5_sponsors_2' =>
+            ("SELECT SUM(budget) FROM sponsoring,decisions_step5 "
+             ."WHERE sponsor=decision_user AND decision='accept' "
+             ."AND count='%s' AND sponsoring.proid='%s' "
+             ."AND decisions_step5.proid='%s' AND "
+             ."decisions_step5.number='%s'"),
+            'decisions_step5_sponsors_3' =>
+            ("UPDATE follow_up SET iteration='5' WHERE "
+             ."proid='%s' AND milestone_number='%s'"),
+            'decisions_step5_sponsors_4' =>
+            ("SELECT MAX(number) FROM milestones WHERE proid='%s'"),
+            'decisions_step5_sponsors_5' =>
+            ("INSERT follow_up SET iteration='0',proid='%s',"
+             ."milestone_number='%s',count='1'"),
+            'decisions_step5_sponsors_6' =>
+            ("UPDATE description SET status='6' WHERE proid='%s'"),
+            'decisions_step5_sponsors_7' =>
+            ("SELECT SUM(budget) FROM sponsoring,decisions_step5 "
+             ."WHERE sponsor=decision_user AND decision='minor' "
+             ."AND count='%s' AND sponsoring.proid='%s' AND "
+             ."sponsoring.proid='%s' AND decisions_step5.number='%s'"),
+            'decisions_step5_sponsors_8' =>
+            ("SELECT * FROM follow_up WHERE proid='%s' "
+             ."AND milestone_number='%s'"),
+            'decisions_step5_sponsors_9' =>
+            ("UPDATE follow_up SET iteration='0',count='%s',location"
+             ."='' WHERE proid='%s' AND milestone_number='%s'"),
+            'decisions_step5_sponsors_10' =>
+            ("SELECT SUM(budget) FROM sponsoring,decisions_step5 "
+             ."WHERE sponsor=decision_user AND decision='severe'  "
+             ."AND count='%s' AND sponsoring.proid='%s' AND "
+             ."sponsoring.proid='%s' AND decisions_step5.number='%s'"),
+            'decisions_step5_sponsors_11' =>
+            ("UPDATE follow_up SET iteration='2' WHERE proid='%s' AND "
+             ."milestone_number='%s'"),
+            'decisions_step5_votes' =>
+            ("SELECT SUM(budget) AS sum_step5 FROM sponsoring,"
+             ."decisions_step5 WHERE decisions_step5.proid='%s' AND "
+             ."sponsoring.proid='%s' AND sponsoring.sponsor="
+             ."decisions_step5.decision_user AND decisions_step5."
+             ."number='%s' AND count='%s' AND decision='%s' GROUP "
+             ."BY decision"),
+            'put_decision_into_database_1' =>
+            ("SELECT DISTINCT(%s) FROM %s"),
+            'put_decision_into_database_2' =>
+            ("SELECT * FROM decisions WHERE proid='%s' AND step = "
+             ."'%s' AND decision_user='%s'"),
+            'put_decision_into_database_3' =>
+            ("INSERT decisions SET proid='%s', step ='%s', "
+             ."decision_user='%s', decision='%s'"),
+            'put_decision_into_database_4' =>
+            ("UPDATE decisions SET  decision='%s' WHERE proid='%s' AND"
+             ." step='%s' AND decision_user='%s'"),
+            'monitor_mail' =>
+            ("SELECT email_usr FROM auth_user,monitor WHERE "
+             ."monitor.username=auth_user.username AND proid='%s' %s"),
+            'put_decision_step5_into_database_1' =>
+            ("SELECT * FROM decisions_step5 WHERE proid='%s' AND "
+             ."decision_user='%s' AND number='%s' AND count='%s'"),
+            'put_decision_step5_into_database_2' =>
+            ("INSERT decisions_step5 SET proid='%s', decision_user="
+             ."'%s', number='%s', count='%s', decision='%s'"),
+            'put_decision_step5_into_database_3' =>
+            ("UPDATE decisions_step5 SET  decision='%s' WHERE proid="
+             ."'%s' AND decision_user='%s' AND number='%s' AND "
+             ."count='%s'"),
+            'put_into_next_step_1' =>
+            ("SELECT %s,creation FROM %s WHERE proid='%s'"),
+            'put_into_next_step_2' =>
+            ("SELECT SUM(budget) FROM sponsoring,decisions WHERE sponsor="
+             ."decision_user AND decision='%s' AND sponsoring.proid='%s' AND "
+             ."decisions.proid='%s' AND step='%s'"),
+            'put_into_next_step_3' =>
+            ("UPDATE %s SET status='A', creation='%s' WHERE %s='%s' AND "
+             ."proid='%s'"),
+            'put_into_next_step_4' =>
+            ("UPDATE %s SET status='R', creation='%s' WHERE %s='%s' AND "
+             ."proid='%s'"),
+            'put_into_next_step_5' =>
+            ("SELECT status,description_creation FROM description WHERE "
+             ."proid='%s'"),
+            'put_into_next_step_6' =>
+            ("UPDATE description SET status='%s',description_creation='%s' "
+             ."WHERE proid='%s'"),
+            'put_into_next_step_7' =>
+            ("INSERT history SET proid='%s', history_user='Project Owners', "
+             ."type='decision', action='Project is now in phase %s'"),
+            'put_into_next_step_8' =>
+            ("SELECT email_usr FROM auth_user,monitor WHERE monitor."
+             ."username=auth_user.username AND proid='%s' AND "
+             ."importance='high'")
+            );
     }
     
     function setup() {
@@ -928,9 +954,123 @@ extends UnitTest
 
         $this->_check_db( $db_config );
     }
+    function _config_db_put_into_next_step( &$db_config, $inst_nr, &$args,
+                                            $p_status, $rec_cnt = 0, 
+                                            $p_bud = false, $q_p_bud = false ){
+        global $qs;
+
+        $db_i_global = $inst_nr++;
+        $db_i_local  = $inst_nr++;
+        $db_i_quota  = $inst_nr++;
+
+        $d1=$this->_generate_records(array($args['what'],'creation'),$rec_cnt);
+        $db_config->add_query(sprintf($qs[0],$args['what'],$args['table'],
+                                          $args['proid']), $db_i_local );
+        $db_config->add_record_array( $d1, $db_i_local );
+        $db_config->add_record( false, $db_i_local );
+
+        for ( $idx = 0; $idx < $rec_cnt; $idx++ ) {
+            $db_config->add_query( sprintf( $qs[1], $d1[$idx][$args['what']],
+                                   $args['proid'], $args['proid'], 
+                                   $args['status']), $db_i_quota);
+            $db_config->add_record( array('SUM(budget)' => $q_p_bud[$idx]),
+                                    $db_i_quota );
+            $db_config->add_query( sprintf( $qs[9], $args['proid']), 
+                                   $db_i_global );
+            $db_config->add_record( array( 'SUM(budget)' => $p_bud[$idx]),
+                                    $db_i_global );
+
+            if ( $q_p_bud[$idx] > ($p_bud[$idx]/2) ) {
+                $db_config->add_query( sprintf( $qs[2], $args['table'],
+                                     $d1[$idx]['creation'],$args['what'],
+                                     $d1[$idx][$args['what']], $args['proid']),
+                                     $db_i_quota );
+            } else {
+                $db_config->add_query( sprintf( $qs[3], $args['table'],
+                                     $d1[$idx]['creation'],$args['what'],
+                                     $d1[$idx][$args['what']], $args['proid']),
+                                     $db_i_quota );
+            }
+        }
+
+        $d2=$this->_generate_array(array('status','description_creation'),10);
+        $d2['status'] = $p_status;
+        $p_status++;
+        $db_config->add_query(sprintf( $qs[4], $args['proid'] ), $db_i_local);
+        $db_config->add_record( $d2, $db_i_local );
+        
+        $db_config->add_query( sprintf( $qs[5], $p_status, 
+                                        $d2['description_creation'], 
+                                        $args['proid']), $db_i_local );
+        $db_config->add_query( sprintf( $qs[6],$args['proid'],$p_status),
+                               $db_i_local );
+
+        if ( $p_status == 4 ) {
+            $db_config->add_query( sprintf($qs[8], $args['proid'] ), $inst_nr);
+            $db_config->add_record( array( 'developer'=>'fubar'), $inst_nr);
+            $inst_nr++;
+        }
+        
+        $db_config->add_query( sprintf( $qs[7], $args['proid']), $inst_nr );
+        $db_config->add_record( false, $inst_nr );
+        return ++$inst_nr;
+    }
 
     function testPut_into_next_step() {
-        $this->_test_to_be_completed();
+        global $bx, $qs, $db;
+
+        $fname = 'put_into_next_step';
+        $qs = array( 8 =>$this->queries['decision_insert_main_developer_1'],
+                     9 =>$this->queries['project_budget']);
+        for ( $idx = 0; $idx < 8; $idx++ ) {
+            $qs[$idx] = $this->queries[ $fname . '_' . ($idx+1) ];
+        }
+        $args=$this->_generate_records(array( 'proid', 'status', 'what',
+                                              'table' ), 10 );
+
+        $db_config = new mock_db_configure( 26 ); 
+        $inst_nr = 0;
+        // test one: first query returns no values, project_status 1 ==> 2
+        $inst_nr = $this->_config_db_put_into_next_step( $db_config, $inst_nr,
+                                                         $args[0], 1, 0 );
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 0, $args[0] );
+
+        // test two: first query returns no values, project_status 3 ==> 4
+        $inst_nr = $this->_config_db_put_into_next_step( $db_config, $inst_nr,
+                                                         $args[1], 3, 0 );
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 0, $args[1] );
+
+        // test three: first query returns two value, project_status 2 ==> 3
+        $inst_nr = $this->_config_db_put_into_next_step( $db_config, $inst_nr,
+                                                         $args[2], 2, 2,
+                                               array( 10, 20 ), array( 6, 9 ));
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 0, $args[2] );
+
+        // test four: first query returns three value, project_status 3 ==> 4
+        $inst_nr = $this->_config_db_put_into_next_step( $db_config, $inst_nr,
+                                                         $args[3], 3, 3,
+                                        array( 10, 20, 10 ), array( 6, 9, 2 ));
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 0, $args[3] );
+
+        // test five: first query returns four value, project_status 4 ==> 5
+        $inst_nr = $this->_config_db_put_into_next_step( $db_config, $inst_nr,
+                                                         $args[4], 4, 4,
+                                        array( 1,1,1,1 ), array( 2,2,2,2 ));
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 0, $args[4] );
+
+        // test six: first query returns four value, project_status 5 ==> 6
+        $inst_nr = $this->_config_db_put_into_next_step( $db_config, $inst_nr,
+                                                         $args[5], 5, 4,
+                                          array(10,10,10,10),array( 1,1,1,1 ));
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 0, $args[5] );
+
+        $this->_check_db( $db_config );
     }
 
     function testShow_decision_consultants() {

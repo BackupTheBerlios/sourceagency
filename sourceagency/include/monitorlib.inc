@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: monitorlib.inc,v 1.6 2002/05/28 08:56:06 riessen Exp $
+# $Id: monitorlib.inc,v 1.7 2002/07/09 11:15:33 riessen Exp $
 #
 ######################################################################
 
@@ -210,7 +210,7 @@ function monitor_insert($proid, $username, $importance)
  * @param   string    $username      Username of the user who is monitoring
  * @param   string    $importance    'high', 'medium', 'low'
  *                                   level of monitored events
- * @param   timestamp $creation      Creation of the monitoring entry to be modified
+ * @param   timestamp $creation      Creation of the monitoring entry to be modified *NOT USED*
  *
  * @global  object    $db            PHPLib database abstraction
  *
@@ -218,6 +218,7 @@ function monitor_insert($proid, $username, $importance)
  */
 function monitor_modify($proid, $username, $importance, $creation)
 {
+  // TODO: creation argument can be removed, it's never used
     global $db;
 
     $db->query("UPDATE monitor SET importance='$importance' WHERE proid='$proid' AND username='$username'");

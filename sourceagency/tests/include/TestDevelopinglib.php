@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDevelopinglib.php,v 1.5 2002/06/26 09:57:26 riessen Exp $
+// $Id: TestDevelopinglib.php,v 1.6 2002/07/09 11:15:33 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -20,7 +20,31 @@ if ( !defined("BEING_INCLUDED" ) ) {
 class UnitTestDevelopinglib
 extends UnitTest
 {
+    var $queries;
+
     function UnitTestDevelopinglib( $name ) {
+        $this->queries = array (
+            'developing_modify' =>
+            ("UPDATE developing SET developer='%s', cost='%s', license='%s', "
+             ."cooperation='%s', valid='%s', start='%s', duration='%s',"
+             ."status='M' WHERE proid='%s' AND content_id='%s' AND "
+             ."creation='%s'"),
+            'show_developings' =>
+            ("SELECT * FROM developing,auth_user WHERE proid='%s' AND "
+             ."content_id='%s' AND developer=username ORDER BY "
+             ."developing.creation DESC"),
+            'developing_insert_1' =>
+            ("INSERT developing SET proid='%s',developer='%s',"
+             ."content_id='%s', cost='%s', license='%s', "
+             ."cooperation='%s', valid='%s', start='%s', "
+             ."duration='%s',status='P'"),
+            'developing_insert_2' =>
+            ("SELECT email_usr FROM auth_user,monitor WHERE "
+             ."monitor.username=auth_user.username AND "
+             ."proid='%s' AND importance='high'"),
+            'developing_modify_form' => 
+            ('SELECT * FROM licenses ORDER BY license ASC')
+            );
         $this->UnitTest( $name );
     }
     
@@ -66,9 +90,9 @@ extends UnitTest
         global $db, $bx, $t;
         
         $db_config = new mock_db_configure( 2 );
-        $q=("SELECT * FROM developing,auth_user WHERE proid='%s' AND "
-            ."content_id='%s' AND developer=username ORDER BY "
-            ."developing.creation DESC");
+        $fname = 'show_developings';
+        $q=$this->queries[$fname];
+
         $args=$this->_generate_records( array('proid','content_id'), 10 );
         $d=$this->_generate_records( array('creation','username','cost',
                                            'license','cooperation','status',
@@ -86,14 +110,14 @@ extends UnitTest
         // test one: no records
         $db = new DB_SourceAgency;
         $bx = $this->_create_default_box();
-        $this->capture_call( 'show_developings', 71, $args[0] );
+        $this->capture_call( $fname, 71, $args[0] );
         $this->assertEquals("There have not been posted any developement "
                             ."proposals to this project.\n",$this->get_text());
         
         // test two: one record
         $db = new DB_SourceAgency;
         $bx = $this->_create_default_box();
-        $this->capture_call( 'show_developings', 916
+        $this->capture_call( $fname, 916
                              + strlen(timestr(mktimestamp($d[0]['creation']))),
                              $args[1] );
         $this->_checkFor_a_box( 'Developing Proposal' );
@@ -234,16 +258,10 @@ extends UnitTest
     function testDeveloping_insert() {
         global $db;
         
-        $qs=array( 0=>("INSERT developing SET proid='%s',developer='%s',"
-                       ."content_id='%s', cost='%s', license='%s', "
-                       ."cooperation='%s', valid='%s', start='%s', "
-                       ."duration='%s',status='P'"),
-                   1=>("SELECT email_usr FROM auth_user,monitor WHERE "
-                       ."monitor.username=auth_user.username AND "
-                       ."proid='%s' AND importance='high'"),
-                   2=>("SELECT * FROM developing,auth_user WHERE proid='%s' "
-                       ."AND content_id='%s' AND developer=username ORDER "
-                       ."BY developing.creation DESC"));
+        $fname = 'developing_insert';
+        $qs=array( 0=>($this->queries[ $fname . '_1' ]),
+                   1=>($this->queries[ $fname . '_2' ]),
+                   2=>($this->queries['show_developings']));
 
         $args=$this->_generate_records( array('proid','user','content_id',
                                               'cost','license','cooperation',
@@ -270,22 +288,149 @@ extends UnitTest
         $db_config->add_num_row( 0, 0 );
 
         $db = new DB_SourceAgency;
-        $this->capture_call( 'developing_insert', 71, $args[0]);
+        $this->capture_call( $fname, 71, $args[0]);
         $this->assertEquals("There have not been posted any developement "
                             ."proposals to this project.\n",$this->get_text());
         $this->_check_db( $db_config );
     }
 
     function testDeveloping_modify() {
-        $this->_test_to_be_completed();
+        global $db;
+        $fname = 'developing_modify';
+        $qs = array( 0 => $this->queries[ $fname ],
+                     1 => $this->queries[ 'show_developings' ]);
+
+        $args=$this->_generate_array( array('proid','content_id','developer',
+                                            'cost','license','cooperation',
+                                            'valid','start','duration',
+                                            'creation'), 1 );
+        $db_config = new mock_db_configure( 1 );
+
+        $db_config->add_query( sprintf( $qs[0], 
+                    $args['developer'], $args['cost'], $args['license'], 
+                    $args['cooperation'], $args['valid'], $args['start'],
+                    $args['duration'], $args['proid'], $args['content_id'],
+                    $args['creation']));
+        $db_config->add_query( sprintf( $qs[1], $args['proid'], 
+                                                   $args['content_id']));
+        $db_config->add_num_row( 0 );
+        // test one
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 71, $args );
+        $this->assertEquals("There have not been posted any developement "
+                            ."proposals to this project.\n",$this->get_text());
+        
+        $this->_check_db( $db_config );
     }
 
-    function testDeveloping_modify_form() {
-        $this->_test_to_be_completed();
+    function testDeveloping_modify_form() {    
+        global $bx, $t, $sess, $db;
+        global $cost, $license, $cooperation, $valid_day, $valid_month, 
+            $valid_year, $start_day, $start_month, $start_year, 
+            $duration, $creation;
+
+        $cost = 'ths is the cost';
+        $license = 'thsi is the license';
+        $cooperation = 'this is the coopeartion';
+        $valid_day = 'this is the valid_day';
+        $valid_month = 'thsi si the valid month';
+        $valid_year = 'this is the valid year';
+        $start_day = 'this is the start day';
+        $start_month = 'this is the start month';
+        $start_year = 'this is the start year';
+        $duration = 'this is the duration';
+        $creation = 'tjhis si the creation';
+        
+        $args = $this->_generate_array( array( 'proid', 'content_id' ), 10 );
+        $fname = 'developing_modify_form';
+        $db_config = new mock_db_configure( 2 );
+        $qs = array ( 0 => $this->queries[ $fname ] );
+        $db_config->add_query( $qs[0], 0 );
+        $db_config->add_query( $qs[0], 1 );
+        $db_config->add_num_row( 1, 0 );
+        $db_config->add_num_row( 1, 1 );
+        $db_config->add_record( false, 0 );
+        $db_config->add_record( false, 1 );
+        
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
+        call_user_func_array( $fname, $args );
+        $this->set_text( capture_stop_and_get() );
+        $file = $this->get_file_line_from_warning();
+        $slen = ( strlen( $file[1] ) + strlen( $file[2] ) ) * 2;
+        $slen += strlen($sess->self_url());
+        $slen += ( $this->v_gt( "4.1.0", phpversion()) ? 4377 : 4385 );
+        $this->_testFor_string_length( $slen );
+        $this->_testFor_pattern( 'Undefined variable:  valid in' );
+        $this->_testFor_pattern( 'Undefined variable:  start in' );
+        
+        $this->_checkFor_a_form( 'PHP_SELF', array('proid'=>$args['proid']),
+                                 'POST' );
+        $this->_checkFor_a_box( 'Developement proposal modification' );
+        $this->_checkFor_submit_preview_buttons();
+        $start = ''; 
+        $valid = ''; 
+        $tv=array( array( 'Cost', '<b>%s</b> (12): ') 
+                   => html_input_text('cost',12,12,$cost),
+                   array( 'License', '<b>%s</b> (12): ')
+                   => license($license),
+                   array( 'Developer cooperation', '<b>%s</b> (SELECT BOX): ')
+                   => html_input_text('cooperation',12,12,$cooperation),
+                   array( 'Valid until (select box)', '<b>%s</b>: ' )
+                   => html_input_text('valid',14,14,$valid),
+                   array( 'Start (Selecct box)', '<b>%s</b>: ' )
+                   => html_input_text('start',14,14,$start),
+                   array( 'Duration (Select box)', '<b>%s</b>: ' )
+                   => html_input_text('duration',3,3,$duration));
+
+        while ( list ( $key, $val ) = each( $tv ) ) {
+            $this->_checkFor_column_titles( array( $key[0] ), 'right', '30%',
+                                            '', $key[1] );
+            $this->_checkFor_column_values( array( $val ) );
+        }
+
+        $this->_check_db( $db_config );
     }
 
     function testDeveloping_preview() {
-        $this->_test_to_be_completed();
+        global $t, $bx, $auth;
+        global $cost, $license, $cooperation, $valid_day, $valid_month, 
+            $valid_year, $start_day, $start_month, $start_year, $duration;
+        
+        $proid = 'this is the proid';
+        $cost = 'ths is the cost';
+        $license = 'thsi is the license';
+        $cooperation = 'this is the coopeartion';
+        $valid_day = 'this is the valid_day';
+        $valid_month = 'thsi si the valid month';
+        $valid_year = 'this is the valid year';
+        $start_day = 'this is the start day';
+        $start_month = 'this is the start month';
+        $start_year = 'this is the start year';
+        $duration = 'this is the duration';
+
+        $slen = strlen( timestr( time() ) ) + 1188;
+        $bx = $this->_create_default_box();
+        $this->capture_call( 'developing_preview', $slen, array( $proid ) );
+        
+        $this->_checkFor_a_box( 'PREVIEW', '<center><b>%s</b></center>' );
+        $this->_checkFor_a_box( 'Developing Proposal' );
+        
+        $v=array( 'Cost' => $cost." euros",
+                  'License' => $license,
+                  'Cooperation' => $cooperation,
+                  'Status' => 'Proposed',
+                  'Validity' => 
+                  timestr_middle(mktimestamp(date_to_timestamp($valid_day,
+                  $valid_month,$valid_year))),
+                  'Start possible' => 
+                  timestr_middle(mktimestamp(date_to_timestamp($start_day,
+                  $start_month,$start_year))),
+                  'Duration'=> $duration." weeks");
+        while ( list ( $key, $val ) = each( $v ) ) {
+            $str = sprintf( '<b>%s:</b> %s\n', $t->translate($key), $val );
+            $this->_testFor_pattern( '[<]..?[>]'.$this->_to_regexp($str));
+        }
     }
 
 }

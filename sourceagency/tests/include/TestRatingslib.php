@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestRatingslib.php,v 1.6 2002/07/04 13:04:16 riessen Exp $
+// $Id: TestRatingslib.php,v 1.7 2002/07/09 11:15:34 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -44,7 +44,14 @@ extends UnitTest
              ."status='A' AND developer!='%s' ORDER BY devid"),
             'ratings_look_for_first_one_2' =>
             ("SELECT sponsor,spoid FROM sponsoring WHERE proid='%s' AND "
-             ."status='A' AND sponsor!='%s' ORDER BY spoid")
+             ."status='A' AND sponsor!='%s' ORDER BY spoid"),
+            'ratings_look_for_next_one' =>
+            ("SELECT %s,%s FROM %s WHERE proid='%s' AND status='A' AND %s!="
+             ."'%s' AND %s>'%s' ORDER BY %s"),
+            'show_personal_rating' =>
+            ("SELECT rating FROM ratings WHERE proid='%s' AND to_whom='%s'"),
+            'show_participants_rating' =>
+            ("SELECT %s FROM %s WHERE proid='%s' AND status='A'")
             );
         $this->UnitTest( $name );
     }
@@ -272,9 +279,79 @@ extends UnitTest
         $this->_check_db( $db_config );
     }
 
+    function _config_db_ratings_look_for_next_one( &$db_config, $inst_nr,
+                                              $dev_or_spo, &$args, 
+                                              $find_developer, $find_sponsor ){
+        global $qs, $auth;
+        $id_array    =array('developer'=>'devid',     'sponsor'=>'spoid');
+        $table_array =array('developer'=>'developing','sponsor'=>'sponsoring');
+        $id = $id_array[$dev_or_spo];
+        $table = $table_array[$dev_or_spo];
+
+        $orig_inst_nr = $inst_nr;
+        $db_config->add_query(sprintf($qs[0], $dev_or_spo,$id,$table, 
+                              $args['proid'],$dev_or_spo,$auth->auth['uname'],
+                              $id, $args['number'],$id), $orig_inst_nr);
+
+        $d1 = $this->_generate_records( array( $dev_or_spo, $id ), 3);
+        $db_config->add_record_array( $d1, $orig_inst_nr );
+
+        if ( $dev_or_spo == 'sponsor' ) {
+            $find_developer = $find_sponsor;
+        }
+
+        $inst_nr++;
+        for ( $idx = 0; $idx < count( $d1 ); $idx++, $inst_nr++ ) {
+            $db_config->add_query( sprintf( $qs[1], $args['proid'],
+                                            $d1[$idx][$dev_or_spo], 
+                                            $auth->auth['uname'] ), 
+                                            $inst_nr );
+            if ( $find_developer && ($idx == (count( $d1 ) - 1)) ) {
+                $db_config->add_num_row( 0, $inst_nr );
+            } else {
+                $db_config->add_num_row( 1, $inst_nr );
+            }
+        }
+
+        if ( $dev_or_spo == 'sponsor' && !$find_sponsor ) {
+            $db_config->add_record( false, $orig_inst_nr );
+        }
+
+        if ( !$find_developer && $dev_or_spo != 'sponsor' ) {
+            $db_config->add_record( false, $orig_inst_nr );
+            $dev_or_spo = 'sponsor';
+            $id = $id_array[$dev_or_spo];
+            $table = $table_array[$dev_or_spo];
+            
+            $db_config->add_query(sprintf($qs[0], $dev_or_spo,$id,$table, 
+                              $args['proid'],$dev_or_spo,$auth->auth['uname'],
+                              $id, '1',$id), $orig_inst_nr);
+
+            $d1 = $this->_generate_records( array( $dev_or_spo, $id ), 3);
+            $db_config->add_record_array( $d1, $orig_inst_nr );
+
+            for ( $idx = 0; $idx < count( $d1 ); $idx++, $inst_nr++ ) {
+                $db_config->add_query( sprintf( $qs[1], $args['proid'],
+                                                $d1[$idx][$dev_or_spo], 
+                                                $auth->auth['uname'] ), 
+                                                $inst_nr );
+                if ( $find_sponsor && ($idx == (count( $d1 ) - 1)) ) {
+                    $db_config->add_num_row( 0, $inst_nr );
+                } else {
+                    $db_config->add_num_row( 1, $inst_nr );
+                }
+            } 
+
+            if ( !$find_sponsor ) {
+                $db_config->add_record( false, $orig_inst_nr );
+            }
+        }
+        return $inst_nr;
+    }
+
     function _config_db_ratings_look_for_first_one( &$db_config, $inst_nr,
-                                   &$args, $uname, $num_devel, $num_spon, 
-                                    $find_devel, $find_spon ) {
+                                        &$args, $uname, $num_devel, $num_spon, 
+                                        $find_devel, $find_spon ) {
         global $qs;
         
         $orig_inst_nr = $inst_nr;
@@ -282,10 +359,10 @@ extends UnitTest
                               $orig_inst_nr);
         
         $d = $this->_generate_records(array('developer','devid' ),$num_devel);
+        $db_config->add_record_array( $d, $orig_inst_nr );
         $inst_nr++;
         $limit = ( $find_devel ? $num_devel - 1 : $num_devel );
         for ( $idx = 0; $idx < $limit; $idx++, $inst_nr++ ) {
-            $db_config->add_record( $d[$idx], $orig_inst_nr );
             $db_config->add_query( sprintf( $qs[2], $args['proid'],
                                             $d[$idx]['developer'], $uname ), 
                                             $inst_nr );
@@ -294,7 +371,6 @@ extends UnitTest
 
         if ( $find_devel ) {
             $idx = $num_devel - 1;
-            $db_config->add_record( $d[$idx], $orig_inst_nr );
             $db_config->add_query( sprintf( $qs[2], $args['proid'],
                                             $d[$idx]['developer'], $uname ), 
                                             $inst_nr );
@@ -310,9 +386,9 @@ extends UnitTest
                               $orig_inst_nr);
         
         $d = $this->_generate_records(array('sponsor','spoid' ), $num_spon);
+        $db_config->add_record_array( $d, $orig_inst_nr );
         $limit = ( $find_spon ? $num_spon - 1 : $num_spon );
         for ( $idx = 0; $idx < $limit; $idx++, $inst_nr++ ) {
-            $db_config->add_record( $d[$idx], $orig_inst_nr );
             $db_config->add_query( sprintf( $qs[2], $args['proid'],
                                             $d[$idx]['sponsor'], $uname ), 
                                             $inst_nr );
@@ -321,7 +397,6 @@ extends UnitTest
 
         if ( $find_spon ) {
             $idx = $num_spon - 1;
-            $db_config->add_record( $d[$idx], $orig_inst_nr );
             $db_config->add_query( sprintf( $qs[2], $args['proid'],
                                             $d[$idx]['sponsor'], $uname ), 
                                             $inst_nr );
@@ -350,29 +425,37 @@ extends UnitTest
         $inst_nr = 
              $this->_config_db_ratings_look_for_first_one( $db_config, 0, 
                                         $args[0], $uname, 5, -1, true, false );
+        $dev_or_spo = '';
         $db = new DB_SourceAgency;
         $this->assertEquals('devid_4',$this->capture_call($fname,0,$args[0]));
+        $this->assertEquals( 'developer', $dev_or_spo );
 
         // test two: return a developer id after 2 records
         $inst_nr = 
              $this->_config_db_ratings_look_for_first_one($db_config, $inst_nr,
                                         $args[1], $uname, 2, -1, true, false );
+        $dev_or_spo = '';
         $db = new DB_SourceAgency;
         $this->assertEquals('devid_1',$this->capture_call($fname,0,$args[1]));
+        $this->assertEquals( 'developer', $dev_or_spo );
 
         // test three: return a sponsor id after 10 records
         $inst_nr = 
              $this->_config_db_ratings_look_for_first_one($db_config, $inst_nr,
                                         $args[2], $uname, 6, 10, false, true );
+        $dev_or_spo = '';
         $db = new DB_SourceAgency;
         $this->assertEquals('spoid_9',$this->capture_call($fname,0,$args[2]));
+        $this->assertEquals( 'sponsor', $dev_or_spo );
 
         // test four: neither developer nor sponsor id is returned
         $inst_nr = 
              $this->_config_db_ratings_look_for_first_one($db_config, $inst_nr,
                                         $args[2], $uname, 6, 10, false, false);
+        $dev_or_spo = '';
         $db = new DB_SourceAgency;
         $this->assertEquals('',$this->capture_call($fname,0,$args[2]));
+        $this->assertEquals( 'sponsor', $dev_or_spo );
 
         $this->_check_db( $db_config );
     }
@@ -396,6 +479,194 @@ extends UnitTest
         $this->_check_db( $db_config );
     }
 
+    function testRatings_look_for_next_one() {
+        global $db, $auth, $dev_or_spo, $qs;
+        
+        $fname = 'ratings_look_for_next_one';
+        $uname = 'this is the username';
+        $auth->set_uname( $uname );
+        $db_config = new mock_db_configure( 27 );
+        $args = $this->_generate_records( array( 'proid', 'number' ), 10 );
+
+        $qs = array( 0 => $this->queries[ $fname ],
+                     1 => $this->queries[ 'ratings_rated_yet' ] );
+
+        // test one: dev_or_spo is not set ==> $id and $table not defined
+        $dev_or_spo = '';
+        $db_config->add_query(sprintf($qs[0], '','','', $args[0]['proid'],
+                                    '', $uname, '', $args[0]['number'],''), 0);
+        $db_config->add_record( false, 0 );
+        $db = new DB_SourceAgency;
+        capture_reset_and_start();
+        call_user_func_array( $fname, $args[0] );
+        $this->set_text( capture_stop_and_get() );
+        $this->assertEquals( '', $dev_or_spo );
+        $this->_testFor_pattern( "<\/b>:  Undefined variable:  table in <b>" );
+        $this->_testFor_pattern( "<\/b>:  Undefined variable:  id in <b>" );
+        $file = $this->get_file_line_from_warning();
+        $slen = 4 * ( strlen( $file[1] ) + strlen( $file[2] ) );
+        $slen += ( $this->v_gt( "4.1.0", phpversion()) ? 311 : 327 );
+        $this->_testFor_string_length( $slen );
+        
+        // test two: dev_or_spo == developer, and we find a developer
+        $dev_or_spo = 'developer';
+        $inst_nr =
+             $this->_config_db_ratings_look_for_next_one( $db_config, 1,
+                                          $dev_or_spo, $args[1], true, false );
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 0, $args[1] );
+        $this->assertEquals( 'developer', $dev_or_spo );
+
+        // test three: dev_or_spo == developer, no developer but sponsor found
+        $dev_or_spo = 'developer';
+        $inst_nr =
+             $this->_config_db_ratings_look_for_next_one( $db_config, $inst_nr,
+                                          $dev_or_spo, $args[2], false, true );
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 0, $args[2] );
+        $this->assertEquals( 'sponsor', $dev_or_spo );
+
+        // test four: dev_or_spo == developer, no developer & no sponsor found
+        $dev_or_spo = 'developer';
+        $inst_nr =
+             $this->_config_db_ratings_look_for_next_one( $db_config, $inst_nr,
+                                         $dev_or_spo, $args[3], false, false );
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 0, $args[3] );
+        $this->assertEquals( '', $dev_or_spo );
+
+        // test five: dev_or_spo == sponsor, sponsor is found
+        $dev_or_spo = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_look_for_next_one( $db_config, $inst_nr,
+                                         $dev_or_spo, $args[4], false, true );
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 0, $args[4] );
+        $this->assertEquals( 'sponsor', $dev_or_spo );
+
+        // test six: dev_or_spo == sponsor, no sponsor found 
+        $dev_or_spo = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_look_for_next_one( $db_config, $inst_nr,
+                                         $dev_or_spo, $args[5], false, false );
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 0, $args[5] );
+        $this->assertEquals( '', $dev_or_spo );
+
+        $this->_check_db( $db_config );
+    }
+
+    function testShow_personal_rating() {
+        global $t;
+
+        $fname = 'show_personal_rating';
+        $qs=array( 0 => $this->queries[ $fname ] );
+
+        $db_config = new mock_db_configure( 3 );
+        $args=$this->_generate_records( array( 'proid', 'username' ), 10 );
+        $d1 = $this->_generate_records( array( 'rating' ), 11 );
+
+        // test one: no rating
+        $db_config->add_query( sprintf( $qs[0], $args[0]['proid'],
+                                                 $args[0]['username']), 0 );
+        $db_config->add_num_row( 0, 0 );
+        $this->capture_call( $fname, 36, $args[0] );
+        $str = ( "<p><b>".$args[0]['username']."</b>: "
+                 . $t->translate('Not rated yet')."\n" );
+        $this->_testFor_pattern( $this->_to_regexp( $str ) );
+
+        // test two: one rating
+        $db_config->add_query( sprintf( $qs[0], $args[1]['proid'],
+                                                 $args[1]['username']), 1 );
+        $db_config->add_num_row( 1, 1 );
+        $d1[0]['rating'] = 234;
+        $db_config->add_record( $d1[0], 1 );
+        $db_config->add_record( false, 1 );
+        $this->capture_call( $fname, 42, $args[1] );
+  	$str = ( "<p><b>".$args[1]['username']."</b>: "
+                 .(round(234*100/1)/100)." ("
+                 .$t->translate('rated')." 1 ".$t->translate('times').")\n");
+        $this->_testFor_pattern( $this->_to_regexp( $str ) );
+
+        // test three: 10 ratings
+        $db_config->add_query( sprintf( $qs[0], $args[2]['proid'],
+                                                 $args[2]['username']), 2 );
+        $db_config->add_num_row( 1, 2 );
+        $total = 0;
+        for ( $idx = 1; $idx < 11; $idx++ ) {
+            $d1[$idx]['rating'] = $idx;
+            $db_config->add_record( $d1[$idx], 2 );
+            $total += $idx;
+        }
+        $db_config->add_record( false, 2 );
+        $this->capture_call( $fname, 43, $args[2] );
+  	$str = ( "<p><b>".$args[2]['username']."</b>: "
+                 .(round($total*100/10)/100)." ("
+                 .$t->translate('rated')." 10 ".$t->translate('times').")\n");
+        $this->_testFor_pattern( $this->_to_regexp( $str ) );
+        
+        $this->_check_db( $db_config );
+    }
+
+    function testShow_participants_rating() {
+        global $bx, $db;
+
+        $fname = 'show_participants_rating';
+        $qs = array( 0 => $this->queries[ $fname ] );
+        $args = $this->_generate_records( array( 'proid', 'part_type' ), 10 );
+        $db_config = new mock_db_configure( 4 );
+
+        // test one: unknown participant_type, Warning message
+        $args[0]['part_type'] = 'UNKNOWN';
+        $db_config->add_query( sprintf( $qs[0], $args[0]['part_type'], 
+                                                 '', $args[0]['proid'] ), 0);
+        $db_config->add_record( false, 0 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        capture_reset_and_start();
+        call_user_func_array( $fname, $args[0] );
+        $this->set_text( capture_stop_and_get() );
+        $this->_checkFor_a_box( $args[0]['part_type'] );
+        $file = $this->get_file_line_from_warning();
+        $slen = strlen( $file[1] ) + strlen( $file[2] );
+        $slen += ( $this->v_gt( "4.1.0", phpversion()) ? 754 : 758 );
+        $this->_testFor_string_length( $slen );
+        $str = '</b>:  Undefined variable:  table in <b>';
+        $this->_testFor_pattern( $this->_to_regexp( $str ) );
+
+        // test two: participant_type = 'developer'
+        $args[1]['part_type'] = 'developer';
+        $db_config->add_query( sprintf( $qs[0], $args[1]['part_type'], 
+                                        'developing', $args[1]['proid'] ), 1);
+        $db_config->add_record( false, 1 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 676, $args[1] );
+        $this->_checkFor_a_box( $args[1]['part_type'] );
+
+        // test three: participant_type = 'referee'
+        $args[2]['part_type'] = 'referee';
+        $db_config->add_query( sprintf( $qs[0], $args[2]['part_type'], 
+                                        'referees', $args[2]['proid'] ), 2);
+        $db_config->add_record( false, 2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 674, $args[2] );
+        $this->_checkFor_a_box( $args[2]['part_type'] );
+
+        // test four: participant_type = 'sponsor'
+        $args[3]['part_type'] = 'sponsor';
+        $db_config->add_query( sprintf( $qs[0], $args[3]['part_type'], 
+                                        'sponsoring', $args[3]['proid'] ), 3);
+        $db_config->add_record( false, 3 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 674, $args[3] );
+        $this->_checkFor_a_box( $args[3]['part_type'] );
+
+        $this->_check_db( $db_config );
+    }
+
     function testRatings_form() {
         $this->_test_to_be_completed();
     }
@@ -405,18 +676,8 @@ extends UnitTest
     }
 
     function testRatings_in_history() {
-        $this->_test_to_be_completed();
-    }
-
-    function testRatings_look_for_next_one() {
-        $this->_test_to_be_completed();
-    }
-
-    function testShow_participants_rating() {
-        $this->_test_to_be_completed();
-    }
-
-    function testShow_personal_rating() {
+        // TODO: need to implement the affected_rows() method for the
+        // TODO: mock_database class in order to test this function
         $this->_test_to_be_completed();
     }
 }

@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: mock_database.php,v 1.22 2002/07/04 13:02:28 riessen Exp $
+# $Id: mock_database.php,v 1.23 2002/07/09 11:15:33 riessen Exp $
 #
 ######################################################################
 
@@ -184,6 +184,13 @@ class mock_db_configure
         global $g_mkdb_next_record_data;
         $this->_add_data_point( $g_mkdb_next_record_data,$inst_nr, 
                                 $record, $index );
+    }
+    // this is the same as add_record except record_array is an array of
+    // arrays
+    function add_record_array( $record_array, $inst_nr = 0 ) {
+        foreach ( $record_array as $record ) {
+            $this->add_record( $record, $inst_nr );
+        }
     }
 
     // method can be used to turn off specific error checking for specific

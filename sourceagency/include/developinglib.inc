@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: developinglib.inc,v 1.7 2002/06/26 09:57:26 riessen Exp $
+# $Id: developinglib.inc,v 1.8 2002/07/09 11:15:33 riessen Exp $
 #
 ######################################################################
 
@@ -145,7 +145,7 @@ function developing_preview($proid)
     echo "<br><b>License:</b> $license\n";
     echo "<br><b>Cooperation:</b> $cooperation\n";
     echo "<br><b>Status:</b> Proposed\n";
-    echo '<br><b>Validity</b> '.timestr_middle(mktimestamp(date_to_timestamp($valid_day,$valid_month,$valid_year)))."\n";
+    echo '<br><b>Validity:</b> '.timestr_middle(mktimestamp(date_to_timestamp($valid_day,$valid_month,$valid_year)))."\n";
     echo '<br><b>Start possible:</b> '.timestr_middle(mktimestamp(date_to_timestamp($start_day,$start_month,$start_year)))."\n";
     echo "<br><b>Duration:</b> $duration weeks\n";
     $bx->box_body_end();
@@ -280,11 +280,13 @@ function developing_modify_form($proid, $content_id)
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('right','30%','','<b>'.$t->translate('Valid until (select box)').'</b>: ');
+    // FIXME: valid is an undefined  variable
     $bx->box_column ('left','70%','',html_input_text('valid',14,14,$valid));
 
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('right','30%','','<b>'.$t->translate('Start (Select box)').'</b>: ');
+    // FIXME: start is an undefined variable
     $bx->box_column ('left','70%','',html_input_text('start',14,14,$start));
 
     $bx->box_next_row_of_columns();
