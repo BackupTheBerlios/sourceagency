@@ -41,7 +41,7 @@ if ($perm->have_perm('devel_pending') || $perm->have_perm('sponsor_pending')) {
 } else {
     $msg = $t->translate('You are logged in as').' <b>'.$auth->auth['uname']
            .'</b> '.$t->translate('with').' '
-           .'<b>'.$auth->auth['perm'].'</b> '.$t->translate('permission').'.'
+           .'<b>'.$t->translate($auth->auth['perm']).'</b> '.$t->translate('permission').'.'
            .'<br>'.$t->translate('Your authentication is valid until')
            .' <b>'.timestr($auth->auth['exp']).'</b>';
     $bx->box_full($t->translate('Welcome to ').$sys_name, $msg);

@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: sponsoringlib.inc,v 1.12 2002/12/09 10:27:34 erik Exp $
+# $Id: sponsoringlib.inc,v 1.13 2002/12/09 14:37:23 erik Exp $
 #
 ######################################################################
 
@@ -188,7 +188,7 @@ function show_sponsorings($proid)
         $bx->box_end();
 
         lib_comment_it($proid,'Sponsoring',$db->f('spoid'),'0',
-                       'Comment on Sponsor Involvement #'.$db->f('spoid'),
+                       $t->translate('Comment on Sponsor Involvement') . " #" . $db->f('spoid'),
                        $t->translate('Comment it!'));
 
         lib_show_comments_on_it($proid,'Sponsoring',$db->f('spoid'),'0');

@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: German-lang.inc,v 1.30 2002/12/09 10:27:34 erik Exp $
+# $Id: German-lang.inc,v 1.31 2002/12/09 14:37:23 erik Exp $
 #
 ######################################################################
 
@@ -67,6 +67,7 @@ function translate_real($phrase) {
     case 'Change': $tmp = 'Ändern'; break;
     case 'Check if you want to be a consultant':$tmp='Markieren Sie, ob Sie Berater sein möchten';break;
     case 'Comment': $tmp = 'Kommentar'; break;
+    case 'Comment on Sponsor Involvement':$tmp='Kommentar zu Sponsorenbeteiligung';break;
     case 'Comment it!': $tmp = 'Kommentiere es!'; break;
     case 'Comment this News!': $tmp = 'Kommentiere diese Neuigkeit!'; break;
     case 'Comment this Proposal': $tmp = 'Kommentiere dieses Angebot'; break;
@@ -115,6 +116,7 @@ function translate_real($phrase) {
     case 'Developing projects': $tmp = 'Entwickler-Projekte'; break;    
     case 'Developing Proposal': $tmp = 'Entwicklungsangebot'; break;
     case 'Development proposal': $tmp = 'Entwicklungsangebot'; break;
+    case 'Developing Version': $tmp = 'Entwicklungsversion'; break;
     case 'Development': $tmp = 'Entwicklung'; break;
     case 'Documentation': $tmp = 'Dokumentation'; break;
     case 'Duration': $tmp = 'Dauer'; break;
@@ -180,7 +182,7 @@ function translate_real($phrase) {
     case 'License description is not available': $tmp = 'Lizenzbeschreibung nicht verfügbar'; break;
     case 'License': $tmp = 'Lizenz'; break;
     case 'Licenses': $tmp = 'Lizenzen'; break;
-    case 'Logged in': $tmp = 'Eingeloggt an'; break;
+    case 'Logged in': $tmp = 'Eingeloggt als'; break;
     case 'Login': $tmp = 'Einloggen'; break;
     case 'Logout': $tmp = 'Ausloggen'; break;
     case 'Low importance': $tmp = 'Geringe Wichtigkeit'; break;
@@ -211,6 +213,7 @@ function translate_real($phrase) {
     case 'No Comments': $tmp = 'Keine Kommentare'; break;
     case 'No consultant proposal with this status': $tmp = 'Kein Beraterangebot mit diesem Status'; break;
     case 'No consultants wanted': $tmp = 'Keine Berater erwünscht'; break;
+    case 'No developers have offered themselves as consultants yet':$tmp='Keine Entwickler haben sich bisher als Berater angeboten';break;
     case 'No developing cooperation proposal with this status': $tmp = 'Kein Entwicklungsangebot mit diesem Status'; break;
     case 'No monitored projects': $tmp = 'Keine beobachteten Projekte'; break;
     case 'No personal projects': $tmp = 'Keine persönliche Projekte'; break;
@@ -297,6 +300,7 @@ function translate_real($phrase) {
     case 'Receive an email update when something happens in this project': $tmp = 'Sie erhalten eine Mail, wenn sich das Projekt geändert hat'; break;    
     case 'Recommended': $tmp = 'Empfohlen'; break;
     case 'Referee registration and selection. Any developer who has the skills to be a referee can propose himself as one': $tmp = 'Anmeldung und Auswahl von Sachverständigen. Jeder Entwickler mit den notwendigen Fähigkeiten kann sich selbst als Sachverständiger vorschlagen'; break;
+    case 'Referee offered': $tmp = 'Schiedsrichter angeboten'; break;
     case 'Referees Wanted': $tmp = 'Sachverständige gesucht'; break;
     case 'Referee': $tmp = 'Sachverständiger'; break;
     case 'Referees': $tmp = 'Sachverständige'; break;
@@ -385,6 +389,7 @@ function translate_real($phrase) {
     case 'Volume': $tmp = 'Umfang'; break;
     case 'Week(s)': $tmp = 'Woche(n)'; break;
     case 'Welcome to SourceAgency': $tmp = 'Willkommen bei SourceAgency'; break;
+    case 'Welcome to ': $tmp = 'Willkommen bei '; break;
     case 'What is this?': $tmp = 'Was ist das?'; break;
     case 'When the project is reviewed this will also change': $tmp = 'Wenn das Projekt begutachtet wurde, dann ändert sich auch der Status'; break;
     case 'Write and Modify News': $tmp = 'Erstellen und &Auml;ndern von Neuigkeiten'; break;
@@ -414,6 +419,7 @@ function translate_real($phrase) {
     case 'configure your project!': $tmp = 'konfigurieren Sie bitte Ihr Projekt!'; break;
     case 'consultant offerings': $tmp = 'Beratungsangebote'; break;
     case 'consultants': $tmp = 'Berater'; break;
+    case 'created': $tmp = 'angelegt'; break;
     case 'devel': $tmp = 'Entwickler'; break;
     case 'developing proposals': $tmp = 'Entwicklungsangebote'; break;
     case 'feedback': $tmp = 'Rückmeldung'; break;
@@ -461,6 +467,8 @@ function translate_real($phrase) {
     case 'summary': $tmp = 'Zusammenfassung'; break;
     case 'this project is configured to have no consultants': $tmp = 'Die Konfigurartion dieses Projekts erlaubt keine Berater'; break;
     case 'This site is being beta tested': $tmp = 'Diese Website befindet sich im Beta-Test'; break;
+    case 'tech_content': $tmp = 'Technische Spez.'; break;    
+    case 'developing': $tmp = 'Entwicklung'; break;    
     case 'times': $tmp = 'mal'; break;
     case 'to this': $tmp = 'zu diesem'; break;
     case 'views': $tmp = 'Zugriffrechte auf Projektinformationen'; break;
