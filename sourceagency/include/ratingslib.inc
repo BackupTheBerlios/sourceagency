@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: ratingslib.inc,v 1.9 2002/05/29 15:42:08 riessen Exp $
+# $Id: ratingslib.inc,v 1.10 2002/07/04 13:04:01 riessen Exp $
 #
 ######################################################################
 
@@ -246,11 +246,12 @@ function ratings_form_empty($proid, $username, $dev_or_spo, $number)
     /* WISH: config.inc should be only included once (and not here) */
     include('config.inc');
 
-    if ($dev_or_spo = 'sponsor') {
+    if ($dev_or_spo == 'sponsor') {
         $array = $sponsor_rates_developer;
-    } elseif ($dev_or_spo = 'developer') {
+    } elseif ($dev_or_spo == 'developer') {
         $array = $developer_rates_sponsor;
-    }
+    } /** FIXME: array should be defined in case $dev_or_spo is not 
+          FIXME: set to either 'sponsor' or 'developer' **/
 
     $bx->box_begin();
     $bx->box_title($username);
@@ -259,12 +260,8 @@ function ratings_form_empty($proid, $username, $dev_or_spo, $number)
     $bx->box_column ('','','white','&nbsp;');
     $bx->box_next_row_of_columns();
     for($i=0;$i<sizeof($array);$i++) {
-	if ($i%2==0) {
-            $background='gold';
-	} else {
-            $background='#FFFFFF';
-        }
-
+        $background = ( $i % 2 == 0 ? 'gold' : '#FFFFFF' );
+        /** FIXME: the values contained in $array are not used ?!?!? **/
 	$bx->box_column ('','',$background,'&nbsp;');
 	$bx->box_next_row_of_columns();
     }
@@ -299,11 +296,11 @@ function ratings_form_rated($proid, $username, $dev_or_spo, $number)
     /* WISH: config.inc should be only included once (and not here) */
     include('config.inc');
 
-    if ($dev_or_spo = 'sponsor') {
+    if ($dev_or_spo == 'sponsor') {
         $array = $sponsor_rates_developer;
-    } elseif ($dev_or_spo = 'developer') {
+    } elseif ($dev_or_spo == 'developer') {
         $array = $developer_rates_sponsor;
-    }
+    } /** FIXME: array undefined if dev_or_spo not sponsor or developer **/
 
     $bx->box_begin();
     $bx->box_title($username);
@@ -312,14 +309,11 @@ function ratings_form_rated($proid, $username, $dev_or_spo, $number)
     $bx->box_column ('','','white','&nbsp;');
     $bx->box_next_row_of_columns();
     for($i=0;$i<sizeof($array);$i++) {
-	if ($i%2==0) {
-            $background='gold';
-	} else {
-            $background='#FFFFFF';
-	}
+        $background = ( $i % 2 == 0 ? 'gold' : '#FFFFFF' );
 
 	if ($i==floor(sizeof($array)/2)) {
-            $bx->box_column ('','',$background,'<center><b>Already rated</b></center>');
+            $bx->box_column ('','',$background,
+                             '<center><b>Already rated</b></center>');
 	} else {
             $bx->box_column ('','',$background,'&nbsp;');
 	}
@@ -368,18 +362,19 @@ function ratings_insert($proid,  $dev_or_spo,  $number,  $by_whom)
     /* WISH: config.inc should be only included once (and not here) */
     include('config.inc');
     switch ($string) {
-    case 'sponsor_rates_devel':
+    case 'sponsor_rates_developer':
  	$array = $sponsor_rates_developer;
         break;
     case 'sponsor_rates_sponsor':
         $array = $sponsor_rates_developer;
         break;
-    case 'devel_rates_sponsor':
+    case 'developer_rates_sponsor':
         $array = $developer_rates_sponsor;
         break;
-    case 'devel_rates_devel':
+    case 'developer_rates_developer':
         $array = $developer_rates_sponsor;
         break;
+    /** FIXME: missing default **/
     }
 
     if (ratings_rated_yet($proid, $to_whom, $by_whom)) {
@@ -417,9 +412,10 @@ function ratings_look_for_first_one($proid)
 {
     global $db, $auth, $dev_or_spo;
 
-    if (!isset($dev_or_spo) || empty($dev_or_spo)) { 
-        $dev_or_spo = 'developer';
-    }
+// TODO: not required
+//      if (!isset($dev_or_spo) || empty($dev_or_spo)) { 
+//          $dev_or_spo = 'developer';
+//      }
 
     $dev_or_spo = 'developer';
     $db->query("SELECT developer,devid FROM developing WHERE proid='$proid' AND status='A' AND developer!='".$auth->auth["uname"]."' ORDER BY devid");
@@ -436,6 +432,8 @@ function ratings_look_for_first_one($proid)
             return $db->f('spoid');
 	}
     }
+
+    /** TODO: should a default value be returned ??? **/
 }
 
 /**
@@ -464,11 +462,13 @@ function ratings_look_for_next_one($proid, $number)
 	$id = 'spoid';
  	$table = 'sponsoring';
 	break;
+    /** FIXME: no default case **/
     }
 
     $db->query("SELECT $dev_or_spo,$id FROM $table WHERE proid='$proid' AND status='A' AND $dev_or_spo!='".$auth->auth["uname"]."' AND $id>'$number' ORDER BY $id");
     while ($db->next_record()) {
 	if (!ratings_rated_yet($proid, $db->f($dev_or_spo), $auth->auth['uname'])) {
+            /** FIXME: setting $number here has no effect! **/
             $number = $db->f($id);
             return;
         }
@@ -476,6 +476,7 @@ function ratings_look_for_next_one($proid, $number)
 
     if(!strcmp($dev_or_spo,'developer')) {
 	$dev_or_spo = 'sponsor';
+        /** FIXME: should the '1' in the following be $number ??? **/
 	ratings_look_for_next_one($proid,1);
     } else {
 	$dev_or_spo = '';
@@ -495,7 +496,8 @@ function ratings_look_for_next_one($proid, $number)
 function ratings_rated_yet($proid, $to_whom, $by_whom)
 {
     $db_local = new DB_SourceAgency;
-    $db_local->query("SELECT * FROM ratings WHERE proid='$proid' AND to_whom='$to_whom' AND by_whom='$by_whom'");
+    $db_local->query("SELECT * FROM ratings WHERE proid='$proid' AND "
+                     ."to_whom='$to_whom' AND by_whom='$by_whom'");
     if ($db_local->num_rows() == 0) {
         return 0;
     } else {
