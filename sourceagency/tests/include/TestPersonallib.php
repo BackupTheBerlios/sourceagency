@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestPersonallib.php,v 1.16 2001/12/18 17:33:30 riessen Exp $
+# $Id: TestPersonallib.php,v 1.17 2002/01/09 16:30:02 riessen Exp $
 #
 ######################################################################
 
@@ -39,7 +39,7 @@ include_once( 'personallib.inc' );
 // REFACTOR: This entire test class is in bad need of refactoring
 //
 class UnitTestPersonallib
-extends TestCase
+extends UnitTest
 {
     // can't split the value for p_line_template, it generates a parse error
     // Arg: 1=proid,2=project title,3=status
@@ -68,22 +68,6 @@ extends TestCase
         capture_reset_text();
     }
 
-    // could actually be defined in phpunit ....
-    function assertNotRegexp( $regexp, $actual, $message=false ) {
-        if ( preg_match( $regexp, $actual ) ) {
-            $this->failNotEquals( $regexp, $actual, "*NOT* pattern",$message );
-        }
-    }
-
-    function _testFor_length( $length ) {
-        $this->assertEquals($length,capture_text_length(),"Length mismatch");
-    }
-    function _testFor_line( $text, $line ) {
-        $this->_testFor_pattern( $text, $line . "\n" );
-    }
-    function _testFor_pattern( $text, $pattern ) {
-        $this->assertRegexp("/" . $pattern . "/", $text, "pattern not found");
-    }
     function _testFor_project_link( $text, $proid, $ptitle, $status ) {
         $this->_testFor_line( $text, sprintf( $this->p_line_template,
                                               $proid, $ptitle, $status ));
@@ -115,14 +99,6 @@ extends TestCase
                                                 $desc_proid, $p_title ));
     }
 
-    function &_generate_array( $keynames, $postfix ) {
-        $rVal = array();
-        foreach ( $keynames as $val ) {
-            $rVal[$val] = $val . "_" . $postfix;
-        }
-        return $rVal;
-    }
-
     //
     // Start of the actual test methods
     //
@@ -148,8 +124,8 @@ extends TestCase
                        0 => ("SELECT * FROM auth_user WHERE perms "
                              ."LIKE '%%sponsor%%' "
                              . "AND username='%s'"),
-                       // Arg: 1=table name,2=user_type,3=user name,4=table name
-                       // Arg: 5=status, 6=table name,
+                       // Arg: 1=table name,2=user_type,3=user name
+                       // Arg: 4=table name,5=status, 6=table name,
                        1 => ("SELECT * FROM %s,description WHERE "
                              . "%s='%s' AND %s.status='%s' AND %s.proid="
                              . "description.proid  ORDER BY creation DESC"),
