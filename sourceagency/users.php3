@@ -1,8 +1,8 @@
 <?php
 
 ######################################################################
-# SourceAgency
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #                Gregorio Robles (grex@scouts-es.org),
@@ -15,6 +15,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: users.php3,v 1.2 2001/11/26 10:49:23 riessen Exp $
+#
 ######################################################################
 
 page_open(array("sess" => "SourceAgency_Session"));
@@ -27,13 +30,21 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 
 require "header.inc";
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-$bs = new box("100%",$th_strip_frame_color,$th_strip_frame_width,$th_strip_title_bgcolor,$th_strip_title_font_color,$th_strip_title_align,$th_strip_body_bgcolor,$th_strip_body_font_color,$th_strip_body_align);
-?>
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
+$bs = new box("100%",$th_strip_frame_color,$th_strip_frame_width,
+              $th_strip_title_bgcolor,$th_strip_title_font_color,
+              $th_strip_title_align,$th_strip_body_bgcolor,
+              $th_strip_body_font_color,$th_strip_body_align);
 
-<!-- content -->
-<?php
-if (($config_perm_users != "all") && (!isset($perm) || !$perm->have_perm($config_perm_users))) {
+start_content();
+
+if ( ($config_perm_users != "all") 
+     && (!isset($perm) || !$perm->have_perm($config_perm_users))) {
+  // FIXME: there is a no $be defined, but the question is whether
+  // FIXME: access is ever denied?
   $be->box_full($t->translate("Error"), $t->translate("Access denied"));
 } else {
 
@@ -46,13 +57,20 @@ if (($config_perm_users != "all") && (!isset($perm) || !$perm->have_perm($config
   $msg = "[ ";
 
   while (list(, $ltr) = each($alphabet)) {
-    $msg .= "<a href=\"".$sess->self_url().$sess->add_query(array("type" => $type, "by" => $ltr."%"))."\">$ltr</a> | ";
+    $msg .= "<a href=\"".$sess->self_url()
+       .$sess->add_query(array("type" => $type, "by" => $ltr."%"))
+       ."\">".( $ltr."%" == $by ? "<font color=\"red\">$ltr</font>":"$ltr")
+       ."</a> | ";
   }
 
-  $msg .= "<a href=\"".$sess->self_url().$sess->add_query(array("type" => $type, "by" => "%"))."\">".$t->translate("All")."</a> ]";
+  $msg .= ( "<a href=\"".$sess->self_url()
+            .$sess->add_query(array("type" => $type, "by" => "%"))."\">"
+            .( $by == "%" ? ("<font color=\"red\">".$t->translate("All")
+                             ."</font>"):$t->translate("All"))."</a> ]");
 
-  if ($type == "devel" || $type == "sponsor") $where = "perms='$type' AND username LIKE '$by'";
-  else $where = "username LIKE '$by'";
+  $where = ( ($type=="devel"||$type=="sponsor" ? "perms LIKE '%$type%' AND "
+                                               : "")
+             . "username LIKE '$by'");
 
   $bs->box_strip($msg);
   $db->query("SELECT * FROM auth_user WHERE $where ORDER BY username ASC");
@@ -69,30 +87,34 @@ if (($config_perm_users != "all") && (!isset($perm) || !$perm->have_perm($config
   $bx->box_next_row_of_columns();
 
   $i = 1;
+  $colors = array( 0 => "#FFFFFF", 1 => "gold" );
   while($db->next_record()) {
-  	if ($i%2 != 0) $bgcolor = "gold";
-  	else $bgcolor = "#FFFFFF";
+      $bgcolor = $colors[ $i%2 ];
 
-	$db2 = new DB_SourceAgency;
-    	$db2->query("SELECT COUNT(*) FROM description WHERE description_user='".$db->f("username")."' AND status>'0'");
-    	$db2->next_record();
-    	$num = "[".sprintf("%03d",$db2->f("COUNT(*)"))."]";
-	$bx->box_column("right","",$bgcolor,$i);
-	$bx->box_column("center","",$bgcolor,$num);
-	$bx->box_column("center","",$bgcolor,$db->f("username"));
-	$bx->box_column("center","",$bgcolor,$db->f("realname"));
-	$bx->box_column("center","",$bgcolor,html_link("mailto:".$db->f("email_usr"),"",ereg_replace("@"," at ",htmlentities($db->f("email_usr")))));
-	$bx->box_next_row_of_columns();
-	$i++;
+      $db2 = new DB_SourceAgency;
+      $db2->query("SELECT COUNT(*) FROM description "
+                  ."WHERE description_user='"
+                  .$db->f("username")."' AND status>'0'");
+      $db2->next_record();
+      $num = "[".sprintf("%03d",$db2->f("COUNT(*)"))."]";
+      $bx->box_column("right","",$bgcolor,$i);
+      $bx->box_column("center","",$bgcolor,$num);
+      $bx->box_column("center","",$bgcolor,$db->f("username"));
+      $bx->box_column("center","",$bgcolor,$db->f("realname"));
+      $bx->box_column("center","",$bgcolor,
+                      html_link("mailto:"
+                                .$db->f("email_usr"),"",
+                                ereg_replace("@"," at ",
+                                             htmlentities($db->f("email_usr")))));
+      $bx->box_next_row_of_columns();
+      $i++;
   }
   $bx->box_columns_end();
   $bx->box_body_end();
   $bx->box_end();
 }
-?>
-<!-- end content -->
 
-<?php
+end_content();
 require("footer.inc");
 page_close();
 ?>
