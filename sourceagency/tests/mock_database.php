@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: mock_database.php,v 1.21 2002/07/02 10:39:52 riessen Exp $
+# $Id: mock_database.php,v 1.22 2002/07/04 13:02:28 riessen Exp $
 #
 ######################################################################
 
@@ -90,7 +90,10 @@ $g_mkdb_config_did_db_fail_called = array();
 
 // every time a mock database is required, an new object of this
 // class should be created and used to configure the mock database
-// that will be used.
+// that will be used. Normally each unit test that requires a mock 
+// database would create one instance of the mock_db_configure class
+// and use it to configure all the DB_SourceAgency instances created
+// by the corresponding function.
 class mock_db_configure
 {
     var $instance_num = -1;
@@ -263,7 +266,7 @@ class mock_db_configure
                           && (($g_mkdb_ignore_error[$idx] & MKDB_RECORD_COUNT) 
                               != MKDB_RECORD_COUNT)) {
                 $g_mkdb_failure_text
-                     .= ("<br>\nInstance " . $idx . " records mismatch: too"
+                     .= ("<br>\nInstance " . $idx . " records mismatch: too "
                          .($exp_record_count > $cur_record ? "many" : "few" )
                          . " defined records: available = " . $exp_record_count
                          . ", used = " . $cur_record . "<br>\n" );
@@ -489,6 +492,8 @@ function mkdb_check_did_db_fail_calls() {
                 . "did not call did_db_fail method<br>\n";
         }
     }
+    print "mock_database instances created: " 
+      . count($g_mkdb_config_did_db_fail_called) . "<br>\n";
 }
 
 // this replaces the normal db_sourceagency classes and ensures that
