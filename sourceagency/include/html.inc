@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: html.inc,v 1.15 2002/04/22 10:07:24 riessen Exp $
+# $Id: html.inc,v 1.16 2002/04/22 11:37:05 riessen Exp $
 #
 ######################################################################
 
@@ -256,12 +256,8 @@ function htmlp_input_password($name, $size, $maxlength, $value)
  */
 function html_form_submit($value, $name='')
 {
-    if ($name) {
-        $output = "\n".'   <input type="submit" value="'.$value.'"  name="'.$name.'">';
-    } else {
-        $output = "\n".'   <input type="submit" value="'.$value.'">';        
-    }
-    return($output);
+    return ( "\n".'   <input type="submit" value="'.$value
+             . ($name ? '" name="'.$name : '') . '">' );
 }
 function htmlp_form_submit($value, $name='')
 {
@@ -317,9 +313,8 @@ function htmlp_form_reset($value = 'Reset')
  */
 function html_checkbox($name, $value, $checked)
 {
-    $output = "\n".'   <input type="checkbox" name="'.$name.'" value="'.$value.'"';
-    $output .= ( $checked ? ' checked >' : '>' );
-    return($output);
+    return ( "\n".'   <input type="checkbox" name="'.$name.'" value="'
+             .$value.'"'. ( $checked ? ' checked >' : '>' ) );
 }
 function htmlp_checkbox($name,$value,$checked)
 {
@@ -337,9 +332,8 @@ function htmlp_checkbox($name,$value,$checked)
  */
 function html_radio($name, $value, $checked)
 {
-    $output = "\n".'   <input type="radio" name="'.$name.'" value="'.$value.'"';
-    $output .= ( $checked ? ' checked >' : '>' );
-    return($output);
+    return ( "\n".'   <input type="radio" name="'.$name.'" value="'
+             .$value.'"' . ( $checked ? ' checked >' : '>' ) );
 }
 function htmlp_radio($name,$value,$checked)
 {
@@ -360,8 +354,9 @@ function htmlp_radio($name,$value,$checked)
  */
 function html_textarea($name, $columns, $rows, $wrap='', $maxlength='', $value='')
 {
-    $output = "\n".'   <textarea name="'.$name.'" cols="'.$columns.'" rows="'.$rows.'" wrap="'.$wrap.'" maxlength="'.$maxlength.'">'.$value.'</textarea>';
-    return($output);
+    return ( "\n".'   <textarea name="'.$name.'" cols="'.$columns
+             .'" rows="'.$rows.'" wrap="'.$wrap.'" maxlength="'
+             .$maxlength.'">'.$value.'</textarea>' );
 }
 function htmlp_textarea($name,$columns,$rows,$wrap,$maxlength,$value)
 {
