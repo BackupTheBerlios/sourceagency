@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: html.inc,v 1.4 2001/11/19 17:40:59 riessen Exp $
+# $Id: html.inc,v 1.5 2001/11/20 14:09:50 riessen Exp $
 #
 ######################################################################
 
@@ -94,12 +94,8 @@ function htmlp_select($name) {
 }
 
 function html_select_option($value,$selected,$text) {
-
     $output = "<option ";
     $output .= ( $selected ? "selected " : "" );
-//      if ($selected) {
-//          $output .= "selected ";
-//      }
     $output .= "value=\"".$value."\">".$text."\n";
     return($output);
 }
@@ -117,90 +113,56 @@ function htmlp_select_end() {
 function html_input_text($name, $size, $maxlength, $value) {
     return ( "<input type=\"text\" name=\"".$name."\" size=\""
              .$size."\" maxlength=\"".$maxlength."\" value=\""
-             .$value."\">" );
+             .$value."\">\n" );
 }
 function htmlp_input_text($name, $size, $maxlength, $value) {
-
-	print "<input type=\"text\" name=\"".$name."\" size=\"".$size."\" maxlength=\"".$maxlength."\" value=\"".$value."\">\n";
+    print html_input_text( $name, $size, $maxlength, $value );
 }
 
 
 function html_form_submit($value,$name) {
-
-	$output = "<input type=\"submit\" value=\"".$value."\" name=\"".$name."\">";
-
-	return($output);
+    return "<input type=\"submit\" value=\"".$value."\" name=\"".$name."\">\n";
+}
+function htmlp_form_submit($value,$name) {
+    print html_form_submit($value, $name );
 }
 
 function html_checkbox($name,$value,$checked) {
-
-	$output = "<input type=\"checkbox\" name=\"".$name."\" value=\"".$value."\"";
-	if ($checked) $output .= " checked ";
-	$output .= ">";
-
-	return($output);
-
+    $output = ( "<input type=\"checkbox\" name=\"".$name."\" value=\""
+                .$value."\"" );
+    $output .= ( $checked ? " checked >" : ">" );
+    return($output);
+}
+function htmlp_checkbox($name,$value,$checked) {
+    print html_checkbox( $name, $value, $checked );
 }
 
 function html_radio($name,$value,$checked) {
-
-	$output = "<input type=\"radio\" name=\"".$name."\" value=\"".$value."\"";
-	if ($checked) $output .= " checked ";
-	$output .= ">";
-
-	return($output);
+    $output = "<input type=\"radio\" name=\"".$name."\" value=\"".$value."\"";
+    $output .= ( $checked ? " checked >" : ">" );
+    return($output);
+}
+function htmlp_radio($name,$value,$checked) {
+    print html_radio( $name, $value, $checked );
 }
 
 function html_textarea($name,$columns,$rows,$wrap,$maxlength,$value) {
 
-	$output = "<textarea cols=\"".$columns."\" rows=\"".$rows."\" name=\"".$name."\" wrap=\"".$wrap."\" maxlength=\"".$maxlength."\">".$value."</textarea>";
-
-	return($output);
+    return ("<textarea cols=\"".$columns."\" rows=\"".$rows."\" name=\""
+            .$name."\" wrap=\"".$wrap."\" maxlength=\"".$maxlength."\">"
+            .$value."</textarea>\n" );
 }
+function htmlp_textarea($name,$columns,$rows,$wrap,$maxlength,$value) {
+    print html_textarea( $name, $columns, $rows, $wrap, $maxlength, $value );
+}
+
 
 function html_form_end() {
-
-	$output = "</form>";
-
-	return($output);
-}
-
-
-
-	
-
-
-
-
-
-function htmlp_textarea($name,$columns,$rows,$wrap,$maxlength,$value) {
-
-	print "<textarea cols=\"".$columns."\" rows=\"".$rows."\" name=\"".$name."\" wrap=\"".$wrap."\" maxlength=\"".$maxlength."\">".$value."</textarea>\n";
-
-}
-
-function htmlp_form_submit($value,$name) {
-
-	print "<input type=\"submit\" value=\"".$value."\" name=\"".$name."\">\n";
-}
-
-function htmlp_checkbox($name,$value,$checked) {
-
-	print "<input type=\"checkbox\" name=\"".$name."\" value=\"".$value."\"";
-	if ($checked) print " checked ";
-	print ">";
-}
-
-function htmlp_radio($name,$value,$checked) {
-
-	print "<input type=\"radio\" name=\"".$name."\" value=\"".$value."\"";
-	if ($checked) print " checked ";
-	print ">";
+    return "</form>\n";
 }
 
 function htmlp_form_end() {
-
-	print "</form>\n";
+    print html_form_end();
 }
 
 ?>

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestBox.php,v 1.5 2001/11/08 16:17:42 riessen Exp $
+# $Id: TestBox.php,v 1.6 2001/11/20 14:09:50 riessen Exp $
 #
 ######################################################################
 
@@ -42,7 +42,13 @@ extends TestCase
                               "title_align", "body_bgcolor", "body_font_color",
                               "body_align" );
     }
-    
+
+    function tearDown() {
+      // capture stop should be called by each method as required, but
+      // in case a method forgets, call it after the tests
+      capture_stop();
+    }
+
     // the _testFor_XXXXX methods perform the regular expression matches
     // for the individual tests, the reason for splitting them away from
     // the tests is that some of them are reused.
