@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: ratingslib.inc,v 1.7 2002/04/10 11:22:46 grex Exp $
+# $Id: ratingslib.inc,v 1.8 2002/05/03 11:14:07 riessen Exp $
 #
 ######################################################################
 
@@ -563,16 +563,18 @@ function show_personal_rating($proid, $username)
     global $t, $bx;
 
     $db_local = new DB_SourceAgency;
-    $db_local->query("SELECT rating FROM ratings WHERE proid='$proid' AND to_whom='$username'");
+    $db_local->query("SELECT rating FROM ratings WHERE proid='$proid' "
+                     ."AND to_whom='$username'");
     if ($db_local->num_rows() == 0) {
-        echo "<p><b>$username</b>: Not rated yet\n";
+        echo "<p><b>$username</b>: ". $t->translate('Not rated yet')."\n";
     } else {
 	$i=0; $rating=0;
   	while ($db_local->next_record()) {
 	    $i+=1;
 	    $rating += $db_local->f('rating');
 	}
-  	echo "<p><b>$username</b>: ".(round($rating*100/$i)/100)." (rated $i times)\n";
+  	echo "<p><b>$username</b>: ".(round($rating*100/$i)/100)." ("
+          .$t->translate('rated')." $i ".$t->translate('times').")\n";
     }
 }
 
