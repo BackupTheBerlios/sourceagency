@@ -22,12 +22,8 @@ CREATE TABLE active_sessions (
 #
 
 INSERT INTO active_sessions VALUES ('5e5844292895ed148b7b1f4779e933ec','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0dlcm1hbic7ICRHTE9CQUxTWydhdXRoJ10gPSBuZXcgU291cmNlQWdlbmN5X0F1dGg7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGggPSBhcnJheSgpOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1aWQnXSA9ICczNWIzZGI0ODk0NGRiYTdhNGUyNzI5MjZmZDBkMjgzOSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICdkZXZlbCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ2V4cCddID0gJzEwMzEzOTMyMjEnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydyZWZyZXNoJ10gPSAnMTAzMTM4Mzg0Myc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3VuYW1lJ10gPSAnaGVsaXgnOyA=','20020907093701');
-INSERT INTO active_sessions VALUES ('3ad49f64264c8b34cc3fadcec91d2010','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0dlcm1hbic7ICRHTE9CQUxTWydhdXRoJ10gPSBuZXcgU291cmNlQWdlbmN5X0F1dGg7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGggPSBhcnJheSgpOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1aWQnXSA9ICczNWIzZGI0ODk0NGRiYTdhNGUyNzI5MjZmZDBkMjgzOSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICdkZXZlbCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ2V4cCddID0gJzEwMzE0MTk2MDgnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydyZWZyZXNoJ10gPSAnMTAzMTQwODI3Nyc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3VuYW1lJ10gPSAnaGVsaXgnOyA=','20020907165648');
+INSERT INTO active_sessions VALUES ('3ad49f64264c8b34cc3fadcec91d2010','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0dlcm1hbic7ICRHTE9CQUxTWydhdXRoJ10gPSBuZXcgU291cmNlQWdlbmN5X0F1dGg7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGggPSBhcnJheSgpOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1aWQnXSA9ICczNWIzZGI0ODk0NGRiYTdhNGUyNzI5MjZmZDBkMjgzOSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICdkZXZlbCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ2V4cCddID0gJzEwMzE0NDUzODgnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydyZWZyZXNoJ10gPSAnMTAzMTQzNjA0NCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3VuYW1lJ10gPSAnaGVsaXgnOyA=','20020908000628');
 INSERT INTO active_sessions VALUES ('ee8bd6a0ea1bd9739fdf8575cc212668','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0dlcm1hbic7ICRHTE9CQUxTWydhdXRoJ10gPSBuZXcgU291cmNlQWdlbmN5X0F1dGg7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGggPSBhcnJheSgpOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1aWQnXSA9ICczNWIzZGI0ODk0NGRiYTdhNGUyNzI5MjZmZDBkMjgzOSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICdkZXZlbCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ2V4cCddID0gJzEwMzEzOTE0MTEnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydyZWZyZXNoJ10gPSAnMTAzMTM4MTE5OCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3VuYW1lJ10gPSAnaGVsaXgnOyA=','20020907090651');
-INSERT INTO active_sessions VALUES ('035788176cc1d0adf929deba6fbf3930','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0dlcm1hbic7ICRHTE9CQUxTWydhdXRoJ10gPSBuZXcgU291cmNlQWdlbmN5X0F1dGg7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGggPSBhcnJheSgpOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1aWQnXSA9ICczNWIzZGI0ODk0NGRiYTdhNGUyNzI5MjZmZDBkMjgzOSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICdkZXZlbCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ2V4cCddID0gJzEwMzEzMzYwMTknOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydyZWZyZXNoJ10gPSAnMTAzMTMyMTM4NCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3VuYW1lJ10gPSAnaGVsaXgnOyA=','20020906174340');
-INSERT INTO active_sessions VALUES ('e8c504c24f932c89791ec53a01d59d58','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20020906203901');
-INSERT INTO active_sessions VALUES ('251736455a7b1c8432bc9b445072673f','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0dlcm1hbic7ICRHTE9CQUxTWydhdXRoJ10gPSBuZXcgU291cmNlQWdlbmN5X0F1dGg7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGggPSBhcnJheSgpOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1aWQnXSA9ICczNWIzZGI0ODk0NGRiYTdhNGUyNzI5MjZmZDBkMjgzOSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICdkZXZlbCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ2V4cCddID0gJzEwMzEzNDY2NTgnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydyZWZyZXNoJ10gPSAnMTAzMTMzNzYxNSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3VuYW1lJ10gPSAnaGVsaXgnOyA=','20020906204058');
-INSERT INTO active_sessions VALUES ('7bb533147970609732f82f911ab6fa26','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0dlcm1hbic7ICRHTE9CQUxTWydhdXRoJ10gPSBuZXcgU291cmNlQWdlbmN5X0F1dGg7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGggPSBhcnJheSgpOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1aWQnXSA9ICczNWIzZGI0ODk0NGRiYTdhNGUyNzI5MjZmZDBkMjgzOSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICdkZXZlbCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ2V4cCddID0gJzEwMzEzNDY4OTgnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydyZWZyZXNoJ10gPSAnMTAzMTMzNzc4Nyc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3VuYW1lJ10gPSAnaGVsaXgnOyA=','20020906204459');
 
 #
 # Table structure for table 'auth_user'
@@ -149,6 +145,8 @@ INSERT INTO configure VALUES (24,55,'No','Yes','Yes','sponsor','admin');
 INSERT INTO configure VALUES (25,55,'Yes','Yes','Yes','sponsor','');
 INSERT INTO configure VALUES (26,NULL,'No','Yes','Yes',NULL,'riessen');
 INSERT INTO configure VALUES (27,NULL,'No','Yes','',NULL,'admin');
+INSERT INTO configure VALUES (28,NULL,'No','Yes','Yes',NULL,'helix');
+INSERT INTO configure VALUES (30,NULL,'No','Yes','Yes',NULL,'helix');
 
 #
 # Table structure for table 'consultants'
@@ -226,6 +224,9 @@ INSERT INTO counter VALUES (24,0,0);
 INSERT INTO counter VALUES (25,0,0);
 INSERT INTO counter VALUES (26,0,0);
 INSERT INTO counter VALUES (27,0,0);
+INSERT INTO counter VALUES (28,0,0);
+INSERT INTO counter VALUES (29,0,0);
+INSERT INTO counter VALUES (30,0,0);
 
 #
 # Table structure for table 'counter_check'
@@ -367,6 +368,9 @@ INSERT INTO description VALUES (24,'Test of  the view attribute ...','Adaption',
 INSERT INTO description VALUES (25,'and again a test','Adaption','adsad','sponsor','< 0.25 Man Month',-1,20020327110121);
 INSERT INTO description VALUES (26,'asdasd','Adaption','sadasd','riessen','< 0.25 Man Month',-1,20020424124758);
 INSERT INTO description VALUES (27,'DevCounter','Expansion','DevCounter befragt Open-Source-Entwickler nach ihren Kentnissen und Erfahrungen sowie der Mitarbeit an Open-Source-Projekten. Außerdem erlaubt DevCounter die zielgerichtete Suche nach Entwicklern mit definierten Know-How. Man kann dort weitere Entwickler für die eigenen Projekte suchen oder einfach jemand, der bei bestimmten Aufgaben kurz aushelfen kann, wie z.B. bei der Netzwerkprogrammierung, dem Schreiben von Dokumentation oder dem Erstellen von Übersetzungen.\r\n\r\nEntwickler, die Projekte suchen und helfen wollen, können sich bei DevCounters unter Angaben ihrer Kenntnisse eintragen.','admin','< 1 Man Month',0,20020906130357);
+INSERT INTO description VALUES (28,'A New Project','Development','A very new program','helix','> 6 Man Months',0,20020907170611);
+INSERT INTO description VALUES (29,'pppp','Development','ggb aezztzbznjhesh','helix','< 6 Man Months',0,20020908000112);
+INSERT INTO description VALUES (30,'qqqq','Adaption','rusr tejn 73k zu','helix','< 0.25 Man Month',0,20020908000413);
 
 #
 # Table structure for table 'developing'
@@ -605,6 +609,9 @@ INSERT INTO history VALUES (5,'nilix','Configure','Project configuration modifie
 INSERT INTO history VALUES (5,'nilix','Configure','Project configuration modified',20020906142531);
 INSERT INTO history VALUES (5,'nilix','Configure','Project configuration modified',20020906142601);
 INSERT INTO history VALUES (5,'helix','Configure','Project configuration modified',20020906161441);
+INSERT INTO history VALUES (28,'helix','Configure','Project configuration',20020907172230);
+INSERT INTO history VALUES (30,'helix','Configure','Project configuration',20020908000427);
+INSERT INTO history VALUES (30,'helix','Configure','Project configuration modified',20020908000628);
 
 #
 # Table structure for table 'involved'
@@ -909,4 +916,7 @@ INSERT INTO views VALUES (24,'Sponsors','Project Participants','Project Initiato
 INSERT INTO views VALUES (25,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20020327110020);
 INSERT INTO views VALUES (26,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20020327133631);
 INSERT INTO views VALUES (27,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20020906130357);
+INSERT INTO views VALUES (28,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20020907170611);
+INSERT INTO views VALUES (29,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20020908000112);
+INSERT INTO views VALUES (30,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20020908000413);
 
