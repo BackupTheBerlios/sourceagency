@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: insdoco.php3,v 1.3 2002/04/19 10:27:40 grex Exp $
+# $Id: insdoco.php3,v 1.4 2002/04/19 10:32:04 grex Exp $
 #
 ######################################################################  
 
@@ -55,10 +55,10 @@ if (($config_perm_admdoco != 'all')
             doco_show($db);
             $bx->box_begin();
             $bx->box_title($t->translate('Do you really want to delete this Page '
-                                   .'Documentation entry? There is no way for undeletion.'));
+                                   .'Documentation entry?'));
             $bx->box_body_begin();
             $bx->box_columns_begin(2);
-            $bx->box_column('left', '76%', '', $db->f('doco'));
+            $bx->box_column('left', '76%', '',  'There is no way for undeletion.');
             $bx->box_column('right', '12%', '', html_form_action('PHP_SELF')
     	 	                               .html_form_hidden('modify', 0)
     	 	                               .html_form_hidden('delete', 2)
