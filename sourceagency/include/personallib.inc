@@ -16,10 +16,35 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: personallib.inc,v 1.13 2002/04/10 00:36:31 grex Exp $
+# $Id: personallib.inc,v 1.14 2002/04/10 11:09:28 grex Exp $
 #
 ######################################################################
 
+/**
+ * This library contains functionality needed for a personal start
+ * page where any (registered) user can see the projects she is involved
+ * in as well as his contributions (news, comments, etc.)
+ *
+ * This library interacts with many tables in the database, mainly
+ * searching for the author(s) of the database entries
+ *
+ * @author  Gregorio Robles <grex@scouts-es.org>
+ * @access  public
+ * @see html, translate, box
+ */
+
+// NOI18N The whole library requires i18n
+
+/**
+ * Shows the global rating for the given user
+ * (mean of all ratings)
+ * Provides a link to page with all the ratings to the user
+ *
+ * @param   string    $username      Username
+ * @global  object    $bx            Box object
+ * @access  public
+ * @see personal_ratings_long()
+ */
 function personal_ratings_short($username)
 {
     global $bx;
@@ -49,9 +74,17 @@ function personal_ratings_short($username)
     $bx->box_end();
 }
 
+/**
+ * Shows alls ratings for the given user
+ *
+ * @param   string    $username      Username
+ * @global  object    $bx            Box object
+ * @access  public
+ * @see personal_ratings_long()
+ */
 function personal_ratings_long($username)
 {
-    global $bx, $sess;
+    global $bx;
 
     $bx->box_begin();
     $bx->box_title('All the rating on '.$username);
@@ -80,8 +113,18 @@ function personal_ratings_long($username)
     $bx->box_end();
 }
 
-    // ASSUME: user is either a sponsor or developer, if neither
-    // ASSUME: then this function generates an invalid query.
+/**
+ * Shows the projects a (registered) user is involved int
+ * and the status of the user to this projects (accepted, denied, etc.)
+ *
+ * ASSUME: user is either a sponsor or developer, if neither
+ * ASSUME: then this function generates an invalid query.
+ *
+ * @param   string    $username      Username
+ * @param   string    $status        Project status
+ * @global  object    $bx            Box object
+ * @access  public
+ */
 function personal_related_projects($username, $status)
 {
     global $bx;
@@ -123,13 +166,22 @@ function personal_related_projects($username, $status)
 }
 
 /**
+ * Shows the 10 most recent comments a given user has submitted
+ *
+ * WISH: number of shown comments should be configurable
+ *
  * REFACTOR: personal_comments_short only differ in their use of the variable
  * REFACTOR: $i, there really should be refactored with a single function 
  * REFACTOR: whether specifying whether long or short is required.
+ *
+ * @param   string    $username      Username
+ * @global  object    $bx            Box object
+ * @access  public
+ * @see personal_comments_long()
  */
 function personal_comments_short($username)
 {
-    global $bx, $sess;
+    global $bx;
 
     $bx->box_begin();
     $bx->box_title('Last 10 Comments by '.$username);
@@ -182,11 +234,18 @@ function personal_comments_short($username)
 }
 
 /**
+ * Shows all comments a given user has submitted
+ *
  * REFACTOR: replace the followng and above with a single common function
+ *
+ * @param   string    $username      Username
+ * @global  object    $bx            Box object
+ * @access  public
+ * @see personal_comments_long()
  */
 function personal_comments_long($username)
 {
-    global $bx, $sess;
+    global $bx;
 
     $bx->box_begin();
     $bx->box_title('All Comments by '.$username);
@@ -241,9 +300,23 @@ function personal_comments_long($username)
     $bx->box_end();
 }
 
+/**
+ * Shows the 5 most recent news a given user has submitted
+ *
+ * WISH: number of shown news should be configurable
+ *
+ * REFACTOR: personal_news_short only differ in their use of the variable
+ * REFACTOR: $i, there really should be refactored with a single function 
+ * REFACTOR: whether specifying whether long or short is required.
+ *
+ * @param   string    $username      Username
+ * @global  object    $bx            Box object
+ * @access  public
+ * @see personal_news_long()
+ */
 function personal_news_short($username)
 {
-    global $bx, $sess;
+    global $bx;
 
     $bx->box_begin();
     $bx->box_title('Last 5 News by '.$username);
@@ -297,11 +370,20 @@ function personal_news_short($username)
 }
 
 /**
- * REFACTOR: combine the above and below into one common function
+ * Shows all news a given user has submitted
+ *
+ * REFACTOR: personal_news_short only differ in their use of the variable
+ * REFACTOR: $i, there really should be refactored with a single function 
+ * REFACTOR: whether specifying whether long or short is required.
+ *
+ * @param   string    $username      Username
+ * @global  object    $bx            Box object
+ * @access  public
+ * @see personal_news_long()
  */
 function personal_news_long($username)
 {
-    global $bx, $sess;
+    global $bx;
 
     $bx->box_begin();
     $bx->box_title('All news by '.$username);
@@ -344,9 +426,17 @@ function personal_news_long($username)
     $bx->box_end();
 }
 
+/**
+ * Shows all projects the given user has proposed himself as a consultant
+ *
+ * @param   string    $username      Username
+ * @param   string    $status        Status of the consultancy proposal
+ * @global  object    $bx            Box object
+ * @access  public
+ */
 function personal_consultants($username, $status)
 {
-    global $bx, $sess;
+    global $bx;
 
     $bx->box_begin();
     $bx->box_title('Consultant ('.show_status($status).')');
@@ -372,11 +462,18 @@ function personal_consultants($username, $status)
 }
 
 /**
+ * Shows all projects the given user has proposed himself as a referee
+ *
  * REFACTOR: above and below into a common function
+ *
+ * @param   string    $username      Username
+ * @param   string    $status        Status of the consultancy proposal
+ * @global  object    $bx            Box object
+ * @access  public
  */
 function personal_referees($username, $status)
 {
-    global $bx, $sess;
+    global $bx;
 
     $bx->box_begin();
     $bx->box_title('Referee ('.show_status($status).')');
@@ -400,9 +497,20 @@ function personal_referees($username, $status)
     $bx->box_end();
 }
 
+/**
+ * Shows all projects the given user has proposed himself to cooperate
+ * as a developer
+ *
+ * REFACTOR: above and below into a common function
+ *
+ * @param   string    $username      Username
+ * @param   string    $status        Status of the consultancy proposal
+ * @global  object    $bx            Box object
+ * @access  public
+ */
 function personal_cooperation($username, $status)
 {
-    global $bx, $sess;
+    global $bx;
 
     $bx->box_begin();
     $bx->box_title('Developing Cooperation ('.show_status($status).')');
@@ -433,6 +541,13 @@ function personal_cooperation($username, $status)
     $bx->box_end();
 }
 
+/**
+ * Shows all projects the given user is their project initiator
+ *
+ * @param   string    $username      Username
+ * @global  object    $bx            Box object
+ * @access  public
+ */
 function personal_my_projects($username)
 {
     global $bx;
@@ -459,8 +574,13 @@ function personal_my_projects($username)
     $bx->box_end();
 }
 
-// ASSUME: this method assumes that html.inc has already been
-// ASSUME: included
+/**
+ * Shows all projects the given user is monitoring
+ *
+ * @param   string    $username      Username
+ * @global  object    $bx            Box object
+ * @access  public
+ */
 function personal_monitored_projects($username)
 {
     global $bx;
