@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.14 2002/04/12 12:52:04 riessen Exp $
+# $Id: milestoneslib.inc,v 1.15 2002/04/13 17:13:46 grex Exp $
 #
 ######################################################################
 
@@ -52,6 +52,20 @@
  * @see html, lib, translate, box, auth
  */
 
+/**
+ * Shows milestone proposal
+ * Depending on the visitor, he will see also the pending ones.
+ * Usually the author and the sponsors will be able to do so.
+ *
+ * @param   int       $proid         Project id
+ * @param   int       $devid         Developing id
+ * @param   string    $username      User that wants to see the milestones
+ *
+ * @global  object    $t             Translation object
+ * @global  object    $bx            Box object
+ *
+ * @access  public
+ */
 function show_milestones($proid, $devid, $who_wants_to_see)
 {
     global $t, $bx;
@@ -146,12 +160,30 @@ function show_milestones($proid, $devid, $who_wants_to_see)
     }
 }
 
-
+/**
+ * Preview form for the milestones
+ *
+ * @param   int       $proid         Project id
+ * @param   int       $devid         Developing id
+ *
+ * @global  object    $t             Translation object
+ * @global  object    $bx            Box object
+ *
+ * @global  int       $number        Milestone number
+ * @global  string    $goals         Goals of the milestone
+ * @global  int       $release_day   Release day
+ * @global  int       $release_month Release month
+ * @global  int       $release_year  Release year
+ * @global  string    $product       Milestone product
+ * @global  int       $payment       Percentage of payment
+ *
+ * @access  public
+ */
 function milestones_preview($proid, $devid)
 {
     global $t, $bx;
-    global $number, $goals, $release_day, 
-        $release_month, $release_year, $product, $payment;
+    global $number, $goals, $release_day, $release_month,
+           $release_year, $product, $payment;
 
     $bx->box_begin();
     $bx->box_title('<center><b>'.$t->translate('PREVIEW').'</b></center>');
@@ -185,10 +217,30 @@ function milestones_preview($proid, $devid)
     $bx->box_end();
 }
 
-
+/**
+ * Form for inserting a new milestone (by developers)
+ *
+ * @param   int       $proid         Project id
+ * @param   int       $devid         Developing id
+ *
+ * @global  object    $auth          PHPLib authentication object
+ * @global  object    $bx            Box object
+ * @global  object    $t             Translation object
+ * @global  object    $sess          PHPLib session object
+ *
+ * @global  int       $number        Milestone number
+ * @global  string    $goals         Goals of the milestone
+ * @global  int       $release_day   Release day
+ * @global  int       $release_month Release month
+ * @global  int       $release_year  Release year
+ * @global  string    $product       Milestone product
+ * @global  int       $payment       Percentage of payment
+ *
+ * @access  public
+ */
 function form_milestones($proid, $devid)
 {
-    global $auth,$bx,$t,$sess;
+    global $auth, $bx, $t, $sess;
     global $number, $goals, $release_day, $release_month,
            $release_year, $product, $payment;
 
@@ -245,7 +297,14 @@ function form_milestones($proid, $devid)
     $bx->box_end();
 }
 
-
+/**
+ * Link to the page where a milestone proposal can be done for a given project
+ *
+ * @param   int       $proid         Project id
+ * @global  object    $t             Translation object
+ *
+ * @access  public
+ */
 function milestones_propose_milestone($proid)
 {
     global $t;
@@ -257,6 +316,24 @@ function milestones_propose_milestone($proid)
                                           .'</b>').' ]</p>');
 }
 
+/**
+ * Inserts a new milestone into the database
+ * (and afterwards shows all the milestons on that project)
+ *
+ * @param   int       $proid         Project id
+ * @param   int       $devid         Developing id
+ * @param   int       $number        Milestone number
+ * @param   string    $goals         Goals of the milestone
+ * @param   int       $release_day   Release day
+ * @param   int       $release_month Release month
+ * @param   int       $release_year  Release year
+ * @param   string    $product       Milestone product
+ * @param   int       $payment       Percentage of payment
+ *
+ * @global  object    $db            PHPLib database abstraction object
+ *
+ * @access  public
+ */
 function milestones_insert($proid, $devid, $number, $goals, $release_day,
                            $release_month, $release_year, $product, $payment)
 {
@@ -290,7 +367,23 @@ function milestones_insert($proid, $devid, $number, $goals, $release_day,
     milestones_propose_milestone( $proid );
 }
 
-
+/**
+ * Updates a mileston into the database
+ * (and afterwards shows all the milestons on that project)
+ *
+ * @param   int       $proid         Project id
+ * @param   int       $number        Milestone number
+ * @param   string    $goals         Goals of the milestone
+ * @param   int       $release_day   Release day
+ * @param   int       $release_month Release month
+ * @param   int       $release_year  Release year
+ * @param   string    $product       Milestone product
+ * @param   int       $payment       Percentage of payment
+ *
+ * @global  object    $db            PHPLib database abstraction object
+ *
+ * @access  public
+ */
 function milestones_modify($proid, $number, $goals, $release_day,
                            $release_month, $release_year, $product, $payment)
 {
@@ -305,7 +398,26 @@ function milestones_modify($proid, $number, $goals, $release_day,
     milestones_propose_milestone( $proid );
 }
 
-
+/**
+ * Form for modifying a milestones (by its author)
+ *
+ * @param   int       $proid         Project id
+ * @param   int       $devid         Developing id
+ *
+ * @global  object    $bx            Box object
+ * @global  object    $t             Translation object
+ * @global  object    $sess          PHPLib session object
+ *
+ * @global  int       $number        Milestone number
+ * @global  string    $goals         Goals of the milestone
+ * @global  int       $release_day   Release day
+ * @global  int       $release_month Release month
+ * @global  int       $release_year  Release year
+ * @global  string    $product       Milestone product
+ * @global  int       $payment       Percentage of payment
+ *
+ * @access  public
+ */
 function milestones_modify_form($proid, $devid)
 {
     global $bx, $t, $sess;
@@ -366,25 +478,35 @@ function milestones_modify_form($proid, $devid)
     $bx->box_end();
 }
 
-
+/**
+ * Select box for a milestone number
+ * Only five new values can be selected
+ * These values are the five lowest ones that are not a milestone number yet
+ *
+ * @param   int       $proid         Project id
+ * @param   int       $devid         Developing id
+ * @param   int       $selected      Default selection
+ *
+ * @access  public
+ */
 function select_milestone_number($proid, $devid, $selected)
 {
-    $db = new DB_SourceAgency;
-    $db->query("SELECT number FROM milestones WHERE proid='$proid' ".
+    $db_select = new DB_SourceAgency;
+    $db_select->query("SELECT number FROM milestones WHERE proid='$proid' ".
                "ORDER BY number");
 
-    if ($db->num_rows() == 0) {
+    if ($db_select->num_rows() == 0) {
         $array[] = 0;
     } else {
-        while($db->next_record()) {
-            $array[] = $db->f('number');
+        while($db_select->next_record()) {
+            $array[] = $db_sekect->f('number');
         }
     }
     $return = html_select('number');
 
     /* Only five new values can be selected */
     /* these values are the five lowest ones that are not a milestone number yet */
-    for ($i=1; $i <= 5 + $db->num_rows(); $i++) {
+    for ($i=1; $i <= 5 + $db_select->num_rows(); $i++) {
 	$ok = 1;
 	reset($array);
 	while (list(, $value) = each($array)) {
@@ -400,17 +522,31 @@ function select_milestone_number($proid, $devid, $selected)
     return($return);
 }
 
+/**
+ * Select box for milestone payment
+ * The maximum value enabled to be selected is the one
+ * which makes the payment percentage be 100%
+ *
+ * @param   int       $proid         Project id
+ * @param   int       $devid         Developing id
+ * @param   int       $selected      Default selection
+ * @param   int       $number        Milestone number
+ *
+ * @global  object    $auth          PHPLib authentication object
+ *
+ * @access  public
+ */
 function select_milestone_payment($proid, $devid, $selected, $number)
 {
     global $auth;
 
-    $db = new DB_SourceAgency;
-    $db->query("SELECT payment,number FROM milestones WHERE "
+    $db_select = new DB_SourceAgency;
+    $db_select->query("SELECT payment,number FROM milestones WHERE "
                . "proid='$proid' AND devid='$devid'");
     $total=0;
-    while($db->next_record()) {
-        if ($db->f('number')!=$number) {
-            $total += $db->f('payment');
+    while($db_select->next_record()) {
+        if ($db_select->f('number')!=$number) {
+            $total += $db_select->f('payment');
         }
     }
     $max = 100 - $total;

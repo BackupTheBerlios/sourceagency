@@ -1,24 +1,24 @@
 <?php
-
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ===============================================================
 #
 # Copyright (c) 2001 by
 #                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
-#                Gregorio Robles (grex@scouts-es.org)
+#                Gregorio Robles (grex@scouts-es.org),
 #                Gerrit Riessen (riessen@open-source-consultants.de)
 #
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
-# TODO: description missing
+# Footer of all the SourceAgency pages
 #
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: footer.inc,v 1.5 2002/03/18 09:18:29 riessen Exp $
+# $Id: footer.inc,v 1.6 2002/04/13 17:13:46 grex Exp $
 #
 ######################################################################
 
@@ -40,13 +40,12 @@ TARGET="_blank"><?php echo $org_name;?></a>.</font></span></td>
 <td width=15% align=right><span class="titlebar">
 <A HREF="<?php echo $sys_url;?>html" target="_blank"><FONT 
 COLOR="<?php echo $th_nav_bgcolor;?>"
-><?php echo $t->translate("System Credits");?></font></<a>&nbsp;</span></td>
+><?php echo $t->translate('System Credits');?></font></<a>&nbsp;</span></td>
 </tr>
 </table>
 <!-- end footer -->
 
 </body>
-
 <?php
 #
 # the last we do is shut down the logger
@@ -54,5 +53,4 @@ COLOR="<?php echo $th_nav_bgcolor;?>"
 $l = new Logger;
 $l->close();
 ?>
-
 </html>
