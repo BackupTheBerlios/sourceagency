@@ -28,34 +28,31 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require ("sponsoringlib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-?>
-
-<!-- content -->
-
-<?php
-
+start_content();
 $page = "sponsoring";
 
 if (check_proid($proid)) {
-  top_bar($proid,$page);
+    top_bar($proid,$page);
+    
+    htmlp_image("ic/d.png",0,48,48,"Summary");
+    print "Here sponsors can involve themselves in projects... \n";
 
-  htmlp_image("ic/d.png",0,48,48,"Summary");
-  print "Sponsors can involve themselves in projects... bla, bla, bla\n";
-
-  print "<p align=right>[ <b><a href=\"".$sess->url("sponsoring_edit.php3").$sess->add_query(array("proid" => $proid))."\">Sponsor this project</a></b> ] &nbsp;<p>\n";
-
-  show_sponsorings($proid);
-
-  lib_comment_it($proid,"General","0","0","","General Comments");
+    print "<p align=right>[ <b><a href=\""
+        .$sess->url("sponsoring_edit.php3")
+        .$sess->add_query(array("proid" => $proid))
+        ."\">Sponsor this project</a></b> ] &nbsp;<p>\n";
+    
+    show_sponsorings($proid);
+    
+    lib_comment_it($proid,"General","0","0","","General Comments");
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 @page_close();
 ?>

@@ -28,44 +28,47 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 
 require("header.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-<?php
+start_content();
 
-      // When there's a search for a blank line, we look for "xxxxxxxx"
+// When there's a search for a blank line, we look for "xxxxxxxx"
 if (!isset($search) || $search=="") {
-  $search = "xxxxxxxx";
+    $search = "xxxxxxxx";
 }
 
 // $iter is a variable for printing the Top Statistics in steps of 10 apps
 if (!isset($iter)) $iter=0;
 $iter*=10;
 
-			// We need to know the total number of apps
+// We need to know the total number of apps
 $db->query("SELECT * FROM description WHERE project_title LIKE '%$search%'");
 
 if ($db->num_rows() == 0) {
-  $bx->box_full($t->translate("Search"),$t->translate("No projects found"));
+    $bx->box_full($t->translate("Search"),$t->translate("No projects found"));
 } else {
-  while($db->next_record()) {
+    while($db->next_record()) {
 	$numiter = (($db->f("COUNT(*)")-1)/10);
 
-  	$query  = "SELECT * FROM description,auth_user WHERE description.proid='".$db->f("proid")."' AND description.description_user=auth_user.username AND description.status > '0' GROUP BY description.proid";
+  	$query  = ( "SELECT * FROM description,auth_user WHERE "
+                    "description.proid='".$db->f("proid")."' AND "
+                    ."description.description_user=auth_user.username "
+                    ."AND description.status > '0' GROUP BY "
+                    ."description.proid");
 	lib_show_description($query);
 
 	if ($numiter > 1) {
-  		$url = "appsearch.php3";
-  		$urlquery = array("search" => ($search), "by" => $by);
-  		show_more ($iter,$numiter,$url,$urlquery);
+            $url = "appsearch.php3";
+            $urlquery = array("search" => ($search), "by" => $by);
+            show_more ($iter,$numiter,$url,$urlquery);
 	}
-  }
+    }
 }
-?>
-<!-- end content -->
 
-<?php
+end_content();
 require("footer.inc");
 page_close();
 ?>

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMilestoneslib.inc,v 1.9 2002/03/19 17:08:03 riessen Exp $
+# $Id: TestMilestoneslib.inc,v 1.10 2002/03/20 10:53:36 riessen Exp $
 #
 ######################################################################
 
@@ -36,6 +36,7 @@ if ( !defined("BEING_INCLUDED" ) ) {
 
 include_once( 'lib.inc' );
 include_once( 'html.inc' );
+include_once( 'security.inc' );
 include_once( 'milestoneslib.inc' );
 
 class UnitTestMilestoneslib
@@ -50,6 +51,34 @@ extends UnitTest
         // if using the capturing routines then ensure that it's reset,
         // it uses global variables
         capture_reset_text();
+    }
+
+    function testMilestones_propose_milestone() {
+        global $t;
+
+        $pats = array( 0=> ("<p align=right>[[] "),
+                       1=> ("step3_edit.php3[?]proid="),
+                       2=> ("[&]a=1"),
+                       3=> ($t->translate("Propose Milestones")),
+                       4=> (" []]<\/p>") );
+
+        capture_reset_and_start();
+        milestones_propose_milestone( "" );
+        $text = capture_stop_and_get();
+        
+        $this->_testFor_length( 90 );
+
+        $pats[5] = "[?]proid=[&]a=1";
+        $this->_testFor_patterns( $text, $pats, 6 );
+        
+        capture_reset_and_start();
+        milestones_propose_milestone( "this_is_the_proid" );
+        $text = capture_stop_and_get();
+        
+        $this->_testFor_length( 107 );
+
+        $pats[5] = "[?]proid=this_is_the_proid[&]a=1";
+        $this->_testFor_patterns( $text, $pats, 6 );
     }
 
     function testShow_milestones() {
@@ -109,6 +138,9 @@ extends UnitTest
         $db_config->add_num_row( 0, 4 );
         $db_config->add_num_row( 2, 5 );
         $db_config->add_record( array("developer" => $dat[0]["sponsor"]),4);
+
+        $dat[3]["number"] = 0;
+        $dat[4]["number"] = 1;
         $db_config->add_record( $dat[3], 5 );
         $db_config->add_record( $dat[4], 5 );
 
@@ -137,7 +169,7 @@ extends UnitTest
         show_milestones( $dat[2]["proid"], $dat[2]["devid"],
                          $dat[2]["sponsor"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 3575 );
+        $this->_testFor_length( 3543 );
         $pats = array( 0=> ("<td align=\"center\" width=\"7%\" bgcolor=\""
                             ."#FFFFFF\"><b>Number<\/b><\/td>"),
                        1=> ("<td align=\"\" width=\"53%\" bgcolor=\""
@@ -151,7 +183,7 @@ extends UnitTest
                        5=> ("<td align=\"center\" width=\"14%\" bgcolor=\""
                             ."#FFFFFF\"><b>Status<\/b><\/td>"),
                        6=> ("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\"><b>number_3<\/b><\/td>"),
+                            ."#FFFFFF\"><b>0<\/b><\/td>"),
                        7=> ("<td align=\"\" width=\"\" bgcolor=\"#FFFFFF\"><b>"
                             ."goals_3<\/b><\/td>"),
                        8=> ("<td align=\"center\" width=\"\" bgcolor=\""
@@ -163,15 +195,15 @@ extends UnitTest
                        11=>("<td align=\"center\" width=\"\" bgcolor=\""
                             ."#FFFFFF\"><b>Proposed<\/b><\/td>"),
                        12=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\"><b>number_4<\/b><\/td>"),
-                       13=>("<td align=\"\" width=\"\" bgcolor=\"#FFFFFF\">"
+                            ."gold\"><b>1<\/b><\/td>"),
+                       13=>("<td align=\"\" width=\"\" bgcolor=\"gold\">"
                             ."<b>goals_4<\/b><\/td>"),
                        14=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\"><b><\/b><\/td>"),
+                            ."gold\"><b><\/b><\/td>"),
                        15=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\"><b>product_4<\/b><\/td>"),
+                            ."gold\"><b>product_4<\/b><\/td>"),
                        16=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\"><b>payment_4% <\/b><\/td>"));
+                            ."gold\"><b>payment_4% <\/b><\/td>"));
         $this->_testFor_patterns( $text, $pats, 17 );
 
         // finally check that everything went smoothly with the DB
@@ -179,7 +211,7 @@ extends UnitTest
     }
 
     function testMilestones_insert() {
-        global $db;
+        global $db, $t;
 
         $db_config = new mock_db_configure( 4 );
         
@@ -231,9 +263,11 @@ extends UnitTest
                            $dat[1]["goals"], $dat[1]["rday"], $dat[1]["rmon"],
                            $dat[1]["ryear"], $dat[1]["prod"], $dat[1]["pay"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 95 );
-        $pats = array( 0 => (sprintf( $ln, $dat[1]["pid"])));
-        $this->_testFor_patterns( $text, $pats, 1 );
+        $this->_testFor_length( 658 );
+        $pats = array( 0 => (sprintf( $ln, $dat[1]["pid"])),
+                       1 => $t->translate("Insert Failed" ),
+                       2 => $t->translate("No Goals defined."));
+        $this->_testFor_patterns( $text, $pats, 3 );
 
         //
         // test 3 -- number used is already taken
@@ -247,9 +281,12 @@ extends UnitTest
                            $dat[2]["goals"], $dat[2]["rday"], $dat[2]["rmon"],
                            $dat[2]["ryear"], $dat[2]["prod"], $dat[2]["pay"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 95 );
-        $pats = array( 0 => (sprintf( $ln, $dat[2]["pid"])));
-        $this->_testFor_patterns( $text, $pats, 1 );
+        $this->_testFor_length( 673 );
+
+        $pats = array( 0 => (sprintf( $ln, $dat[2]["pid"])),
+                       1 => $t->translate("Insert Failed" ),
+                       2 => $t->translate("Number parameter already in use."));
+        $this->_testFor_patterns( $text, $pats, 3 );
 
         //
         // test 4 -- number parameter is not set, no queries
@@ -262,9 +299,11 @@ extends UnitTest
                            $dat[3]["goals"], $dat[3]["rday"], $dat[3]["rmon"],
                            $dat[3]["ryear"], $dat[3]["prod"], $dat[3]["pay"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 95 );
-        $pats = array( 0 => (sprintf( $ln, $dat[3]["pid"])));
-        $this->_testFor_patterns( $text, $pats, 1 );
+        $this->_testFor_length( 670 );
+        $pats = array( 0 => (sprintf( $ln, $dat[3]["pid"])),
+                       1 => $t->translate("Insert Failed" ),
+                       2 => $t->translate("Number parameter was not set."));
+        $this->_testFor_patterns( $text, $pats, 3 );
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -330,6 +369,88 @@ extends UnitTest
         $this->_check_db( $db_config );
     }
 
+    function testSelect_milestone_payment() {
+        $db_config = new mock_db_configure( 3 );
+
+        $db_q = array( 0 => ("SELECT payment,number FROM milestones WHERE "
+                             . "proid='%s' AND devid='%s'"));
+
+        $args = $this->_generate_records( array("proid","devid","selected",
+                                                "number"), 3 );
+        $dat = $this->_generate_records( array( "number", "payment" ), 6 );
+
+        $db_config->add_query( sprintf( $db_q[0], $args[0]["proid"],
+                                        $args[0]["devid"]), 0 );
+        $db_config->add_query( sprintf( $db_q[0], $args[1]["proid"],
+                                        $args[1]["devid"]), 1 );
+        $db_config->add_query( sprintf( $db_q[0], $args[2]["proid"],
+                                        $args[2]["devid"]), 2 );
+
+        // we do the following assignments to check the if statement:
+        //     	if ($db->f("number")!=$number) {
+        // if the if fails, then $max value will be set to zero.
+
+        // instance 0 (test 1): $max = 4
+        $dat[0]["number"] = $args[0]["number"];
+        $dat[1]["number"] = "dont_match" . $args[0]["number"];
+        $dat[0]["payment"] = 4;
+        $dat[1]["payment"] = 96; 
+        $db_config->add_record( $dat[0], 0 );
+        $db_config->add_record( $dat[1], 0 );
+
+        // instance 1 (test 2): $max = 50
+        $dat[2]["number"] = $args[1]["number"];
+        $dat[3]["number"] = "dont_match" . $args[1]["number"];
+        $dat[2]["payment"] = 50;
+        $dat[3]["payment"] = 50; 
+        $db_config->add_record( $dat[2], 1 );
+        $db_config->add_record( $dat[3], 1 );
+
+        // instance 2 (test 3): $max = 100
+        $dat[4]["number"] = $args[2]["number"];
+        $dat[5]["number"] = "dont_match" . $args[2]["number"];
+        $dat[4]["payment"] = 100;
+        $dat[5]["payment"] = 0; 
+        $db_config->add_record( $dat[4], 2 );
+        $db_config->add_record( $dat[5], 2 );
+
+        // test 1
+        $args[0]["selected"] = 4;
+        $text = select_milestone_payment( $args[0]["proid"], $args[0]["devid"],
+                                     $args[0]["selected"], $args[0]["number"]);
+
+        $this->_testFor_string_length( $text, 85 );
+        for ( $i = 2; $i < 4; $i+=2 ) {
+            $this->_testFor_pattern($text, "option value=\"" . $i . "\">" 
+                                           . $i . "%");
+        }
+        $this->_testFor_pattern( $text, "option selected value=\"4\">4%" );
+
+        // test 2
+        $args[1]["selected"] = 50;
+        $text = select_milestone_payment( $args[1]["proid"], $args[1]["devid"],
+                                  $args[1]["selected"], $args[1]["number"]);
+        $this->_testFor_string_length( $text, 610 );
+        for ( $i = 2; $i < 50; $i+=2 ) {
+            $this->_testFor_pattern($text, "option value=\"" . $i . "\">" 
+                                           . $i . "%");
+        }
+        $this->_testFor_pattern( $text, "option selected value=\"50\">50%" );
+
+        // test 3
+        $args[2]["selected"] = 100;
+        $text = select_milestone_payment( $args[2]["proid"], $args[2]["devid"],
+                                  $args[2]["selected"], $args[2]["number"]);
+        $this->_testFor_string_length( $text, 1187 );
+        for ( $i = 2; $i < 100; $i+=2 ) {
+            $this->_testFor_pattern($text, "option value=\"" . $i . "\">" 
+                                           . $i . "%");
+        }
+        $this->_testFor_pattern( $text, "option selected value=\"100\">100%" );
+
+        // finally check that everything went smoothly with the DB
+        $this->_check_db( $db_config );
+    }
 }
 
 define_test_suite( __FILE__ );
