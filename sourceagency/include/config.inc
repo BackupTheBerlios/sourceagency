@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.8 2001/11/15 18:07:44 riessen Exp $
+# $Id: config.inc,v 1.9 2001/11/19 16:56:58 riessen Exp $
 #
 ######################################################################
 
@@ -122,6 +122,14 @@ $g_step_text[3] = "Milestones";
 $g_step_text[4] = "Referees";
 $g_step_text[5] = "Project Follow-up";
 $g_step_text[6] = "Rating";
+
+$g_step_explanation[1] = "step_1_explanation";
+$g_step_explanation[2] = "step_2_explanation";
+$g_step_explanation[3] = "step_3_explanation";
+$g_step_explanation[4] = "step_4_explanation";
+$g_step_explanation[5] = "step_5_explanation";
+$g_step_explanation[6] = "step_6_explanation";
+
 $g_step_count = 6;
 
 ######################################################################
