@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: developing_mod.php3,v 1.2 2001/11/16 10:59:28 riessen Exp $
+# $Id: developing_mod.php3,v 1.3 2001/11/16 11:06:29 riessen Exp $
 #
 ######################################################################  
 
@@ -31,12 +31,12 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require ("developinglib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-
-<?php
+start_content();
 
 $page = "developing_edit";
 
@@ -49,29 +49,26 @@ if (check_proid($proid)) {
   print "Developers can modify their proposals.\n";
   print "<br><p>\n";
 
-  if ((!isset($preview) || empty($preview)) && (!isset($submit) || empty($submit))) {
-	$db->query("SELECT * FROM developing WHERE content_id='$content_id' AND proid='$proid' AND creation='$creation'");
-	$db->next_record();
-	$cost = $db->f("cost");
-	$license = $db->f("license");
-	$cooperation = $db->f("cooperation");
-	$start = $db->f("start");
-	$duration = $db->f("duration");
-	$valid = $db->f("valid");
+  if ( is_not_set_or_empty( $preview ) && is_not_set_or_empty($submit) ) {
+    $db->query("SELECT * FROM developing WHERE content_id='$content_id' "
+               ."AND proid='$proid' AND creation='$creation'");
+    $db->next_record();
+    $cost = $db->f("cost");
+    $license = $db->f("license");
+    $cooperation = $db->f("cooperation");
+    $start = $db->f("start");
+    $duration = $db->f("duration");
+    $valid = $db->f("valid");
   }
 
-  if (!isset($submit) || empty($submit)) {
-	developing_modify_form($proid,$content_id);
+  if ( is_not_set_or_empty( $submit ) ) {
+    developing_modify_form($proid,$content_id);
   } else {
-	developing_modify($proid,$content_id,"devel",$cost, $license, $cooperation, $valid, $start, $duration,$creation);
+    developing_modify($proid,$content_id,"devel",$cost, $license, 
+                  $cooperation, $valid, $start, $duration,$creation);
   }
 }
-
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 @page_close();
 ?>
