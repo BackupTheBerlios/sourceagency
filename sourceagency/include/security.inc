@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.24 2002/07/02 10:40:59 riessen Exp $
+# $Id: security.inc,v 1.25 2002/10/08 15:25:43 helix Exp $
 #
 ######################################################################
 
@@ -80,9 +80,8 @@ function allowed_actions ($project_status, $action_number, $proid)
                                 .'</B> '
                                 .$t->translate('consultant offerings').')' );
             } else {
-              $statistics = ( '( '.$t->translate('this project is configured '
-                                                 .'to have <b>no</b> '
-                                                 .'consultants')
+                $statistics = ( '( '.$t->translate('this project is configured '
+                                                 .'to have no consultants')
                               .')' );
             }
             $explanation = $g_step_explanation[1];
@@ -95,7 +94,7 @@ function allowed_actions ($project_status, $action_number, $proid)
                                ."WHERE proid='$proid'");
             $db_allowed->next_record();
             $statistics = ('( <B>'.$db_allowed->f("COUNT(*)").'</B> '
-                           .'suggested project contents');
+                           .$t->translate('suggested specifications').' ');
             $db_allowed->query("SELECT COUNT(*) FROM developing "
                                ."WHERE proid='$proid'");
             $db_allowed->next_record();
@@ -128,9 +127,9 @@ function allowed_actions ($project_status, $action_number, $proid)
         }
         case 5: {
             $link = 'step5.php3?proid='.$proid;
-            $statistics = ( '( <B>x</B> '.$t->translate('milestones of')
+            $statistics = ( '( <B>x</B> '.$t->translate('milestones of totally')
                             .' <b>x</b> '
-                            .$t->translate('total milestones fulfilled')
+                            .$t->translate('milestones fulfilled')
                             .' )' );
             $explanation = $g_step_explanation[5];
             break;

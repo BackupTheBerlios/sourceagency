@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: consultantslib.inc,v 1.10 2002/09/11 11:27:37 helix Exp $
+# $Id: consultantslib.inc,v 1.11 2002/10/08 15:25:43 helix Exp $
 #
 ######################################################################
 
@@ -222,7 +222,7 @@ function consultants_wanted($proid)
 
         $be->box_full($t->translate('No consultants wanted'),
                       $t->translate('This project does not require '
-                                    .'any consultants'));
+                                    .'any consultants').'.');
         return 0;
     }
 }

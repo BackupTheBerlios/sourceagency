@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.19 2002/07/17 12:38:48 riessen Exp $
+# $Id: milestoneslib.inc,v 1.20 2002/10/08 15:25:43 helix Exp $
 #
 ######################################################################
 
@@ -108,7 +108,7 @@ function show_milestones($proid, $devid, $who_wants_to_see)
         $bx->box_body_begin();
         $bx->box_columns_begin(6);
       
-        $bx->box_column('center','7%','','<b>'.$t->translate('Number').'</b>');
+        $bx->box_column('center','7%','','<b>'.$t->translate('No.').'</b>');
         $bx->box_column('','53%','','<b>'.$t->translate('Goals').'</b>');
         $bx->box_column('center','16%','','<b>'
                         .$t->translate('Release Date').'</b>');
@@ -126,26 +126,25 @@ function show_milestones($proid, $devid, $who_wants_to_see)
           
             if (!strcmp($milestone_user,$who_wants_to_see)) {
                 $bx->box_column('center','',$bgcolor,
-                                '<b>'.$db->f('number').' '
+                                $db->f('number').' '
                                 .html_link('step3_mod.php3',
                                            array('proid' => $proid, 
                                                  'devid' => $devid, 
                                                  'number'=>$db->f('number')),
-                                           'mod') . '</b>');
+                                           'mod'));
             } else {
                 $bx->box_column('center','',$bgcolor,
-                                '<b>'.$db->f('number').'</b>');
+                                $db->f('number'));
             }
-            $bx->box_column('','',$bgcolor,'<b>'.$db->f('goals').'</b>');
-            $bx->box_column('center','',$bgcolor,'<b>'
-                            .timestr_middle(mktimestamp($db->f('release')))
-                            .'</b>');
-            $bx->box_column('center','',$bgcolor,'<b>'
-                            .$db->f('product').'</b>');
-            $bx->box_column('center','',$bgcolor,'<b>'
-                            .$db->f('payment').'% </b>');
-            $bx->box_column('center','',$bgcolor,'<b>'
-                            .show_status($db->f('status')).'</b>');
+            $bx->box_column('','',$bgcolor,$db->f('goals'));
+            $bx->box_column('center','',$bgcolor,
+                            timestr_middle(mktimestamp($db->f('release'))));
+            $bx->box_column('center','',$bgcolor,
+                            $db->f('product'));
+            $bx->box_column('center','',$bgcolor,
+                            $db->f('payment').'%');
+            $bx->box_column('center','',$bgcolor,
+                            show_status($db->f('status')));
             $total_payment += $db->f('payment');
         }
       

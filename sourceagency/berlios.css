@@ -28,10 +28,11 @@ A.maintitlebar:visited { color: <?php echo $th_navstrip_font_color;?> }
 
 .menus { color: <?php echo $th_nav_font_color;?>; text-decoration: none }
 .menus:visited { color: <?php echo $th_font_color;?>; text-decoration: none }
+.menus:hover { text-decoration:underline; }
 
 A:link { text-decoration:none }
 A:visited { text-decoration:none }
 A:active { text-decoration:none }
-A:hover { text-decoration:underline; color: <?php echo $th_hover_font_color;?> }
+A:hover { text-decoration:underline }
 
 .titlebar { text-decoration:none; color:<?php echo $th_navstrip_font_color;?>; font-family: <?php echo $th_font_family;?>; font-size: <?php echo $fsn ?>; font-weight: bold }

@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.46 2002/09/11 11:27:37 helix Exp $
+# $Id: lib.inc,v 1.47 2002/10/08 15:25:43 helix Exp $
 #
 ######################################################################
 
@@ -984,7 +984,7 @@ function lib_show_description($query) {
   	$bx->box_body_begin();
  	echo "<b>";
 	lib_pnick($db_local->f("description_user"));
-  	echo " - ".timestr(mktimestamp($db_local->f("description_creation")));
+  	echo " - ".timestr(mktimestamp($db_local->f("description_creation")))."</b>";
   	echo ( "<p><b>".$t->translate("Description")."</b>: "
                . $db_local->f("description")."\n" );
   	echo ( "<p><b>".$t->translate("Volume")."</b>: "

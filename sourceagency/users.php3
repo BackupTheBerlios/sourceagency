@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: users.php3,v 1.7 2002/05/02 13:26:15 riessen Exp $
+# $Id: users.php3,v 1.8 2002/10/08 15:27:39 helix Exp $
 #
 ######################################################################
 
@@ -81,7 +81,7 @@ if ( ($config_perm_users != 'all')
     $bs->box_strip($msg);
     $db->query("SELECT * FROM auth_user WHERE $where ORDER BY username ASC");
     $bx->box_begin();
-    $bx->box_title($t->translate('Users'));
+    $bx->box_title($t->translate('Users').': '.$t->translate($type));
     $bx->box_body_begin();
 
     $bx->box_columns_begin(5);

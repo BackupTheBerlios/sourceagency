@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: contentlib.inc,v 1.9 2002/09/11 11:27:37 helix Exp $
+# $Id: contentlib.inc,v 1.10 2002/10/08 15:25:43 helix Exp $
 #
 ######################################################################
 
@@ -80,12 +80,12 @@ function show_content($proid, $show_proposals, $which_proposals)
     $db->query($query);
 
     if ($db->num_rows() == 0) {
-        print $t->translate('No technical content suggestions have been posted to '
+        print $t->translate('No technical specification suggestions have been posted to '
              .'this project.');
     } else {
         while($db->next_record()) {
             $bx->box_begin();
-            $bx->box_title($t->translate('Technical Content'));
+            $bx->box_title($t->translate('Technical Specification'));
             $bx->box_body_begin();
             $timestamp = mktimestamp($db->f('creation'));
             echo '<b>';
@@ -105,7 +105,7 @@ function show_content($proid, $show_proposals, $which_proposals)
             }
             echo '<br><b>'.$t->translate('Status').':</b> '
                 .show_status($db->f('status'))."\n";
-            echo '<p><b>'.$t->translate('Technical Specification').':</b> '
+            echo '<p><b>'.$t->translate('Specification').':</b><br>'
                 .$db->f('specification')."\n";
             echo "<br>&nbsp;\n";
             $bx->box_body_end();
@@ -113,9 +113,9 @@ function show_content($proid, $show_proposals, $which_proposals)
             content_box_footer($proid,$db->f('content_id'), $which_proposals);
             $bx->box_end();
           
-            lib_comment_it($proid, 'Specifications', $db->f('content_id'), '0',
-                           'Comment on Specification #'.$db->f('content_id'),
-                           'Comment This Specification');
+            lib_comment_it($proid, $t->translate('Specifications'), $db->f('content_id'), '0',
+                           $t->translate('Comment on Specification').' #'.$db->f('content_id'),
+                           $t->translate('Comment this Specification'));
 
             echo '<p>';
           
@@ -152,7 +152,7 @@ function content_preview($proid)
     global $architecture, $environment, $docs, $specification;
 
     $bx->box_begin();
-    $bx->box_title($t->translate('Technical Content'));
+    $bx->box_title($t->translate('Technical Specification'));
     $bx->box_body_begin();
     $timestamp = time();
     echo '<b>';
@@ -233,7 +233,7 @@ function content_box_footer($proid, $content_id, $which_proposals)
     $bx->box_column_start('right','50%',$th_box_title_bgcolor);
     htmlp_link('developing_edit.php3',
                array('proid' => $proid, 'content_id'=>$db->f('content_id')),
-               '[ <b>'.$t->translate('Make a Proposal to this content!')
+               '[ <b>'.$t->translate('Make a Proposal to this specification!')
                .'</b> ]&nbsp;');
     $bx->box_column_finish();
     $bx->box_columns_end();
@@ -279,67 +279,67 @@ function show_proposals($proid, $content_id)
 	$timestamp = mktimestamp($db_proposal->f('creation'));
 	echo '<b>'.lib_nick($db_proposal->f('username')).' - '
             .timestr($timestamp)."</b>\n";
-	echo '<p><b>Cost:</b> '.$db_proposal->f('cost')." euros\n";
-    	echo '<br><b>License:</b> '.$db_proposal->f('license')."\n";
-    	echo '<br><b>Status:</b> '.show_status($db_proposal->f('status'))."\n";
+	echo '<p><b>'.$t->translate('Cost').':</b> '.$db_proposal->f('cost')." Euros\n";
+    	echo '<br><b>'.$t->translate('License').':</b> '.$db_proposal->f('license')."\n";
+    	echo '<br><b>'.$t->translate('Status').':</b> '.show_status($db_proposal->f('status'))."\n";
 	if ($db_proposal->f('cooperation') != 'No') {
-            echo '<br><b>Cooperation:</b> '
+            echo '<br><b>'.$t->translate('Cooperation').':</b> '
                 .html_link('cooperation_edit.php3',
                            array('proid' => $proid, 
                                  'devid' => $db_proposal->f('devid')),
                            $db_proposal->f('cooperation') 
                            .'  &nbsp; [ <b>Cooperate</b> ]')."\n";
 	} else {
-            echo '<br><b>Cooperation:</b> '
+            echo '<br><b>'.$t->translate('Cooperation').':</b> '
                 .$db_proposal->f('cooperation')."\n";
-        }
-    	echo '<br><b>Valid:</b> '
+    }
+    echo '<br><b>'.$t->translate('Valid').':</b> '
             .timestr_middle(mktimestamp($db_proposal->f('valid')))."\n";
-    	echo '<br><b>Start:</b> '
+    echo '<br><b>'.$t->translate('Start').':</b> '
             .timestr_middle(mktimestamp($db_proposal->f('start')))."\n";
-    	echo '<br><b>Duration:</b> '.$db_proposal->f('duration')." weeks\n";
-        echo "<br>&nbsp;\n";
-    	$bx_small->box_body_end();
-        $bx_small->box_title_begin();
+    echo '<br><b>'.$t->translate('Duration').':</b> '.$db_proposal->f('duration').' '.$t->translate('Week(s)')."\n";
+    echo "<br>&nbsp;\n";
+    $bx_small->box_body_end();
+    $bx_small->box_title_begin();
 
 	$db_number = new DB_SourceAgency;
-    	if ($db_proposal->f('cooperation') != 'No') {
+    if ($db_proposal->f('cooperation') != 'No') {
 	    $db_number->query("SELECT COUNT(*) FROM cooperation WHERE "
                               ."devid='".$db_proposal->f("devid")."'");
 	    $db_number->next_record();
 	    if ($db_number->f("COUNT(*)")) {
-		htmlp_link('cooperation.php3',
+	        htmlp_link('cooperation.php3',
                            array('proid' => $proid, 
                                  'devid' => $db_proposal->f('devid')),
-                           'Cooperation');
-		echo ' ['.$db_number->f("COUNT(*)").']';
+                           $t->translate('Cooperation'));
+	        echo ' ['.$db_number->f("COUNT(*)").']';
 	    } else {
-                echo 'Cooperation ['.$db_number->f("COUNT(*)").']';
-            }
+                echo $t->translate('Cooperation').' ['.$db_number->f("COUNT(*)").']';
+        }
   	    echo '&nbsp;|&nbsp; ';
   	}
 
 	$db_number->query("SELECT COUNT(*) FROM comments WHERE proid='$proid' "
                           ."AND type='proposals' AND number='"
                           .$db_proposal->f("devid")."'");
-        $db_number->next_record();
+    $db_number->next_record();
 	if ($db_number->f("COUNT(*)") > 0) {
             htmlp_link('comments.php3', 
                        array('proid' => $proid, 
                              'type' => 'proposals', 
                              'number' => $db_proposal->f('devid')),
-                       'Comments');
+                       $t->translate('Comments'));
 	    echo ' ['.$db_number->f('COUNT(*)')."]\n";
 	} else {
-            echo 'Comments [0]';
-        }
+            echo $t->translate('No Comments');
+    }
    	$bx_small->box_title_end();
 	$bx_small->box_end();
 
 	print "<FONT SIZE=-1>[ <a href=\"".$sess->url("comments_edit.php3")
             .$sess->add_query(array("proid" => $proid, "type" => "proposal", 
                                     "number" => $db_proposal->f("devid")))
-            ."\">Comment This Proposal</a> ]</FONT><p>\n";
+            ."\">".$t->translate('Comment this Proposal')."</a> ]</FONT><p>\n";
     }
 }
 
@@ -367,7 +367,7 @@ function content_form($proid)
     global $architecture, $environment, $docs, $specification;
 
     $bx->box_begin();
-    $bx->box_title($t->translate('Suggesting a technical content'));
+    $bx->box_title($t->translate('Suggesting a Technical Specification'));
     $bx->box_body_begin();
     htmlp_form_action('PHP_SELF',array('proid' => $proid),'POST');
 
@@ -416,8 +416,8 @@ function content_form($proid)
 
     $bx->box_column ('right','30%','','&nbsp;');
     $bx->box_column ('left','70%','',
-                     html_form_submit('Preview','preview')
-                     .html_form_submit('Submit','submit'));
+                     html_form_submit($t->translate('Preview'),'preview')
+                     .html_form_submit($t->translate('Submit'),'submit'));
     htmlp_form_end();
     $bx->box_columns_end();
 
@@ -592,7 +592,7 @@ function show_selected_content($proid)
     $db->next_record();
 
     $bx->box_begin();
-    $bx->box_title($t->translate('Technical Content'));
+    $bx->box_title($t->translate('Technical Specification'));
     $bx->box_body_begin();
     $timestamp = mktimestamp($db->f('creation'));
     // FIXME: the end link </a> is not ........ VVVV ... required?????

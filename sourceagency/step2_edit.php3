@@ -40,9 +40,9 @@ $page = "step2_edit";
 if (check_permission($proid,$page)) {
     top_bar($proid,$page);
     
-    print $t->translate('Project technical content suggestions. They can be '
+    print $t->translate('Technical content suggestions. They can be '
                         .'made either by developers or by a sponsor (if the '
-                        .'sponsor is owner of the project)')."\n<br><p>\n";
+                        .'sponsor is owner of the project).')."\n<br><p>\n";
 
     if (!isset($submit) || empty($submit)) {
 	if (isset($preview) && !empty($preview)) {

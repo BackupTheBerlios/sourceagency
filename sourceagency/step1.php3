@@ -44,7 +44,7 @@ if (check_proid($proid)) {
   print( $t->translate( "A sponsor may require help to submit a project "
                         ."in a proper way. If he wishes, he can ask "
                         ."registered developers to "
-                        ."assist him on this topic."));
+                        ."assist him on this topic.").'<p>');
 
   if (consultants_wanted($proid)) {
 

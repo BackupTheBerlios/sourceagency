@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: English-lang.inc,v 1.18 2002/05/07 19:29:55 grex Exp $
+# $Id: English-lang.inc,v 1.19 2002/10/08 15:25:43 helix Exp $
 #
 ######################################################################
 
@@ -36,14 +36,22 @@ function translate_real($phrase) {
     case 'French': $tmp = 'Fran&ccedil;ais'; break;
     
     /** these are various page titles **/
+    case 'comments':            $tmp = 'Comments';            break;
     case 'comments_edit':       $tmp = 'Edit Comments';       break;
     case 'comments_mod':        $tmp = 'Modify Comments';     break;
     case 'consultants':         $tmp = 'Consultants';         break;
-    case 'summary':             $tmp = 'Summary';             break;
     case 'configure_edit':      $tmp = 'Edit Configuration';  break;
-    case 'content suggestions': $tmp = 'Content Suggestions'; break;
+    case 'news_edit':           $tmp = 'Edit News';           break;
+    case 'news':                $tmp = 'News';                break;
+    case 'specifications':      $tmp = 'Specifications';      break;
+    case 'sponsoring':          $tmp = 'Sponsoring';          break;
+    case 'sponsoring_edit':     $tmp = 'Offer Sponsoring';    break;
+    case 'summary':             $tmp = 'Summary';             break;
 
     /** explanations for the various steps a project has **/
+    case 'step_0_explanation': 
+        $tmp = 'Please wait until a SourceAgency Editor has reviewed your project.'; 
+        break;
     case 'step_1_explanation': 
         $tmp = 'Help for sponsors on making a proper project submission.'; 
         break;

@@ -37,19 +37,19 @@ $bx = new box('100%',$th_box_frame_color,$th_box_frame_width,
               $th_box_body_font_color,$th_box_body_align);
 
 start_content();
-$page = 'content suggestions';
+$page = 'specifications';
 
 if (check_proid($proid)) {
     top_bar($proid,$page);
 
-    print ( $t->translate('Technical content suggestions. They can '
+    print ( $t->translate('Technical specification suggestions. They can '
                           .'be made either by developers or by a sponsor '
                           .'(if the sponsor is owner of the project).')."\n");
 
     print ( '<p align=right>[<b> '
             . html_link('step2_edit.php3',
                         array('proid' => $proid),
-                        $t->translate('Suggest a Technical Content'))
+                        $t->translate('Suggest a Technical Specification'))
             ." </b>] &nbsp;<p>\n" );
 
     show_content($proid, $show_proposals, $which_proposals);
