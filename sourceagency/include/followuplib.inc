@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: followuplib.inc,v 1.6 2001/12/10 14:50:16 grex Exp $
+# $Id: followuplib.inc,v 1.7 2001/12/17 10:06:11 grex Exp $
 #
 ######################################################################
 
@@ -247,7 +247,7 @@ function followup_referee_form($proid) {
 
   $bx->box_next_row_of_columns();
 
-  $bx->box_column ("right","30%","","<b>".$t->translate("count")."</b>: ");
+  $bx->box_column ("right","30%","","<b>".$t->translate("Count")."</b>: ");
   $bx->box_column ("left","70%","",$count);
 
   $bx->box_next_row_of_columns();
@@ -277,7 +277,13 @@ function followup_current_milestone($proid) {
 	if ($db_local->num_rows() == 0) return 1;
 	$db_local->next_record();
 	$temp = $db_local->f("milestone_number");
-	if ($db_local->f("iteration") == 3) $temp += 1;
+	if ($db_local->f("iteration") == 0) {
+            $db_local->query("SELECT MAX(number) FROM milestones WHERE proid='$proid'");
+            $db_local->next_record();
+            if ($db_local->f("MAX(number)") < $temp) {
+                $temp = -1;     // No more milestones!!! Step 5 has finished!
+            }
+        }
 	return $temp;
 }
 
@@ -290,10 +296,10 @@ function followup_current_count($proid,$milestone_number) {
 	return $db_local->f("count");
 }
 
-function followup_location($proid,$milestone_number) {
+function followup_location($proid,$milestone_number,$count) {
 
 	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT location FROM follow_up WHERE milestone_number='$milestone_number'");
+	$db_local->query("SELECT location FROM follow_up WHERE milestone_number='$milestone_number' AND count='$count'");
 	$db_local->next_record();
 	return $db_local->f("location");
 }
@@ -350,9 +356,9 @@ function followup_milestone_schedule($proid,$milestone_number,$count) {
         if ($days_left > 1) {
             print "<p>Number of days left until <b>milestone number $milestone_number</b> is released: <b>".floor($days_left)." days</b>.<p>";
         } elseif ($days_left < -0.5) {
-            print "<p>Milestone number <b>$milestone_number</b> should have been released <b>".ceil(-$days_left)."</b> days ago.<p>";
+             print "<p>Milestone number <b>$milestone_number</b> should have been released <b>".ceil(-$days_left)."</b> days ago.<p>";
         } else {
-           print "<p>Milestone number <b>$milestone_number</b> should be released <b>today</b>.<p>";
+            print "<p>Milestone number <b>$milestone_number</b> should be released <b>today</b>.<p>";
         }
 	if(is_main_developer($proid)) {
             print "You are the main developer. You can post the milestone ".html_link("step5_devel.php3",array("proid"=>$proid),"in this page");
@@ -378,8 +384,8 @@ function followup_milestone_schedule($proid,$milestone_number,$count) {
             print "<p>You are an accepted sponsor for this project. You can decide what will happen to this project ".html_link("step5_sponsor.php3",array("proid"=>$proid),"in this page");
         }
         break;
-    case '5':
-        print "The follow_up process is finished";
+     case '5':
+        print "The follow_up process is finished. Now it is time for rating.";
         break;
     }
 

@@ -50,13 +50,9 @@ if (check_permission($proid,$page)) {
 
 	$milestone_number = followup_current_milestone($proid);
 	$count = followup_current_count($proid,$milestone_number);
-	$location = followup_location($proid,$milestone_number);
+	$location = followup_location($proid,$milestone_number,$count);
 
-	if(isset($Yes) && !empty($Yes)) {
-
-		$bx->box_full("<b>A decision has been made</b>","And this is the decision: FIXME");
-
-	} else {
+	if(!isset($Yes) || empty($Yes)) {
 
 		$voted_yet=0;
 
@@ -73,10 +69,15 @@ if (check_permission($proid,$page)) {
 			}
 
 		$quorum = show_decision_step5($proid,$milestone_number,$count);
-	}
+        }
+
 	if ($quorum || (isset($Yes) && !empty($Yes))) {
-		if ($No || !isset($Yes) || empty($Yes)) are_you_sure_message_step5($proid);
-		else decisions_step5_sponsors($proid,$milestone_number,$count);
+		if ($No || !isset($Yes) || empty($Yes)) {
+                    are_you_sure_message_step5($proid);
+                } else {
+                    decisions_step5_sponsors($proid,$milestone_number,$count);
+                    $bx->box_full("<b>A decision has been made</b>","And this is the decision: ".decisions_decision_met_on_step5 ($proid,$milestone_number,$count));
+                }
 	}
         $bx->box_full($t->translate("Information Box"),
 		      $t->translate("Sponsors can decide themselves for three different choices:")."<p><ul>".

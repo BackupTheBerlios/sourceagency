@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisionslib.inc,v 1.6 2001/12/10 14:51:42 grex Exp $
+# $Id: decisionslib.inc,v 1.7 2001/12/17 10:06:11 grex Exp $
 #
 ######################################################################
 
@@ -739,8 +739,18 @@ function decisions_step5_sponsors($proid,$milestone_number,$count) {
   $db_quota->next_record();
   if ($db_quota->f("SUM(budget)") > $decision_value) { 
 	$db_quota->query("UPDATE follow_up SET iteration='5' WHERE proid='$proid' AND milestone_number='$milestone_number'");
-	$milestone_number++;
-	$db_quota->query("INSERT follow_up SET iteration='0',proid='$proid',milestone_number='$milestone_number',count='1'");
+
+			// Looking for the last milestone
+        $db_quota->query("SELECT MAX(number) FROM milestones WHERE proid='$proid'");
+        $db_quota->next_record();
+			// If it is not the last milestone, we start the next iteration
+        if ($db_quota->f("MAX(number)") != $milestone_number) {
+	    $milestone_number++;
+	    $db_quota->query("INSERT follow_up SET iteration='0',proid='$proid',milestone_number='$milestone_number',count='1'");
+			// ... but if it was the last milestone... then we are finished with step 5
+        } else {
+	    $db_quota->query("UPDATE description SET status='6' WHERE proid='$proid'");
+        }
   } else {
 
 		// minor problems
@@ -834,6 +844,22 @@ function decisions_decision_met($proid) {
 
 	if ($first == $second) return 1;
 	else return 0;
+}
+
+function decisions_decision_met_on_step5 ($proid, $milestone_number, $count) {
+    global $db;
+
+    $db->query("SELECT iteration FROM follow_up WHERE proid='$proid' AND milestone_number='$milestone_number'");
+    $db->next_record();
+
+    if ($db->f("iteration") == "5") {
+        return "The milestone has been <b>accepted</b>";
+    } elseif ($db->f("iteration") == "2") {
+        return "<b>Severe</b> problems have been found.<p>The referee has been switched to decide.";
+    } else {
+	// Clarification: for this to happen $db->f("iteration") should be 0
+        return "<b>Minor</b> changes are required.<p>Developers have some days to enhance their program propperly.";
+    }
 }
 
 ?>
