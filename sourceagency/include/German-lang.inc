@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: German-lang.inc,v 1.13 2002/05/03 10:42:54 riessen Exp $
+# $Id: German-lang.inc,v 1.14 2002/05/03 10:45:43 riessen Exp $
 #
 ######################################################################
 
@@ -145,6 +145,7 @@ function translate_real($phrase) {
         case 'Personal Page': $tmp = 'Personliche Seite'; break;
         case 'Platform': $tmp = 'Plattform'; break;
         case 'Please try again': $tmp = 'Bitte versuchen Sie es nochmal'; break;
+        case 'Project': $tmp = 'Projekt'; break;
         case 'Project Follow-up': $tmp = 'Projekt Nachgehen'; break;
         case 'Project History': $tmp = 'Projekt Historie'; break;
         case 'Project Information': $tmp = 'Projekt Information'; break;
@@ -233,9 +234,11 @@ function translate_real($phrase) {
         case 'other comments on this project': $tmp = 'andere Kommentare zu diesem Projekt'; break;
         case 'permission': $tmp = 'Berechtigung'; break;
         case 'posted to': $tmp = $phrase; break;
+        case 'project': $tmp = 'Projekt'; break;
         case 'project_name': $tmp = 'Projektname'; break;
         case 'sponsoring': $tmp = 'Finanzielle Unterstützung'; break;
         case 'status': $tmp = $phrase; break;
+        case 'step': $tmp = "schritt"; break;
         case 'step1_edit': $tmp = 'Neue Berater vorschlagen'; break;
         case 'step3_edit': $tmp = 'Neue Meilensteine definieren'; break;
         case 'summary': $tmp = 'Zusammenfassung'; break;
