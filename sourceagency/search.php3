@@ -61,7 +61,7 @@ if ($db->num_rows() == 0) {
 	lib_show_description($query);
 
 	if ($numiter > 1) {
-            $url = "appsearch.php3";
+            $url = "search.php3";
             $urlquery = array("search" => ($search), "by" => $by);
             show_more ($iter,$numiter,$url,$urlquery);
 	}
