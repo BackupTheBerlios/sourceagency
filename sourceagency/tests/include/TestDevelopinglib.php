@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDevelopinglib.php,v 1.1 2002/05/15 15:46:17 riessen Exp $
+// $Id: TestDevelopinglib.php,v 1.2 2002/06/06 08:18:27 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -24,6 +24,8 @@ extends UnitTest
     function setup() {
     }
     function tearDown() {
+        unset( $GLOBALS[ 'db' ] );
+        unset( $GLOBALS[ 'bx' ] );
     }
 
     function testDeveloping_form() {
@@ -46,11 +48,33 @@ extends UnitTest
     }
 
     function testDeveloping_select_cooperation() {
-        $this->_test_to_be_completed();
+        global $t;
+        $v = array( 'No', 'no', 'yes', 'Yes', 'Yes Please', 'NO', 'YES' );
+        while ( list( , $val ) = each( $v ) ) {
+            capture_reset_and_start();
+            $this->set_text( developing_select_cooperation( $val ) );
+            $this->assertEquals(0,strlen(capture_stop_and_get()),"Test $val");
+            $this->_testFor_html_select( 'cooperation' );
+            $this->_testFor_html_select_option( 'No', ($val=='No'), 
+                                                $t->translate('No'));
+            $this->_testFor_html_select_end();
+            $this->_testFor_string_length( ($val=='No'? 93 : 84 ) );
+        }
     }
 
     function testSelect_duration() {
-        $this->_test_to_be_completed();
+        for ( $idx = -10; $idx < 110; $idx++ ) {
+            capture_reset_and_start();
+            $this->set_text( select_duration( $idx ) );
+            $this->assertEquals(0,strlen(capture_stop_and_get()),"test $idx");
+            // if something is selected, then strings is longer
+            $this->_testFor_string_length(($idx<1||$idx>100 ? 2936:2945));
+            $this->_testFor_html_select( 'duration' );
+            for ( $jdx = 1; $jdx < 101; $jdx++ ) {
+                $this->_testFor_html_select_option( $jdx, ($jdx==$idx), $jdx );
+            }
+            $this->_testFor_html_select_end();
+        }
     }
 
     function testShow_developings() {
