@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: chguser.php3,v 1.7 2002/05/10 11:55:34 grex Exp $
+# $Id: chguser.php3,v 1.8 2002/05/10 11:56:34 grex Exp $
 #
 ######################################################################
 
@@ -102,7 +102,7 @@ $bx->box_body_begin();
 htmlp_form_action();
 $bx->box_columns_begin();
 
-$db->query("SELECT * FROM auth_user WHERE username='".$auth->auth["uname"]."'");
+$db->query("SELECT * FROM auth_user WHERE username='".$auth->auth['uname']."'");
 $db->next_record();
 
 $bx->box_column('right',  '50%', '', '<b>'.$t->translate('Username').':</b>');
@@ -131,17 +131,17 @@ $bx->box_column('left', '50%', '', html_input_text('email_usr', $db->f('$email_u
 $bx->box_next_row_of_columns();
 
 $bx->box_column('right', '50%', '', '<b>'.$t->translate('Creation').':</b>');
-$bx->box_column('left', '50%', '', timestr($db->f("creation_usr")));
+$bx->box_column('left', '50%', '', timestr($db->f('creation_usr')));
 
 $bx->box_next_row_of_columns();
 
 $bx->box_column('right', '50%', '', '<b>'.$t->translate('Last Modification').':</b>');
-$bx->box_column('left', '50%', '', timestr($db->f("modification_usr")));
+$bx->box_column('left', '50%', '', timestr($db->f('modification_usr')));
 
 $bx->box_next_row_of_columns();
 
-$bx->box_column('right, '50%', '', ''<b>'.$t->translate('Permisions').':</b>');
-$bx->box_column('left', '50%', '', timestr($db->f("perms")));
+$bx->box_column('right', '50%', '', '<b>'.$t->translate('Permisions').':</b>');
+$bx->box_column('left', '50%', '', timestr($db->f('perms')));
 
 $bx->box_next_row_of_columns();
 
