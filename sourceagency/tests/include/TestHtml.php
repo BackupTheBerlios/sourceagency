@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.20 2002/05/21 09:51:04 riessen Exp $
+# $Id: TestHtml.php,v 1.21 2002/05/21 12:55:46 riessen Exp $
 #
 ######################################################################
 
@@ -47,12 +47,38 @@ extends UnitTest
         capture_stop();
     }
 
-    function testhtml_link() {
+    // generic tester function for html_XXXX and htmlp_XXXX functions
+    function _test_html_function( $name, $args, $exp_length ) {
+        for ( $idx = 0; $idx < count($args); $idx++ ) {
+            // first test the function that returns a value, i.e. html_XXXX
+            $text = call_user_func_array( $name, $args[$idx] );
+            // never use arguments for the function that are called 'text'
+            // or 'msg', these are arguments to the _testFor_XXXX method
+            $args2 = array_merge( array( 'text' => $text ), $args[$idx],
+                                  array( 'msg' => "test $idx" ) );
+            // call the _testFor_html_XXXX method of the class which
+            // generates an expected value for the htmlp_XXXX function call
+            // This method is normally defined in the UnitTest class.
+            $expect = call_user_method_array('_testFor_'.$name, $this, $args2);
+            $this->assertEquals( $expect, $text, "assert 1: test $idx" );
+            // call the print variation of the function assuming that it's
+            // called htmlp_XXXX instead of html_XXXX
+            capture_reset_and_start();
+            call_user_func_array( ereg_replace('^html_','htmlp_',$name), 
+                                  $args[$idx] );
+            $text = capture_stop_and_get();
+            $this->_testFor_captured_length( $exp_length[$idx], "test $idx" );
+            $this->assertEquals( $expect, $text, "assert 2: test $idx" );
+        }
+    }
+
+    function testHtml_link() {
         //
         // a total of five tests
         //
         global $sess;
-        $args=$this->_generate_records(array('url','paras','text','css',),5);
+        $args=$this->_generate_records(array('url','paras','txt','css',),5);
+
         $args[0]['url'] = 'fubar';           $args[0]['css'] = '';
         $args[1]['url'] = 'PHP_SELF';        $args[1]['css'] = '';
         $args[2]['url'] = 'PHP_SELF';        $args[2]['css'] = 'css';
@@ -65,92 +91,36 @@ extends UnitTest
         $args[3]['paras'] = '';
         $args[4]['paras'] = array( 'one'=>'what+the+hell','two'=>'argument 2');
 
-        $args[0]['text'] = 'hello world';
-        $args[1]['text'] = 'goodbye cruel world';
-        $args[2]['text'] = 'hello world';
-        $args[3]['text'] = 'hello world';
-        $args[4]['text'] = 'goodbye cruel world';
+        $args[0]['txt'] = 'hello world';
+        $args[1]['txt'] = 'goodbye cruel world';
+        $args[2]['txt'] = 'hello world';
+        $args[3]['txt'] = 'hello world';
+        $args[4]['txt'] = 'goodbye cruel world';
 
         $exp_length = array( 0=>49, 
                              1=>43 + strlen( $sess->self_url()), 
-                             2=>56 + strlen($sess->self_url()), 
+                             2=>56 + strlen( $sess->self_url()), 
                              3=>43, 
                              4=>98);
 
-        for ( $idx = 0; $idx < count($args); $idx++ ) {
-            if ( $args[$idx]['css'] ) {
-                $actual = call_user_func_array( 'html_link',$args[$idx] );
-            } else {
-                $actual = html_link($args[$idx]['url'], $args[$idx]['paras'], 
-                                     $args[$idx]['text']);
-            }
-            $expect = $this->_testFor_html_link( $actual, $args[$idx]['url'], 
-                                     $args[$idx]['paras'], $args[$idx]['text'],
-                                     $args[$idx]['css'], "test $idx");
-            $this->assertEquals( $expect, $actual, "assert1: test $idx" );
-            capture_reset_and_start();
-            if ( $args[$idx]['css'] ) {
-                call_user_func_array( 'htmlp_link',$args[$idx] );
-            } else {
-                htmlp_link($args[$idx]['url'], $args[$idx]['paras'], 
-                                                        $args[$idx]['text']);
-            }
-            $text = capture_stop_and_get();
-            $this->_testFor_captured_length($exp_length[$idx],"test $idx");
-            $this->assertEquals( $expect, $text, "assert2: test $idx" );
-        }
+        $this->_test_html_function( 'html_link', $args, $exp_length );
     }
 
-    function _testFor_html_anchor( $text, $name, $msg = '') {
-        $str = '<a name="'. $name . '"></a>';
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
-                     '_testFor_html_anchor'.($msg == '' ? '': ' ('.$msg.')'));
-        return $str;
+    function testHtml_anchor() {
+        $args = array( 0 => array( 'name' => 'hello world' ));
+        $this->_test_html_function( 'html_anchor', $args, array( 0=> 26 ) );
     }
 
-    function testhtml_anchor() {
-        $name = 'hello world';
-        $actual = html_anchor( $name );
-        $expect = $this->_testFor_html_anchor( $actual, $name );
-        $this->assertEquals( $expect, $actual );
-
-        // test the print variation of the same function
-        htmlp_anchor( $name );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 26, "test 1" );
-        $this->assertEquals( $expect, $text );
-    }
-
-    function _testFor_html_image( $text, $file, $border, $width, $height,
-                                  $alt, $msg = '' ) {
-        $str = ( '<img src="images/'.$file.'" border="'.$border.'"'
-                 .' width="'.$width.'" height="'.$height
-                 .'" alt="'.$alt.'">' );
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
-                           "_testFor_html_image" 
-                           . ($msg == '' ? '' : ' (' . $msg . ')'));
-        return $str;
-    }
-    function testhtml_image() {
+    function testHtml_image() {
         $args=$this->_generate_records(array('file','border','width','height',
                                              'alt'),1);
-        $actual = call_user_func_array( 'html_image', $args[0] );
-        $expect = $this->_testFor_html_image( $actual,$args[0]["file"], 
-                                        $args[0]["border"], $args[0]["width"], 
-                                        $args[0]["height"], $args[0]["alt"]);
-        $this->assertEquals( $expect, $actual );
-        
-        // test the print version of the function
-        call_user_func_array( 'htmlp_image', $args[0] );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 89, "test 1" );
-        $this->assertEquals( $expect, $text );
+        $this->_test_html_function( 'html_image', $args, array(0=>89));
     }
 
-    function testhtml_form_action() {
+    function testHtml_form_action() {
         global $sess;
         //
-        // test 1
+        // 3 tests in total
         //
         $args = $this->_generate_records(array("file","query","method"),3);
         $args[0]["file"] = 'PHP_SELF';
@@ -166,114 +136,44 @@ extends UnitTest
         $exp_length = array( 0 => 31 +  strlen( $sess->self_url()), 
                              1 => 35, 2 => 54 );
         
-        for ( $idx = 0; $idx < count( $args ); $idx++ ) {
-            $text = html_form_action( $args[$idx]["file"],$args[$idx]["query"],
-                                      $args[$idx]["method"] );
-            $expect = $this->_testFor_html_form_action( $text,
-                                      $args[$idx]["file"],$args[$idx]["query"],
-                                      $args[$idx]["method"], "test $idx" );
-            $this->assertEquals( $expect, $text, "assert1: test $idx" );
-            capture_reset_and_start();
-            htmlp_form_action( $args[$idx]["file"],$args[$idx]["query"],
-                                                       $args[$idx]["method"]);
-            $text = capture_stop_and_get();
-            $this->_testFor_captured_length( $exp_length[$idx], "test $idx");
-            $this->assertEquals( $expect, $text, "assert2: test $idx" );
-        }
+        $this->_test_html_function( 'html_form_action', $args, $exp_length );
+    }
+    
+    function testHtml_form_hidden() {
+        $args=$this->_generate_records(array("name","value"), 1);
+
+        $this->_test_html_function( 'html_form_hidden', $args, array(0=>56));
     }
 
-    function testhtml_form_hidden() {
-        $text = html_form_hidden( "name", "value" );
-        $expect = ( "[ \n]+<input type=\"hidden\" name=\"name\" "
-                    ."value=\"value\">" );
-        $this->_testFor_pattern( $text, $expect, "p1" );
-        htmlp_form_hidden( "name", "value" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 52, 'test 1' );
-        $this->_testFor_pattern( $text, $expect, "p2" );
+    function testHtml_select() {
+        $args = $this->_generate_records(array("name",'multi','size'),3);
+
+        $args[0]['size'] = 0;
+        $args[0]['multi'] = '';
+        $args[1]['size'] = 23;
+        $args[1]['multi'] = 0;
+        $args[2]['size'] = 23;
+        $args[2]['multi'] = 1;
+        $exp_length = array( 0=> 36, 1=> 37, 2=> 46);
+
+        $this->_test_html_function( 'html_select', $args, $exp_length );
     }
 
-    function testhtml_select() {
-        // test 1: single name argument tests
-        $text = html_select( "name" );
-        $expect = "[ \n]+".'<select name="name" size="0">'."\n";
-        $this->_testFor_pattern( $text, $expect, "p1" );
-        htmlp_select( "name" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 34, "test 1" );
-        $this->_testFor_pattern( $text, $expect, "p2" );
-
-        // test2: test the name and size arguments
-        $text = html_select( "name", 0, 23 );
-        $expect = "[ \n]+".'<select name="name" size="23">'."\n";
-        $this->_testFor_pattern( $text, $expect, "p3" );
-        capture_reset_and_start();
-        htmlp_select( "name", 0, 23 );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 35, "test 2" );
-        $this->_testFor_pattern( $text, $expect, "p4" );
-
-        // test3: test the size and multiple argument
-        $text = html_select( "name", 1, 23 );
-        $expect = "[ \n]+".'<select name="name" size="23" multiple>'."\n";
-        $this->_testFor_pattern( $text, $expect, "p5" );
-        capture_reset_and_start();
-        htmlp_select( "name", 1, 23 );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 44, "test 3" );
-        $this->_testFor_pattern( $text, $expect, "p6" );
+    function testHtml_select_option() {
+        $args = $this->_generate_records( array("value","selected","txt"),4);
+        $args[1]['selected'] = '';
+        $args[1]['txt'] = '';
+        $args[2]['selected'] = false;
+        $args[2]['value'] = '';
+        $args[3]['value'] = '';
+        $args[3]['selected'] = true;
+        $args[3]['txt'] = '';
+        $exp_length = array( 0=>46,1=>32,2=>30,3=>34);
+        
+        $this->_test_html_function( 'html_select_option', $args, $exp_length );
     }
 
-    function testhtml_select_option() {
-        //
-        // test 1
-        //
-        $text = html_select_option( "value", "selected", "text" );
-        $expect = "[ \n]+<option selected value=\"value\">text\n";
-        $this->_testFor_pattern( $text, $expect, "p1" );
-        htmlp_select_option( "value", "selected", "text" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 43, "test 1" );
-        $this->_testFor_pattern( $text, $expect, "p2" );
-
-        //
-        // test 2
-        //
-        $text = html_select_option( "value", "", "" );
-        $expect = "[ \n]+<option value=\"value\">\n";
-        $this->_testFor_pattern( $text, $expect, "p3" );
-        capture_reset_and_start();
-        htmlp_select_option( "value", "", "" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 30, "test 2" );
-        $this->_testFor_pattern( $text, $expect, "p4" );
-
-        //
-        // test 3
-        //
-        $text = html_select_option( "", false, "text" );
-        $expect = "[ \n]+<option value=\"\">text\n";
-        $this->_testFor_pattern( $text, $expect, "p5" );
-        capture_reset_and_start();
-        htmlp_select_option( "", false, "text" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 29, "test 3" );
-        $this->_testFor_pattern( $text, $expect, "p6" );
-
-        //
-        // test 4
-        //
-        $text = html_select_option( "", true, "" );
-        $expect = "[ \n]+<option selected value=\"\">\n";
-        $this->_testFor_pattern( $text, $expect, "p7" );
-        capture_reset_and_start();
-        htmlp_select_option( "", true, "" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 34, "test 4" );
-        $this->_testFor_pattern( $text, $expect, "p8" );
-    }
-
-    function testhtml_select_end() {
+    function testHtml_select_end() {
         $text = html_select_end();
         $expect = "[ \n]+<\/select>\n";
         $this->_testFor_pattern( $text, $expect, "p1" );
@@ -283,7 +183,7 @@ extends UnitTest
         $this->_testFor_pattern( $text, $expect, "p2" );
     }
 
-    function testhtml_input_text() {
+    function testHtml_input_text() {
         $text = html_input_text( "name", "size", "maxlength", "value" );
         $expect = ( "[ \n]+<input type=\"text\" name=\"name\" size=\"size\" "
                     ."maxlength=\"maxlength\" value=\"value\">" );
@@ -294,7 +194,7 @@ extends UnitTest
         $this->_testFor_pattern( $text, $expect, "p2" );
     }
 
-    function testhtml_form_submit() {
+    function testHtml_form_submit() {
         // test 1 with name
         $text = html_form_submit( "value", "name" );
         $expect = ( "[ \n]+<input type=\"submit\" value=\"value\" "
@@ -316,7 +216,7 @@ extends UnitTest
         $this->_testFor_pattern( $text, $expect, "p4" );
     }
 
-    function testhtml_checkbox() {
+    function testHtml_checkbox() {
         //
         // test 1
         //
@@ -369,7 +269,7 @@ extends UnitTest
         $this->_testFor_pattern( $text, $expect, "p8" );
     }
 
-    function testhtml_radio() {
+    function testHtml_radio() {
         //
         // test 1
         //
@@ -420,7 +320,7 @@ extends UnitTest
         $this->_testFor_pattern( $text, $expect, "p8" );
     }
     
-    function testhtml_textarea() {
+    function testHtml_textarea() {
         $text = html_textarea( "name", "columns", "rows", "wrap", 
                                  "maxlength", "value" );
         $expect = ("[ \n]+<textarea name=\"name\" cols=\"columns\" "
@@ -434,7 +334,7 @@ extends UnitTest
         $this->_testFor_pattern( $text, $expect, "p2" );
     }
 
-    function testhtml_form_end() {
+    function testHtml_form_end() {
         $text = html_form_end( );
         $expect = "\n<\/form>";
         $this->_testFor_pattern( $text, $expect, "p1" );
