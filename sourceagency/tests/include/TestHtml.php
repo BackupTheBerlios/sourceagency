@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.16 2002/04/23 12:07:45 riessen Exp $
+# $Id: TestHtml.php,v 1.17 2002/04/24 16:10:56 riessen Exp $
 #
 ######################################################################
 
@@ -52,23 +52,23 @@ extends UnitTest
         // test 1
         //
         $actual = html_link('fubar',array( 'one' => 'what'),'hello world' );
-        $expect = "<a href=\"fubar?one=what\">hello world</a>";
+        $expect = "<a href=\"fubar?one=what\" class=\"\">hello world</a>";
         $this->assertEquals( $expect, $actual );
         htmlp_link('fubar',array( 'one' => 'what'),'hello world' );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 40, "test 1" );
+        $this->_testFor_captured_length( 49, "test 1" );
         $this->assertEquals( $expect, $text );
         
         // 
         // test 2
         //
         $actual = html_link( 'snafu', "", 'goodbye cruel world' );
-        $expect = "<a href=\"snafu\">goodbye cruel world</a>";
+        $expect = "<a href=\"snafu\" class=\"\">goodbye cruel world</a>";
         $this->assertEquals( $expect, $actual );
         capture_reset_and_start();
         htmlp_link( 'snafu', "", 'goodbye cruel world' );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 39, "test 2" );
+        $this->_testFor_captured_length( 48, "test 2" );
         $this->assertEquals( $expect, $text );
 
         //
@@ -76,13 +76,14 @@ extends UnitTest
         //
         $actual = html_link('fubar',array( 'one' => 'what the hell'),
                             'hello world' );
-        $expect = "<a href=\"fubar?one=what+the+hell\">hello world</a>";
+        $expect = ( "<a href=\"fubar?one=what+the+hell\" class=\"\">"
+                    ."hello world</a>" );
         $this->assertEquals( $expect, $actual );
         capture_reset_and_start();
         htmlp_link('fubar',array( 'one' => 'what the hell'),
                   'hello world' );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 49, "test 3" );
+        $this->_testFor_captured_length( 58, "test 3" );
         $this->assertEquals( $expect, $text );
 
         //
@@ -90,13 +91,14 @@ extends UnitTest
         //
         $actual = html_link('fubar',array( 'one' => 'what+the+hell'),
                             'hello world' );
-        $expect = "<a href=\"fubar?one=what%2Bthe%2Bhell\">hello world</a>";
+        $expect = ( "<a href=\"fubar?one=what%2Bthe%2Bhell\" class=\"\">"
+                    ."hello world</a>" );
         $this->assertEquals( $expect, $actual );
         capture_reset_and_start();
         htmlp_link('fubar',array( 'one' => 'what+the+hell'),
                    'hello world' );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 53, "test 4" );
+        $this->_testFor_captured_length( 62, "test 4" );
         $this->assertEquals( $expect, $text );
     }
 
