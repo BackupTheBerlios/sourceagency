@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: admfaq.php3,v 1.3 2002/04/18 14:30:52 grex Exp $
+# $Id: admfaq.php3,v 1.4 2002/04/18 14:33:02 grex Exp $
 #
 ######################################################################  
 
@@ -53,7 +53,6 @@ if (($config_perm_admfaq != 'all')
     $bx->box_title($t->translate('Frequently Asked Questions Administration'));
     $bx->box_body_begin();
 
-    $bx->box_body_begin();
     $bx->box_columns_begin(2);
     $bx->box_column('left', '88%', '', 'Enter a New Frequently Asked Question');
     $bx->box_column('right', '12%', '', html_form_action('insfaq.php3')
@@ -62,6 +61,7 @@ if (($config_perm_admfaq != 'all')
                                        .html_form_end());
     $bx->box_columns_end();
     $bx->box_body_end();
+    $bx->box_end();
 
     while($db->next_record()) {
         $bx->box_begin();
