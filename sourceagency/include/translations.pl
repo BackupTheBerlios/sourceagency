@@ -6,13 +6,13 @@ while ($file = glob "*.inc") {
     while (<FILE>) {
 	$i++;
         if (/$t->translate\(\s?"(.*?)"\s?\)/) {
-	    print $1."\n";
+	    push @complete, $1;
 	} elsif (/$t->translate\(\s?'(.*?)'\s?\)/) {
-	    print $1."\n";
+	    push @complete, $1;
 	} elsif (/$t->translate\(\$/) {
 	    # print "Tranlation is a variable: line $i\n";
 	} elsif (/$t->translate/) {
-	    print "----> Uncompleted translation in file $file at line $i <----\n";
+	    push @uncomplete, "File $file at line $i <----";
 	}
     }
     close FILE;
@@ -26,14 +26,23 @@ while ($file = glob "*.php3") {
     while (<FILE>) {
 	$i++;
         if (/$t->translate\(\s?"(.*?)"\s?\)/) {
-	    print $1."\n";
+	    push @complete, $1;
 	} elsif (/$t->translate\(\s?'(.*?)'\s?\)/) {
-	    print $1."\n";
+	    push @complete, $1;
 	} elsif (/$t->translate\(\$/) {
 	    # print "Tranlation is a variable: line $i\n";
 	} elsif (/$t->translate/) {
-	    print "----> Uncompleted translation in file $file at line $i <----\n";
+	    push @uncompleted, "File $file at line $i <----";
 	}
     }
     close FILE;
+}
+
+@complete = sort @complete;
+foreach $line (@complete) {
+    print $line."\n";
+}
+
+foreach $line (@uncomplete) {
+    print $line."\n";
 }
