@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestPersonallib.php,v 1.11 2001/10/26 15:57:53 riessen Exp $
+// $Id: TestPersonallib.php,v 1.12 2001/10/30 14:49:25 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -16,18 +16,12 @@ if ( !defined("BEING_INCLUDED" ) ) {
     $sess = new session;
 } 
 
-class db_sourceagency 
-extends mock_database 
-{
-    function db_sourceagency() {
-        // call the constructor of our parent
-        $this->mock_database();
-    }
-}
-
 include_once( 'lib.inc' ); // need this for show_status(..)
 include_once( 'html.inc' ); // implicitly required by personallib.inc
+include_once( 'security.inc' ); // required for personal_related_projects
+
 include_once( 'personallib.inc' );
+
 //
 // REFACTOR: This entire test class is in bad need of refactoring
 //
@@ -48,8 +42,8 @@ extends TestCase
     var $p_news_long_template = "<br><li>News: <b><a href=\"news.php3[?]proid=%s\">%s<\/a><\/b>[^(]*[(]<b>%s<\/b>[ \\n]*comments on it[)][^<]*<br>[^o\\n]*osted to <a href=\"summary.php3[?]proid=%s\">%s<\/a><br>";
     // Arg: 1=type, 2=proid, 3=type, 4=number, 5=reference, 6=subject cmt
     // Arg: 7=count star, 8=proid(from description) 9=project title
-      var $p_comment_line_template = "<br><li>Comment [(]%s[)]: <b><a href=\"comments[.]php3[?]proid=%s&type=%s&number=%s&ref=%s\">%s<\/a><\/b>  [(]<b>%s<\/b> comments on it[)][\\n]+<br>&nbsp; &nbsp; &nbsp; posted to <a href=\"summary[.]php3[?]proid=%s\">%s<\/a><br>";
-//      var $p_comment_line_template = "<br><li>Comment [(]%s[)]: <b><a href=\"comments[.]php3[?]proid=%s&type=%s";
+    var $p_comment_line_template = "<br><li>Comment [(]%s[)]: <b><a href=\"comments[.]php3[?]proid=%s&type=%s&number=%s&ref=%s\">%s<\/a><\/b>  [(]<b>%s<\/b> comments on it[)][\\n]+<br>&nbsp; &nbsp; &nbsp; posted to <a href=\"summary[.]php3[?]proid=%s\">%s<\/a><br>";
+
     function UnitTestPersonallib( $name ) {
         $this->TestCase( $name );
     }
@@ -119,6 +113,110 @@ extends TestCase
     //
     // Start of the actual test methods
     //
+    function testPersonal_related_projects() {
+        global $auth;
+        // status can be one of: P(Proposed),N(Negotiating),A(Accepted),
+        //                       R(Rejected),D(Delete),M(Modified)
+        $user1 = "fubar";
+        $user2 = "snafu";
+        $user3 = "fritz";
+        
+        $table1 = "sponsoring";
+        $user_type1 = "sponsor";
+        $status1 = "P";
+
+        $table2 = "developing";
+        $user_type2 = "developer";
+        $status2 = "D";
+
+        $db_config = new mock_db_configure;
+        $db_config->set_nr_instance_expected( 5 );
+        $db_q = array( // Arg: 1=user name
+                       0 => ("SELECT * FROM auth_user WHERE perms='sponsor' "
+                             . "AND username='%s'"),
+                       // Arg: 1=table name,2=user_type,3=user name,4=table name
+                       // Arg: 5=status, 6=table name,
+                       1 => ("SELECT * FROM %s,description WHERE "
+                             . "%s='%s' AND %s.status='%s' AND %s.proid="
+                             . "description.proid  ORDER BY creation DESC"),
+                       // Arg: 1=user name
+                       2 => ("SELECT * FROM auth_user WHERE perms='devel' "
+                             . "AND username='%s'"));
+
+        // Database instances: 
+        //  fubar:
+        //    0 created by personal_related_projects
+        //    1 created by is_sponsor
+        //  snafu:
+        //    2 created by personal_related_projects
+        //    3 created by is_sponsor
+        //    4 created by is_developer
+        $db_config->add_query( sprintf( $db_q[1], $table1, $user_type1, 
+                                        $user1, $table1, $status1, 
+                                        $table1), 0 );
+        $db_config->add_query( sprintf( $db_q[0], $user1 ), 1 );
+
+        $db_config->add_num_row(0, 0); // fubar not related to any projects
+        $db_config->add_record(false, 0);
+        $db_config->add_num_row(1, 1); // return one, fubar is sponsor
+
+        $db_config->add_query( sprintf( $db_q[1], $table2, $user_type2, 
+                                        $user2, $table2, $status2, 
+                                        $table2), 2 );
+        $db_config->add_query( sprintf( $db_q[0], $user2 ), 3 ); //is_sponsor
+        $db_config->add_query( sprintf( $db_q[2], $user2 ), 4 ); //is_sponsor
+        $db_config->add_num_row( 0, 2 ); // snafu also has no relate projects
+        $db_config->add_record( false, 2 );
+        $db_config->add_num_row( 0, 3 );
+        $db_config->add_num_row( 1, 4 );
+        
+        //
+        // fubar 
+        //
+        capture_start();
+        $auth->set_uname( $user1 );
+        $auth->set_perm( "hell yes!" );
+        personal_related_projects( $auth->auth['uname'], $status1 );
+        capture_stop();
+        
+        $text = capture_text_get();
+        $this->_testFor_length( 566 );
+        $this->_testFor_pattern( $text, ("<b>Involved ".show_status($status1)
+                                         ." Projects<\/b>" ));
+        $this->_testFor_line( $text, ("Not related to any project with "
+                                      . show_status($status1)." status"));
+        $this->assertNotRegexp( "/summary.php3/", $text, 
+                                "[User: ".$user1."] summary link shouldn't"
+                                . " exist");
+
+        // 
+        // snafu
+        //
+        capture_reset_text();
+        capture_start();
+        $auth->set_uname( $user2 );
+        $auth->set_perm( "hell yes!" );
+        personal_related_projects( $auth->auth['uname'], $status2 );
+        capture_stop();
+        
+        $text = capture_text_get();
+        $this->_testFor_length( 564 );
+        $this->_testFor_pattern( $text, ("<b>Involved ".show_status($status2)
+                                         ." Projects<\/b>" ));
+        $this->_testFor_line( $text, ("Not related to any project with "
+                                      . show_status($status2)." status"));
+        $this->assertNotRegexp( "/summary.php3/", $text, 
+                                "[User: ".$user2."] summary link shouldn't"
+                                . " exist");
+
+        // TODO: this test requires another test for fritz where projects
+        // TODO: actually exist in the database
+
+        // if using a database, then ensure that it didn't fail
+        $this->assertEquals(false, $db_config->did_db_fail(),
+                            $db_config->error_message() );
+    }
+
     function testPersonal_comments_short() {
         $user1 = "fubar";
         $user2 = "snafu";

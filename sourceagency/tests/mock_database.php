@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: mock_database.php,v 1.7 2001/10/26 13:49:16 riessen Exp $
+// $Id: mock_database.php,v 1.8 2001/10/30 14:49:24 riessen Exp $
 
 //
 // For an explanation of this class, see:
@@ -248,6 +248,15 @@ extends Assert
                                          ($message ? $message
                                          : "No Message Give"));
         $g_mkdb_failed = true;
+    }
+}
+
+class db_sourceagency 
+extends mock_database 
+{
+    function db_sourceagency() {
+        // call the constructor of our parent
+        $this->mock_database();
     }
 }
 ?>

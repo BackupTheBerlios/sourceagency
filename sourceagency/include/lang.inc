@@ -1,6 +1,4 @@
 <?php
-// FIXME: Missing a global call here ....
-//global $sess;
 if ($sess->is_registered("la")) {
    if (isset($lang)) {
       $la = $lang;

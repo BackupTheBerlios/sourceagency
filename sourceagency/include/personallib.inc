@@ -2,7 +2,7 @@
 #
 # personallib.inc
 #
-# $Id: personallib.inc,v 1.8 2001/10/26 13:49:16 riessen Exp $
+# $Id: personallib.inc,v 1.9 2001/10/30 14:49:22 riessen Exp $
 #
 
 ######################################################################
@@ -84,6 +84,8 @@ function personal_ratings_long($username) {
 }
 
 function personal_related_projects($username,$status) {
+        // ASSUME: user is either a sponsor or developer, if neither
+        // ASSUME: then this function generates an invalid query.
  	global $bx;
 
 	$bx->box_begin();
@@ -92,10 +94,13 @@ function personal_related_projects($username,$status) {
 
 	$db_local = new DB_SourceAgency;
 
+        // FIXME: security.lib::is_sponsor does not accept argument
 	if (is_sponsor($username)) {
 		$user_type = "sponsor";
 		$table = "sponsoring";
-	} elseif (is_developer($username)) {
+	} elseif (is_developer($username)) { 
+            // FIXME: security.lib::is_developer does not accept
+            // FIXME: argument
 		$user_type = "developer";
 		$table = "developing";
 	}

@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: constants.php,v 1.10 2001/10/23 16:36:33 riessen Exp $
+// $Id: constants.php,v 1.11 2001/10/30 14:49:24 riessen Exp $
 //
 // php library root directory
 $env_php_lib_dir = getenv( "PHP_LIB_DIR" );
@@ -22,6 +22,7 @@ include_once("phpunit.php");
 // strange really: this file is at the same level as the constants BUT
 // because constants is included in the tests, need to prefix an "../"
 include_once( "../mock_database.php" );
+include_once( "../mock_auth.php" );
 
 function define_test_suite( $filename ) {
     // using the naming convention that the file name is "TestXXXX.php"
