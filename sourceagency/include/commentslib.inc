@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: commentslib.inc,v 1.7 2002/05/08 09:46:13 riessen Exp $
+# $Id: commentslib.inc,v 1.8 2002/05/28 08:54:28 riessen Exp $
 #
 ######################################################################
 
@@ -195,8 +195,9 @@ function comments_form($proid)
  */
 function comments_preview($proid)
 {
+    // FIXME: proid argument is not used, it can be removed.
     global $t, $bx, $auth, $sess;
-    global $subject, $text, $number, $ref, $type;
+    global $subject, $text;
 
     $bx->box_begin();
     $bx->box_title('<center><b>'.$t->translate('PREVIEW').'</b></center>');
@@ -204,6 +205,7 @@ function comments_preview($proid)
     $bx->box_body_begin();
     $timestamp = time();
     echo '<b>';
+    // FIXME: this database query does nothing. What is its purpose?
     $db_local = new DB_SourceAgency;
     $db_local->query("SELECT email_usr FROM auth_user WHERE username='"
                      .$auth->auth["uname"]."'");
