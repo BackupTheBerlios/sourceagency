@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: English-lang.inc,v 1.5 2001/11/09 13:56:23 riessen Exp $
+# $Id: English-lang.inc,v 1.6 2001/11/09 14:16:20 riessen Exp $
 #
 ######################################################################
 
@@ -30,7 +30,7 @@ switch($phrase) {
         if ( floor( phpversion() >= 4 ) ) {
           require_once( "logger.inc" );
         }
-        // ASSUME: that the class logger is defined
+        // php3: ASSUME: that the class logger is defined
         $l = new Logger;
         $l->log( "translating '" . $phrase . "'" );
         break;
