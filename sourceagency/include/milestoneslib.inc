@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.15 2002/04/13 17:13:46 grex Exp $
+# $Id: milestoneslib.inc,v 1.16 2002/04/15 09:37:12 riessen Exp $
 #
 ######################################################################
 
@@ -499,7 +499,7 @@ function select_milestone_number($proid, $devid, $selected)
         $array[] = 0;
     } else {
         while($db_select->next_record()) {
-            $array[] = $db_sekect->f('number');
+            $array[] = $db_select->f('number');
         }
     }
     $return = html_select('number');
