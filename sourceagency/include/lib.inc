@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.13 2001/11/19 17:06:59 riessen Exp $
+# $Id: lib.inc,v 1.14 2001/11/19 17:11:37 riessen Exp $
 #
 ######################################################################
 
@@ -546,8 +546,8 @@ function summary($proid) {
                                html_image("ic/check.png",0,16,15,
                                           "ic/check.png")
                                . " ".$t->translate("Monitor This Project"))
-            . $t->translate(" Receive an email update when something "
-                            ."happens in this project")
+            . " ". $t->translate("Receive an email update when something "
+                                 ."happens in this project")
             . "<p>\n" );
 
     $bx->box_body_end();
