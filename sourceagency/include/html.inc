@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: html.inc,v 1.16 2002/04/22 11:37:05 riessen Exp $
+# $Id: html.inc,v 1.17 2002/04/24 12:16:07 grex Exp $
 #
 ######################################################################
 
@@ -33,27 +33,34 @@
  * @param   array     $query         PHPLib session object query
  * @param   string    $text          Text displayed as link
  *                                   (should already be translated!)
+ * @param   string    $cssClass      CSS Class this link obeys to
  *
  * @global  object    $sess          PHPLib session object
  *
  * @access  public
  */
-function html_link($address, $query, $text)
+function html_link($address, $query, $text, $cssClass='')
 {
     global $sess;
-    
-    if (!isset($query) || empty($query)) {
-        $output = '<a href="'.$sess->url($address).'">'.$text.'</a>';
+
+    if ($address == 'PHP_SELF') {
+        if (is_array($query) && isset($query) && !empty($query)) {
+            $output = '<a href="'.$sess->self_url().$sess->add_query($query).'" class="'.$cssClass.'">'.$text.'</a>';
+        } else {
+            $output = '<a href="'.$sess->self_url().'" class="'.$cssClass.'">'.$text.'</a>';
+        }
     } else {
-        $output = '<a href="'.$sess->url($address)
-             .$sess->add_query($query).'">'.$text.'</a>';
+        if (is_array($query) && isset($query) && !empty($query)) {
+            $output = '<a href="'.$sess->url($address).$sess->add_query($query).'" class="'.$cssClass.'">'.$text.'</a>';
+        } else {
+            $output = '<a href="'.$sess->url($address).'" class="'.$cssClass.'">'.$text.'</a>';
+        }
     }
-    
-    return $output;
+    return($output);
 }
-function htmlp_link($address, $query, $text)
+function htmlp_link($address, $query, $text, $cssClass='')
 {
-    print html_link( $address, $query, $text );
+    print html_link( $address, $query, $text, $cssClass);
 }
 
 /**
