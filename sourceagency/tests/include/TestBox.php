@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestBox.php,v 1.6 2001/11/20 14:09:50 riessen Exp $
+# $Id: TestBox.php,v 1.7 2002/01/09 16:17:09 riessen Exp $
 #
 ######################################################################
 
@@ -25,7 +25,7 @@ include_once( "../constants.php" );
 include_once( "box.inc" );
 
 class UnitTestBox
-extends TestCase
+extends UnitTest
 {
     var $box;
 
@@ -52,10 +52,6 @@ extends TestCase
     // the _testFor_XXXXX methods perform the regular expression matches
     // for the individual tests, the reason for splitting them away from
     // the tests is that some of them are reused.
-    function _testFor_length( $length ) {
-        $this->assertEquals( $length, capture_text_length(), 
-                             "Length mismatch" );
-    }
     function _testFor_box_begin( $text ) {
         $this->assertRegexp( "/<table border=0 cellspacing=0 cellpadding=0 "
                              . "bgcolor=\"frame_color\" width=\"box_width\" "
