@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.26 2002/05/07 21:58:37 grex Exp $
+# $Id: config.inc,v 1.27 2002/09/05 08:12:46 helix Exp $
 #
 ######################################################################
 
@@ -142,7 +142,7 @@ $g_step_count = 6;
 # of the user of interest.
 ######################################################################
 $g_dev_counter_url = ( 'http://devcounter.berlios.de/devcounter'
-                       . '/showprofile.php3?devname=%s' );
+                       . '/showprofile.php?devname=%s' );
 
 ######################################################################
 # Project Types
