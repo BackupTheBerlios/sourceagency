@@ -1,5 +1,5 @@
 <?php
-
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ===============================================================
@@ -12,23 +12,24 @@
 # BerliOS SourceWell: http://sourcewell.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
-# TODO: description missing
+# Looks at the language specified in the session or selected
+# and includes on-the-fly the *-lang.inc file with the translated strings
 #
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lang.inc,v 1.18 2002/04/17 11:29:12 riessen Exp $
+# $Id: lang.inc,v 1.19 2002/04/20 13:57:44 grex Exp $
 #
 ######################################################################
 
 global $l;
 
 if ( isset( $l ) ) {
-  $l->log( "Language: " . (isset( $lang ) ? $lang : "No Language set"));
+  $l->log( 'Language: ' . (isset( $lang ) ? $lang : 'No Language set'));
 }
 
-if ($sess->is_registered("la")) {
+if ($sess->is_registered('la')) {
     /* there's a previous language setting (registered) */ 
     if (isset($lang)) {
         /* the user has modified the language setting */
@@ -42,31 +43,31 @@ if ($sess->is_registered("la")) {
     if (isset($lang)) {
         $la = $lang;
     } else {
-        $la = "English";
+        $la = 'English';
     }
-    $sess->register("la");
+    $sess->register('la');
 }
 
 switch($la) {
-    case "English":
-        $locale = "en_EN";
-        include("English-lang.inc");
+    case 'English':
+        $locale = 'en_EN';
+        include('English-lang.inc');
         break;
-    case "German":  
-        $locale = "de_DE";
-        include("German-lang.inc");
+    case 'German':  
+        $locale = 'de_DE';
+        include('German-lang.inc');
         break;
-    case "Spanish":
-        $locale = "es_ES";
-        include("Spanish-lang.inc");
+    case 'Spanish':
+        $locale = 'es_ES';
+        include('Spanish-lang.inc');
         break;
-    case "Unknown":
-        $locale = "en_EN";
-        include( "Unknown-lang.inc" );
+    case 'Unknown':
+        $locale = 'en_EN';
+        include( 'Unknown-lang.inc' );
         break;
     default:
-        $locale = "en_EN";
-        include("English-lang.inc");
+        $locale = 'en_EN';
+        include('English-lang.inc');
         break;
 }
 
