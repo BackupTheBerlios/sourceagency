@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.12 2002/04/30 01:23:13 grex Exp $
+# $Id: browselib.inc,v 1.13 2002/04/30 10:14:06 riessen Exp $
 #
 ######################################################################
 
@@ -116,12 +116,10 @@ function browse_licenses()
     $bx->box_column('left','70%','','<b>'.$t->translate('License').'</b>');
     $bx->box_next_row_of_columns();
     
+    $colors = array( 1 => 'gold', 0 => '#FFFFFF' );
+
     while($db->next_record()) {
-  	if ($i%2 != 0) {
-            $bgcolor = 'gold';
-        } else {
-            $bgcolor = '#FFFFFF';
-        }
+        $bgcolor = $colors[ $i % 2 ];
 
   	$db2 = new DB_SourceAgency;
   	$db2->query("SELECT COUNT(*) FROM developing WHERE license = '"
@@ -177,12 +175,10 @@ function _browse_type()
     $bx->box_column('left','70%','','<b>'.$t->translate('Type').'</b>');
     $bx->box_next_row_of_columns();
     
+    $colors = array( 0 => 'gold', 1 => '#FFFFFF' );
+
     for($i=0;$i < sizeof($project_types);$i++) {
-  	if ($i%2 != 1) {
-            $bgcolor = 'gold';
-        } else {
-            $bgcolor = '#FFFFFF';
-        }
+        $bgcolor = $colors[ $i % 2 ];
 
   	$db2 = new DB_SourceAgency;
   	$db2->query("SELECT COUNT(*) FROM description WHERE type='"
@@ -288,12 +284,10 @@ function _browse_volume()
     $bx->box_column('left','70%','','<b>'.$t->translate('Volume').'</b>');
     $bx->box_next_row_of_columns();
 
-    for($i=0;$i < sizeof($project_volume);$i++) {
-  	if ($i%2 != 1) {
-            $bgcolor = 'gold';
-        } else {
-            $bgcolor = '#FFFFFF';
-        }
+    $colors = array( 0 => 'gold', 1 => '#FFFFFF' );
+
+    for( $i=0; $i < sizeof($project_volume); $i++) {
+        $bgcolor = $colors[ $i % 2 ];
 
   	$db2 = new DB_SourceAgency;
   	$db2->query("SELECT COUNT(*) FROM description WHERE volume='"
@@ -343,12 +337,10 @@ function _browse_platform()
     $bx->box_column('left','70%','','<b>'.$t->translate('Platform').'</b>');
     $bx->box_next_row_of_columns();
 
+    $colors = array( 0 => 'gold', 1 => '#FFFFFF' );
+
     for($i=0;$i < sizeof($platform_array);$i++) {
-  	if ($i%2 != 1) {
-            $bgcolor = 'gold';
-        } else {
-            $bgcolor = '#FFFFFF';
-        }
+        $bgcolor = $colors[ $i % 2 ];
 
   	$db2 = new DB_SourceAgency;
   	$db2->query("SELECT COUNT(*) FROM tech_content WHERE platform='"
@@ -399,12 +391,10 @@ function _browse_architecture()
                     .'</b>');
     $bx->box_next_row_of_columns();
 
+    $colors = array( 0 => 'gold', 1 => '#FFFFFF' );
+
     for($i=0;$i < sizeof($architecture_array);$i++) {
-        if ($i%2 != 1) {
-            $bgcolor = 'gold';
-        } else {
-            $bgcolor = '#FFFFFF';
-        }
+        $bgcolor = $colors[ $i % 2 ];
 
         $db2 = new DB_SourceAgency;
         $db2->query("SELECT COUNT(*) FROM tech_content WHERE architecture='"
@@ -454,12 +444,10 @@ function _browse_environment()
     $bx->box_column('left','70%','','<b>'.$t->translate('Environment').'</b>');
     $bx->box_next_row_of_columns();
     
+    $colors = array( 0 => 'gold', 1 => '#FFFFFF' );
+
     for($i=0;$i < sizeof($environment_array);$i++) {
-        if ($i%2 != 1) {
-            $bgcolor = 'gold';
-        } else {
-            $bgcolor = '#FFFFFF';
-        }
+        $bgcolor = $colors[ $i % 2 ];
 
         $db2 = new DB_SourceAgency;
         $db2->query("SELECT COUNT(*) FROM tech_content WHERE environment='"
@@ -625,15 +613,13 @@ function _browse_project_name()
     $bx->box_column('left','70%','','<b>'.$t->translate('Project Name').'</b>');
     $bx->box_next_row_of_columns();
     
+    $colors = array( 1 => 'gold', 0 => '#FFFFFF' );
+
     while (list(, $ltr) = each($alphabet)) {
-  	if ($i%2 != 0) {
-            $bgcolor = 'gold';
-        } else {
-            $bgcolor = '#FFFFFF';
-        }
+        $bgcolor = $colors[ $i % 2 ];
 
   	$db2 = new DB_SourceAgency;
-  	$db2->query("SELECT COUNT(*) FROM description WHERE status='A'"
+  	$db2->query("SELECT COUNT(*) FROM description WHERE status > 0"
                      ." AND  project_title LIKE '%$ltr'");
   	$db2->next_record();
   	$num = '['.sprintf('%03d',$db2->f('COUNT(*)')).']';
@@ -648,7 +634,7 @@ function _browse_project_name()
         } else {
             $bx->box_column('center','', $bgcolor, $num);
         }
-  	$bx->box_column('left','', $bgcolor, html_link($ltr,'',$ltr));
+  	$bx->box_column('left','', $bgcolor, $ltr );
   	$bx->box_next_row_of_columns();
   	$i++;
     }
