@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: admuser.php3,v 1.2 2001/11/09 20:34:08 riessen Exp $
+# $Id: admuser.php3,v 1.3 2001/11/29 15:33:53 grex Exp $
 #
 ######################################################################
 
@@ -75,31 +75,6 @@ if (($config_perm_admuser != "all")
                     break;
                 }
 
-                /* Does an anonymous user already exist?
-                   NOTE: This should also be a transaction, but it isn't... */
-                $db->query("select * from auth_user where perms='anonymous'");
-                if ($db->num_rows() > 0 
-                    && ereg("anonymous",implode($perms,","))) {
-                    $be->box_full($t->translate("Error"), 
-                                  $t->translate("There can only be one "
-                                                ."anonymous user in the "
-                                                ."system").".");
-                    break;
-                }
-
-                /* Does the anonymous user have other permissions? */
-                if (ereg("anonymous",implode($perms,",")) 
-                    && (ereg("user_pending",implode($perms,",")) 
-                        || ereg("user",implode($perms,",")) 
-                        || ereg("editor",implode($perms,",")) 
-                        || ereg("admin",implode($perms,",")) 
-                        || ereg("user_pending",implode($perms,",")))) {
-                    $be->box_full($t->translate("Error"), 
-                                  $t->translate("The anonymous permission "
-                                                ."is incompatible with another"
-                                                ." type of permission").".");
-                    break;
-                }
                 // Create a uid and insert the user...
                 $u_id=md5(uniqid($hash_secret));
                 $permlist = addslashes(implode($perms,","));
@@ -135,15 +110,8 @@ if (($config_perm_admuser != "all")
                 // Handles all user contributions to the system
                 // so that we don't loose them when changing username
                 if ($username != $old_username) {
-                    $query = ("update software set user='$username',status='M'"
-                              ." where user='$old_username'");
-                    $db->query($query);
-                    $query = ("update history set user_his ='$username' where "
-                              ."user_his='$old_username'");
-                    $db->query($query);
-                    $query = ("update comments set user_cmt='$username' where "
-                              ."user_cmt='$old_username'");
-                    $db->query($query);
+			// WISH: all the user insertions in the database under the old username
+			// should be changed into the new username to avoid loosing them
                 }
                 // Update user information.
                 $permlist = addslashes(implode($perms,","));
@@ -164,25 +132,8 @@ if (($config_perm_admuser != "all")
                 break;
                 
             case "u_kill":{
-                // we change the users contributions to anonymous
-                // if the anonymous user exists in the system
-                $db->query("SELECT username FROM auth_user WHERE "
-                           ."perms='anonymous'");
-                // FIXME: check whether there are any rows else next_record
-                // FIXME: fails
-                $db->next_record();
-                $anonymous = $db->f("username");
-                $query = ("update software set user='$anonymous',status='M' "
-                          ."where user='$old_username'");
-                $db->query($query);
-                $query = ("update history set user_his ='$anonymous' where "
-                          ."user_his='$old_username'");
-                $db->query($query);
-                $query = ("update comments set user_cmt='$anonymous' where "
-                          ."user_cmt='$old_username'");
-                $db->query($query);
-
                 // Delete that user.
+                // All contributions of the current user to the system will be made transparent!
                 $query = ("delete from auth_user where user_id='$u_id' "
                           ."and username='$username'");
                 $db->query($query);
@@ -205,7 +156,65 @@ if (($config_perm_admuser != "all")
    information, if we come here after a submission...
 */
 
-?>
+
+$bx->box_begin();
+$bx->box_title($t->translate("User Administration"));
+$bx->box_body_begin();
+$bx->box_columns_begin(8);
+
+$bx->box_column("center","","",$t->translate("Username"));
+$bx->box_column("center","","",$t->translate("Password"));
+$bx->box_column("center","","",$t->translate("Realname"));
+$bx->box_column("center","","",$t->translate("E-Mail"));
+$bx->box_column("center","","",$t->translate("Modification"));
+$bx->box_column("center","","",$t->translate("Creation"));
+$bx->box_column("center","","",$t->translate("Permission"));
+$bx->box_column("center","","",$t->translate("Action"));
+
+$bx->box_next_row_of_columns();
+
+// Create a new user
+
+htmlp_form_action("PHP_SELF",array(),"POST");
+
+$bx->box_column("center","","",html_input_text("username", 12, 32, ""));
+$bx->box_column("center","","",html_input_password("password", 12, 32, ""));
+$bx->box_column("center","","",html_input_text("realname", 12, 32, ""));
+$bx->box_column("center","","",html_input_text("email_usr", 12, 32, ""));
+$bx->box_column("center","","","");
+$bx->box_column("center","","","");
+$bx->box_column("center","","",$perm->perm_sel("perms","devel"));
+$bx->box_column("center","","",html_form_submit($t->translate("Create User"),"create"));
+htmlp_form_end();
+
+// Traverse the result set
+$db->query("SELECT * FROM auth_user ORDER BY username");
+while ($db->next_record()) {
+
+    $bx->box_next_row_of_columns();
+
+    htmlp_form_action("PHP_SELF",array(),"POST");
+    htmlp_form_hidden("u_id",$db->f("user_id"));
+    htmlp_form_hidden("old_username",$db->f("username"));
+
+    $bx->box_column("center","","",html_input_text("username", 12, 32, $db->f("username")));
+    $bx->box_column("center","","",html_input_password("password", 12, 32, $db->f("password")));
+    $bx->box_column("center","","",html_input_text("realname", 12, 32, $db->f("realname")));
+    $bx->box_column("center","","",html_input_text("email_usr", 12, 32, $db->f("email_usr")));
+    $bx->box_column("center","","",timestr_short($db->f("creation_usr")));
+    $bx->box_column("center","","",timestr_short($db->f("modification_usr")));
+    $bx->box_column("center","","",$perm->perm_sel("perms",$db->f("perms")));
+    $bx->box_column("center","","",html_form_submit($t->translate("Delete"),"u_kill").html_form_submit($t->translate("Change"),"u_edit"));
+
+    htmlp_form_end();
+}
+
+$bx->box_columns_end();
+$bx->box_body_end();
+$bx->box_end();
+
+/*
+
 
 <table border="0" cellspacing="0" cellpadding="0" 
      bgcolor="<?php echo $th_box_frame_color;?>" align="center">
@@ -299,6 +308,7 @@ if (($config_perm_admuser != "all")
 </tr>
 </table>
 <?php
+*/
 }
 
 end_content();
