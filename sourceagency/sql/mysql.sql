@@ -144,8 +144,9 @@ CREATE TABLE decisions (
 DROP TABLE IF EXISTS decisions_step5;
 CREATE TABLE decisions_step5 (
    proid bigint(20) unsigned DEFAULT '0' NOT NULL,
-   number int(8) unsigned NOT NULL,
-   time int(3) unsigned NOT NULL,
+   number int(8) unsigned NOT NULL,    # milestone_number
+   count int(3) unsigned NOT NULL,     # Number of times this milestone has been
+                                       # released
    decision_user  varchar(16) NOT NULL,
    decision varchar(16) NOT NULL
 );
@@ -557,7 +558,11 @@ DROP TABLE IF EXISTS follow_up;
 CREATE TABLE follow_up (
    proid bigint(20) unsigned DEFAULT '0' NOT NULL,
    milestone_number int(8) unsigned NOT NULL,
-   iteration int(8) DEFAULT '1' NOT NULL,
-   location varchar(255) NOT NULL,
-   time int(3) DEFAULT '1' NOT NULL
+   iteration int(8) DEFAULT '1' NOT NULL,     # Iteration process number
+                                              # from 1-5
+   location varchar(255) NOT NULL,        # URL where the release can be found
+   count int(3) DEFAULT '1' NOT NULL      # Number of times this milestone has been
+                                          # released
 );
+
+
