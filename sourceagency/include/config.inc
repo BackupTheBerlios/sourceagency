@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.17 2002/03/06 12:43:18 riessen Exp $
+# $Id: config.inc,v 1.18 2002/03/06 12:44:35 riessen Exp $
 #
 ######################################################################
 
@@ -41,7 +41,7 @@ $sys_name = "SourceAgency";
 $sys_title = "Open Source Project Mediation & Management";
 $sys_url_title = "http://www.berlios.de/";
 $sys_url = "http://sourceagency.berlios.de/beta/";
-$sys_logo_image = "images/berliOS_logo.jpg";
+$sys_logo_image = "images/berliOS_logo.png";
 $sys_logo_alt = "BerliOS";
 $sys_logo_width = "238";
 $sys_logo_height = "61";
