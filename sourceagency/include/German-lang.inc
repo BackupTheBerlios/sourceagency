@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: German-lang.inc,v 1.27 2002/11/06 14:14:19 erik Exp $
+# $Id: German-lang.inc,v 1.28 2002/11/20 10:15:43 erik Exp $
 #
 ######################################################################
 
@@ -64,6 +64,7 @@ function translate_real($phrase) {
     case 'Change User': $tmp = 'Benutzer ändern'; break;
     case 'Change a License URL': $tmp = 'Lizenz URL ändern'; break;
     case 'Change': $tmp = 'Ändern'; break;
+    case 'Check if you want to be a consultant':$tmp='Markieren Sie, ob Sie Berater sein möchten';break;
     case 'Comment': $tmp = 'Kommentar'; break;
     case 'Comment it!': $tmp = 'Kommentiere es!'; break;
     case 'Comment this News!': $tmp = 'Kommentiere diese Neuigkeit!'; break;
@@ -149,6 +150,7 @@ function translate_real($phrase) {
     case 'If you are interested in this project, you can monitor it': $tmp = 'Wenn Sie an diesem Projekt interessiert sind, können Sie es beobachten'; break;
     case 'If you are not yet a registered User, please select': $tmp = 'Falls Sie noch kein registrierter Benutzer sind, bitte wählen'; break;
     case 'Here you will find all the information related to you': $tmp = 'Hier finden Sie alle Informationen, die mit Ihnen in Beziehung stehen'; break;
+    case 'If you are a registered developer, you can propose yourself as a consultant for this project....':$tmp='Wenn Sie sich als Benutzer registrieren, können Sie sich als Berater für dieses Projekt vorschlagen.';break;
     case 'Importance': $tmp = 'Wichtigkeit'; break;
     case 'Importance filter': $tmp = 'Wichtigkeitsfilter'; break;
     case 'Index': $tmp = 'Hauptseite'; break;
@@ -214,6 +216,7 @@ function translate_real($phrase) {
     case 'No project with this id.': $tmp = 'Kein Projekt mit dieser Identifikation vorhanden.'; break;
     case 'No participantions in projects with this status': $tmp = 'Keine Beteiligungen an Projekten mit diesem Status'; break;
     case 'No technical specification suggestions have been posted to this project.': $tmp = 'Es wurde noch keine Vorschläge für eine technische Spezifikation des Projektes abgegeben.'; break;
+    case 'Offer yourself as project consultant':$tmp='Bieten Sie sich als Projektberater an';break;
     case 'Once this is done, you will receive an e-mail': $tmp = 'Wenn diese geschehen ist, erhalten Sie eine E-Mail'; break;
     case 'Open Source Project Mediation & Management': $tmp = 'Open Source Projekt-Vermittlung & Management'; break;
     case 'Open Source Software Projects': $tmp = 'Open-Source-Software-Projekte'; break;
@@ -284,6 +287,7 @@ function translate_real($phrase) {
     case 'Register as a new User': $tmp = 'Registrierung als neuer Benutzer'; break;
     case 'Register': $tmp = 'Anmelden'; break;
     case 'Registered': $tmp = 'Registrierter Benutzer'; break;
+    case 'Registered developers can offer themselves as consultants':$tmp='Registrierte Entwickler können sich als Berater anbieten';break;
     case 'Rejected': $tmp = 'Abgelehnt'; break;
     case 'Release Date': $tmp = 'Fertigstellung'; break;
     case 'Remind me': $tmp = 'Erinnern'; break;
@@ -322,6 +326,7 @@ function translate_real($phrase) {
     case 'Suggesting a Technical Specification': $tmp = 'Vorschlag für technische Spezifikation'; break;
     case 'Summary': $tmp = 'Zusammenfassung'; break;
     case 'System Credits': $tmp = 'Systembeschreibung'; break;
+    case 'Technical content suggestions. They can be made either by developers or by a sponsor (if the sponsor is owner of the project).': $tmp = 'Vorschläge für technische Inhalte. Vorschläge können entweder von Entwicklern oder von einem Sponsor abgegeben werden (wenn der Sponsor der Projekteigner ist).'; break;
     case 'Technical Specification': $tmp = 'Technische Spezifikation'; break;
     case 'Technical Specifications': $tmp = 'Technische Spezifikationen'; break;
     case 'Technical specification suggestions. They can be made either by developers or by a sponsor (if the sponsor is owner of the project).': $tmp = 'Technische Spezifikationen können entweder von Entwicklern oder einem Sponsor erstellt werden (wenn der Sponsor Eigner des Projekts ist).'; break;
@@ -374,6 +379,7 @@ function translate_real($phrase) {
     case 'Your authentication is valid until': $tmp = 'Ihre Authentifikation ist gültig bis'; break;
     case 'Your authentication was valid until': $tmp = 'Ihre Authentifikation war gültig bis'; break;
     case 'Your Comment': $tmp = 'Ihr Kommentar'; break;
+    case 'Your username': $tmp= 'Ihr Benutzername';break;
     case 'You have not yet confirmed your account. Please check your e-mail, there should be a message that contains a confirmation link. Only after you have clicked this link you can start using SourceAgency.' : $tmp = 'Sie haben Ihren Zugang noch nicht aktiviert. Bitte prüfen Sie Ihr Postfach, Sie sollten eine Nachricht erhalten haben, die einen Aktivierungs-Link (URL) enthält. Erst nach Anklicken dieses Links können Sie ihren SourceAgency-Zugang nutzen.'; break;
     case 'You will now have to wait for a SourceAgency editor to review your pending project': $tmp = 'Sie müssen sich nun gedulden, bis ein SourceAgency Editor Ihr Projekt begutachtet hat'; break;
     case 'You will receive an e-mail for every action in this project that has the importance you specify': $tmp = 'Sie erhalten eine E-Mail bei jeder Aktion des Projekts, die der angegebenen Wichtigkeit entspricht'; break;
