@@ -86,7 +86,7 @@ if (($config_perm_admlicens != 'all')
                                ."license='$license'");
 	            $bx->box_full($t->translate('Administration'),
                                   $t->translate('License').' '.$license.' '
-                                  .$t->translate('has a new URL:').' .'$new_url);
+                                  .$t->translate('has a new URL:').' '.$new_url);
                 } else {
                     // URL is a blank line
                     $be->box_full($t->translate('Error'), 
