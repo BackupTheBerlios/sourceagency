@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: doco.php3,v 1.4 2002/04/18 10:06:09 grex Exp $
+# $Id: doco.php3,v 1.5 2002/04/18 10:06:37 grex Exp $
 #
 ######################################################################
 
@@ -61,7 +61,7 @@ if ( is_not_set_or_empty( $page ) ) {
 	}
     } else {
         $db->next_record();
-        $be->box_full( $db->f('header', $db->f('doco'));
+        $be->box_full( $db->f('header'), $db->f('doco'));
     }
 }
 
