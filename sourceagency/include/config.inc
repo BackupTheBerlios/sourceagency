@@ -1,12 +1,12 @@
 <?php
-
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ================================================================
 #
 # Copyright (c) 2001 by
-#                Gregorio Robles (grex@scouts-es.org) and
-#		 Lutz Henckel (lutz.henckel@fokus.gmd.de)
+#                Gregorio Robles (grex@scouts-es.org),
+#		 Lutz Henckel (lutz.henckel@fokus.gmd.de) and
 #                Gerrit Riessen (riessen@open-source-consultants.de)
 #
 # BerliOS SourceAgency: http://sourceagency.berlios.de
@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.22 2002/04/17 12:33:01 riessen Exp $
+# $Id: config.inc,v 1.23 2002/04/18 10:35:29 grex Exp $
 #
 ######################################################################
 
@@ -37,14 +37,14 @@
 # (don't forget to put slashes at the end of the URLs)
 ######################################################################
 
-$sys_name = "SourceAgency";
-$sys_title = "Open Source Project Mediation & Management";
-$sys_url_title = "http://www.berlios.de/";
-$sys_url = "http://sourceagency.berlios.de/beta/";
-$sys_logo_image = "images/berliOS_logo.png";
-$sys_logo_alt = "BerliOS";
-$sys_logo_width = "238";
-$sys_logo_height = "61";
+$sys_name = 'SourceAgency';
+$sys_title = 'Open Source Project Mediation & Management';
+$sys_url_title = 'http://www.berlios.de/';
+$sys_url = 'http://sourceagency.berlios.de/beta/';
+$sys_logo_image = 'images/berliOS_logo.png';
+$sys_logo_alt = 'BerliOS';
+$sys_logo_width = '238';
+$sys_logo_height = '61';
 
 ######################################################################
 # Organisation Config
@@ -57,12 +57,12 @@ $sys_logo_height = "61";
 # org_logo_height  Height of the image of your Organisation
 ######################################################################
 
-$org_name = "FOKUS";
-$org_url = "http://www.fokus.fhg.de/";
-$org_logo_image = "images/logo_fokus.png";
+$org_name = 'FOKUS';
+$org_url = 'http://www.fokus.fhg.de/';
+$org_logo_image = 'images/logo_fokus.png';
 $org_logo_alt = $org_name;
-$org_logo_width = "60";
-$org_logo_height = "60";
+$org_logo_width = '60';
+$org_logo_height = '60';
 
 ######################################################################
 # Top Strip
@@ -70,17 +70,17 @@ $org_logo_height = "60";
 # You can change (add, delete, modify) the top strip
 # as you wish as long as you mantain this syntax:
 #
-#         "Title"	=> $sys_url_title."URLofYourTitle",
+#         'Title'	=> $sys_url_title.'URLofYourTitle',
 #
 # (don't forget that the last one hasn't got a comma!)
 #
 ######################################################################
 
 $ts_array = array (
-	"Home"		=> $sys_url_title."index.php",
-	"About us"	=> $sys_url_title."about/index.php",
-	"Partners"	=> $sys_url_title."partners/index.php",
-	"Contact"	=> $sys_url_title."contact/index.php"
+	'Home'		=> $sys_url_title.'index.php',
+	'About us'	=> $sys_url_title.'about/index.php',
+	'Partners'	=> $sys_url_title.'partners/index.php',
+	'Contact'	=> $sys_url_title.'contact/index.php'
 );
 
 ######################################################################
@@ -97,9 +97,9 @@ $ts_array = array (
 // WISH: since this file is read in for each page .... further: it might
 // WISH: be possible to do this and store the results in an environmental
 // WISH: variable, ofcourse updating the variable once set would be a problem
-$la_array[] = "English";
-$la_array[] = "German";
-# $la_array[] = "Spanish";
+$la_array[] = 'English';
+$la_array[] = 'German';
+# $la_array[] = 'Spanish';
 
 ######################################################################
 # Step names and count
@@ -113,23 +113,23 @@ $la_array[] = "German";
 #
 ######################################################################
 
-$g_step_text[-1] = "Deleted";
-$g_step_text[0] = "Configuration";
-$g_step_text[1] = "Consultancy";
-$g_step_text[2] = "Technical Specifications";
-$g_step_text[3] = "Milestones";
-$g_step_text[4] = "Referees";
-$g_step_text[5] = "Project Follow-up";
-$g_step_text[6] = "Rating";
+$g_step_text[-1] = 'Deleted';
+$g_step_text[0] = 'Configuration';
+$g_step_text[1] = 'Consultancy';
+$g_step_text[2] = 'Technical Specifications';
+$g_step_text[3] = 'Milestones';
+$g_step_text[4] = 'Referees';
+$g_step_text[5] = 'Project Follow-up';
+$g_step_text[6] = 'Rating';
 
-$g_step_explanation[-1] = "step_-1_explanation";   
-$g_step_explanation[0] = "step_0_explanation";
-$g_step_explanation[1] = "step_1_explanation";
-$g_step_explanation[2] = "step_2_explanation";
-$g_step_explanation[3] = "step_3_explanation";
-$g_step_explanation[4] = "step_4_explanation";
-$g_step_explanation[5] = "step_5_explanation";
-$g_step_explanation[6] = "step_6_explanation";
+$g_step_explanation[-1] = 'step_-1_explanation';   
+$g_step_explanation[0] = 'step_0_explanation';
+$g_step_explanation[1] = 'step_1_explanation';
+$g_step_explanation[2] = 'step_2_explanation';
+$g_step_explanation[3] = 'step_3_explanation';
+$g_step_explanation[4] = 'step_4_explanation';
+$g_step_explanation[5] = 'step_5_explanation';
+$g_step_explanation[6] = 'step_6_explanation';
 
 $g_step_count = 6;
 
@@ -141,8 +141,8 @@ $g_step_count = 6;
 # It should contain a single %s which is replaced with the username
 # of the user of interest.
 ######################################################################
-$g_dev_counter_url = ( "http://devcounter.berlios.de/devcounter"
-                       . "/showprofile.php3?devname=%s" );
+$g_dev_counter_url = ( 'http://devcounter.berlios.de/devcounter'
+                       . '/showprofile.php3?devname=%s' );
 
 ######################################################################
 # Project Types
@@ -152,11 +152,11 @@ $g_dev_counter_url = ( "http://devcounter.berlios.de/devcounter"
 #
 ######################################################################
 
-$project_types[] = "Adaption";
-$project_types[] = "Expansion";
-$project_types[] = "Development";
-$project_types[] = "Documentation";
-$project_types[] = "Other";
+$project_types[] = 'Adaption';
+$project_types[] = 'Expansion';
+$project_types[] = 'Development';
+$project_types[] = 'Documentation';
+$project_types[] = 'Other';
 
 ######################################################################
 # Project Volumes
@@ -166,11 +166,11 @@ $project_types[] = "Other";
 #
 ######################################################################
 
-$project_volume[] = "< 0.25 Man Month (5 Man Days)";
-$project_volume[] = "< 1 Man Month";
-$project_volume[] = "< 2 Man Months";
-$project_volume[] = "< 6 Man Months";
-$project_volume[] = "> 6 Man Months";
+$project_volume[] = '< 0.25 Man Month (5 Man Days)';
+$project_volume[] = '< 1 Man Month';
+$project_volume[] = '< 2 Man Months';
+$project_volume[] = '< 6 Man Months';
+$project_volume[] = '> 6 Man Months';
 
 ######################################################################
 # Platforms
@@ -183,17 +183,17 @@ $project_volume[] = "> 6 Man Months";
 #
 ######################################################################
 
-$platform_array[] = "Linux";
-$platform_array[] = "Solaris";
-$platform_array[] = "SunOS";
-$platform_array[] = "FreeBSD";
-$platform_array[] = "Windows XP";
-$platform_array[] = "Windows 2000";
-$platform_array[] = "Windows NT";
-$platform_array[] = "Windows 3.X";
-$platform_array[] = "HPUX";
-$platform_array[] = "MSDOS";
-$platform_array[] = "Platform independent";
+$platform_array[] = 'Linux';
+$platform_array[] = 'Solaris';
+$platform_array[] = 'SunOS';
+$platform_array[] = 'FreeBSD';
+$platform_array[] = 'Windows XP';
+$platform_array[] = 'Windows 2000';
+$platform_array[] = 'Windows NT';
+$platform_array[] = 'Windows 3.X';
+$platform_array[] = 'HPUX';
+$platform_array[] = 'MSDOS';
+$platform_array[] = 'Platform independent';
 ######################################################################
 # Architectures
 #
@@ -202,13 +202,13 @@ $platform_array[] = "Platform independent";
 #
 ######################################################################
 
-$architecture_array[] = "x86";
-$architecture_array[] = "Sparc";
-$architecture_array[] = "HP";
-$architecture_array[] = "Apple";
-$architecture_array[] = "IBM";
-$architecture_array[] = "CHAIR";
-$architecture_array[] = "Architecture Independent";
+$architecture_array[] = 'x86';
+$architecture_array[] = 'Sparc';
+$architecture_array[] = 'HP';
+$architecture_array[] = 'Apple';
+$architecture_array[] = 'IBM';
+$architecture_array[] = 'CHAIR';
+$architecture_array[] = 'Architecture Independent';
 
 ######################################################################
 # Environments
@@ -218,14 +218,14 @@ $architecture_array[] = "Architecture Independent";
 #
 ######################################################################
 
-$environment_array[] = "Web";
-$environment_array[] = "Server";
-$environment_array[] = "Client";
-$environment_array[] = "Distributed";
-#$environment_array[] = "";
-#$environment_array[] = "";
-#$environment_array[] = "";
-#$environment_array[] = "";
+$environment_array[] = 'Web';
+$environment_array[] = 'Server';
+$environment_array[] = 'Client';
+$environment_array[] = 'Distributed';
+#$environment_array[] = '';
+#$environment_array[] = '';
+#$environment_array[] = '';
+#$environment_array[] = '';
 
 ######################################################################
 # Monitoring Importance
@@ -235,24 +235,24 @@ $environment_array[] = "Distributed";
 #
 ######################################################################
 
-$config_monitor_importance_comments = "middle";
-$config_monitor_importance_news = "high";
-$config_monitor_importance_next_step = "high";
-$config_monitor_importance_decision = "low";
-$config_monitor_importance_decision_milestone = "low";
-$config_monitor_importance_decision_step_5 = "low";
-$config_monitor_importance_sponsoring = "high";
-$config_monitor_importance_developing = "high";
-$config_monitor_importance_referee = "high";
-$config_monitor_importance_consultant = "high";
-$config_monitor_importance_milestone_delivery = "high";
-$config_monitor_importance_monitor = "low";
-$config_monitor_importance_configure = "middle";
+$config_monitor_importance_comments = 'middle';
+$config_monitor_importance_news = 'high';
+$config_monitor_importance_next_step = 'high';
+$config_monitor_importance_decision = 'low';
+$config_monitor_importance_decision_milestone = 'low';
+$config_monitor_importance_decision_step_5 = 'low';
+$config_monitor_importance_sponsoring = 'high';
+$config_monitor_importance_developing = 'high';
+$config_monitor_importance_referee = 'high';
+$config_monitor_importance_consultant = 'high';
+$config_monitor_importance_milestone_delivery = 'high';
+$config_monitor_importance_monitor = 'low';
+$config_monitor_importance_configure = 'middle';
 
 /*
-$config_monitor_importance_ = "";
-$config_monitor_importance_ = "";
-$config_monitor_importance_ = "";
+$config_monitor_importance_ = '';
+$config_monitor_importance_ = '';
+$config_monitor_importance_ = '';
 */
 
 ######################################################################
@@ -263,12 +263,12 @@ $config_monitor_importance_ = "";
 #
 ######################################################################
 
-$milestone_product_array[] = "Prototype";
-$milestone_product_array[] = "Developing Version";
-$milestone_product_array[] = "Alpha";
-$milestone_product_array[] = "Beta";
-$milestone_product_array[] = "Release Candidate";
-$milestone_product_array[] = "Final";
+$milestone_product_array[] = 'Prototype';
+$milestone_product_array[] = 'Developing Version';
+$milestone_product_array[] = 'Alpha';
+$milestone_product_array[] = 'Beta';
+$milestone_product_array[] = 'Release Candidate';
+$milestone_product_array[] = 'Final';
 
 ######################################################################
 # Developer rating skills by Sponsor
@@ -278,13 +278,13 @@ $milestone_product_array[] = "Final";
 #
 ######################################################################
 
-$sponsor_rates_developer[] = "one";
-$sponsor_rates_developer[] = "two";
-$sponsor_rates_developer[] = "three";
+$sponsor_rates_developer[] = 'one';
+$sponsor_rates_developer[] = 'two';
+$sponsor_rates_developer[] = 'three';
 
-$developer_rates_sponsor[] = "uno";
-$developer_rates_sponsor[] = "due";
-$developer_rates_sponsor[] = "tres";
+$developer_rates_sponsor[] = 'uno';
+$developer_rates_sponsor[] = 'due';
+$developer_rates_sponsor[] = 'tres';
 
 /*
 
@@ -297,16 +297,16 @@ $developer_rates_sponsor[] = "tres";
 #
 ######################################################################
 
-$comments_type_array[] = "general";
-$comments_type_array[] = "news";
-$comments_type_array[] = "comments";
-$comments_type_array[] = "sponsoring";
-$comments_type_array[] = "history";
-$comments_type_array[] = "consultants";
-$comments_type_array[] = "specifications";
-$comments_type_array[] = "proposals";
-$comments_type_array[] = "milestones";
-$comments_type_array[] = "referees";
+$comments_type_array[] = 'general';
+$comments_type_array[] = 'news';
+$comments_type_array[] = 'comments';
+$comments_type_array[] = 'sponsoring';
+$comments_type_array[] = 'history';
+$comments_type_array[] = 'consultants';
+$comments_type_array[] = 'specifications';
+$comments_type_array[] = 'proposals';
+$comments_type_array[] = 'milestones';
+$comments_type_array[] = 'referees';
 
 */
 
@@ -319,14 +319,14 @@ $comments_type_array[] = "referees";
 #
 ######################################################################
 
-$views_array[] = "Everybody";
-$views_array[] = "Registered";
-$views_array[] = "Developers";
-$views_array[] = "Sponsors";
-$views_array[] = "Project Participants";
-$views_array[] = "Project Developers";
-$views_array[] = "Project Sponsors";
-$views_array[] = "Project Initiator";
+$views_array[] = 'Everybody';
+$views_array[] = 'Registered';
+$views_array[] = 'Developers';
+$views_array[] = 'Sponsors';
+$views_array[] = 'Project Participants';
+$views_array[] = 'Project Developers';
+$views_array[] = 'Project Sponsors';
+$views_array[] = 'Project Initiator';
 
 ######################################################################
 # Theme
@@ -335,35 +335,35 @@ $views_array[] = "Project Initiator";
 #
 ######################################################################
 
-$th_body_bgcolor = "#FFFFFF";
-$th_font_family = "verdana,arial,helvetica,sans-serif";
-$th_tt_font_family = "courier,sans-serif";
-$th_font_color = "#333333";
-$th_hover_font_color = "#FF0000";
+$th_body_bgcolor = '#FFFFFF';
+$th_font_family = 'verdana,arial,helvetica,sans-serif';
+$th_tt_font_family = 'courier,sans-serif';
+$th_font_color = '#333333';
+$th_hover_font_color = '#FF0000';
 
-$th_nav_bgcolor = "#FFCC33";
-$th_navstrip_bgcolor = "#7B7B7B";
-$th_nav_font_color = "#333333";
-$th_navstrip_font_color = "#FFFFFF";
+$th_nav_bgcolor = '#FFCC33';
+$th_navstrip_bgcolor = '#7B7B7B';
+$th_nav_font_color = '#333333';
+$th_navstrip_font_color = '#FFFFFF';
 
-$th_box_frame_color = "#CCCCCC";
-$th_box_frame_width = "1";
-$th_box_title_bgcolor = "#CCCCCC";
-$th_box_body_bgcolor = "#FFFFFF";
-$th_box_title_align = "left";
-$th_box_body_align = "left";
-$th_box_title_font_color = "#000000";
-$th_box_body_font_color = "#333333";
-$th_box_error_font_color = "#FF2020";
+$th_box_frame_color = '#CCCCCC';
+$th_box_frame_width = '1';
+$th_box_title_bgcolor = '#CCCCCC';
+$th_box_body_bgcolor = '#FFFFFF';
+$th_box_title_align = 'left';
+$th_box_body_align = 'left';
+$th_box_title_font_color = '#000000';
+$th_box_body_font_color = '#333333';
+$th_box_error_font_color = '#FF2020';
 
-$th_strip_frame_color = "#CCCCCC";
-$th_strip_frame_width = "1";
-$th_strip_title_bgcolor = "#CCCCCC";
-$th_strip_body_bgcolor = "";
-$th_strip_title_align = "center";
-$th_strip_body_align = "";
-$th_strip_title_font_color = "#000000";
-$th_strip_body_font_color = "";
+$th_strip_frame_color = '#CCCCCC';
+$th_strip_frame_width = '1';
+$th_strip_title_bgcolor = '#CCCCCC';
+$th_strip_body_bgcolor = '';
+$th_strip_title_align = 'center';
+$th_strip_body_align = '';
+$th_strip_title_font_color = '#000000';
+$th_strip_body_font_color = '';
 
 ######################################################################
 # Page Layout
@@ -389,8 +389,8 @@ $config_show_numberofdays = 7;
 ######################################################################
 
 $ml_notify = 1;
-$ml_fromaddr = "noreply@mail.berlios.de";
-$ml_replyaddr = "noreply@mail.berlios.de";
+$ml_fromaddr = 'noreply@mail.berlios.de';
+$ml_replyaddr = 'noreply@mail.berlios.de';
 
 ######################################################################
 # Newsletter Configuration
@@ -407,13 +407,13 @@ $ml_replyaddr = "noreply@mail.berlios.de";
 #
 ######################################################################
 
-$ml_listurl = "http://lists.berlios.de/mailman/listinfo/sourceagency-news";
-$ml_weeklylisturl = "http://lists.berlios.de/mailman/listinfo/sourceagency-weeklynews";
-$ml_newstoaddr = "sourceagency-news@lists.berlios.de";
-$ml_newsreqaddr = "sourceagency-news-request@lists.berlios.de";
-$ml_weeklynewstoaddr = "sourceagency-weeklynews@lists.berlios.de";
-$ml_weeklynewsreqaddr = "sourceagency-weeklynews-request@lists.berlios.de";
-$ml_newsadmaddr = "sourceagency-admin@lists.berlios.de";
+$ml_listurl = 'http://lists.berlios.de/mailman/listinfo/sourceagency-news';
+$ml_weeklylisturl = 'http://lists.berlios.de/mailman/listinfo/sourceagency-weeklynews';
+$ml_newstoaddr = 'sourceagency-news@lists.berlios.de';
+$ml_newsreqaddr = 'sourceagency-news-request@lists.berlios.de';
+$ml_weeklynewstoaddr = 'sourceagency-weeklynews@lists.berlios.de';
+$ml_weeklynewsreqaddr = 'sourceagency-weeklynews-request@lists.berlios.de';
+$ml_newsadmaddr = 'sourceagency-admin@lists.berlios.de';
 $ml_newsfromaddr = $ml_newsadmaddr;
 $ml_newsreplyaddr = $ml_newsadmaddr;
 
@@ -426,7 +426,7 @@ $ml_newsreplyaddr = $ml_newsadmaddr;
 # MinimumLicByEmail	the same but for Licenses >= 0.01
 # Minimum_apps_in_license   minimum amount of apps a license has to
 #			    have to be displayed in the statistic
-#			    "Apps by Licenses and Email Domains"
+#			    'Apps by Licenses and Email Domains'
 #			    >= 1
 #
 ######################################################################
@@ -439,11 +439,11 @@ $Minimum_apps_in_license = 1;
 ######################################################################
 # Permission for accessing web pages
 #
-# "devel"    only allows access to registered users with devel permission
-# "sponsor"    only allows access to registered users with sponsor permission
-# "editor"  only allows access to registered users with editor permission
-# "admin"   only allows access to registered users with admin permission
-# "all"     allows access to everybody (also unregistered users)
+# 'devel'    only allows access to registered users with devel permission
+# 'sponsor'    only allows access to registered users with sponsor permission
+# 'editor'  only allows access to registered users with editor permission
+# 'admin'   only allows access to registered users with admin permission
+# 'all'     allows access to everybody (also unregistered users)
 #
 # Please, be sure of what you make!
 # An error could make your system fragile.
@@ -460,29 +460,31 @@ $Minimum_apps_in_license = 1;
 # config_perm_admcat	Access permission to administrate categories
 # config_perm_nladm	Access permission to administrate newsletters
 # config_perm_admfaq 	Access permission for administrating the faq
+# config_perm_admdoco 	Access permission for administrating page documentation
 # config_perm_admprojects 	Access permission for administrating for project reviewing
 # 
 ######################################################################
 
-$config_perm_apppend = "editor";
-$config_perm_appdom = "editor";
-$config_perm_developer = "all";
-$config_perm_users = "all";
-$config_perm_admdate = "admin";
-$config_perm_admuser = "admin";
-$config_perm_admlicens = "admin";
-$config_perm_admcomment = "admin";
-$config_perm_admsec = "admin";
-$config_perm_admcat = "admin";
-$config_perm_nladm = "admin";
-$config_perm_admfaq = "admin";
-$config_perm_admprojects = "admin";
+$config_perm_apppend = 'editor';
+$config_perm_appdom = 'editor';
+$config_perm_developer = 'all';
+$config_perm_users = 'all';
+$config_perm_admdate = 'admin';
+$config_perm_admuser = 'admin';
+$config_perm_admlicens = 'admin';
+$config_perm_admcomment = 'admin';
+$config_perm_admsec = 'admin';
+$config_perm_admcat = 'admin';
+$config_perm_nladm = 'admin';
+$config_perm_admfaq = 'admin';
+$config_perm_admdoco = 'admin';
+$config_perm_admprojects = 'admin';
 
 
 ######################################################################
 # Parameter configuration
 #
-# $config_first_year	contains the first year in forms that can be selected by the users (f.e. "valid until", "start" and "finish")
+# $config_first_year	contains the first year in forms that can be selected by the users (f.e. 'valid until', 'start' and 'finish')
 # $config_last_year		contains the last year in forms that can be selected by the users
 ######################################################################
 
@@ -495,7 +497,7 @@ $config_last_year = 2005;
 # Put a random string in it 
 ######################################################################
 
-$hash_secret = "Jabberwocky...";
+$hash_secret = 'Jabberwocky...';
 
 ######################################################################
 # 
@@ -520,6 +522,6 @@ $hash_secret = "Jabberwocky...";
 #
 ######################################################################
 
-$SourceAgency_Version = "0.8";
+$SourceAgency_Version = '0.8';
 
 ?>
