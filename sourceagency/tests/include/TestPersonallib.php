@@ -4,18 +4,18 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestPersonallib.php,v 1.2 2001/10/18 18:20:02 ger Exp $
+// $Id: TestPersonallib.php,v 1.3 2001/10/18 18:51:01 riessen Exp $
 
-include( "../constants.php" );
+include_once( "../constants.php" );
 
 if ( !defined("BEING_INCLUDED" ) ) {
-  ini_set('include_path', ini_get('include_path') . ':../../include' );
-
-  require_once( "session.inc" );
-  $sess = new Session;
-
-  require_once( 'box.inc' );
-  $bx = new box;
+    ini_set('include_path', ini_get('include_path') . ':../../include' );
+    
+    include_once( "session.inc" );
+    $sess = new Session;
+    
+    include_once( 'box.inc' );
+    $bx = new box;
 } 
 
 class db_sourceagency 
@@ -25,7 +25,7 @@ extends mock_database
   }
 }
 
-include( 'personallib.inc' );
+include_once( 'personallib.inc' );
 
 class UnitTestPersonallib
 extends TestCase

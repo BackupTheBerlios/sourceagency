@@ -4,24 +4,24 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestLib.php,v 1.3 2001/10/16 12:47:45 ger Exp $
+// $Id: TestLib.php,v 1.4 2001/10/18 18:51:01 riessen Exp $
 
-require_once( "../constants.php" );
+include_once( "../constants.php" );
 
 if ( !defined("BEING_INCLUDED" ) ) {
     // LIB_ROOT is the base of my libraries and is defined in constants.php
     ini_set('include_path', ini_get('include_path') . ':../../include' );
 
     // required for the $sess global variable
-    require_once( "session.inc" );
+    include_once( "session.inc" );
     $sess = new Session;
     
     // global translation object
-    require_once( "translation.inc" );
+    include_once( "translation.inc" );
     $t = new translation("English");
 }
 
-require_once( 'lib.inc' );
+include_once( 'lib.inc' );
 
 class UnitTestLib
 extends TestCase
@@ -86,7 +86,7 @@ extends TestCase
 
     function testLib_select_yes_or_no() {
         // this requires html
-        include( "html.inc" );
+        include_once( "html.inc" );
         $ary = array();
         $expect[0] = "<select name=\"fubar\">\n";
         $expect[1] = "<option value=\"Yes\">Yes\n";

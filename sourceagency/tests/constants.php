@@ -4,18 +4,19 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: constants.php,v 1.7 2001/10/18 18:20:02 ger Exp $
+// $Id: constants.php,v 1.8 2001/10/18 18:51:01 riessen Exp $
 //
 // php library root directory
 $PHP_LIB_DIR = "/www/development/lib/php";
 
 ini_set('include_path', ini_get('include_path') . ':' . $PHP_LIB_DIR );
 ini_set('include_path', ini_get('include_path') . ':' . getcwd() );
+
 // php unit test framework
-include("phpunit.php");
+include_once("phpunit.php");
 // strange really: this file is at the same level as the constants BUT
 // because constants is included in the tests, need to prefix an "../"
-include( "../mock_database.php" );
+include_once( "../mock_database.php" );
 
 function define_test_suite( $filename ) {
     // using the naming convention that the file name is "TestXXXX.php"
