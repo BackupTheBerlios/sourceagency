@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: sponsoring_edit.php3,v 1.5 2002/04/10 13:02:48 grex Exp $
+# $Id: sponsoring_edit.php3,v 1.6 2002/04/11 13:15:00 riessen Exp $
 #
 ######################################################################  
 
@@ -42,9 +42,6 @@ $page = 'sponsoring_edit';
 if (check_permission($proid, $page)) {
     top_bar($proid, $page);
 
-    print "Sponsors can modify their sponsoring wish using this form.\n";
-    print "<br><p>\n";
-
     if ( is_not_set_or_empty( $submit ) ) {
         if ( is_set_and_not_empty( $preview ) ) {
             sponsoring_preview( $proid );
@@ -57,7 +54,7 @@ if (check_permission($proid, $page)) {
         }
 
         /* now check whether the user is already sponsoring */
-        if ( already_involved_in_this_step($proid,$page,$auth->auth['uname']) ) {
+        if ( already_involved_in_this_step($proid,$page,$auth->auth['uname'])){
             $db->query("SELECT * FROM sponsoring WHERE proid='$proid' AND "
                        ."sponsor='".$auth->auth['uname']."'" );
             $db->next_record();
@@ -66,12 +63,22 @@ if (check_permission($proid, $page)) {
             $sponsoring_text = $db->f('sponsoring_text');
             // TODO: retrieve the date information ....
         }
+
+        print "Sponsors can modify their sponsoring wish using this form.\n";
+        print "<br><p>\n";
+
         sponsoring_form($proid);
     } else {
-        sponsoring_insert($proid, $auth->auth['uname'], $sponsoring_text,
-                          $budget, $valid_day, $valid_month, $valid_year,
-                          $begin_day, $begin_month, $begin_year, $finish_day,
-                          $finish_month, $finish_year);
+        /** Check that budget is positive **/
+        if ( $budget <= 0 ) {
+            generate_failed_box( "Sponsoring", 
+                                 "Budget must be greater than zero" );
+        } else {
+            sponsoring_insert($proid, $auth->auth['uname'], $sponsoring_text,
+                              $budget, $valid_day, $valid_month, $valid_year,
+                              $begin_day, $begin_month, $begin_year, 
+                              $finish_day,$finish_month, $finish_year);
+        }
     }
 }
 
