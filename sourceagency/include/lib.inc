@@ -755,8 +755,8 @@ function month($number) {
 
 function date_to_timestamp($day,$month,$year) {
 
-  if ($day < 10) $day = "0".$day;
-  if ($month < 10) $month = "0".$month;
+  if ($day < 10 && strlen($day) < 2 ) $day = "0".$day;
+  if ($month < 10 && strlen($month) < 2) $month = "0".$month;
 
   return($year.$month.$day."120000");
 
@@ -764,6 +764,8 @@ function date_to_timestamp($day,$month,$year) {
 
 function timestamp_to_date($timestamp) {
 
+  // TODO: precondition ensuring that the timestamp is the right length
+  
   $array["year"] = substr($timestamp,0,4);
   $array["month"] = substr($timestamp,4,2);
   $array["day"] = substr($timestamp,6,2);
@@ -781,7 +783,8 @@ function lib_select_yes_or_no($name,$selected) {
   if($selected=="No") $select="selected";
   else $select="";
   $return .= html_select_option("No",$select,"No");
-  $return .=htmlp_select_end();
+
+  $return .= html_select_end();
 
   return($return);
 }
@@ -792,6 +795,7 @@ function lib_nick($nick) {
 }
 
 function lib_pnick($nick) {
+  // TODO: should use the lib_nick(..) function above
 	print "<b>by ".$nick."</b>";
 //	htmlp_link("mailto:nomail@noplace.no","",$nick);
 }
@@ -817,7 +821,7 @@ function show_project_milestones($proid) {
 
 function lib_insertion_finished() {
 	global $auth;
-
+        // NOI18N: need to use translation here
 	echo "<b>Congratulations. You are finished with the insertion process.</b>\n";
   	echo "<br>You will now have to wait for a SourceAgency editor to review your pending project.\n";
 	echo "<br>Once this is done, you will receive an e-mail.\n";
