@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestPersonallib.php,v 1.8 2001/10/24 17:09:31 riessen Exp $
+// $Id: TestPersonallib.php,v 1.9 2001/10/25 12:15:21 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -43,6 +43,9 @@ extends TestCase
     var $p_referee_line_template = "Project:[^\\n]*step4[.]php3[?]proid=%s[^\\n]*%s<\/a>[^\\n]*[(]step <b>%s<\/b>[)]<br>";
     // Arg: 1=proid,2=project title,3=status
     var $p_consultant_line_template = "Project:[^\\n]*step1[.]php3[?]proid=%s[^\\n]*%s<\/a>[^\\n]*[(]step <b>%s<\/b>[)]<br>";
+    // Arg: 1=project id,2=subject news,3=count star,4=reference project id(2),
+    // Arg: 5=reference project title
+    var $p_news_long_template = "<br><li>News: <b><a href=\"news.php3[?]proid=%s\">%s<\/a><\/b>[^(]*[(]<b>%s<\/b>[ \\n]*comments on it[)][^<]*<br>[^o\\n]*osted to <a href=\"summary.php3[?]proid=%s\">%s<\/a><br>";
 
     function UnitTestPersonallib( $name ) {
         $this->TestCase( $name );
@@ -53,6 +56,13 @@ extends TestCase
         // if using the capturing routines then ensure that it's reset,
         // it uses global variables
         capture_reset_text();
+    }
+
+    // could actually be defined in phpunit ....
+    function assertNotRegexp( $regexp, $actual, $message=false ) {
+        if ( preg_match( $regexp, $actual ) ) {
+            $this->failNotEquals( $regexp, $actual, "*NOT* pattern",$message );
+        }
     }
 
     function _testFor_length( $length ) {
@@ -81,47 +91,156 @@ extends TestCase
         $this->_testFor_line($text,sprintf( $this->p_consultant_line_template,
                                             $proid, $ptitle, $status ));
     }
+    function _testFor_news_link($text,$proid,$sub,$count,$refpid,$refptitle) {
+        $this->_testFor_pattern($text,sprintf( $this->p_news_long_template,
+                                            $proid, $sub, $count, $refpid,
+                                            $refptitle));
+    }
 
     //
     // Start of the actual test methods
     //
+    function testPersonal_news_short() {
+        $user1 = "fubar";
+        $user2 = "snafu";
+
+        $db_config = new mock_db_configure;
+        $db_config->set_nr_instance_expected( 4 );
+        $db_q = array( 0 => ("SELECT * FROM news WHERE user_news='%s'"),
+                       1 => ("SELECT COUNT(*) FROM comments WHERE proid="
+                             . "'%s' AND type='News' AND ref='%s'"),
+                       2 => ("SELECT * FROM description WHERE proid='%s'"));
+        $db_config->add_query( sprintf( $db_q[0], $user1 ), 0 );
+        $db_config->add_query( sprintf( $db_q[0], $user2 ), 1 );
+
+        $db_config->add_num_row(0, 0); // fubar generates zero
+        $db_config->add_record(false, 0 );
+
+        $db_config->add_num_row(2, 1); // snafu generates 2 results
+        $row1 = array( 'id'            => 'reference_id',
+                       'proid'         => 'project_id',
+                       'subject_news'  => 'subject news',
+                       'creation_news' => 'creation_news');
+        $db_config->add_record( $row1, 1 );
+        $row2 = array( 'id'            => 'reference_id_num_22',
+                       'proid'         => 'project_id_333',
+                       'subject_news'  => 'subject news 4444',
+                       'creation_news' => 'creation_news 55555');
+        $db_config->add_record( $row2, 1 );
+        $db_config->add_record( false, 1 );
+
+        // third&fourth instances created as part of the snafu query
+        $db_config->add_query(sprintf($db_q[1],$row1['proid'],$row1['id']),2);
+        $db_config->add_query(sprintf($db_q[2],$row1['proid']),2);
+        $db_config->add_query(sprintf($db_q[1],$row2['proid'],$row2['id']),3);
+        $db_config->add_query(sprintf($db_q[2],$row2['proid']),3);
+        $row3 = array( 'COUNT(*)'      => 'count star value row3');
+        $db_config->add_record( $row3, 2 );
+        $row4 = array( 'proid'         => 'project_id_row4',
+                       'project_title' => 'project title row4');
+        $db_config->add_record( $row4, 2 );
+        $row5 = array( 'COUNT(*)'      => 'count star value row5');
+        $db_config->add_record( $row5, 3 );
+        $row6 = array( 'proid'         => 'project_id_row6',
+                       'project_title' => 'project title row6');
+        $db_config->add_record( $row6, 3 );
+        
+        capture_start();
+        // here next_record will not be called
+        personal_news_short( $user1 );
+        capture_stop();
+
+        $text = capture_text_get();
+        $this->_testFor_length( 554 );
+        $this->_testFor_pattern( $text, "Last 5 News by " . $user1 );
+        $this->_testFor_line( $text, "no news posted" );
+        $this->assertNotRegexp( "/See all the comments.../", $text, 
+                                "[User: ".$user1."] should not have link");
+
+        //
+        // snafu query
+        //
+        capture_reset_text();
+        capture_start();
+        // here next_record will not be called
+        personal_news_short( $user2 );
+        capture_stop();
+
+        $text = capture_text_get();
+        $this->_testFor_length( 1006 );
+        $this->_testFor_pattern( $text, "Last 5 News by " . $user2 );
+        $this->assertNotRegexp( "/no news posted/", $text, 
+                                "[User: ".$user2."] has news posted");
+        $this->assertNotRegexp( "/See all the comments.../", $text, 
+                                "[User: ".$user2."] should not have link");
+
+        // if using a database, then ensure that it didn't fail
+        $this->assertEquals(false, $db_config->did_db_fail(),
+                            $db_config->error_message() );
+
+        $this->_testFor_news_link( $text, $row1['proid'],$row1['subject_news'],
+                                   $row3['COUNT(*)'],$row4['proid'],
+                                   $row4['project_title']);
+        $this->_testFor_news_link( $text, $row2['proid'],$row2['subject_news'],
+                                   $row5['COUNT(*)'],$row6['proid'],
+                                   $row6['project_title']);
+    }
+
     function testPersonal_news_long() {
         $user1 = "fubar";
         $user2 = "snafu";
 
         $db_config = new mock_db_configure;
-        $db_config->set_nr_instance_expected( 3 );
+        // 4 instances: 1 for the fubar query, 3 for the snafu query (we
+        // call personal_news_long twice). The snafu database has two
+        // entries, each of which create separate database instances, hence
+        // we need a total of 3 instances for the snafu query
+        $db_config->set_nr_instance_expected( 4 );
 
-        $db_q = ("SELECT * FROM comments WHERE user_cmt='%s' "
-                 ."AND comments.proid");
-        $db_config->add_query( sprintf( $db_q, $user1 ), 0);
-        $db_config->add_query( sprintf( $db_q, $user2 ), 1);
+        $db_q = array( 0 => ("SELECT * FROM comments WHERE user_cmt='%s' "
+                               ."AND comments.proid"),
+                       1 => ("SELECT COUNT(*) FROM comments WHERE proid='%s"
+                             ."' AND type='News' AND ref='%s'"),
+                       2 => "SELECT * FROM description WHERE proid='%s'");
+
+        $db_config->add_query( sprintf( $db_q[0], $user1 ), 0);
+        $db_config->add_query( sprintf( $db_q[0], $user2 ), 1);
 
         $db_config->add_num_row(0, 0);
-        $db_config->add_num_row(1, 1);
+        $db_config->add_num_row(2, 1);
 
         $db_config->add_record( false, 0 );
-        $row2 = array( 'id'            => 'reference_id',
+
+        $row1 = array( 'id'            => 'reference_id',
                        'proid'         => 'project_id',
                        'project_title' => 'project_title',
                        'subject_news'  => 'subject news',
                        'creation_news' => 'creation_news');
+        $db_config->add_record( $row1, 1 );
+        $row2 = array( 'id'            => 'reference_id_num_2',
+                       'proid'         => 'project_id_222',
+                       'project_title' => 'project_title @@3',
+                       'subject_news'  => 'subject news 444',
+                       'creation_news' => 'creation_news %%%5');
         $db_config->add_record( $row2, 1 );
         $db_config->add_record( false, 1 );
 
-        $row1 = array( 'id'            => 'reference_id_instance_2',
-                       'proid'         => 'project_id_instance_2',
-                       'COUNT(*)'      => 'count star value' );
-        $db_config->add_record( $row1, 2 );
-        $row3 = array( 'project_title' => 'reference_id_instance_2',
-                       'proid'         => 'project_id_instance_2');
+        $row3 = array( 'COUNT(*)'      => 'count star value 2' );
         $db_config->add_record( $row3, 2 );
+        $row4 = array( 'project_title' => 'reference_id_instance_2',
+                       'proid'         => 'project_id_instance_2');
+        $db_config->add_record( $row4, 2 );
 
-        $db_q = ("SELECT COUNT(*) FROM comments WHERE proid='%s"
-                 ."' AND type='News' AND ref='%s'");
-        $db_config->add_query(sprintf( $db_q, $row2['proid'], $row2['id']),2);
-        $db_q = ("SELECT * FROM description WHERE proid='%s'");
-        $db_config->add_query(sprintf( $db_q, $row2['proid']),2);
+        $row5 = array( 'COUNT(*)'      => 'count star value 3' );
+        $db_config->add_record( $row5, 3 );
+        $row6 = array( 'project_title' => 'reference_id_instance_3',
+                       'proid'         => 'project_id_instance_3');
+        $db_config->add_record( $row6, 3 );
+
+        $db_config->add_query(sprintf( $db_q[1],$row1['proid'],$row1['id']),2);
+        $db_config->add_query(sprintf( $db_q[2], $row1['proid']),2);
+        $db_config->add_query(sprintf( $db_q[1],$row2['proid'],$row2['id']),3);
+        $db_config->add_query(sprintf( $db_q[2], $row2['proid']),3);
 
         //
         // fubar query
@@ -133,9 +252,8 @@ extends TestCase
 
         $text = capture_text_get();
         $this->_testFor_length( 559 );
-        //
-        // TODO: need to complete this test ....
-        //
+        $this->_testFor_pattern( $text, "All Comments by " . $user1 );
+        $this->_testFor_line( $text, "no comments posted" );
 
         //
         // snafu query
@@ -147,11 +265,15 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 775 );
+        $this->_testFor_length( 1022 );
+        $this->_testFor_pattern( $text, "All Comments by " . $user2 );
 
-        //
-        // TODO: need to complete this test ....
-        //
+        $this->_testFor_news_link( $text, $row1['proid'],$row1['subject_news'],
+                                   $row3['COUNT(*)'],$row4['proid'],
+                                   $row4['project_title']);
+        $this->_testFor_news_link( $text, $row2['proid'],$row2['subject_news'],
+                                   $row5['COUNT(*)'],$row6['proid'],
+                                   $row6['project_title']);
 
         // if using a database, then ensure that it didn't fail
         $this->assertEquals(false, $db_config->did_db_fail(),

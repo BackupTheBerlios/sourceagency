@@ -2,7 +2,7 @@
 #
 # personallib.inc
 #
-# $Id: personallib.inc,v 1.6 2001/10/24 15:31:43 riessen Exp $
+# $Id: personallib.inc,v 1.7 2001/10/25 12:15:21 riessen Exp $
 #
 
 ######################################################################
@@ -241,6 +241,8 @@ function personal_news_short($username) {
 	$bx->box_title("Last 5 News by ".$username);
 	$bx->box_body_begin();
 
+        // ASSUME: that DB_sourceagency returns false for a next_record
+        // ASSUME: if num_row == 0 .... ok, this is probably very likely!
 	$db_local = new DB_SourceAgency;
 	$db_local->query("SELECT * FROM news WHERE user_news='$username'");
 	if ($db_local->num_rows() == 0) print "no news posted\n";
@@ -284,6 +286,8 @@ function personal_news_short($username) {
 /**
  * REFACTOR: combine the above and below into one common function
  */
+// FIXME: this routine displays comments, shouldn't it be called
+// FIXME: personal_comments_long ???
 function personal_news_long($username) {
  	global $bx, $sess;
 
@@ -295,7 +299,8 @@ function personal_news_long($username) {
 	$db_local->query("SELECT * FROM comments WHERE user_cmt='$username' "
                          ."AND comments.proid");
 	if ($db_local->num_rows() == 0) print "no comments posted\n";
-	$i=0;
+        // FIXME: where does $i get set???, is $i used?
+	$i=0; 
 	print "<ul>\n";
 	while ($db_local->next_record()) {
 		print "<br><li>";
