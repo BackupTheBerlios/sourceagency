@@ -14,7 +14,7 @@
  *
  *                                                  (C) May 2001
  */
-	
+
 /* Handle special modes */
 if (isset($mode)) {
     switch ($mode) {
@@ -179,8 +179,15 @@ include("config.inc");
     <li>I am now going to try to create a DB_SourceAgency database connection. If this line is the last thing that you see then you should look at these points and fix them before proceeding:
 	<UL>
 	<LI>Have you introduced the correct database parameters (<I>Host</I>, <I>Database</I> name, <I>User</I> name and <I>Password</I>) in the include/local.inc file?
-        <LI>Have you created the database structures in the database? (you've got them in the <I>sql</I> subdirectory)
+        <LI>Have you created the database structures in the database? (you have got them in the <I>sql</I> subdirectory)
         <LI>Is your database running? ;-)
+        <li>Database configuration:
+          <ul>
+           <li> Host <b><?php $DB_SourceAgency->Host ?></b>
+           <li> Database <b><?php $DB_SourceAgency->SourceAgency ?></b>
+           <li> User <b><?php $DB_SourceAgency->User ?></b>
+           <li> Password <b>??????</b>
+          </ul>
 	</UL>
         <?php
         $db = new DB_SourceAgency;
