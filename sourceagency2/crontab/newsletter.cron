@@ -1,0 +1,2 @@
+59 23  *  *  * /usr/bin/wget http://sourceagency.berlios.de/nlsend.php3?period=daily -a /home/groups/sourceagency/htdocs/crontab/nldaily.log -O /home/groups/sourceagency/htdocs/crontab/nldaily.output
+59 23  *  *  5 /usr/bin/wget http://sourceagency.berlios.de/nlsend.php3?period=weekly -a /home/groups/sourceagency/htdocs/crontab/nlweekly.log -O /home/groups/sourceagency/htdocs/crontab/nlweekly.output

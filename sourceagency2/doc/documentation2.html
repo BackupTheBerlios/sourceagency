@@ -1,0 +1,1571 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta http-equiv="expires" content="0">
+   <META NAME="Author" CONTENT="Gregorio Robles">
+   <META NAME="Description" CONTENT="Documentation for SourceAgency 0.3">
+   <META NAME="KeyWords" CONTENT="BerliOS, SourceAgency, OpenSource, Free Software, SourceXchange, Projects, GPL, GNU, SourceWell">
+   <title>The SourceAgency 0.3 Documentation</title>
+
+   <STYLE type="text/css">
+      P { font-size: 12pt;
+          text-align: justify;
+          margin-left: 2%;
+          margin-right: 2%;
+          text-indent: 10pt;
+        }
+	P.title { font-size: 28pt;
+		text-align: center;
+		font-weight: bold;
+		margin-left: 1%;
+		margin-right: 1%;
+		text-indent: 2pt;
+		color: black;
+	}
+	P.subtitle { font-size: 21pt;
+		font-weight: bold;
+		text-align: left;
+		margin-left: 1%;
+		margin-right: 1%;
+		text-indent: 25pt;
+		color: black;
+	}
+	P.subsubtitle { font-size: 17pt;   
+		font-weight: bold;
+		text-align: left;
+		margin-left: 1%;
+		margin-right: 1%;
+		text-indent: 25pt;
+		color: black;
+	}
+	P.subsubsubtitle { font-size: 15pt;
+			font-weight: bold;
+		text-align: left;
+		margin-left: 1%;
+		margin-right: 1%;
+		text-indent: 25pt;
+		color: black;
+	}
+	P.authors { font-size: 12pt;
+		text-align: right;
+		margin-left: 2%;
+		margin-right: 2%;
+		text-indent: 10pt;
+		color: black;
+	}
+        P.function { font-size: 12pt;
+                     text-align: left;
+  		     font-weight: bold;
+                     margin-left: 2%;
+                     margin-right: 2%;
+                     text-indent: 10pt;
+	             font-family: verdana;
+        }
+	P.index { font-size: 14pt;
+		text-align: left;
+		margin-left: 7%;
+		margin-right: 2%;
+		text-indent: 0pt;
+		color: black;
+	}
+      UL { margin-left: 3%;
+	   font-size: 12pt;
+           text-align: left;
+           margin-left: 3%;
+           margin-right: 2%;
+       }
+      OL { margin-left: 3%;
+	   font-size: 14pt;
+           text-align: left;
+           margin-left: 3%;
+           margin-right: 2%;
+       }
+	</STYLE>
+
+</head>
+<body bgcolor="#FFCC33" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+
+<br>&nbsp;
+<P CLASS="title">SourceAgency 0.3
+</P>
+
+<P Class="authors">Berlin, August 13 2001<br>
+Gregorio Robles &lt;<A
+HREF="mailto:grex at scouts-es.org">grex at scouts-es.org</A>&gt;<br>
+</P>
+
+<!-- This is the index table -->
+<!-- The first line is for x. -->
+<!-- The second one for x.x. -->
+<!-- The third one for x.x.x. -->
+<!--
+<center><table align=center width=100%>
+<tr><TD colspan=3><P CLASS="index"></P></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index"></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index"></td></tr>
+</table></center>
+-->
+
+<center><table align=center width=100% cellspacing=0>
+
+<tr><TD colspan=3><P CLASS="index">7. <a href="#files">Files listed and shortly
+explained</A></P></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">8. <a href="#database">SourceAgency's
+database</A></P></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.1. <A
+HREF="#active_sessions">Table active_sessions</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.2. <a href="#auth_user">Table auth_user</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.3. <a href="#comments">Table comments</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.4. <a href="#consultants">Table consultants</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.5. <a href="#counter">Table counter</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.6. <a href="#counter_check">Table counter_check</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.7. <a href="#decisions">Table decisions</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.8. <a href="#description">Table description</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.9. <a href="#developing">Table developing</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.10. <a href="#table_faq">Table faq</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.11. <a href="#history">Table history</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.12. <a href="#licenses">Table licenses</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.13. <a href="#milestones">Table milestones</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.14. <a href="#news">Table news</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.15. <a href="#preferences">Table preferences</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.16. <a href="#rating">Table rating</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.17. <a href="#referees">Table referees</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.18. <a href="#sponsoring">Table sponsoring</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.19. <a href="#tech_content">Table tech_content</A></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">9. <a href="#developers">For Developers</A></P></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">9.1. <A
+HREF="#source_contribution">Source contribution</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">9.2. <A
+HREF="#structure_of_a_page">Main structure of a page</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">9.3. <A
+HREF="#sourceagency_functions">SourceAgency Functions</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.1 <a href="#box">Functions in box.inc</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.2 <a href="#commentstlib">Functions in commentslib.inc</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.3 <a href="#configurelib">Functions in configurelib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.4 <a href="#consultantslib">Functions in consultantslib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.5 <a href="#decisionslib">Functions in decisionslib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.6 <a href="#developinglib">Functions in developinglib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.7 <a href="#faqlib">Functions in faqlib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.8 <a href="#followmentlib">Functions in followmentlib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.9 <a href="#historylib">Functions in historylib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.10 <a href="#html">Functions in html</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.11 <a href="#insertlib">Functions in insertlib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.12 <a href="#lang">Functions in lang.inc</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.13 <a href="#lib">Functions in lib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.14 <a href="#milestones">Functions in milestones</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.15 <a href="#newslib">Functions in newslib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.16 <a href="#refereeslib">Functions in refereeslib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.17 <a href="#sponsoringlib">Functions in sponsoringlib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.18 <a href="#statslib">Functions in statslib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.19 <a href="#translation">Functions in translation</A></td></tr>
+
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">9.4. <a href="#translations_for_developers">Supporting translations</A></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">10. <a href="#version_numbering">Version numbering policy</A></P></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">11. <a href="#faq">FAQ</A></P></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">12. <a href="#todo">TODO</A></P></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">13. <A
+HREF="#references">References</A></P></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">14. <a href="#authors">About the authors</A></P></td></tr>
+
+</table></center>
+
+
+
+<p>&nbsp;
+<A NAME="files">
+<P CLASS="subtitle">7. Files and functionality
+
+<p>The following list gives all the files that come with SourceAgency Version 0.3. It is interesting to have a look at it for any adaption and/or modification
+you would like to do to the system.
+
+<p>The list is in alphabetical order for each directory. For the main directory
+you'll find a column with the permission requirements to enter the page. The
+legend is at the bottom of the table.
+
+<P CLASS="function">SourceAgency's main directory:
+
+<p><center><table width=90% border=1>
+<tr><td>&nbsp;</td><td>admuser.php3</td><td>This file is useful for administrating (registered) users</td></tr>
+<tr><td>R</td><td>chguser.php3</td><td>This page enables (authenticated) users to change their registration data</td></tr>
+<tr><td>&nbsp;</td><td>comments.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>comments_edit.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>comments_mod.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>decisions.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>developing_edut.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>developing_mod.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>faq.php3</td><td>This is the file with the Frequently Asked Questions</td></tr>
+<tr><td>&nbsp;</td><td>history.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>index.php3</td><td>This is the index file which shows the recent projects</td></tr>
+<tr><td>&nbsp;</td><td>insform.php3</td><td>This file is used to insert a project. It contains the second form that has to be filled when inserting projects</td></tr>
+<tr><td>&nbsp;</td><td>insert.php3</td><td>This file inserts a project</td></tr>
+<tr><td>&nbsp;</td><td>insform.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>licenses.php3</td><td>This file indexes the software licenses</td></tr>
+<tr><td>&nbsp;</td><td>licnotavailable.php3</td><td>This file is shown when a license URL is not available</td></tr>
+<tr><td>&nbsp;</td><td>login.php3</td><td>This is the login file; here authenticated sessions start</td></tr>
+<tr><td>&nbsp;</td><td>loginform.ihtml</td><td>Verifies login</td></tr>
+<tr><td>R</td><td>logout.php3</td><td>This file contains the logout; session and authentication finish</td></tr>
+<tr><td>&nbsp;</td><td>news.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>news_edit.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>news_mod.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>register.php3</td><td>Registration form for users</td></tr>
+<tr><td>&nbsp;</td><td>remind.php3</td><td>This file allows users to get their forgotten password via e-mail</td></tr>
+<tr><td>&nbsp;</td><td>remindme.php3</td><td>This file sends the forgotten password to the user </td></tr>
+<tr><td>&nbsp;</td><td>sponsoring.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>sponsoring_edit.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>step1.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>step1_edit.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>step2.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>step2_edit.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>step2_mod.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>step3.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>step3_edit.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>step3_mod.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>step4.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>step4_edit.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>step5.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>step6.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>summary.php3</td><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td>test.php3</td><td>SourceAgency System Capabilities Test. It looks if PHPLib and the database are correctly configured for the system</td></tr>
+<tr><td>&nbsp;</td><td>users.php3</td><td>This page lists the users registered in our system</td></tr>
+<tr><td>&nbsp;</td><td>verify.php3</td><td>This file contains the verification procedure when registering. Users have to visit this page (with a hashcode send to them via e-mail by the system) to validate their registration.</td></tr>
+</table></center>
+
+<P Class=authors>R: Registered user (<i>admin</i>, <i>editor</i>, <i>sponsor</i> or <i>devel</i> permission)
+<br>E: <i>Editor</i> permission needed
+<br>S: <i>Sponsor</i> permission needed
+<br>D: <i>Devel</i> permission needed
+<br>C: Configurable through the configuration file
+
+<p>The permissions needed to access certain pages can be configurated dinamically from the include/config.inc file. This allows to set the permission to <i>admin</i>, <i>editor</i>, <i>sponsor</i>, <i>devel</i> or even <i>all</i> (with the <i>all</i> option, everybody is able to access that page) at your wish. Please, be aware that the security of your system depends on what you decide; be sure of what you are doing. The default values are the recommended ones. At this moment, the only possibility for configuring permissions is by editing the include/config.inc file, but future versions of SourceAgency may allow you to administrate this permissions through the web.
+
+<P CLASS="function">Subdirectory include:
+<p>(Please, be aware of inserting your own security procedures to make this
+directory not public)
+
+<p><center><table width=90% border=1>
+<tr><td>English-lang.inc</td><td>Main English translation</td></tr>
+<tr><td>box.inc</td><td>Library with the boxes (tables)</td></tr>
+<tr><td>commentslib.inc</td><td>Library for comments</td></tr>
+<tr><td>config.inc</td><td>Configuration file</td></tr>
+<tr><td>consultantslib.inc</td><td>Library for the consultants pages</td></tr>
+<tr><td>contentlib.inc</td><td>Library for the specifications pages</td></tr>
+<tr><td>decisionslib.inc</td><td>Library for the decisions pages</td></tr>
+<tr><td>developinglib.inc</td><td>Library for the developing proposal pages</td></tr>
+<tr><td>faqlib.inc</td><td>Library for the faq</td></tr>
+<tr><td>followmentlib.inc</td><td>Library for the project followment pages</td></tr>
+<tr><td>footer.inc</td><td>Common footer for almost all pages</td></tr>
+<tr><td>header.inc</td><td>Common header for almost all pages</td></tr>
+<tr><td>historylib.inc</td><td>Library for the project history</td></tr>
+<tr><td>html.inc</td><td>Library with an abstraction layer over HTML and PHPLib</td></tr>
+<tr><td>insertlib.inc</td><td>Library for inserting projects</td></tr>
+<tr><td>lang.inc</td><td>Library for translations</td></tr>
+<tr><td>lib.inc</td><td>Base Library for SourceAgency</td></tr>
+<tr><td>lang-translate.inc</td><td>File used for translation contributors</td></tr>
+<tr><td>local.inc</td><td>PHPLib local configuration file</td></tr>
+<tr><td>menubar.inc</td><td>Left bar in the browser window. Provides ease of navigation. The links shown depend on the permissions of the visitor</td></tr>
+<tr><td>milestoneslib.inc</td><td>Library for the milestones pages</td></tr>
+<tr><td>newslib.inc</td><td>Library for the news pages</td></tr>
+<tr><td>refereeslib.inc</td><td>Library for the referees pages</td></tr>
+<tr><td>session.inc</td><td>&nbsp;</td></tr>
+<tr><td>sponsoringlib.inc</td><td>Library for the project sponsoring wish pages</td></tr>
+<tr><td>statslib.inc</td><td>Library for statistics</td></tr>
+<tr><td>top_strip.inc</td><td>Top strip on every page</td></tr>
+<tr><td>top_title.inc</td><td>Top title strip on every page</td></tr>
+<tr><td>translation.inc</td><td>Library for translations</td></tr>
+</table></center>
+
+<P CLASS="function">Subdirectory images:
+
+<p><center><table width=90% border=1>
+<tr><td>bell.png</td><td>Urgency</td></tr>
+<tr><td>binary2.png</td><td>Download redirection (for tarballs)</td></tr>
+<tr><td>blank.gif</td><td>A blank image</td></tr>
+<tr><td>html.png</td><td>Homepage</td></tr>
+<tr><td>importance.png</td><td>Interest</td></tr>
+<tr><td>info.png</td><td>Changelog</td></tr>
+<tr><td>leftbar.gif</td><td>Left end of statistics bar (taken from PHP-Nuke)</td></tr>
+<tr><td>mainbar.gif</td><td>Main statistics bar (tanken form PHP-Nuke)</td></tr>
+<tr><td>recycled.png</td><td>Update/change</td></tr>
+<tr><td>rightbar.gif</td><td>Right end of statistics bar (taken from PHP-Nuke)</td></tr>
+<tr><td>txt.png</td><td>Coments</td></tr>
+<tr><td>berlios.jpg</td><td>Default image of the Site</td></tr>
+<tr><td>logo_fokus.gif</td><td>Default image of the Organisation</td></tr>
+</table></center>
+
+<P CLASS="function">Subdirectory sql:
+
+<p><center><table width=90% border=1>
+<tr><td>mysql.sql</td><td>MySQL structure of the Database (with some example entries)</td></tr>
+</table></center>
+
+<P CLASS="function">Subdirectory doc:
+<p><center><table width=90% border=1>
+<tr><TD colspan=2>Files with the SourceAgency documentation, changelog, license, install etc.</td></tr>
+</table></center>
+
+<P CLASS="function">Subdirectory html:
+<p><center><table width=90% border=1>
+<tr><TD colspan=2>This files contain the SourceAgency Project Pages which can also be found at <a href="http://sourceagency.berlios.de/html/">http://sourceagency.berlios.de/html/</A></td></tr>
+</table></center>
+
+<p>&nbsp;
+<A NAME="database">
+<P CLASS="subtitle">7. SourceAgency's database structure
+
+<p>In the following section, we are going to introduce SourceAgency's
+database structure. It may be interesting for developers to know what is stored
+in the
+SourceAgency system and how the different tables look like.
+
+<p>For the database structure, please, have a look at the files in the sql
+subdirectory. We've added to this dump some entries that may serve as example
+projects and licenses for new users.
+
+<A NAME="active_sessions">
+<P CLASS="subsubtitle">7.1. Table active_sessions
+
+<p>This table is used internally by PHPLib to keep track of the active
+sessions. As this library is used at a too low level it is uninteresting for
+the SourceAgency developer.
+
+<A NAME="auth_user">
+<P CLASS="subsubtitle">7.2. Table auth_user
+
+<p>This table contains the data of authenticated (registered) users in
+your SourceAgency system. The content of this table can be changed by a registered user with
+<i>admin</i> permission in the http://yourserver/admuser.php3 page.
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=42%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=25%>OTHERS</td></tr>
+<tr><td>user_id</td><td>Id of a registered user</td><td>varchar<td>32</td></td><td>X</td><td>PRIMARY KEY</td></tr>
+<tr><td>username</td><td>Login name of a registered user</td><td>varchar<td>32</td></td><td>X</td><td>UNIQUE</td></tr>
+<tr><td>password</td><td>Password (in clear) for a registered user</td><td>varchar<td>32</td></td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>realname</td><td>Real Name of registered user</td><td>varchar<td>64</td></td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>email_usr</td><td>E-mail address of registered user</td><td>varchar<td>128</td></td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>modification_usr</td><td>Date of last modification</td><td>timestamp<td>14</td></td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>creation_usr</td><td>Date of creation</td><td>timestamp<td>14</td></td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>perms</td><td>Permissions of the registered user (<i>devel pending</i>, <i>sponsor pending</i>, <i>devel</i>, <i>sponsor</i>
+<i>editor</i>, <i>admin</i>)</td><td>varchar<td>255</td></td><td>X</td><td>&nbsp;</td></tr>
+</table></center>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+<p>Note: Be carefull when deleting users. All their contributions to the system will be lost.
+
+
+<A NAME="comments">
+<P CLASS="subsubtitle">7.3. Table comments
+
+<p>It stores the comments made by registered users on projects. A registered user with <i>admin</i> permission can change or modify these comments in the
+http://yourserver/admcomment.php3 page.
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=42%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=25%>OTHERS</td></tr>
+<tr><td>proid</td><td>Id of the commented project (see table projects)</td><td>bigint</td><td>20</td><td>X</td><td>unsigned DEFAULT '0'</td></tr>
+<tr><td>user_cmt</td><td>User name of the user (<i>devel</i> or <i>sponsor</i>) that posted the comment</td><td>varchar</td><td>16</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>Type</td><td>Gives the type of the comment from the following list: <i>general</i>, <i>news</i>...)</td><td>varchar</td><td>16</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>Number</td><td>Used to not confuse comments of the same type but different stuff</td><td>varchar</td><td>16</td><td>X</td><td>DEFAULT '0'</td></tr>
+<tr><td>id</td><td>Id of the comment. This is only a local id (for type and number) to distinguish between comments of the same type and to the same object</td><td>int</td><td>8</td><td>X</td><td>DEFAULT '1'</td></tr>
+<tr><td>ref</td><td>Reference to the comment id (same number, type and proid). If it does not refer to another comment, then its value is 0</td><td>int</td><td>8</td><td>X</td><td>DEFAULT '0'</td></tr>
+<tr><td>subject_cmt</td><td>Subject of the comment</td><td>varchar</td><td>128</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>text_cmt</td><td>Content of the comment</td><td>blob</td><td>&nbsp;</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>creation_cmt</td><td>Date of creation of the comment</td><td>timestamp<td>14</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+</table></center>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+
+<A NAME="consultants">
+<P CLASS="subsubtitle">7.4. Table consultants
+
+<p>This table contains the users that offer themselves as project consultants for a sponsored project.
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=42%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=25%>OTHERS</td></tr>
+<tr><td>proid</td><td>Id of the project where cooperation is wished (see table projects)</td><td>bigint</td><td>20</td><td>X</td><td>unsigned DEFAULT '0'</td></tr>
+<tr><td>consultant</td><td>User name (<i>sponsor</i> or <i>devel</i>)</td><td>varchar</td><td>16</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>status</td><td>Negotiating (N), Denied (D), Agreed (A)</td><td>char</td><td>1</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>creation</td><td>Date of creation</td><td>timestamp</td><td>14</td><td>X</td><td>&nbsp;</td></tr>
+</table></center>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+
+
+<A NAME="counter">
+<P CLASS="subsubtitle">7.5. Table counter
+
+<p>This table keeps several counters on projects. At the moment, these counters are a hit counter and a documentation link counter. The sum of all the counter gives what we call the <i>interest</i> on a project.
+
+<p>The goal of the counters is to measure the interest that inserted projects have arised between the visitors. As this is an internal table for SourceAgency's correct functioning, it does not need to be (and can't be) administrated through the web.
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=42%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=25%>OTHERS</td></tr>
+<tr><td>proid</td><td>Id of the project (see table projects)</td><td>bigint</td><td>20</td><td>X</td><td>unsigned DEFAULT '0' UNIQUE</td></tr>
+<tr><td>pro_cnt</td><td>Count of hits (visits on appbyid.php3) in our system</td><td>int</td><td>11</td><td>X</td><td>DEFAULT '0'</td></tr>
+<tr><td>docs_cnt</td><td>Count of redirected documentation links</td><td>int</td><td>11</td><td>X</td><td>DEFAULT '0'</td></tr>
+</table></center>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+<A NAME="counter_check">
+<P CLASS="subsubtitle">7.6. Table counter_check
+
+<p>This table is used to avoid manipulation of the project counters stored in the counter table. SourceAgency saves some time the IP address of the visitor for each redirection that makes a counter increase. When doing a redirection, SourceAgency looks in this table if that counter has already been increased by a visitor from that IP address. If an entry is found, the counter is not increased.
+
+<p>The contents of this table are deleted automatically after a certain time. As this is an internal table for SourceAgency's correct functioning, it does not need to be (and can't be) administrated through the web.
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=42%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=25%>OTHERS</td></tr>
+<tr><td>proid</td><td>Id of the project (see table projects)</td><td>bigint</td><td>20</td><td>X</td><td>unsigned DEFAULT '0'</td></tr>
+<tr><td>cnt_type</td><td>Type of counting (see table counter)</td><td>varchar</td><td>20</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>ipaddr v</td><td>Source address of hit</td><td>archar</td><td>15</td><td>X</td><td>DEFAULT '127.000.000.001'</td></tr>
+<tr><td>creation_cnt</td><td>Date of hit</td><td>timestamp</td><td>14</td><td>X</td><td>&nbsp;</td></tr>
+</table></center>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+<A NAME="decisions">
+<P CLASS="subsubtitle">7.7. Table decisions
+
+<p>This table contains the decisions that are taken in the projects negotiation. The field "decision" contains the username (when deciding for a consultant), content_id (when doing it for tech_content), number (when managing milestones) and devid (when deciding for a proposal).
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=52%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=15%>OTHERS</td></tr>
+<tr><td>proid</td><td>Id of the project (see table projects)</td><td>bigint</td><td>20</td><td>X</td><td>unsigned DEFAULT '0'</td></tr>
+<tr><td>step</td><td>Step the decisions is about</td><td>int</td><td>8</td><td>X</td><td>unsigned</td></tr>
+<tr><td>decision_user</td><td>Username of the user that has taken the decision/td><td>varchar</td><td>16</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>decision</td><td>Decision taken</td><td>varchar</td><td>16</td><td>X</td><td>&nbsp;</td></tr>
+</table></center>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+
+<A NAME="description">
+<P CLASS="subsubtitle">7.8. Table description
+
+<p>This table has the projects' data. Besides <i>editors</i> and <i>admin</i>, only the registered user (<i>devel</i> or <i>sponsor</i>) can modify or change his own projects through the web.
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=52%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=15%>OTHERS</td></tr>
+<tr><td>proid</td><td>Id of the sponsored project (see table projects)</td><td>bigint</td><td>20</td><td>X</td><td>unsigned DEFAULT '0'</td></tr>
+<tr><td>project_title</td><td>Title of the project</td><td>varchar</td><td>128</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>type</td><td>Adaption, Expansion, Development, Documentation, Other...</td><td>varchar</td><td>16</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>description</td><td>Short description of the project</td><td>blob</td><td>&nbsp;</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>description_user</td><td>Username of the user that has inserted this description</td><td>varchar</td><td>16</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>volume</td><td>Volume of the project (Very Small, Small, Regular, Big, Very Big)</td><td>varchar</td><td>16</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>status</td><td>Status of the project (0,1,2,3,4,5,6) (0 is for pending projects)</td><td>int</td><td>1</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>description_creation</td><td>Date of this entry</td><td>timestamp</td><td>14</td><td>X</td><td>&nbsp;</td></tr>
+</table></center>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+
+<A NAME="developing">
+<P CLASS="subsubtitle">7.9. Table developing
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=52%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=15%>OTHERS</td></tr>
+<TR width=15%><td>devid</td><TD width=52%>Id of the development</td><TD width=10%>bigint</td><TD width=5%>20</td><TD width=3%>X</td><TD width=15%>unsigned DEFAULT '0' auto_increment UNIQUE</td></tr>
+<tr><td>proid</td><td>Id of the developed project (see table projects)</td><td>bigint</td><td>20</td><td>X</td><td>unsigned DEFAULT '0'</td></tr>
+<tr><td>content_id</td><td>Id of the content the development is proposed to</td><td>bigint</td><td>20</td><td>X</td><td>unsigned DEFAULT '0'</td></tr>
+<tr><td>developer</td><td>User name of the <i>devel</i> that wants to develope a project</td><td>varchar</td><td>16</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>salary</td><td>Wanted money</td><td>int</td><td>8</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>status</td><td>Pending (P), Negotiating (N), Active (A), Finished (F), Deleted (D) or Modified (M)</td><td>char</td><td>1</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>cooperation</td><td>If cooperation is wanted, in this field the sort of wanted cooperation is specified</td><td>varchar</td><td>64</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>valid</td><td>Valid until...</td><td>bigint</td><td>14</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>start</td><td>Date when starting is possible</td><td>bigint</td><td>14</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>duration</td><td>Duration (in weeks) of the project</td><td>int</td><td>4</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>creation</td><td>Date of creation</td><td>timestamp</td><td>14</td><td>X</td><td>&nbsp;</td></tr>
+</table></center>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+
+<A NAME="table_faq">
+<P CLASS="subsubtitle">7.10. Table faq
+
+<p>This table contains the frequently asked questions of our system. Registered users with <i>admin</i> permission can administrate (create, modify and delete) them through the web easily.
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=42%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=25%>OTHERS</td></tr>
+<tr><td>faqid</td><td>Id of the question-answer pair</td><td>int</td><td>8</td><td>X</td><td>unsigned DEFAULT '0' UNIQUE</td></tr>
+<tr><td>question</td><td>Content of the question</td><td>blob</td><td>&nbsp;</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>answer</td><td>Content of the answer</td><td>blob</td><td>&nbsp;</td><td>X</td><td>&nbsp;</td></tr>
+</table></center>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+
+<A NAME="licenses">
+<P CLASS="subsubtitle">7.11. Table licenses
+
+<p>Table licenses contains all licenses listed in your system. For each lisence
+there is a field with its name and another one with the URL where the
+license-text can be found. We expect to
+have the text of all licenses locally in future
+SourceAgency releases.
+
+<p>If you don't know the URL of an
+inserted license you can insert http://yourserver/licnotavailable.php3,
+which is a page that contains an information box announcing that the
+license text is not available.
+
+<p> A registered user with
+<i>admin</i> permission can change, modify or delete the content of the licenses table through the web,
+visiting the http://yourserver/admlicens.php3 page.
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=42%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=25%>OTHERS</td></tr>
+<tr><td>license</td><td>Name of the license</td><td>varchar</td><td>64</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>url</td><td>URL where the license can be read</td><td>varchaR</td><td>255</td><td>X</td><td>&nbsp;</td></tr>
+</table></center>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+
+<A NAME="table_faq">
+<P CLASS="subsubtitle">7.12. Table milestones
+
+<p>This table contains the mailstones of all the projects listed in our system.
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=42%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=25%>OTHERS</td></tr>
+<tr><td>proid</td><td>Id of the commented project (see table projects)</td><td>bigint</td><td>20</td><td>X</td><td>unsigned DEFAULT '0'</td></tr>
+<tr><td>number</td><td>Number of the milestone</td><td>int</td><td>8</td><td>X</td><td>unsigned DEFAULT '1'</td></tr>
+<tr><td>goals</td><td>Description of the milestone's goals</td><td>blob</td><td>&nbsp;</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>release</td><td>Date of release</td><td>bigint</td><td>14</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>product</td><td>Final product</td><td>varchar</td><td>64</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>payment</td><td>Payment of the milestone</td><td>bigint</td><td>20</td><td>X</td><td>unsigned DEFAULT '0'</td></tr>
+<tr><td>status</td><td>Pending (P), Negotiating (N), Active (A), Finished (F), Deleted (D) or Modified (M)</td><td>char</td><td>1</td><td>X</td><td>&nbsp;</td></tr>
+</table></center>
+
+<p><b>we don't have any creation timestamp!!!!</b>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+<A NAME="news">
+<P CLASS="subsubtitle">7.13. Table news
+
+<p>This table contains all the news posted by the <i>project owner(s)</i>.
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=42%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=25%>OTHERS</td></tr>
+<tr><td>proid</td><td>Id of the project (see table projects)</td><td>bigint</td><td>20</td><td>X</td><td>unsigned DEFAULT '0' UNIQUE</td></tr>
+<tr><td>user_news</td><td>User that has posted this news</td><td>varchar</td><td>16</td><td>X</td><td></td></tr>
+<tr><td>subject_news</td><td>News Headline</td><td>varchar</td><td>128</td><td>X</td><td></td></tr>
+<tr><td>text_news</td><td>News Body</td><td>blob</td><td>&nbsp;</td><td>X</td><td></td></tr>
+<tr><td>creation_news</td><td>Date of creation of the news</td><td>timestamp<td>14</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+</table></center>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+
+<A NAME="rating">
+<P CLASS="subsubtitle">7.14. Table rating
+
+<p>This table contains all the ratings made to sponsors, developers and, automatically, referees.
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=42%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=25%>OTHERS</td></tr>
+<tr><td>proid</td><td>Id of the project where cooperation is wished (see table projects)</td><td>bigint</td><td>20</td><td>X</td><td>unsigned DEFAULT '0'</td></tr>
+<tr><td>who</td><td>User name (<i>sponsor</i> or <i>devel</i>) of the rated person</td><td>varchar</td><td>16</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>by_whom</td><td>User name (<i>sponsor</i> or <i>devel</i>) of the rating person</td><td>varchar</td><td>16</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>mark</td><td>from 1 (very bad) to 5 (very good)</td><td>char</td><td>1</td><td>X</td><td>unsigned DEFAULT '3'</td></tr>
+<tr><td>on_what</td><td>Attitude that is rated</td><td>varchar</td><td>24</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>project_importance</td><td>To notice the importance of this rating</td><td>varchar</td><td>16</td><td>X</td><td>&nbsp;</td></tr>
+</table></center>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+
+<A NAME="referees">
+<P CLASS="subsubtitle">7.14. Table referees
+
+<p>This table contains the users that offer themselves as project referees.
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=42%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=25%>OTHERS</td></tr>
+<tr><td>proid</td><td>Id of the project where cooperation is wished (see table projects)</td><td>bigint</td><td>20</td><td>X</td><td>unsigned DEFAULT '0'</td></tr>
+<tr><td>referee</td><td>User name (<i>sponsor</i> or <i>devel</i>)</td><td>varchar</td><td>16</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>status</td><td>Negotiating (N), Denied (D), Agreed (A)</td><td>char</td><td>1</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>creation</td><td>Date of creation</td><td>timestamp</td><td>14</td><td>X</td><td>&nbsp;</td></tr>
+</table></center>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+
+
+<A NAME="sponsoring">
+<P CLASS="subsubtitle">7.15. Table sponsoring
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=52%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=15%>OTHERS</td></tr>
+<TR width=15%><td>spoid</td><TD width=52%>Id of the sponsoring</td><TD width=10%>bigint</td><TD width=5%>20</td><TD width=3%>X</td><TD width=15%>unsigned DEFAULT '0' auto_increment UNIQUE</td></tr>
+<tr><td>proid</td><td>Id of the sponsored project (see table projects)</td><td>bigint</td><td>20</td><td>X</td><td>unsigned DEFAULT '0'</td></tr>
+<tr><td>sponsor</td><td>User name of the <i>sponsor</i> that wants to sponsor a project</td><td>varchar</td><td>16</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>budget</td><td>Offered money</td><td>int</td><td>8</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>status</td><td>Pending (P), Negotiating (N), Active (A), Finished (F), Deleted (D) or Modified (M)</td><td>char</td><td>1</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td># cooperation</td><td>If cooperation is wanted, in this field the sort of wanted cooperation is specified</td><td>varchar</td><td>64</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>valid</td><td>Valid until...</td><td>bigint</td><td>14</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>begin</td><td>Date when starting is possible</td><td>bigint</td><td>14</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>finish</td><td>Date when the project should have been finished</td><td>bigint</td><td>14</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>creation</td><td>Date of creation</td><td>timestamp</td><td>14</td><td>X</td><td>&nbsp;</td></tr>
+</table></center>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+
+<A NAME="tech_content">
+<P CLASS="subsubtitle">7.16. Table tech_content
+
+<p>This table has the projects' data. Besides <i>editors</i> and <i>admin</i>, only the registered user (<i>devel</i> or <i>sponsor</i>) can modify or change his own projects through the web.
+
+<p><center><table width=90% border=1>
+<tr><TD width=15%>NAME</td><TD width=52%>EXPLANATION</td><TD
+width=10%>TYPE</td><TD width=5%>L</td><TD width=3%>N</td><TD width=15%>OTHERS</td></tr>
+<TR width=15%><td>content_id</td><TD width=52%>Id of the technical content</td><TD width=10%>bigint</td><TD width=5%>20</td><TD width=3%>X</td><TD width=15%>unsigned DEFAULT '0' auto_increment UNIQUE</td></tr>
+<TR width=15%><td>proid</td><TD width=52%>Id of the project => FK from table description</td><TD width=10%>bigint</td><TD width=5%>20</td><TD width=3%>X</td><TD width=15%>unsigned DEFAULT '0'</td></tr>
+<tr><td>license</td><td>License under which the project will be released</td><td>varchar</td><td>64</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>skills</td><td>Needed skills</td><td>varchar</td><td>64</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>platform</td><td>Platform the project should run under</td><td>varchar</td><td>64</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>architecture</td><td>Architecture of the project</td><td>varchar</td><td>64</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>enviroment</td><td>development enviroment</td><td>varchar</td><td>64</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>docs</td><td>Documetation skills</td><td>varchar</td><td>255</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>specification</td><td>Tecnical specification of the project</td><td>blob</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>cost</td><td>estimated remuneration</td><td>int</td><td>8</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>content_user</td><td>User (<i>sponsor</i> or <i>developer</i>) that proposses this content</td><td>varchar</td><td>16</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>status</td><td>Status of the content ('A' = Accepted, 'P' = Propposed, 'R' = Rejected, 'M' = Modified)</td><td>char</td><td>1</td><td>X</td><td>&nbsp;</td></tr>
+<tr><td>creation</td><td>Date of creation</td><td>timestamp</td><td>14</td><td>X</td><td>&nbsp;</td></tr>
+</table></center>
+
+<P Class=authors>L: Length
+<br>N: Not Null
+
+<p>&nbsp;
+<A NAME="developers">
+<P CLASS="subtitle">8. For developers
+
+<p>SourceAgency is Open Source, so you're invited to contribute to it.
+
+<p>The next paragrahps have been made with the idea of a developer who wants to
+make further development in SourceAgency or who wants to make some
+modifications so that SourceAgency suits his needs.
+
+<p>Note: PHP knowledge is needed for developing or modifying SourceAgency. You should also have
+certain SQL experience if you want to handle with databases.
+
+<p>SourceAgency has been thought as an announcement and retrieval system for OpenSource projects, but maybe you're interested in adapting SourceAgency for
+using it for other type of projects. Or maybe you want to improve SourceAgency adding features or correcting errors. If one of these is your case, keeping on reading will be of interest for you.
+
+<p>Please report to the authors any adaptions and/or modifications. This
+could help us knowing what SourceAgency should implement in the future
+and making other SourceAgency users benefit from your work.
+
+<p>For advanced uses, PHPLib should also be known. You can read about
+PHPLib's API in PHPLib's manual. At this moment, PHPLib is used only
+for sessions and authentication. If you aren't going to work with
+them, you don't need to have a look at PHPLib.
+
+<A NAME="source_contribution">
+<P CLASS="subsubtitle">8.1. Source contribution
+
+<p> If you're planning to contribute source, please read the following
+ information:
+<ul>
+<li>All configuration data belongs to config.inc. The local.inc file
+   just is the local configuration for the PHPLib library. Please keep it free from other code.
+<li>Commonly used functions should be added to lib.inc.
+<li>Functions that refer to statistics belong to statslib.inc.
+<li>Functions that are used for comments should be placed at
+   cmtlib.inc.
+<li>Functions that handle boxes have to be inserted in box.inc.
+<li>Obviously, you're free to use whatever coding style you want. But please
+   try to keep your code as simple as possible.
+<li>Please, try to write all your outputs in English with the translate
+   function (explained later). This will help to keep the
+   internationalization of this project clear.
+<li>If you want to be really helpful, write an entry for the ChangeLog.
+</ul>
+
+<p>Important: With SourceAgency version xx.xx, development has switched to CVS.
+  The following method (anonymous CVS access) is preferred for new developers. The module you wish to check out must be specified as the <i>modulename</i>. When prompted for a password for anonymous, simply press the <i>Enter</i> key:
+<ul>
+<li>Fetch the current CVS tree over anonymous CVS:
+<br>user$ cvs -d :pserver:anonymous@cvs.berlios.de:/csroot/sourceagency login
+<br>[Password: <i>(just press <i>Enter</i> if you are an anonymous user)</i>]
+<br>user$ cvs -z3 -d:pserver:anonymous@cvs.berlios.de:/cvsroot/sourceagency co <i>modulename</i>
+<br>[Updates from within the module's directory do not need the -d parameter]
+<li>send us the file you've modified, or send us a diff.
+</ul>
+
+<p> We've also set up CVSWEB on <a href="http://developer.berlios.de/cvs/?group_id=89">http://developer.berlios.de/cvs/?group_id=89</A>.
+
+<p> Write access to the CVS tree is granted only to developers who have already
+  contributed something useful to SourceAgency.  If you're interested in that,
+  please contact the authors.
+
+<A NAME="structure_of_a_page">
+<P CLASS="subsubtitle">8.2. Main structure of a page
+
+<p>Explaining how most of SourceAgency files
+are structured is important for developers in order to rapidly know what is
+coded and how it has been done. Afterwards adaptions and modifications are made more easily.
+
+<ul>
+<li>Starting (loading) session:
+<PRE>
+  page_open(array("sess" => "SourceAgency_Session"));
+</PRE>
+
+<p>This is a function provided by PHPLib which allows to have sessions
+with and without cookies enabled in the visitor's browser. It should
+be placed at the top of every page and before any other output.
+
+<p>&nbsp;<li>Authentication
+
+<p>There are two different types of authentication depending on the page
+visited.
+
+<p>Case a: authenticated and not authenticated visitors (both type of users can
+access the current page)
+
+<PRE>
+    if (isset($auth) && !empty($auth->auth["perm"])) {
+      page_close();
+      page_open(array("sess" => "SourceAgency_Session",
+                      "auth" => "SourceAgency_Auth",
+                      "perm" => "SourceAgency_Perm"));
+    }
+</PRE>
+
+<p>In the first case, everybody can visit that web page without
+having logged in. What the code does is looking if the user is
+authenticated; if it is so, a new session with his parameters is
+loaded (the default one is closed with the page_close() function
+given by PHPLib). Loading of sessions is done by means of PHPLib.
+
+<p>This type of authentication should be the default one. The SourceAgency system
+needs sessions to led PHPLib work with databases that are not in the local
+host. That's why even if sessions are not necessary for a certain page, they
+should be inserted to ensure a correct functioning of the system.
+
+<p>Case b: authenticated users only
+
+<PRE>
+    page_open(array("sess" => "SourceAgency_Session",
+                    "auth" => "SourceAgency_Auth",
+                    "perm" => "SourceAgency_Perm"));
+</PRE>
+
+<p>This page requires to be logged in. At this point it doesn't matter
+what permissions the registered user has. If the visitor is not logged in, the
+login-page (loginform.ihtml) will be automatically called by means of PHPLib's functionality.
+
+<p>At this point we haven't looked if the page visited requires
+any special permission. This will be done later in the page and won't be realized by PHPLib; the
+developer will have to make an if-statement with the required permissions and allow the user to access the
+content of the page or prompt an error box.
+
+<p>&nbsp;<li>Header
+
+<p>The include/header.inc file contains the common functions and
+initializations almost all SourceAgency pages require. What the header inserts in
+each file is:
+
+<ul>
+<p>&nbsp;<li>Disabling cache
+<PRE>
+  header("Cache-Control: no-cache, must-revalidate");
+  header("Pragma: no-cache");
+</PRE>
+
+<p>This disables the browsers to catch our web pages in the local cache. If we
+wouldn't do cache cleaning, just made modifications may not be shown by the
+  browsers as they may show an earlier version of the webpage with the same URL copied in the cache.
+
+<p>The first line follows the HTTP/1.1 standard, while the second works under HTTP/1.0.
+
+<p>&nbsp;<li>Required libraries are included:
+<PRE>
+   require("config.inc");
+   require("lib.inc");
+   require("translation.inc");
+   require("lang.inc");
+   require("box.inc");
+</PRE>
+
+<p>These are the basic libraries for SourceAgency. You can
+find an explanation of them in the chapter where the files are exposed. The
+functions they contain are explained later.
+
+<p>&nbsp;<li>Initializes the translation object
+
+<PRE>
+  $t = new translation($la);
+</PRE>
+
+<p>This is the constructor for the language object. It assures that on
+every page the object is constructed properly. The value of the $la
+variable gives the language in which the page will be shown.
+
+  <p>&nbsp;<li>database connection (if required in the page)
+
+<p>SourceAgency works in many pages (and in its menubar) with a database. At this point a persistent connection to the database is build. By using PHPLib's functions we have database independence.
+
+<PRE>
+    $db = new DB_SourceAgency;
+</PRE>
+
+<p>Note that for MySQL (SourceAgency's only supported database up to the moment), this code is equivalent to build a persistent connection
+like this:
+
+<PRE>
+    $db = mysql_pconnect($db_host,$db_name,$db_password);
+</PRE>
+
+  <p>&nbsp;<li>Head of the page (HTML and BODY tags, metatags, title, css, fonts...)
+  <br>&nbsp;<li>top strip and top title
+
+<p>The top strip is a strip (one line table with 100% width) with some links at the
+left side and the
+actual value of the session (if logged in user name, permissions and
+time to end session and if not logged in the string "not logged in") at the right one. You can personalize the links
+at the right side in the config.inc file. The actual value of the session is
+translated into the supported languages.
+
+<p>The top title is another table (with 100% width) which has two images and the title and
+ slogan of your website. You can configure this propperly in the
+config.inc file.
+
+  <br>&nbsp;<li>Menubar
+<p>The menubar allows to easily navigate through the SourceAgency system. It is
+placed at the left side of your browser.
+
+<p>The links shown depend on the
+permissions of the visitor. If you look at the sections where the files in the
+main directory are explained, you'll understand what this means. For instance,
+while the menubar contains a link to "Login" for unauthenticated users,
+authenticated users (that means users who have logged in) will instead get a
+"Logout" link.
+
+  <p>&nbsp;<li>Opens table
+<p>The content of each page is exposed in the table just opened. It will be
+closed in the footer.
+</ul>
+
+<p>&nbsp;<li>Initializes box objects
+<p>The box objects that are used in the page are constructed at the
+beginning. Usually you will find two boxes: bx and be. bx is the main
+box while be is the error message box.
+
+<p>&nbsp;<li>Content of the page
+  <ul>
+  <br><li>permission if required
+<p>Depending on the page, permissions will be required. For instance, if
+we want a page only accessible for the <i>editor</i>, we will put
+this code:
+
+<PRE>
+    if (!$perm->have_perm("editor"))
+</PRE>
+
+<p>In the case shown as an example, any other visitor who hasn't got <i>editor</i> permission will get an error message. This is only an example that is not really true. Instead of <i>editor</i>, you will find a variable such as <i>$config_perm_xxxx</i> (being <i>xxxx</i> the type of functionality, such as administrating licenses, administrating the faq, etc.). That means that the permission needed to enter that page is set by this variable. This is done so allowing you to easily change the permission needed just by editing the include/config.inc file and modifying the permission requirements that should be met to access that page.
+
+  <p>&nbsp;<li> functionality of the page
+
+<p>Here comes the real functionality of the page. For instance, the file for
+registering as a new user (register.php3) contains here the code for doing a
+registration.
+  </ul>
+
+<p>&nbsp;<li>Footer
+
+<p>The include/footer.inc file contains the common ending of almost all SourceAgency pages. What the footer inserts in
+each file is:
+
+  <ul>
+  <br><li>Close table
+<p>The content table opened in the header.inc file is closed.
+
+  <br>&nbsp;<li>Bottom strip
+<p>The bottom strip (one line table with 100% width) gives the name of the Organisation which owns the
+website. You can configure it to suit your needs in the config.inc file.
+
+  <br>&nbsp;<li>Ending HTML and BODY tags
+  </ul>
+
+<p>&nbsp;<li>Ending (saving) session
+<p>The PHPLib page_close() function closes (saves) the session for this
+page. In fact, the SourceAgency developer does not have to worry about sessions
+if he follows the exposed scheme. PHPLib will do the session-job transparently
+for you. Nice ;-).
+</ul>
+<br>&nbsp;
+
+<A NAME="sourceagency_functions">
+<P CLASS="subsubtitle">8.3. SourceAgency Functions
+
+<p>If you're interested in further developing or in (re)using what is already
+coded, this section will help you to rapidly know what is available.
+
+<A NAME="box">
+<P CLASS="subsubsubtitle">8.3.1. Functions in box.inc
+
+<p>The box class is defined to make tables easier to implement in
+SourceAgency. This functions are used in almost all files in the SourceAgency system.
+
+<P CLASS="function">function box (...)
+
+<PRE>
+    function box ($box_width="",
+	          $frame_color="#000000",
+	          $frame_width="1",
+	          $title_bgcolor="#CCCCCC",
+	          $title_font_color="#000000",
+	          $title_align="",
+	          $body_bgcolor="#FFFFFF",
+	          $body_font_color="#000000",
+	          $body_align="");
+</PRE>
+
+<p>Constructor. The given parameters are the parameters by default; any
+other value will overwrite them.
+
+<P CLASS="function">function box_begin()
+
+<p>Begins the box. The box has to be constructed before with the box()
+function. This function requires box_end() at the end.
+
+<P CLASS="function">function box_end()
+
+<p>Ends the box. Requires box_begin() to be defined before in order to end it.
+
+<P CLASS="function">function box_title($title)
+
+<p>This function allows you to put the string $title as title of the box. This
+function should be placed after the box_begin() function.
+
+<P CLASS="function">function box_full($title, $text)
+
+<p>Given the strings title and text, the box is created. This type of
+box is usefull when printing error messages. 
+
+<P CLASS="function">function box_strip($title)
+
+<p>This function allows you to have subtitles in boxes. This function is very
+usefull when you have different classifications in the same box and want to
+have a title header (strip) for each one. This functions requires the box to be
+constructed with the box() function and to be beginned with box_begin().
+
+<P CLASS="function">function box_columns_begin($number_of_columns)
+<P CLASS="function">function box_column_start($align,$width,$bg_color)
+<P CLASS="function">function box_column_finish()
+<P CLASS="function">function box_columns_end()
+<P CLASS="function">function box_column($align,$width,$bgcolor,$text)
+<P CLASS="function">function box_next_row_of_columns()
+<P CLASS="function">function box_colspan ($number_of_columns,$align,$bgcolor,$text="")
+
+
+<A NAME="commentslib">
+<P CLASS="subsubsubtitle">8.3.2. Functions in commentslib.inc
+
+<p>The commentslib library contains the functions needed for the supporting comments on projects.
+
+<P CLASS="function">function comments_show($proid,$type_cmt,$number,$cmt_id,$ref)
+<P CLASS="function">function comments_form($proid)
+<P CLASS="function">function comments_insert($proid,$user,$type_cmt,$number,$ref,$subject,$text)
+<P CLASS="function">function comments_modify($proid,$user,$type_cmt,$number,$cmt_id,$ref,$subject,$text)
+<P CLASS="function">function comments_modify_form($proid)
+<P CLASS="function">function comments_missing_parameters()
+
+<P CLASS="function">function cmtform($query)
+
+<p>Shows the form to be filled to give a comment on a certain project. The query parameter is a SQL query that looks in the software table for the project with the given <i>id</i>. Projects that can be commented have to be not <i>pending</i>.
+
+<P CLASS="function">function cmtshow($query)
+
+<p>Shows the comment given for an projects. The query parameter is a SQL query with the information of the projects whose comments will be shown. If your aim is to  show all comments on a given project, this function has to be called several times.
+
+<P CLASS="function">function cmtmod($query)
+
+<p>This function is used by the <i>admin</i> to administrate comments. The query parameter is a SQL query with the information of the projects whose comments will be modified. While in cmtform($query) the fields are in blank,
+this function returns the fields with the actual values stored in the database
+as default entries to the form. 
+
+
+<A NAME="configurelib">
+<P CLASS="subsubsubtitle">9.3.3. Functions in configurelib.inc
+
+<P CLASS="function">function 
+
+<A NAME="consultantslib">
+<P CLASS="subsubsubtitle">9.3.4. Functions in consultantslib.inc
+
+<P CLASS="function">function show_consultants($proid)
+<P CLASS="function">function consultants_form($proid)
+<P CLASS="function">function consultants_insert($proid,$user)
+
+<A NAME="decisionslib">
+<P CLASS="subsubsubtitle">9.3.5. Functions in decisionslib.inc
+
+<P CLASS="function">function show_decision_consultants($proid)
+<P CLASS="function">function show_decision_contents($proid)
+<P CLASS="function">function show_decision_proposals($proid)
+<P CLASS="function">function show_decision_referees($proid)
+<P CLASS="function">function project_budget($proid)
+<P CLASS="function">function put_decision_into_database($proid,$step,$your_vote,$what,$table)
+<P CLASS="function">function put_into_next_step($proid)
+
+<A NAME="developinglib">
+<P CLASS="subsubsubtitle">9.3.6. Functions in developinglib.inc
+
+<P CLASS="function">function show_developings($proid,$content_id)
+<P CLASS="function">function developing_form($proid,$content_id)
+<P CLASS="function">function developing_modify_form($proid,$content_id)
+<P CLASS="function">function developing_insert($proid,$user,$content_id, $cost, $license, $cooperation, $valid, $start, $duration)
+<P CLASS="function">function developing_modify($proid,$content_id,$developer,$cost, $license, $cooperation, $valid, $start, $duration,$creation)
+<P CLASS="function">function show_selected_developing($proid)
+
+<A NAME="faqlib">
+<P CLASS="subsubsubtitle">9.3.7. Functions in faqlib.inc
+
+<P CLASS="function">function faqshow($query)
+
+<p>Shows the just inserted FAQ by the <i>admin</i>. The query parameter is a SQL query with the information of the faq being showed. For showing all the FAQs in the FAQ-page accessible to everybody (faq.php3), another algorithm is used (and that's why it appears differently), but you could use this one iteratively too with the same aim.
+
+<P CLASS="function">function faqmod($query)
+
+<p>This function is used by the <i>admin</i> to modify existing FAQs. While in faqform() the fields are in blank, this function returns the fields with the actual values stored in the database as default entries to the form. 
+
+<P CLASS="function">function faqform()
+
+<p>This function is used by the <i>admin</i> to insert new FAQs.
+
+<A NAME="followmentlib">
+<P CLASS="subsubsubtitle">9.3.8. Functions in followmentlib.inc
+
+<P CLASS="function">function show_followment($proid)
+
+
+<A NAME="historylib">
+<P CLASS="subsubsubtitle">9.3.9. Functions in historylib.inc
+
+<P CLASS="function">function extract_table($table_name,$table_creation,$table_user,$table_subject)
+<P CLASS="function">function bubblesort(&$history)
+<P CLASS="function">function show_history($history)
+
+<A NAME="html">
+<P CLASS="subsubsubtitle">9.3.9. Functions in html.inc
+
+<P CLASS="function">function html_link($address, $query, $text)
+<P CLASS="function">function html_anchor($name)
+<P CLASS="function">function html_image($file, $border, $width, $height, $alternate)
+<P CLASS="function">function html_form_action($file, $query, $type)
+<P CLASS="function">function html_form_hidden($name, $value)
+<P CLASS="function">function html_select($name)
+<P CLASS="function">function html_select_option($value,$selected,$text)
+<P CLASS="function">function html_select_end()
+<P CLASS="function">function html_input_text($name, $size, $maxlength, $value)
+<P CLASS="function">function html_form_submit($value,$name)
+<P CLASS="function">function html_checkbox($name,$value,$checked)
+<P CLASS="function">function html_radio($name,$value,$checked)  
+<P CLASS="function">function html_textarea($name,$columns,$rows,$wrap,$maxlength,$value)
+<P CLASS="function">function html_form_end()
+
+
+<A NAME="insertlib">
+<P CLASS="subsubsubtitle">9.3.11. Functions in insertlib.inc
+
+<P CLASS="function">function insert_form()
+<P CLASS="function">function everything_filled($project_title,$description)
+<P CLASS="function">function project_title_not_set()
+<P CLASS="function">function description_not_set()
+<P CLASS="function">function insert_into_database($project_title,$description,$type,$volume)
+
+
+<A NAME="lang">
+<P CLASS="subsubsubtitle">9.3.12. Functions in lang.inc
+
+<A NAME="lib">
+<P CLASS="subsubsubtitle">9.3.13. Functions in lib.inc
+
+<p>This is the main library. It contains all the functions that work with the
+projects, its parameters and main functionality. This functions are used in
+almost every SourceAgency file.
+
+<P CLASS="function">function mktimestamp($time)
+
+<p>Returns the variable $timestamp. Transforms the time parameter
+properly into a value accepted by the (MySQL) database.
+
+<p>The use of timestamp in SourceAgency's database gets a little clearer when we
+read the MySQL Manual: "The TIMESTAMP column type provides a
+type that you can use to automatically mark INSERT or UPDATE operations with
+the current date and time. If you have multiple TIMESTAMP columns, only the
+first one is updated automatically."
+
+<P CLASS="function">function timestr($timestamp)
+
+<p>Returns the variable $time. This function transforms the type timestamp
+used in MySQL into the wanted output.
+
+<p>It prints the date in this format: "%A, %e. %B %Y, %H:%M:%S %Z". An example
+output could be: "Monday, 1. Jan 2001, 15:46:15 CET".
+
+<p>SourceAgency can translate the weekday and the month to the languages
+supported by the system. In our example, "Monday" and "January" will appear only for the English version.
+
+<P CLASS="function">function timestr_short($timestamp)
+
+<p>Returns the variable $time. This function transforms the type timestamp
+used in MySQL into the wanted output. This function is used in the
+top_strip.inc file from the include subdirectory that comes at the beginning of
+almost all SourceAgency files. It prints the date in this
+format: "%a,%e.%b,%H:%M:%S". An example output would be:
+"Mon,1.Jan,15:46:15".
+
+<p>SourceAgency can translate the weekday and the month to the languages
+supported by the system. In our example, "Mon" (that stays for Monday) and "Jan"
+(that stays for January) will appear only for the English version.
+
+<P CLASS="function">function timestr_comment($timestamp)
+
+<p>Returns the variable $time. This function transforms the type timestamp
+used in MySQL into the wanted output. This function is used to show the
+creation date of project comments.
+
+<p>The printed data format follows this rule: "%e. %b, %H:%M". An example
+output could be:
+"1. Jan, 15:46".
+
+<p>SourceAgency can translate the month to the languages
+supported by the system. In our example, "Jan"
+(that stays for January) will appear only for the English version.
+
+<P CLASS="function">function timestr_shortest($timestamp)
+
+<P CLASS="function">function license($selected)
+
+<p>Displays the different licenses as options of a HTML SELECT form. row is the
+license by default (the SELECTED attribute in the form).
+
+<P CLASS="function">function show_more($iter,$maxiter,$url, $urlquery)
+
+<p>Shows projects of the current iteraction iter until it reaches ten or the
+maximum number of iteractions maxiter. The url and urlquery parameters allow to go forward and/or backwards in order: url is just the php3 page that will be called and urlquery the rest of the URL query (the parameters that follow the "?" in the URL).
+
+<P CLASS="function">function wrap($string,$width=75,$break=" ")
+
+<p>This functions wraps the input $string at the characters given by $break
+(which is by default a blank space) when the width of the string is greater
+than $width (which is by default 75 characters long).
+
+<P CLASS="function">function typestr($type)
+
+<p>The type of an project is stored in the database as a single
+character. Given this character as a parameter, the
+typestr function returns the string equivalent.
+
+<center><table width=40% border=0 cellspacing=0>
+<tr><td>Entered value</td><td>typestr returns</td></tr>
+<tr><td>$type = "S"</td><td>"Stable"</td></tr>
+<tr><td>$type = "D"</td><td>"Development"</td></tr>
+</table></center>
+
+<p>This function supports internally the translation function.
+
+<P CLASS="function">function increasecnt($id, $type)
+
+<p>Given the project id and the type of count (see table counter), this
+function increases that type of count for that project in the database.
+
+<P CLASS="function">function checkcnt($id, $ipaddr, $type)
+
+<p>This function checks if the project (given by its id) has increased its
+counting from the IP address (given by ipaddr) in the last day. The type gives
+the type of count (see table counter).
+
+<p>The table counter_check keeps track of all the countings made during the
+last hours. This functions looks if the project has an entry from the actual
+IP address in a counter type given by $type. If this occurs, the function increasecnt($id,
+$type) will not be called avoiding malicious increasing of project interest.
+
+<P CLASS="function">function nlmsg($period)
+
+<p>This function shows the contents of the news mailing lists. The period parameter is a string whose value can be "weekly" for the
+weekly mailing list or "daily" for the daily mailing list.
+
+<P CLASS="function">function mailuser($perms, $subj, $message)
+
+<p>Sends an e-mail message to the users with the <i>$perm</i> permission. The
+content of the message is given by the <i>$message</i> parameter and its subject by
+<i>$subj</i>. This function is used to give advice to editors when a new
+project is inserted, deleted or changed (modified not!) and to give advice to
+administrators when new users register.
+
+<P CLASS="function"> function top_bar($proid, $page)
+<P CLASS="function"> function summary($proid)
+<P CLASS="function"> function allowed_actions ($project_status, $action_number, $proid)
+<P CLASS="function"> function step_information ($status)
+<P CLASS="function"> function check_permission($proid,$page)
+<P CLASS="function"> function permission_denied()
+<P CLASS="function"> function step_not_open()
+<P CLASS="function"> function calendar_box($proid)
+<P CLASS="function"> function summary_news($proid)
+<P CLASS="function"> function lib_show_description($query)
+<P CLASS="function"> function select_from_config($name,$array_name,$selected)
+<P CLASS="function"> function followment($proid)
+<P CLASS="function"> function show_status($char)
+<P CLASS="function"> function show_project_participants($proid,$participant_type)
+<P CLASS="function"> function lib_comment_it($proid,$type,$number,$ref,$subject,$text)
+<P CLASS="function"> function lib_previous_comment($proid,$type,$number,$ref,$text)
+<P CLASS="function"> function lib_show_comments_on_it($proid,$type_cmt,$number,$cmt_id)
+
+<A NAME="milestoneslib">
+<P CLASS="subsubsubtitle">9.3.13. Functions in milestoneslib.inc
+
+<P CLASS="function"> function show_milestones($proid,$milestone_user,$who_wants_to_see)
+<P CLASS="function"> function form_milestones($proid)
+<P CLASS="function"> function milestones_insert($proid,$milestone_user,$number,$goals,$release,$product,$payment)
+<P CLASS="function"> function milestones_modify_form($proid)
+<P CLASS="function"> function milestones_modify($proid,$number,$goals,$release,$product,$payment)
+<P CLASS="function"> function select_milestone_payment($proid,$selected,$number)
+
+<A NAME="newslib">
+<P CLASS="subsubsubtitle">9.3.15. Functions in newslib.inc
+
+<P CLASS="function"> function newsform($proid)
+<P CLASS="function"> function news_modify_form($proid)
+<P CLASS="function"> function newsshow($proid)
+<P CLASS="function"> function news_insert($proid,$user,$subject,$text)
+<P CLASS="function"> function news_modify($proid,$user,$subject,$text,$creation)
+
+<A NAME="refereeslib">
+<P CLASS="subsubsubtitle">9.3.16. Functions in refereeslib.inc
+
+<P CLASS="function"> function show_referees($proid)
+<P CLASS="function"> function referees_form($proid)
+<P CLASS="function"> function referees_insert($proid,$user)
+
+<A NAME="sponsoringlib">
+<P CLASS="subsubsubtitle">9.3.17. Functions in sponsoringlib.inc
+
+<P CLASS="function"> function sponsoring_form($proid)
+<P CLASS="function"> function show_sponsorings($proid)
+<P CLASS="function"> function sponsoring_insert($proid,$user,$sponsoring_text,$budget,$valid,$begin,$finish)
+
+<A NAME="statslib">
+<P CLASS="subsubsubtitle">9.3.18. Functions in statslib.inc
+
+<p>The statslib library has been thought to develop the statistics for
+SourceAgency. The boxes are implemented internally, so the developer
+only has to worry about the statistical implementation.
+
+<p>This library has been
+developed parallel to the box library, so you'll find common (and exclusive)
+features in them. Future versions may try to make both libraries converge.
+
+<P CLASS="function">function stats($result,$var,$message,$position)
+
+<p>This function returns an ordered list (a sort of top list) for the variable <i>$var</i>. <i>$var</i> gives the type for which the table is shown
+(pro_cnt, docs_cnt). <i>$result</i> is the database result for a given SQL
+input. <i>$message</i> is the title of the table. The <i>$position</i>
+parameter gives the starting position of the projects listed.
+
+<p>It does not require any previous box or table definition as it
+does this internally. The length of the graphic bar is also internally chosen.
+
+<P CLASS="function">function stats_title($message)
+
+<p>Displays the header of the table with the title given by $message. This function is
+similar to the box_title($title) function defined in box.inc.
+
+<P CLASS="function">function stats_subtitle($message)
+
+<p>Used to insert subtitles in the table. This function is
+similar to the box_strip($title) function defined in box.inc.
+
+<P CLASS="function">function stats_display($what,$count,$url)
+
+<p>This function displays the statistics graphically in one row. <i>$what</i>
+is a string with the name of what is displayed, <i>$count</i> gives the number of times it
+appears in the database and <i>$url</i> is the corresponding url.
+
+<P CLASS="function">function stats_display_alt($what,$count,$url,$total)
+
+<p>This function displays the statistics graphically in one row. As you might
+have noticed, this function is the stats_display($what,$count,$url) function
+with the aggregation of the <i>$total</i> parameter. <i>$total</i>
+is the total number of implied projects. You should use this function when
+you want to see compared distribution of project characteristics
+(licenses, urgency, etc.).
+
+<P CLASS="function">function stats_end()
+
+<p>Finishes the table. This function is similar to the box_end() function defined in box.inc.
+
+
+<A NAME="translation">
+<P CLASS="subsubsubtitle">8.3.5. Functions in translation.inc
+
+<p>This library is small, but very important. It has the translate
+function which allows SourceAgency to be supported in several languages.
+
+<P CLASS="function">function translation($lang = "English")
+
+<P CLASS="function">function translate($phrase)
+
+<p>Returns $tmp. phrase is a parameter that contains the string in
+SourceAgency's native language, English. The returned value, $tmp, will
+be the string in the translated language. The translate function belongs to the
+translation object. On every SourceAgency page, at the header, the variable $t is
+an initialization (construction) of this object.
+
+
+<A NAME="translations_for_developers">
+<P CLASS="subsubtitle">8.4. Supporting translations
+
+<p>The way the translation works is very simple. SourceAgency's outputs are
+written by default in English, but there's an implemented
+function (the translate($phrase) function) that <i>translates</i> these outputs to
+other languages. In the include subdirectory, you'll find the files that are
+responsible for this miracle: the <i>Language</i>-lang.inc. These files contain
+the English to <i>Language</i> translations and help the translate($phrase)
+function with its work.
+
+<p>The translation procedure is very simple. Every page in SourceAgency has a
+translation object constructed that is ready for use. This object, whose
+variable is <i>$t</i> contains a function which will be called for every string
+that should be translated.
+
+<p>It's better understood with an example. Imagine you would like to have the
+string <i>Home</i> be able to be translated in other languages other than
+English. For a normal output, we would write this code:
+
+<PRE>
+      echo "Home";
+</PRE>
+
+<p>When wanting to be able to have it translated, we will call the explained
+translation function of the $t object. Coded:
+
+<PRE>
+      echo $t->translate("Home");
+</PRE>
+
+<p>The translation function will see first what language the user has chosen and
+then return the string in $temp that corresponds to "Home" for that language.
+That means that if the visitor has
+chosen the German language, you will get this in your web browser as the output
+of the upper code:
+
+<PRE>
+      Heim
+</PRE>
+
+<p>And
+that's it. You'll have noticed how simple it is to support internationalization
+for SourceAgency!
+
+<p>&nbsp;
+<A NAME="version_numbering">
+<P CLASS="subtitle">9. Version numbering policy
+
+<p>SourceAgency versions will follow this pattern:
+<i>a</i>.<i>b</i>.<i>c</i>. While <i>a</i> and <i>b</i> can only be integers,
+<i>c</i> can be either an integer or a character.
+
+<ul>
+<li><i>a</i> will be increased when the SourceAgency system has new,
+innovative concepts.
+<br>Updating your actual SourceAgency system is then not
+only recommended... it's a must!
+
+<br>&nbsp;<li><i>b</i> is increased when inserting major bug fixes, major security fixes, a big amount of
+further developing or new relevant features.
+<br>Updating your SourceAgency system is
+recommended.
+
+<br>&nbsp;<li><i>c</i> is increased when inserting minor bug fixes, minor
+security fixes, a small amount of
+further developing or a new language support. <i>c</i> is optional if it is
+cero. It will become a character
+in steps of five. That means for example that
+<ul>
+<li>SourceAgency 1.0a = SourceAgency 1.0.5 and that
+<li>SourceAgency 2.3c = SourceAgency 2.3.15
+</ul>
+The reason for this is that every fifth minor release will be
+announced in the most known software announcement systems.
+<br>While for versions with <i>c</i> as a character the whole SourceAgency system
+will be available as a tarball, for the other minor releases diffs will be more probable.
+<br>Updating your SourceAgency
+system is not required if you do not need the incorporated functionality.
+</ul>
+
+<p>&nbsp;
+<A NAME="faq">
+<P CLASS="subtitle">10. FAQ
+
+<ul>
+<p>&nbsp;<li>Is SourceAgency database independent?
+<br>The answer is yes. SourceAgency uses PHPLib's functions to access the database, so every database supported by PHPLib should also support the SourceAgency system. Up to now, we've only tested SourceAgency in BerliOS with MySQL.
+
+<p>&nbsp;
+<li>Does SourceAgency work with PHP4?
+<br>Theoretically yes. Please report the authors if you have got any problems.
+
+<p>&nbsp;
+<li>Can an anonymous users add projects and do comments?
+<br>No. SourceAgency only accepts project insertions, project modifications and
+comments by registered users.
+
+<p>&nbsp;
+<li>Does a mailing list for developers interested in SourceAgency exist?
+<br>Yes. Just write it down: <a href="mailto:sourceagency-support at lists.berlios.de">sourceagency-support at lists.berlios.de</A>.
+
+<p>&nbsp;
+<li>Why is SourceAgency not in my language?
+<br>SourceAgency can be easily translated into different languages. If you see
+that SourceAgency does not have support in your language, you're gladly invited to help us with the internationalization. Visit <a href="http://sourceagency.berlios.de/html/translating.php3">http://sourceagency.berlios.de/html/translating.php3</A>.
+
+<p>&nbsp;
+<li>What is BerliOS?
+<br>BerliOS is the German national OpenSource Center. BerliOS offers web
+information, documentation, information events, consultancy + further
+developments, sector-specific solutions, software-solutions + new versions,
+searchengines and successfull debut in the world of OpenSource Software.
+</ul>
+
+<p>&nbsp;
+<A NAME="todo">
+<P CLASS="subtitle">11. TODO
+<ul>
+<li>Finish security system
+<li>Finish history_log with history table
+<li>Browse through projects by license, architecture, platform, etc.
+<li>Administration of the site through the web (licenses, comments, FAQ, newsletters...)
+<li>Search and Advanced Search
+<li>Project configuration by the project initiator
+<li>Project followment
+<li>Rating when finishing the project
+<li>Personal page for sponsors and developers
+<li>Communication infrastructure (notifying e-mail messages, monitoring, etc.)
+<li>Index Page
+<li>XML Backend
+<li>"Intelligent" cache
+<li>Browserspecific CSSs
+<li>i18n and l12n
+<li>Statistics
+<li>Timing scripting for beta-testing
+<li>Any other ideas? Write the authors ;-)
+</ul>
+
+
+<p>&nbsp;
+<A NAME="references">
+<P CLASS="subtitle">12. References
+
+<p>SourceAgency software:
+
+<ul>
+<li>SourceAgency Homepage: <a href="http://sourceagency.berlios.de/html/">http://sourceagency.berlios.de/html/</A>
+<li>Developer Project page: <a href="http://developer.berlios.de/projects/sourceagency">http://developer.berlios.de/projects/sourceagency</A>
+<li>Tarballs: <a href="http://developer.berlios.de/project/filelist.php?group_id=89">http://developer.berlios.de/project/filelist.php?group_id=89</A>
+<li>Changelog: <a href="http://sourceagency.berlios.de/doc/CHANGELOG">http://sourceagency.berlios.de/doc/CHANGELOG</A>
+<li>Screenshots (= example system): <a href="http://sourceagency.berlios.de/">http://sourceagency.berlios.de/</A>
+<li>Documentation and Manuals: <A
+HREF="http://developer.berlios.de/docman/?group_id=89">http://developer.berlios.de/docman/?group_id=89</A> (or with the SourceAgency tarballs)
+<li>CVS tree (in web): <a href="http://cvs.berlios.de/cgi-bin/cvsweb.cgi/?cvsroot=sourceagency">http://cvs.berlios.de/cgi-bin/cvsweb.cgi/?cvsroot=sourceagency</A>
+<li>Mailing List Archive: <a href="http://lists.berlios.de/pipermail/sourceagency-support/">http://lists.berlios.de/pipermail/sourceagency-support/</A>
+</ul>
+
+<p>Programs and library dependences for SourceAgency:
+
+<ul>
+<li>PHP: <a href="http://www.php.net">http://www.php.net</A>
+<li>Apache: <a href="http://www.apache.org">http://www.apache.org</A>
+<li>PHPLib: <a href="http://phplib.netuse.de/">http://phplib.netuse.de/</A>
+<li>MySQL: <a href="http://www.mysql.com">http://www.mysql.com</A>
+<li>PostgreSQL: <a href="http://www.postgres.org">http://www.postgres.org</A>
+
+</ul>
+
+<p>Other references:
+
+<ul>
+<li>BerliOS SourceAgency: <A
+HREF="http://sourceagency.berlios.de">http://sourceagency.berlios.de</A>
+<li>BerliOS: <a href="http://www.berlios.de">http://www.berlios.de</A>
+<li>BerliOS Developer Platform: <a href="http://developer.berlios.de">http://developer.berlios.de</A>
+<li>BerliOS News (in German): <a href="http://news.berlios.de">http://news.berlios.de</A>
+<li>GMD FOKUS: <a href="http://www.fokus.gmd.d">http://www.fokus.gmd.de</A>
+<li>TU-Berlin: <a href="http://www.tu-berlin.de">http://www.tu-berlin.de</A>
+<li>Fachbereich Informatik - Institut OKS: <a href="http://www.fokus.gmd.de/research/cc//oks/uni/index.php3">http://www.fokus.gmd.de/research/cc/oks/uni/index.php3</A>
+<li>Free Software Foundation: <A
+HREF="http://www.fsf.org">http://www.fsf.org</A>
+<li>phpMyAdmin: <a href="http://phpwizard.net/projects/phpMyAdmin">http://phpwizard.net/projects/phpMyAdmin</A>
+<li>phpPgAdmin: <a href="http://www.greatbridge.org/project/phppgadmin/projdisplay.php">http://www.greatbridge.org/project/phppgadmin/projdisplay.php</A>
+<li>Horde: <a href="http://www.horde.org">http://www.horde.org</A>
+</ul>
+
+<p>&nbsp;
+<A NAME="authors">
+<P CLASS="subtitle">13. About the authors:
+
+<ul>
+<li>Gregorio Robles &lt;<a href="mailto:grex at scouts-es.org">grex at scouts-es.org</A>&gt;
+<br>Gregorio Robles is a Spanish exchange student who is doing his diploma
+thesis at the Technical University of Berlin in contact with BerliOS.
+<br>&nbsp;
+
+<br>&nbsp;
+<li>Lutz Henckel &lt;<a href="mailto:lutz.henckel at fokus.gmd.de">lutz.henckel at fokus.gmd.de</A>&gt;
+<br>Lutz Henckel is the project manager of the BerliOS team. He is known for his
+earlier home page "Woven Goods for Linux", which has evolved to what BerliOS is today.
+</ul>
+
+<p>You can find the authors writing en e-mail to <a href="mailto:sourceagency-support at lists.berlios.de">sourceagency-support at lists.berlios.de</A>.
+
+<P class="Authors"><font SIZE=-2>Edited in HTML using GNU Emacs 20.7.1 on an i386 SuSE Linux</font>
+</BODY>
+</HTML>
