@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDevelopinglib.php,v 1.7 2002/07/17 12:39:59 riessen Exp $
+// $Id: TestDevelopinglib.php,v 1.8 2002/07/23 14:09:40 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -20,10 +20,8 @@ if ( !defined("BEING_INCLUDED" ) ) {
 class UnitTestDevelopinglib
 extends UnitTest
 {
-    var $queries;
-
     function UnitTestDevelopinglib( $name ) {
-        $this->queries = array (
+        $GLOBALS['queries'] = array (
             'developing_modify' =>
             ("UPDATE developing SET developer='%s', cost='%s', license='%s', "
              ."cooperation='%s', valid='%s', start='%s', duration='%s',"
@@ -87,11 +85,11 @@ extends UnitTest
     }
 
     function testShow_developings() {
-        global $db, $bx, $t;
+        global $db, $bx, $t, $queries;
         
         $db_config = new mock_db_configure( 2 );
         $fname = 'show_developings';
-        $q=$this->queries[$fname];
+        $q=$queries[$fname];
 
         $args=$this->_generate_records( array('proid','content_id'), 10 );
         $d=$this->_generate_records( array('creation','username','cost',
@@ -256,12 +254,12 @@ extends UnitTest
     }
 
     function testDeveloping_insert() {
-        global $db;
+        global $db, $queries;
         
         $fname = 'developing_insert';
-        $qs=array( 0=>($this->queries[ $fname . '_1' ]),
-                   1=>($this->queries[ $fname . '_2' ]),
-                   2=>($this->queries['show_developings']));
+        $qs=array( 0=>($queries[ $fname . '_1' ]),
+                   1=>($queries[ $fname . '_2' ]),
+                   2=>($queries['show_developings']));
 
         $args=$this->_generate_records( array('proid','user','content_id',
                                               'cost','license','cooperation',
@@ -295,10 +293,10 @@ extends UnitTest
     }
 
     function testDeveloping_modify() {
-        global $db;
+        global $db, $queries;
         $fname = 'developing_modify';
-        $qs = array( 0 => $this->queries[ $fname ],
-                     1 => $this->queries[ 'show_developings' ]);
+        $qs = array( 0 => $queries[ $fname ],
+                     1 => $queries[ 'show_developings' ]);
 
         $args=$this->_generate_array( array('proid','content_id','developer',
                                             'cost','license','cooperation',
@@ -327,7 +325,7 @@ extends UnitTest
         global $bx, $t, $sess, $db;
         global $cost, $license, $cooperation, $valid_day, $valid_month, 
             $valid_year, $start_day, $start_month, $start_year, 
-            $duration, $creation;
+            $duration, $creation, $queries;
 
         $cost = 'ths is the cost';
         $license = 'thsi is the license';
@@ -344,7 +342,7 @@ extends UnitTest
         $args = $this->_generate_array( array( 'proid', 'content_id' ), 10 );
         $fname = 'developing_modify_form';
         $db_config = new mock_db_configure( 2 );
-        $qs = array ( 0 => $this->queries[ $fname ] );
+        $qs = array ( 0 => $queries[ $fname ] );
         $db_config->add_query( $qs[0], 0 );
         $db_config->add_query( $qs[0], 1 );
         $db_config->add_num_row( 1, 0 );
@@ -356,13 +354,12 @@ extends UnitTest
         capture_reset_and_start();
         call_user_func_array( $fname, $args );
         $this->set_text( capture_stop_and_get() );
-        $file = $this->get_file_line_from_warning();
-        $slen = ( strlen( $file[1] ) + strlen( $file[2] ) ) * 2;
-        $slen += strlen($sess->self_url());
-        $slen += ( $this->v_gt( "4.1.0", phpversion()) ? 4377 : 4385 );
+        $slen = ( strlen( $GLOBALS['err_file'] ) 
+                  + strlen( $GLOBALS['err_line'] ) ) * 2;
+        $slen += strlen($sess->self_url()) + 4085;
         $this->_testFor_string_length( $slen );
-        $this->_testFor_pattern( 'Undefined variable:  valid in' );
-        $this->_testFor_pattern( 'Undefined variable:  start in' );
+        $this->assertRegexp( '/Undefined variable:  start/', 
+                             $GLOBALS['err_msg'] );
         
         $this->_checkFor_a_form( 'PHP_SELF', array('proid'=>$args['proid']),
                                  'POST' );

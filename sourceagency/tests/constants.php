@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: constants.php,v 1.28 2002/07/17 12:38:07 riessen Exp $
+# $Id: constants.php,v 1.29 2002/07/23 14:09:39 riessen Exp $
 #
 ######################################################################
 
@@ -26,6 +26,25 @@ if ( ! $env_php_lib_dir || $env_php_lib_dir == "" ) {
 } else {
   $PHP_LIB_DIR = $env_php_lib_dir;
 }
+
+function unset_error_values() {
+    unset_global( 'err_no', 'err_msg', 'err_line', 'err_file' );
+}
+// define an error handler should an error occur
+error_reporting( E_ALL );
+function unit_test_error_handler($errno, $errmsg, $filename, $linenum, $vars){
+    switch ( $errno ) {
+        case E_ERROR:
+            /* fatal error */
+        default:
+            /* fall through */
+    }
+    $GLOBALS['err_no'] = $errno;
+    $GLOBALS['err_msg'] = $errmsg;
+    $GLOBALS['err_line'] = $linenum;
+    $GLOBALS['err_file'] = $filename;
+}
+set_error_handler("unit_test_error_handler");
 
 // for obtaining time information
 function getmicrotime(){ 
@@ -110,6 +129,7 @@ function define_test_suite( $filename ) {
         $suite->addTest( new TestSuite( _filename_to_classname($filename) ) );
     } else {
         // doing a single test, no global suite
+        global $old_error_handler;
         $suite = new TestSuite(_filename_to_classname( $filename ));
         $testRunner = new TestRunner;
         $testRunner->run( $suite );

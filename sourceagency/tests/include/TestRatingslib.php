@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestRatingslib.php,v 1.10 2002/07/22 12:00:19 riessen Exp $
+// $Id: TestRatingslib.php,v 1.11 2002/07/23 14:09:40 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -22,10 +22,8 @@ if ( !defined("BEING_INCLUDED" ) ) {
 class UnitTestRatingslib
 extends UnitTest
 {
-    var $queries;
-
     function UnitTestRatingslib( $name ) {
-        $this->queries = array (
+        $GLOBALS['queries'] = array (
             'ratings_rated_yet' =>
             ("SELECT * FROM ratings WHERE proid='%s' AND to_whom='%s' "
              ."AND by_whom='%s'"),
@@ -108,11 +106,11 @@ extends UnitTest
         capture_reset_and_start();
         call_user_func_array( $fname, $args[0] );
         $this->set_text( capture_stop_and_get() );
-        $this->_testFor_pattern( 'Undefined variable:  array in');
-        $file = $this->get_file_line_from_warning();
-        $sleng = ( strlen( $file[1] ) + strlen( $file[2] ) 
-                   + strlen( $sess->self_url()) );
-        $sleng += ( $this->v_gt( "4.1.0", phpversion()) ? 1531 : 1535 );
+        $this->assertRegexp( '/Undefined variable:  array/',
+                             $GLOBALS['err_msg'] );
+        $sleng = ( strlen( $GLOBALS['err_file'] ) 
+                   + strlen( $GLOBALS['err_line'] ) 
+                   + strlen( $sess->self_url()) + 1388);
         $this->_testFor_string_length( $sleng );
 
         // test two: sponsor
@@ -152,11 +150,11 @@ extends UnitTest
         capture_reset_and_start();
         call_user_func_array( $fname, $args[0] );
         $this->set_text( capture_stop_and_get() );
-        $this->_testFor_pattern( 'Undefined variable:  array in');
-        $file = $this->get_file_line_from_warning();
-        $sleng = ( strlen( $file[1] ) + strlen( $file[2] ) 
-                   + strlen( $sess->self_url()) );
-        $sleng += ( $this->v_gt( "4.1.0", phpversion()) ? 1530 : 1534 );
+        $this->assertRegexp( '/Undefined variable:  array/', 
+                             $GLOBALS['err_msg']);
+        $sleng = ( strlen( $GLOBALS['err_file'] ) 
+                   + strlen( $GLOBALS['err_line'] ) 
+                   + strlen( $sess->self_url()) + 1387 );
         $this->_testFor_string_length( $sleng );
 
         // test two: sponsor
@@ -224,7 +222,7 @@ extends UnitTest
     }
 
     function testRatings_insert() {
-        global $db, $t, $auth, $qs;
+      global $db, $t, $auth, $qs, $queries;
 
         // need to define these on the global-plane 
         require( 'config.inc' );
@@ -238,11 +236,11 @@ extends UnitTest
         }
 
         $fname = 'ratings_insert';
-        $qs=array( 0 => $this->queries[ $fname . '_1' ],
-                   1 => $this->queries[ $fname . '_2' ],
-                   2 => $this->queries[ $fname . '_3' ],
-                   3 => $this->queries[ $fname . '_4' ],
-                   4 => $this->queries[ 'ratings_rated_yet' ] );
+        $qs=array( 0 => $queries[ $fname . '_1' ],
+                   1 => $queries[ $fname . '_2' ],
+                   2 => $queries[ $fname . '_3' ],
+                   3 => $queries[ $fname . '_4' ],
+                   4 => $queries[ 'ratings_rated_yet' ] );
         $db_config = new mock_db_configure( 16 );
         $args=$this->_generate_records( array( 'proid', 'dev_or_spo', 'number',
                                                'by_whom'), 8 );
@@ -421,15 +419,15 @@ extends UnitTest
     }
 
     function testRatings_look_for_first_one() {
-        global $db, $auth, $dev_or_spo, $qs;
+        global $db, $auth, $dev_or_spo, $qs, $queries;
 
         $fname = 'ratings_look_for_first_one';
         $uname = 'this is the username';
         $auth->set_uname( $uname );
 
-        $qs=array( 0 => $this->queries[ $fname . '_1' ],
-                   1 => $this->queries[ $fname . '_2' ],
-                   2 => $this->queries[ 'ratings_rated_yet' ] );
+        $qs=array( 0 => $queries[ $fname . '_1' ],
+                   1 => $queries[ $fname . '_2' ],
+                   2 => $queries[ 'ratings_rated_yet' ] );
         $db_config = new mock_db_configure( 43 );
         $args=$this->_generate_records( array( 'proid' ), 10 );
 
@@ -473,11 +471,12 @@ extends UnitTest
     }
 
     function testRatings_rated_yet() {
+        global $queries;
         $args=$this->_generate_records(array('proid', 'to_whom', 'by_whom'),3);
 
         $db_config = new mock_db_configure( 3 );
 
-        $q = $this->queries['ratings_rated_yet'];
+        $q = $queries['ratings_rated_yet'];
         
         for ( $idx = 0; $idx < 3; $idx++ ) {
             $db_config->add_query( sprintf( $q, $args[$idx]['proid'],
@@ -492,7 +491,7 @@ extends UnitTest
     }
 
     function testRatings_look_for_next_one() {
-        global $db, $auth, $dev_or_spo, $qs;
+        global $db, $auth, $dev_or_spo, $qs, $queries;
         
         $fname = 'ratings_look_for_next_one';
         $uname = 'this is the username';
@@ -500,8 +499,8 @@ extends UnitTest
         $db_config = new mock_db_configure( 27 );
         $args = $this->_generate_records( array( 'proid', 'number' ), 10 );
 
-        $qs = array( 0 => $this->queries[ $fname ],
-                     1 => $this->queries[ 'ratings_rated_yet' ] );
+        $qs = array( 0 => $queries[ $fname ],
+                     1 => $queries[ 'ratings_rated_yet' ] );
 
         // test one: dev_or_spo is not set ==> $id and $table not defined
         $dev_or_spo = '';
@@ -513,12 +512,9 @@ extends UnitTest
         call_user_func_array( $fname, $args[0] );
         $this->set_text( capture_stop_and_get() );
         $this->assertEquals( '', $dev_or_spo );
-        $this->_testFor_pattern( "<\/b>:  Undefined variable:  table in <b>" );
-        $this->_testFor_pattern( "<\/b>:  Undefined variable:  id in <b>" );
-        $file = $this->get_file_line_from_warning();
-        $slen = 4 * ( strlen( $file[1] ) + strlen( $file[2] ) );
-        $slen += ( $this->v_gt( "4.1.0", phpversion()) ? 311 : 327 );
-        $this->_testFor_string_length( $slen );
+        $this->assertRegexp( "/Undefined variable:  id/",
+                             $GLOBALS['err_msg']);
+        $this->_testFor_string_length( 0 );
         
         // test two: dev_or_spo == developer, and we find a developer
         $dev_or_spo = 'developer';
@@ -569,10 +565,10 @@ extends UnitTest
     }
 
     function testShow_personal_rating() {
-        global $t;
+        global $t, $queries;
 
         $fname = 'show_personal_rating';
-        $qs=array( 0 => $this->queries[ $fname ] );
+        $qs=array( 0 => $queries[ $fname ] );
 
         $db_config = new mock_db_configure( 3 );
         $args=$this->_generate_records( array( 'proid', 'username' ), 10 );
@@ -621,10 +617,10 @@ extends UnitTest
     }
 
     function testShow_participants_rating() {
-        global $bx, $db;
+        global $bx, $db, $queries;
 
         $fname = 'show_participants_rating';
-        $qs = array( 0 => $this->queries[ $fname ] );
+        $qs = array( 0 => $queries[ $fname ] );
         $args = $this->_generate_records( array( 'proid', 'part_type' ), 10 );
         $db_config = new mock_db_configure( 4 );
 
@@ -639,12 +635,11 @@ extends UnitTest
         call_user_func_array( $fname, $args[0] );
         $this->set_text( capture_stop_and_get() );
         $this->_checkFor_a_box( $args[0]['part_type'] );
-        $file = $this->get_file_line_from_warning();
-        $slen = strlen( $file[1] ) + strlen( $file[2] );
-        $slen += ( $this->v_gt( "4.1.0", phpversion()) ? 754 : 758 );
+        $slen = strlen( $GLOBALS['err_file'] ) 
+           + strlen($GLOBALS['err_line']) + 611;
         $this->_testFor_string_length( $slen );
-        $str = '</b>:  Undefined variable:  table in <b>';
-        $this->_testFor_pattern( $this->_to_regexp( $str ) );
+        $str = '/Undefined variable:  table/';
+        $this->assertRegexp( $str, $GLOBALS['err_msg'] );
 
         // test two: participant_type = 'developer'
         $args[1]['part_type'] = 'developer';
@@ -680,11 +675,11 @@ extends UnitTest
     }
 
     function testRatings_in_history() {
-        global $db, $t, $bx;
+        global $db, $t, $bx, $queries;
 
         $fname = 'ratings_in_history';
         $db_config = new mock_db_configure( 2 );
-        $qs = array( 0 => $this->queries[ $fname ]);
+        $qs = array( 0 => $queries[ $fname ]);
         $args=$this->_generate_records( array( 'proid', 'history_user' ),10);
         
         $db_config->add_query( sprintf( $qs[0], $args[0]['proid'],
@@ -748,7 +743,7 @@ extends UnitTest
     }
 
     function testRatings_form_full() {
-        global $bx, $t, $sess, $auth;
+        global $bx, $t, $sess, $auth, $queries;
 
         $fname = 'ratings_form_full';
         $uname = 'this is the username';
@@ -758,8 +753,8 @@ extends UnitTest
         $db_config = new mock_db_configure( 18 );
         $inst_nr = 0;
 
-        $qs = array( 0 => $this->queries['ratings_rated_yet'],
-                     1 => $this->queries[ $fname ] );
+        $qs = array( 0 => $queries['ratings_rated_yet'],
+                     1 => $queries[ $fname ] );
 
         // test one: dev_or_spo == 'developer', ratings_rated_yet returns true
         $args[0]['dev_or_spo'] = 'developer';
@@ -863,7 +858,7 @@ extends UnitTest
         // TODO: complete this function
     }
     function testRatings_form() {
-        global $bx, $auth, $db, $t, $sess;
+        global $bx, $auth, $db, $t, $sess, $queries;
 
         $fname = 'ratings_form';
         $uname = 'this is the username';
@@ -871,39 +866,40 @@ extends UnitTest
 
         $args = $this->_generate_records( array( 'proid', 'dev_or_spo', 
                                                  'number'), 24 );
-        $qs = array( 0 => $this->queries[ 'ratings_rated_yet' ],
-                     1 => $this->queries[ 'ratings_form_full' ],
-                     2 => $this->queries[ $fname . '_1' ], 
-                     3 => $this->queries[ $fname . '_2' ] );
+        $qs = array( 0 => $queries[ 'ratings_rated_yet' ],
+                     1 => $queries[ 'ratings_form_full' ],
+                     2 => $queries[ $fname . '_1' ], 
+                     3 => $queries[ $fname . '_2' ] );
                      
-        $db_config = new mock_db_configure( 82 );
         $inst_nr = 0;
         
         // test one: no data points, and not rated
         $a = $args[0];
         $d1 = array();
         $d2 = array();
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 1 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 1527+strlen($sess->self_url()), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test two: no data points, but has been rated
         $a = $args[0];
         $d1 = array();
         $d2 = array();
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 1 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 1527+strlen($sess->self_url()), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test three: one data point(developing), no data points(sponsoring),
         // test three: not rated, dev_or_spo == 'developer', number == devid
@@ -912,14 +908,15 @@ extends UnitTest
         $d2 = array();
         $a['number'] = $d1[0]['devid'];
         $a['dev_or_spo'] = 'developer';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 4 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 7562+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test four: one data point(developing), no data points(sponsoring),
         // test four: not rated, dev_or_spo != 'developer', number == devid
@@ -928,14 +925,15 @@ extends UnitTest
         $d2 = array();
         $a['number'] = $d1[0]['devid'];
         $a['dev_or_spo'] = 'sponsor';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 2 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 3620+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test four: one data point(developing), no data points(sponsoring),
         // test four: not rated, dev_or_spo != 'developer', number != devid
@@ -944,14 +942,15 @@ extends UnitTest
         $d2 = array();
         $a['number'] = $d1[0]['devid'] . "NO MATCH";
         $a['dev_or_spo'] = 'sponsor';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 2 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 3620+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test five: one data point(developing), no data points(sponsoring),
         // test five: not rated, dev_or_spo == 'developer', number != devid
@@ -960,14 +959,15 @@ extends UnitTest
         $d2 = array();
         $a['number'] = $d1[0]['devid'] . "NO MATCH";
         $a['dev_or_spo'] = 'developer';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 2 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 3620+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test six: no data point(developing), one data point(sponsoring),
         // test six: not rated, dev_or_spo == 'sponsor', number != spoid
@@ -976,14 +976,15 @@ extends UnitTest
         $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
         $a['number'] = $d2[0]['spoid'] . "NO MATCH";
         $a['dev_or_spo'] = 'sponsor';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 2 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 3616+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test seven: no data point(developing), one data point(sponsoring),
         // test seven: not rated, dev_or_spo == 'sponsor', number == spoid
@@ -992,14 +993,15 @@ extends UnitTest
         $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
         $a['number'] = $d2[0]['spoid'];
         $a['dev_or_spo'] = 'sponsor';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 4 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 7552+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test eight: no data point(developing), one data point(sponsoring),
         // test eight: not rated, dev_or_spo != 'sponsor', number == spoid
@@ -1008,14 +1010,15 @@ extends UnitTest
         $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
         $a['number'] = $d2[0]['spoid'];
         $a['dev_or_spo'] = 'developer';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 2 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 3616+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         //
         // one data point each
@@ -1028,14 +1031,15 @@ extends UnitTest
         $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
         $a['number'] = $d2[0]['spoid'];
         $a['dev_or_spo'] = 'developer';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 3 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 5709+(3*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test ten: one data point(developing), one data point(sponsoring),
         // test ten: not rated, dev_or_spo == 'developer', number == devid
@@ -1044,14 +1048,15 @@ extends UnitTest
         $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
         $a['number'] = $d1[0]['devid'];
         $a['dev_or_spo'] = 'developer';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 5 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 9651+(3*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test eleven: one data point(developing), one data point(sponsoring),
         // test eleven: not rated, dev_or_spo == 'sponsor', number == devid
@@ -1060,14 +1065,15 @@ extends UnitTest
         $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
         $a['number'] = $d1[0]['devid'];
         $a['dev_or_spo'] = 'sponsor';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 3 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 5712+(3*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test twelve: one data point(developing), one data point(sponsoring),
         // test twelve: not rated, dev_or_spo == 'sponsor', number == spoid
@@ -1076,14 +1082,15 @@ extends UnitTest
         $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
         $a['number'] = $d2[0]['spoid'];
         $a['dev_or_spo'] = 'sponsor';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 5 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 9648+(3*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
         
         //
         // repeat all the tests above except not turn rated, i.e. the user
@@ -1097,14 +1104,15 @@ extends UnitTest
         $d2 = array();
         $a['number'] = $d1[0]['devid'];
         $a['dev_or_spo'] = 'developer';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 7 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 7564+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test 14: one data point(developing), no data points(sponsoring),
         // test 14: rated, dev_or_spo != 'developer', number == devid
@@ -1113,14 +1121,15 @@ extends UnitTest
         $d2 = array();
         $a['number'] = $d1[0]['devid'];
         $a['dev_or_spo'] = 'sponsor';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 2 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 3652+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test 15: one data point(developing), no data points(sponsoring),
         // test 15: rated, dev_or_spo != 'developer', number != devid
@@ -1129,14 +1138,15 @@ extends UnitTest
         $d2 = array();
         $a['number'] = $d1[0]['devid'] . "NO MATCH";
         $a['dev_or_spo'] = 'sponsor';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 2 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 3652+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test 16: one data point(developing), no data points(sponsoring),
         // test 16: rated, dev_or_spo == 'developer', number != devid
@@ -1145,14 +1155,15 @@ extends UnitTest
         $d2 = array();
         $a['number'] = $d1[0]['devid'] . "NO MATCH";
         $a['dev_or_spo'] = 'developer';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 2 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 3652+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test 17: no data point(developing), one data point(sponsoring),
         // test 17: rated, dev_or_spo == 'sponsor', number != spoid
@@ -1161,14 +1172,15 @@ extends UnitTest
         $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
         $a['number'] = $d2[0]['spoid'] . "NO MATCH";
         $a['dev_or_spo'] = 'sponsor';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 2 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 3648+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test 18: no data point(developing), one data point(sponsoring),
         // test 18: not rated, dev_or_spo == 'sponsor', number == spoid
@@ -1177,14 +1189,15 @@ extends UnitTest
         $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
         $a['number'] = $d2[0]['spoid'];
         $a['dev_or_spo'] = 'sponsor';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 7 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 7554+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test 19: no data point(developing), one data point(sponsoring),
         // test 19: rated, dev_or_spo != 'sponsor', number == spoid
@@ -1193,14 +1206,15 @@ extends UnitTest
         $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
         $a['number'] = $d2[0]['spoid'];
         $a['dev_or_spo'] = 'developer';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 2 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 3648+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         //
         // one data point each
@@ -1213,14 +1227,15 @@ extends UnitTest
         $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
         $a['number'] = $d2[0]['spoid'];
         $a['dev_or_spo'] = 'developer';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 3 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 5772+(3*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test 21: one data point(developing), one data point(sponsoring),
         // test 21: not rated, dev_or_spo == 'developer', number == devid
@@ -1229,14 +1244,15 @@ extends UnitTest
         $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
         $a['number'] = $d1[0]['devid'];
         $a['dev_or_spo'] = 'developer';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 8 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 9684+(3*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test 22: one data point(developing), one data point(sponsoring),
         // test 22: not rated, dev_or_spo == 'sponsor', number == devid
@@ -1245,14 +1261,15 @@ extends UnitTest
         $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
         $a['number'] = $d1[0]['devid'];
         $a['dev_or_spo'] = 'sponsor';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 3 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 5772+(3*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
+        $this->_check_db( $db_config );
 
         // test 23: one data point(developing), one data point(sponsoring),
         // test 23: not rated, dev_or_spo == 'sponsor', number == spoid
@@ -1261,16 +1278,14 @@ extends UnitTest
         $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
         $a['number'] = $d2[0]['spoid'];
         $a['dev_or_spo'] = 'sponsor';
-        $inst_nr =
-             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+        $db_config = new mock_db_configure( 8 );
+        $this->_config_db_ratings_form( $db_config, 0, $qs, 
                                              $a['proid'], $a['dev_or_spo'], 
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         $this->capture_call( $fname, 9678+(3*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
-
-
         $this->_check_db( $db_config );
     }
 }

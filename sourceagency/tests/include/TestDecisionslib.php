@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDecisionslib.php,v 1.13 2002/07/22 11:38:07 riessen Exp $
+// $Id: TestDecisionslib.php,v 1.14 2002/07/23 14:09:40 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -20,12 +20,8 @@ if ( !defined("BEING_INCLUDED" ) ) {
 class UnitTestDecisionslib
 extends UnitTest
 {
-    var $queries;
-
     function UnitTestDecisionslib( $name ) {
-        $this->UnitTest( $name );
-        
-        $this->queries =array( 
+        $GLOBALS['queries'] = array ( 
             'project_budget' =>
             ("SELECT SUM(budget) FROM sponsoring WHERE proid='%s' "
              ."AND status='A'"),
@@ -222,6 +218,7 @@ extends UnitTest
             'show_decision_step5' =>
             ("SELECT * FROM milestones WHERE proid='%s' AND number='%s'"),
             );
+        $this->UnitTest( $name );
     }
     
     function setup() {
@@ -289,10 +286,10 @@ extends UnitTest
     }
 
     function testDecision_accepted_milestones() {
-        global $auth;
+        global $auth, $queries;
 
-        $qs=array( 1 => $this->queries['decision_accepted_milestones_1'],
-                   2 => $this->queries['decision_accepted_milestones_2'] );
+        $qs=array( 1 => $queries['decision_accepted_milestones_1'],
+                   2 => $queries['decision_accepted_milestones_2'] );
 
         $uname = 'tjhis is the username';
         $auth->set_uname( $uname );
@@ -342,10 +339,11 @@ extends UnitTest
     }
 
     function testDecision_milestone_insert() {
+        global $queries;
         $db_config = new mock_db_configure( 4 );
-        $qs=array( 0 => $this->queries['decision_milestone_insert_1'],
-                   1 => $this->queries['decision_milestone_insert_2'],
-                   2 => $this->queries['decision_milestone_insert_3'] );
+        $qs=array( 0 => $queries['decision_milestone_insert_1'],
+                   1 => $queries['decision_milestone_insert_2'],
+                   2 => $queries['decision_milestone_insert_3'] );
         $args=$this->_generate_records( array('proid','devid','decision_user',
                                               'number','decision'), 10 );
 
@@ -402,10 +400,11 @@ extends UnitTest
     }
 
     function testDecisions_decision_met() {
+        global $queries;
         $db_config = new mock_db_configure( 4 );
-        $qs=array( 0 => $this->queries['decisions_decision_met_1'],
-                   1 => $this->queries['decisions_decision_met_2'],
-                   2 => $this->queries['decisions_decision_met_3'] );
+        $qs=array( 0 => $queries['decisions_decision_met_1'],
+                   1 => $queries['decisions_decision_met_2'],
+                   2 => $queries['decisions_decision_met_3'] );
         $args=$this->_generate_records( array( 'proid' ), 10 );
         $d = $this->_generate_records( array( 'status' ), 10 );
         $d2 = $this->_generate_records( array( 'step' ), 10 );
@@ -482,9 +481,9 @@ extends UnitTest
     }
 
     function testDecisions_decision_met_on_step5 () {
-        global $db;
+        global $db, $queries;
 
-        $qs=array(0=>$this->queries['decisions_decision_met_on_step5']);
+        $qs=array(0=>$queries['decisions_decision_met_on_step5']);
         $db_config= new mock_db_configure( 20 );
 
         $args=$this->_generate_records(array('proid','milestone_number',
@@ -511,9 +510,10 @@ extends UnitTest
     }
 
     function testDecisions_milestone_into_db() {
+        global $queries;
         $db_config = new mock_db_configure( 1 );
-        $qs=array(0 => $this->queries['decisions_milestone_into_db_select'],
-                  1 => $this->queries['decisions_milestone_into_db_update']);
+        $qs=array(0 => $queries['decisions_milestone_into_db_select'],
+                  1 => $queries['decisions_milestone_into_db_update']);
         $args=$this->_generate_records( array( 'proid','devid','number',
                                                'status' ), 1 );
         $d = $this->_generate_records(array( 'creation','release'), 1 );
@@ -529,13 +529,13 @@ extends UnitTest
     }
 
     function testProject_budget() {
-        global $db;
+        global $db, $queries;
         $db_config = new mock_db_configure( 1 );
         
         $proid = 'this is teh proid';
         $dat=$this->_generate_records( array('SUM(budget)'), 1 );
 
-        $q = $this->queries[ 'project_budget' ];
+        $q = $queries[ 'project_budget' ];
 
         $db_config->add_query( sprintf( $q, $proid ), 0 );
         $db_config->add_record( $dat[0], 0 );
@@ -549,10 +549,10 @@ extends UnitTest
     }
 
     function testYou_have_already_voted() {
-        global $db, $auth, $t;
+        global $db, $auth, $t, $queries;
         $db_config = new mock_db_configure( 3 );
         $auth->set_uname( 'this si the username' );
-        $q=$this->queries['you_have_already_voted'];
+        $q=$queries['you_have_already_voted'];
         $args=$this->_generate_records( array( 'proid','step' ), 3 );
         for ( $idx = 0; $idx < count( $args ); $idx++ ) {
             $db_config->add_query( sprintf( $q, $args[$idx]['proid'],
@@ -585,13 +585,13 @@ extends UnitTest
     }
 
     function testYour_quota() {
-        global $db, $auth;
+        global $db, $auth, $queries;
         
         $db_config = new mock_db_configure( 2 );
         $auth->set_uname( 'this is the username' );
         $proid = 'this is the projd';
-        $qs = array( 0 => $this->queries[ 'your_quota' ],
-                     1 => $this->queries[ 'project_budget' ] );
+        $qs = array( 0 => $queries[ 'your_quota' ],
+                     1 => $queries[ 'project_budget' ] );
         $d = $this->_generate_records( array( "budget" ), 2 );
         $d2 = $this->_generate_records( array( "SUM(budget)" ), 2 );
 
@@ -626,24 +626,23 @@ extends UnitTest
         // in versions less than 4.1.X(??) to being <br /> and since there
         // are two breaks to a warning message, there are four extra characters
         // hence this if statement
-        $file = $this->get_file_line_from_warning();
-        $sleng = strlen( $file[1] ) + strlen( $file[2] );
-        $sleng += ( $this->v_gt( "4.1.0", phpversion()) ? 144 : 148 );
+        $sleng = strlen($GLOBALS['err_file'])+strlen($GLOBALS['err_line'])+9;
         $this->_testFor_string_length( $sleng );
 
-        $ps = array( 0 => '<b>Warning<\/b>:  Division by zero in <b>',
-                     1 => ( '<p>Your quota: <b>'.$d[1]['budget']
+        $this->assertRegexp( '/Division by zero/', $GLOBALS['err_msg']);
+        $ps = array( 0 => ( '<p>Your quota: <b>'.$d[1]['budget']
                             .'<\/b> euros [(]<b>0%<\/b> of the total' ) );
 
-        $this->_testFor_patterns( $ps, 2 );
+        $this->_testFor_patterns( $ps, 1 );
 
         $this->_check_db( $db_config );
     }
 
     function testDecision_developer_voted() {
+        global $queries;
         $db_config = new mock_db_configure( 20 );
-        $qs = array( 0 => $this->queries['decision_developer_voted_1'],
-                     1 => $this->queries['decision_developer_voted_2'] );
+        $qs = array( 0 => $queries['decision_developer_voted_1'],
+                     1 => $queries['decision_developer_voted_2'] );
         $args = $this->_generate_records( array( 'proid', 'referee' ), 20 );
         $d = $this->_generate_records( array( 'developer' ), 20 );
 
@@ -664,9 +663,10 @@ extends UnitTest
     }
 
     function testDecision_insert_main_developer() {
-        $qs=array( 0 => $this->queries['decision_insert_main_developer_1'],
-                   1 => $this->queries['decision_insert_main_developer_2'],
-                   2 => $this->queries['decision_insert_main_developer_3']);
+        global $queries;
+        $qs=array( 0 => $queries['decision_insert_main_developer_1'],
+                   1 => $queries['decision_insert_main_developer_2'],
+                   2 => $queries['decision_insert_main_developer_3']);
 
         $db_config = new mock_db_configure( 2 );
         $args=$this->_generate_records( array('proid'), 10 );
@@ -695,11 +695,12 @@ extends UnitTest
     }
 
     function testDecisions_step5_sponsors() {
+        global $queries;
         // decision_step5_sponsors uses 11 queries
         $fname = 'decisions_step5_sponsors';
         $qs=array();
         for ( $idx = 0, $jdx = 1; $idx < 11; $idx++, $jdx++ ) {
-            $qs[ $idx ] = $this->queries['decisions_step5_sponsors_'.$jdx];
+            $qs[ $idx ] = $queries['decisions_step5_sponsors_'.$jdx];
         }
         $db_config = new mock_db_configure( 5 );
         $args=$this->_generate_records(array('proid','milestone_number',
@@ -779,10 +780,10 @@ extends UnitTest
     }
 
     function testDecisions_step5_votes() {
-        global $db;
+        global $db, $queries;
         $fname = 'decisions_step5_votes';
-        $qs=array( 0 => $this->queries['decisions_step5_votes'],
-                   1 => $this->queries['project_budget'] );
+        $qs=array( 0 => $queries['decisions_step5_votes'],
+                   1 => $queries['project_budget'] );
 
         $db_config = new mock_db_configure( 8 );
         $args=$this->_generate_records( array( 'proid', 'milestone_number',
@@ -810,16 +811,9 @@ extends UnitTest
         $this->assertEquals( 0, call_user_func_array( $fname, $args[1] ) );
         $this->set_text( capture_stop_and_get() );
 
-        // the line break symbols in the warning messages went from <br>
-        // in versions less than 4.1.X(??) to being <br /> and since there
-        // are two breaks to a warning message, there are four extra characters
-        // hence this if statement
-        $file = $this->get_file_line_from_warning();
-        $sleng = strlen( $file[1] ) + strlen( $file[2] );
-        $sleng += ( $this->v_gt( "4.1.0", phpversion()) ? 70 : 74 );
-        $this->_testFor_string_length( $sleng );
+        $this->_testFor_string_length( 0 );
 
-        $this->_testFor_pattern( 'Division by zero in' );
+        $this->assertRegexp( '/Division by zero/', $GLOBALS['err_msg'] );
 
         // test three: sum_step5 == 0
         $db_config->add_num_row( 1, 5 );
@@ -841,15 +835,15 @@ extends UnitTest
     }
 
     function testPut_decision_into_database() {
-        global $db, $auth;
+        global $db, $auth, $queries;
 
         $uname = 'this is the username';
         $auth->set_uname( $uname );
-        $qs=array( 0 => $this->queries['put_decision_into_database_1'],
-                   1 => $this->queries['put_decision_into_database_2'],
-                   2 => $this->queries['put_decision_into_database_3'],
-                   3 => $this->queries['put_decision_into_database_4'],
-                   4 => $this->queries['monitor_mail'] );
+        $qs=array( 0 => $queries['put_decision_into_database_1'],
+                   1 => $queries['put_decision_into_database_2'],
+                   2 => $queries['put_decision_into_database_3'],
+                   3 => $queries['put_decision_into_database_4'],
+                   4 => $queries['monitor_mail'] );
         
         $args=$this->_generate_records( array('proid','step','your_vote',
                                               'what','table'), 10 );
@@ -942,16 +936,16 @@ extends UnitTest
     }
 
     function testPut_decision_step5_into_database() {
-        global $db, $auth;
+        global $db, $auth, $queries;
 
         $uname = 'this is the username';
         $auth->set_uname( $uname );
         $fname = 'put_decision_step5_into_database';
          
-        $qs=array( 0 => $this->queries[$fname."_1"],
-                   1 => $this->queries[$fname."_2"],
-                   2 => $this->queries[$fname."_3"],
-                   3 => $this->queries['monitor_mail']);
+        $qs=array( 0 => $queries[$fname."_1"],
+                   1 => $queries[$fname."_2"],
+                   2 => $queries[$fname."_3"],
+                   3 => $queries['monitor_mail']);
         $db_config = new mock_db_configure( 6 );
         $args=$this->_generate_records(array( 'proid','your_vote',
                                               'milestone_number','count'), 10);
@@ -1064,13 +1058,13 @@ extends UnitTest
     }
 
     function testPut_into_next_step() {
-        global $bx, $qs, $db;
+        global $bx, $qs, $db, $queries;
 
         $fname = 'put_into_next_step';
-        $qs = array( 8 =>$this->queries['decision_insert_main_developer_1'],
-                     9 =>$this->queries['project_budget']);
+        $qs = array( 8 =>$queries['decision_insert_main_developer_1'],
+                     9 =>$queries['project_budget']);
         for ( $idx = 0; $idx < 8; $idx++ ) {
-            $qs[$idx] = $this->queries[ $fname . '_' . ($idx+1) ];
+            $qs[$idx] = $queries[ $fname . '_' . ($idx+1) ];
         }
         $args=$this->_generate_records(array( 'proid', 'status', 'what',
                                               'table' ), 10 );
@@ -1164,17 +1158,17 @@ extends UnitTest
 
     function testShow_decision_consultants() {
         global $t, $bx, $db, $sess;
-        global $voted_yet, $your_vote;
+        global $voted_yet, $your_vote, $queries;
         
         $voted_yet = 0;
         $your_vote = 'adsad';
 
         $fname = 'show_decision_consultants';
-        $qs = array( 0 => $this->queries[ 'decisions_step5_sponsors_1' ],
-                     1 => $this->queries[ $fname . '_1' ],
-                     2 => $this->queries[ $fname . '_2' ],
-                     3 => $this->queries[ $fname . '_3' ],
-                     4 => $this->queries[ 'project_budget' ]);
+        $qs = array( 0 => $queries[ 'decisions_step5_sponsors_1' ],
+                     1 => $queries[ $fname . '_1' ],
+                     2 => $queries[ $fname . '_2' ],
+                     3 => $queries[ $fname . '_3' ],
+                     4 => $queries[ 'project_budget' ]);
         $db_config = new mock_db_configure( 10 );
         $inst_nr = 0;
         $args = $this->_generate_records( array( 'proid' ), 10 );
@@ -1322,13 +1316,13 @@ extends UnitTest
 
     function testShow_decision_contents() {
         global $t, $bx, $db, $sess;
-        global $voted_yet, $your_vote;
+        global $voted_yet, $your_vote, $queries;
 
         $fname = 'show_decision_contents';
-        $qs = array( 0 => $this->queries[ 'decisions_step5_sponsors_1' ],
-                     1 => $this->queries[ 'project_budget' ],
-                     2 => $this->queries[ $fname . '_1' ],
-                     3 => $this->queries[ $fname . '_2' ]);
+        $qs = array( 0 => $queries[ 'decisions_step5_sponsors_1' ],
+                     1 => $queries[ 'project_budget' ],
+                     2 => $queries[ $fname . '_1' ],
+                     3 => $queries[ $fname . '_2' ]);
         $db_config = new mock_db_configure( 9 );
         $inst_nr = 0;
         $args=$this->_generate_records( array( 'proid' ), 10 );
@@ -1483,15 +1477,15 @@ extends UnitTest
     
     function testShow_decision_milestones() {
         global $t, $bx, $db, $sess;
-        global $voted_yet, $your_vote;
+        global $voted_yet, $your_vote, $queries;
 
         $fname = 'show_decision_milestones';
-        $qs = array( 0 =>$this->queries[ 'decisions_step5_sponsors_1' ],
-                     1 =>$this->queries[ 'project_budget' ],
-                     2 =>$this->queries[ $fname . '_1' ],
-                     3 =>$this->queries[ $fname . '_2' ],
-                     4 =>$this->queries['decisions_milestone_into_db_select'],
-                     5 =>$this->queries['decisions_milestone_into_db_update']);
+        $qs = array( 0 =>$queries[ 'decisions_step5_sponsors_1' ],
+                     1 =>$queries[ 'project_budget' ],
+                     2 =>$queries[ $fname . '_1' ],
+                     3 =>$queries[ $fname . '_2' ],
+                     4 =>$queries['decisions_milestone_into_db_select'],
+                     5 =>$queries['decisions_milestone_into_db_update']);
 
         $db_config = new mock_db_configure( 21 );
         $inst_nr = 0;
@@ -1759,16 +1753,16 @@ extends UnitTest
 
     function testShow_decision_proposals() {
         global $t, $bx, $db, $sess;
-        global $voted_yet, $your_vote;
+        global $voted_yet, $your_vote, $queries;
         
         $fname = 'show_decision_proposals';
         $args = $this->_generate_records( array( 'proid' ), 10 );
-        $qs = array( 0 => $this->queries[ 'decisions_step5_sponsors_1' ],
-                     1 => $this->queries[ 'project_budget' ],
-                     2 => $this->queries[ $fname . '_1' ],
-                     3 => $this->queries[ $fname . '_2' ],
-                     4 => $this->queries[ 'decision_accepted_milestones_1'],
-                     5 => $this->queries[ 'decision_accepted_milestones_2'] );
+        $qs = array( 0 => $queries[ 'decisions_step5_sponsors_1' ],
+                     1 => $queries[ 'project_budget' ],
+                     2 => $queries[ $fname . '_1' ],
+                     3 => $queries[ $fname . '_2' ],
+                     4 => $queries[ 'decision_accepted_milestones_1'],
+                     5 => $queries[ 'decision_accepted_milestones_2'] );
                      
         $db_config = new mock_db_configure( 37 );
         $inst_nr = 0;
@@ -1970,18 +1964,18 @@ extends UnitTest
     }
     function testShow_decision_referees() {
         global $t, $bx, $db, $sess;
-        global $voted_yet, $your_vote;
+        global $voted_yet, $your_vote, $queries;
         
         $fname = 'show_decision_referees';
         $args = $this->_generate_records( array( 'proid' ), 10 );
         $db_config = new mock_db_configure( 25 );
         $inst_nr = 0;
-        $qs = array( 0 => $this->queries[ 'decisions_step5_sponsors_1' ],
-                     1 => $this->queries[ 'project_budget' ],
-                     2 => $this->queries[ $fname . '_1' ],
-                     3 => $this->queries[ $fname . '_2' ],
-                     4 => $this->queries[ 'decision_developer_voted_1' ],
-                     5 => $this->queries[ 'decision_developer_voted_2' ] );
+        $qs = array( 0 => $queries[ 'decisions_step5_sponsors_1' ],
+                     1 => $queries[ 'project_budget' ],
+                     2 => $queries[ $fname . '_1' ],
+                     3 => $queries[ $fname . '_2' ],
+                     4 => $queries[ 'decision_developer_voted_1' ],
+                     5 => $queries[ 'decision_developer_voted_2' ] );
                      
         // test one: no data points
         $voted_yet = 0;
@@ -2212,13 +2206,13 @@ extends UnitTest
 
     function testShow_decision_step5() {
         global $t, $bx, $db, $sess;
-        global $voted_yet, $decision;
+        global $voted_yet, $decision, $queries;
 
         $fname = 'show_decision_step5';
-        $qs = array( 0 => $this->queries[ 'decisions_step5_sponsors_1' ],
-                     1 => $this->queries[ 'project_budget' ],
-                     2 => $this->queries[ $fname ],
-                     3 => $this->queries[ 'decisions_step5_votes' ]);
+        $qs = array( 0 => $queries[ 'decisions_step5_sponsors_1' ],
+                     1 => $queries[ 'project_budget' ],
+                     2 => $queries[ $fname ],
+                     3 => $queries[ 'decisions_step5_votes' ]);
                      
         $args=$this->_generate_records( array('proid', 'm_num', 'count'), 10);
         $db_config = new mock_db_configure( 12 );

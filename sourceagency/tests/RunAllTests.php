@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: RunAllTests.php,v 1.16 2002/07/22 11:26:55 riessen Exp $
+# $Id: RunAllTests.php,v 1.17 2002/07/23 14:09:37 riessen Exp $
 #
 ######################################################################
 
@@ -91,6 +91,7 @@ function scan_directory( ) {
             $total_tests += $result->countTests();
             $total_failures += $result->countFailures();
 
+            unset_global( 'queries' );
             $result = '';
             $suite = new TestSuite;
         }
@@ -106,6 +107,7 @@ print "<br>\n ----- Summary ----- <br>\n";
 print "Total tests/failures: <b>$total_tests</b>/<b>$total_failures</b><br>\n";
 // finally print information about how long the tests took
 $time = getmicrotime() - $time_start;
-print "Executed all tests in $time seconds";
-
+// this causes problems with Phester calls which detect this as
+// a change ....
+//print "Executed all tests in $time seconds";
 ?>

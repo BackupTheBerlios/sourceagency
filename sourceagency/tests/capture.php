@@ -15,32 +15,30 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: capture.php,v 1.3 2002/07/22 12:31:26 riessen Exp $
+# $Id: capture.php,v 1.4 2002/07/23 14:09:39 riessen Exp $
 #
 ######################################################################
 
 // global (g_) variable for storing the data that would normally
 // have been outtputed through echo's or print's. Avoiding using
 // this directly, instead use the functions provided below.
-$g_cap_text="";
+$g_cap_text = array();
 
 // this function is passed to the ob_start function to capture text
 function capture_text( $str ) {
     global $g_cap_text;
-    $g_cap_text .= $str;
-    return "";
+    $g_cap_text[] = $str;
+    return '';
 }
 
 // replaces the ob_get_length function
 function capture_text_length() {
-    global $g_cap_text;
-    return ( strlen( $g_cap_text ) );
+    return ( strlen( join( '', $GLOBALS['g_cap_text'] ) ) );
 }
 
 // replaces the ob_get_content function
-function capture_text_get() {
-    global $g_cap_text;
-    return ($g_cap_text);
+function &capture_text_get() {
+    return ( join( '', $GLOBALS['g_cap_text'] ) );
 }
 
 // this should be called to begin output capturing
@@ -55,15 +53,13 @@ function capture_stop() {
 
 // resets the contents of the capture buffer to zero
 function capture_reset_text() {
-    global $g_cap_text;
-    $g_cap_text="";
+    $GLOBALS['g_cap_text'] = array();
 }
 
 // stop the capturing and return the captured text
-function capture_stop_and_get() {
-    global $g_cap_text;
+function &capture_stop_and_get() {
     capture_stop();
-    return $g_cap_text;
+    return join( '', $GLOBALS['g_cap_text'] );
 }
 
 // short cut: one call instead of two

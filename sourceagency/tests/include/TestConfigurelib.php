@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConfigurelib.php,v 1.9 2002/07/09 11:15:33 riessen Exp $
+// $Id: TestConfigurelib.php,v 1.10 2002/07/23 14:09:40 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -29,7 +29,7 @@ extends UnitTest
     var $queries;
 
     function UnitTestConfigurelib( $name ) {
-        $this->queries = array (
+        $GLOBALS['queries'] = array (
             'project_type' =>
             ("SELECT perms FROM description,auth_user WHERE proid='%s' AND "
              ."description_user=username"),
@@ -94,8 +94,9 @@ extends UnitTest
     }
 
     function testConfigure_first_time() {
+        global $queries;
         $db_config = new mock_db_configure( 3 );
-        $db_q = array( 0 => $this->queries['configure_form']);
+        $db_q = array( 0 => $queries['configure_form']);
         
         $dat = $this->_generate_records( array( "proid" ), 3 );
         
@@ -115,8 +116,9 @@ extends UnitTest
     }
 
     function testProject_type() {
+        global $queries;
         $db_config = new mock_db_configure( 3 );
-        $db_q = array( 0 => $this->queries['project_type']);
+        $db_q = array( 0 => $queries['project_type']);
         
         $dat = $this->_generate_records( array( "proid" ), 3 );
         $rows = $this->_generate_records( array( "perms" ), 3 );
@@ -170,8 +172,9 @@ extends UnitTest
      */
     function _config__s_pi_d_s_pi__db( &$db_config, $sinst, $proid, $uname, 
                                        $vals ) {
-        $qs=array( 0 => $this->queries['configure_preview_1'],
-                   1 => $this->queries['configure_preview_2']);
+        global $queries;
+        $qs=array( 0 => $queries['configure_preview_1'],
+                   1 => $queries['configure_preview_2']);
         // 1. first call to is_sponsor
         $db_config->add_query( sprintf( $qs[1], 'sponsor', $uname ), $sinst );
         $db_config->add_num_row( $vals[0], $sinst++ );
@@ -242,7 +245,7 @@ extends UnitTest
     }
     function testConfigure_form() {
         global $bx, $t, $sess, $preview, $quorum, $other_tech_contents, 
-          $other_developing_proposals, $consultants, $auth;
+            $other_developing_proposals, $consultants, $auth, $queries;
 
         $uname = 'this is the usernmae';
         $auth->set_uname( $uname );
@@ -256,7 +259,7 @@ extends UnitTest
         $db_config = new mock_db_configure( 178 );
         $args = $this->_generate_records( array( 'proid' ), 50 );
         $fname = 'configure_form';
-        $qs=array( 0 => $this->queries[$fname] );
+        $qs=array( 0 => $queries[$fname] );
 
         // test1: configure_first_time(..) returns 1 (true)
         $db_config->add_query( sprintf( $qs[0], $args[0]['proid']), 0 );
@@ -324,7 +327,7 @@ extends UnitTest
     }
     function testConfigure_modify_form() {
         global $quorum, $consultants, $other_tech_contents, 
-            $other_developing_proposals;
+            $other_developing_proposals, $queries;
 
         $quorum = 'this is the quro';
         $consultants = 'this is the consulatnts';
@@ -332,7 +335,7 @@ extends UnitTest
         $other_developing_proposals = 'this is the other tech proposals';
 
         $fname = 'configure_modify_form';
-        $q = $this->queries[ 'configure_form' ];
+        $q = $queries[ 'configure_form' ];
         $row=$this->_generate_array( array( 'quorum', 'consultants',
                                             'other_tech_contents',
                                             'other_developing_proposals'),'1');
@@ -394,9 +397,9 @@ extends UnitTest
     }
 
     function testConfigure_show() {
-        global $t, $bx, $db, $sess;
+        global $t, $bx, $db, $sess, $queries;
         
-        $qs=array( 0 => $this->queries['configure_form'] );
+        $qs=array( 0 => $queries['configure_form'] );
         $args=$this->_generate_records( array( 'proid' ), 3 );
         $dat=$this->_generate_records( array( 'quorum', 'consultants',
                                               'other_tech_contents','sponsor',
@@ -517,15 +520,15 @@ extends UnitTest
 
     function testConfigure_modify() {
         global $db, $auth, $quorum, $consultants, $other_tech_contents,
-            $other_developing_proposals, $t, $qs;
+            $other_developing_proposals, $t, $qs, $queries;
 
         $fname = 'configure_modify';
-        $qs = array( 0 => $this->queries['project_type'],
-                     1 => $this->queries[ $fname . '_1' ],/*update*/
-                     2 => $this->queries[ $fname . '_2' ],/*is_sponsor*/
-                     3 => $this->queries[ $fname . '_3' ],/*history insert*/
-                     4 => $this->queries[ $fname . '_4' ],/*monitor_mail*/
-                     5 => $this->queries['configure_form'] );/*config. show*/
+        $qs = array( 0 => $queries['project_type'],
+                     1 => $queries[ $fname . '_1' ],/*update*/
+                     2 => $queries[ $fname . '_2' ],/*is_sponsor*/
+                     3 => $queries[ $fname . '_3' ],/*history insert*/
+                     4 => $queries[ $fname . '_4' ],/*monitor_mail*/
+                     5 => $queries['configure_form'] );/*config. show*/
                      
         $db_config = new mock_db_configure( 16 );
         $inst_nr = 0;
@@ -698,15 +701,15 @@ extends UnitTest
 
     function testConfigure_insert() {
         global $db,$auth,$quorum,$consultants,$other_tech_contents,
-            $other_developing_proposals, $t, $qs, $bx;
+            $other_developing_proposals, $t, $qs, $bx, $queries;
         // TODO: this test does not test whether configure_modify is
         // TODO: called when configure_first_time returns false ...
         $fname = 'configure_insert';
-        $qs = array( 0 => $this->queries['configure_form'],/*conf. first time*/
-                     1 => $this->queries[ $fname . '_1' ],/*insert*/
-                     2 => $this->queries[ $fname . '_2' ],/*history insert*/
-                     3 => $this->queries[ $fname . '_3' ],/*is developer*/
-                     4 => $this->queries['configure_modify_2']);/*is sponsor*/
+        $qs = array( 0 => $queries['configure_form'],/*conf. first time*/
+                     1 => $queries[ $fname . '_1' ],/*insert*/
+                     2 => $queries[ $fname . '_2' ],/*history insert*/
+                     3 => $queries[ $fname . '_3' ],/*is developer*/
+                     4 => $queries['configure_modify_2']);/*is sponsor*/
         $args=$this->_generate_records( array( 'proid', 'user' ), 10 );
         $db_config = new mock_db_configure( 26 );
         $inst_nr = 0;

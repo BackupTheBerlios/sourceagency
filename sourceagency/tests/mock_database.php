@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: mock_database.php,v 1.24 2002/07/19 10:18:56 riessen Exp $
+# $Id: mock_database.php,v 1.25 2002/07/23 14:09:39 riessen Exp $
 #
 ######################################################################
 
@@ -99,6 +99,10 @@ $g_mkdb_config_did_db_fail_called = array();
 // database would create one instance of the mock_db_configure class
 // and use it to configure all the DB_SourceAgency instances created
 // by the corresponding function.
+//
+// Note that this class (and mock_database) are *NOT* thread safe.
+// A lot of use is made of global variables and no semaphoring is done.
+//
 class mock_db_configure
 {
     var $instance_num = -1;
@@ -350,7 +354,6 @@ extends Assert
     function mock_database() {
         global $g_mkdb_instance_counter, $g_mkdb_nr_instance_expected,
             $g_mkdb_ignore_error;
-        // TODO: should be semaphored when accessing instance counter
         $this->instance_number = $g_mkdb_instance_counter++;
 
         // assert that we're creating too many instances

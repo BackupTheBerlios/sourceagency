@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestInsertlib.inc,v 1.16 2002/07/19 10:19:17 riessen Exp $
+# $Id: TestInsertlib.inc,v 1.17 2002/07/23 14:09:40 riessen Exp $
 #
 ######################################################################
 
@@ -240,11 +240,8 @@ extends UnitTest
         capture_reset_and_start();
         $this->assertEquals( 0, $fname( $project_title, $description ) );
         $this->set_text( capture_stop_and_get() );
-        $file = $this->get_file_line_from_warning();
-        $sleng = strlen( $file[1] ) + strlen( $file[2] );
-        // line break in warning message went from <br> to <br /> between
-        // 4.0.* and 4.1.*
-        $sleng += ( $this->v_gt( "4.1.0", phpversion()) ? 929 : 933 );
+        $sleng = ( strlen( $GLOBALS['err_file'] ) 
+                   + strlen( $GLOBALS['err_line'] ) + 769 );
         $this->_testFor_string_length( $sleng );
 
         // test four: description is empty
@@ -260,11 +257,8 @@ extends UnitTest
         capture_reset_and_start();
         $this->assertEquals( 0, $fname( $project_title, $description ) );
         $this->set_text( capture_stop_and_get() );
-        $file = $this->get_file_line_from_warning();
-        $sleng = strlen( $file[1] ) + strlen( $file[2] );
-        // line break in warning message went from <br> to <br /> between
-        // 4.0.* and 4.1.*
-        $sleng += ( $this->v_gt( "4.1.0", phpversion()) ? 937 : 941 );
+        $sleng = ( strlen( $GLOBALS['err_file'] ) 
+                   + strlen( $GLOBALS['err_line'] ) + 779 );
         $this->_testFor_string_length( $sleng );
     }
 

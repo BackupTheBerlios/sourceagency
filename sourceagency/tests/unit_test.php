@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.30 2002/07/22 12:07:08 riessen Exp $
+# $Id: unit_test.php,v 1.31 2002/07/23 14:09:39 riessen Exp $
 #
 ######################################################################
 
@@ -79,8 +79,10 @@ extends TestCase
         // this is a paranoia check: make sure that no PHP warnings were
         // generated, if so, then print a warning and the entire text
         if ( $check_for_warning 
-               && preg_match( '/[<]b[>]Warning[<]\/b[>]:/', 
-                              $this->get_text() ) ) {
+               && ( preg_match( '/[<]b[>]Warning[<]\/b[>]:/', 
+                                $this->get_text())
+                    || preg_match( '/[<]b[>]Fatal error[<]\/b[>]:/',
+                                   $this->test_text ) ) ) {
             print( "<b>CaptureCall: Warning: captured text contained a "
                    ."warning message?</b>\n" );
             $this->print_text_as_html();
@@ -322,20 +324,6 @@ extends TestCase
                         "title_bgcolor", "title_font_color", 
                         "title_align", "body_bgcolor", "body_font_color",
                         "body_align" );
-    }
-
-    // retrieve the filename and line number from a warning message. 
-    // This is required because the length for the filename various
-    // according to where the sources where checked out.
-    // Returns an array containing three elements:
-    //   0 ==> the matched warning line
-    //   1 ==> the filename in which the warning occured
-    //   2 ==> the line number
-    function &get_file_line_from_warning() {
-        $matches = array();
-        preg_match( "/<b>Warning<\/b>: .* in <b>([^<]+)<\/b> on line <b>"
-                    ."([0-9]+)<\/b>/", $this->get_text(), $matches );
-        return $matches;
     }
 
     // _checkFor_ methods are intended to be a combination of several
