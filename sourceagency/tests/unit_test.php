@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.24 2002/06/10 15:35:52 riessen Exp $
+# $Id: unit_test.php,v 1.25 2002/06/11 13:01:00 riessen Exp $
 #
 ######################################################################
 
@@ -62,6 +62,21 @@ extends TestCase
     function print_text_as_html() {
         print '<pre>' . htmlspecialchars( $this->get_text() ) . '</pre>';
     }
+
+    function &capture_call( $func_name, $exp_length, $args = array(),
+                            $debug = FALSE ) {
+        if ( $debug ) {
+            capture_stop();
+            capture_reset_text();
+        } else {
+            capture_reset_and_start();
+        }
+        $rval = call_user_func_array( $func_name, &$args );
+        $this->set_text( capture_stop_and_get() );
+        $this->_testFor_string_length( $exp_length );
+        return $rval;
+    }
+
     function set_msg( $msg ) {
         $this->test_msg = &$msg;
     }
