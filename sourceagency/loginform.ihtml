@@ -1,0 +1,72 @@
+<?php
+
+global $la;
+global $username;
+
+require("header.inc");  
+                                                     
+$bx = new box("",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
+$be = new box("",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
+?>
+
+<!-- content -->
+
+<!-- failed login code -->
+<?php
+if (isset($username)) {
+    $be->box_full($t->translate("Error"), $t->translate("Either your Username or Password are invalid")."."
+		."<br>".$t->translate("Please try again")."!"
+		."<br><br>".$t->translate("If you are not yet a registered User, please select")
+		." <a href=\"register.php3\">".$t->translate("New User")."</a>."
+	);
+}
+$bx->box_begin();
+$bx->box_title($t->translate("$sys_name Login"));
+$bx->box_body_begin();
+?>
+<form action="<?php print $this->url();?>" method=post>
+<table border=0 cellspacing=0 cellpadding=3>
+<tr>
+<?php
+echo "<td align=right>".$t->translate("Username").":</td><td><input type=\"text\" name=\"username\" size=20  maxlength=32 value=\"";
+if (isset($this->auth["uname"])) print $this->auth["uname"];
+echo "\">";
+?>
+</td>
+</tr>
+<tr valign=middle align=left>
+<?php
+echo "<td align=right>".$t->translate("Password").":</td><td><input type=\"password\" name=\"password\" size=20 maxlength=32>";
+?>
+</td></tr>
+<tr>
+<td></td>
+<td align=left>
+<?php
+echo "<input type=\"submit\" name=\"submit\" value=\"".$t->translate("Login")."\">";
+?>
+</td>
+</tr>
+</form>
+</table>
+
+<?php
+$bx->box_body_end();
+$bx->box_end();
+?>
+<!-- end content -->
+
+<?php
+require("footer.inc");
+?>
+
+<script language="JavaScript">
+<!--
+  if (document.forms[0][0].value != '') {
+      document.forms[0][1].focus();
+  } else {
+      document.forms[0][0].focus();
+  }
+// -->
+</script>
+</html>

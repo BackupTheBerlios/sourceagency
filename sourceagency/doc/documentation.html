@@ -1,0 +1,619 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta http-equiv="expires" content="0">
+   <META NAME="Author" CONTENT="Gregorio Robles">
+   <META NAME="Description" CONTENT="Documentation for SourceAgency 0.3">
+   <META NAME="KeyWords" CONTENT="BerliOS, SourceAgency, OpenSource, Free Software, SourceXchange, Projects, GPL, GNU, SourceWell">
+   <title>The SourceAgency 0.3 Documentation</title>
+
+   <STYLE type="text/css">
+      P { font-size: 12pt;
+          text-align: justify;
+          margin-left: 2%;
+          margin-right: 2%;
+          text-indent: 10pt;
+        }
+	P.title { font-size: 28pt;
+		text-align: center;
+		font-weight: bold;
+		margin-left: 1%;
+		margin-right: 1%;
+		text-indent: 2pt;
+		color: black;
+	}
+	P.subtitle { font-size: 21pt;
+		font-weight: bold;
+		text-align: left;
+		margin-left: 1%;
+		margin-right: 1%;
+		text-indent: 25pt;
+		color: black;
+	}
+	P.subsubtitle { font-size: 17pt;   
+		font-weight: bold;
+		text-align: left;
+		margin-left: 1%;
+		margin-right: 1%;
+		text-indent: 25pt;
+		color: black;
+	}
+	P.subsubsubtitle { font-size: 15pt;
+			font-weight: bold;
+		text-align: left;
+		margin-left: 1%;
+		margin-right: 1%;
+		text-indent: 25pt;
+		color: black;
+	}
+	P.authors { font-size: 12pt;
+		text-align: right;
+		margin-left: 2%;
+		margin-right: 2%;
+		text-indent: 10pt;
+		color: black;
+	}
+        P.function { font-size: 12pt;
+                     text-align: left;
+  		     font-weight: bold;
+                     margin-left: 2%;
+                     margin-right: 2%;
+                     text-indent: 10pt;
+	             font-family: verdana;
+        }
+	P.index { font-size: 14pt;
+		text-align: left;
+		margin-left: 7%;
+		margin-right: 2%;
+		text-indent: 0pt;
+		color: black;
+	}
+      UL { margin-left: 3%;
+	   font-size: 12pt;
+           text-align: left;
+           margin-left: 3%;
+           margin-right: 2%;
+       }
+      OL { margin-left: 3%;
+	   font-size: 14pt;
+           text-align: left;
+           margin-left: 3%;
+           margin-right: 2%;
+       }
+	</STYLE>
+
+</head>
+<body bgcolor="#FFCC33" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+
+<br>&nbsp;
+<P CLASS="title">SourceAgency 0.3
+</P>
+
+<P Class="authors">Berlin, August 13 2001<br>
+Gregorio Robles &lt;<A
+HREF="mailto:grex at scouts-es.org">grex at scouts-es.org</A>&gt;<br>
+</P>
+
+<!-- This is the index table -->
+<!-- The first line is for x. -->
+<!-- The second one for x.x. -->
+<!-- The third one for x.x.x. -->
+<!--
+<center><table align=center width=100%>
+<tr><TD colspan=3><P CLASS="index"></P></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index"></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index"></td></tr>
+</table></center>
+-->
+
+<center><table align=center width=100% cellspacing=0>
+<tr><TD colspan=3><P CLASS="index">0. <a href="#about">About this manual</A></P></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">1. <a href="#copyleft">Copyright</A></P></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">2. <a href="#introduction">Introduction</A></P></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">3. <a href="#installation">Installation</A></P></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">3.1. <A
+HREF="#fast_installation">Fast installation</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">3.2. <a href="#before_starting">Before starting</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P
+CLASS="index">3.2.1. <a href="#phplib">About PHPLib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P
+CLASS="index">3.2.2. <a href="#database_installation">About the Database</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">3.3. <A
+HREF="#obtaining_sourceagency">Obtaining SourceAgency</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">3.4. <a href="#file_extraction">File extraction</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">3.5. <a href="#database_configuration">Database configuration</A></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">4. <a href="#configuration">Configuration</A></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">5. <A HREF="#functionality">Main Functionality</A></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">6. <a href="#international">International Support</A></P></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">5.1. <A
+HREF="#normal_outputs">Main outputs</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">5.2. <A
+HREF="#faq_file">Translation of the FAQ</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">5.3. <a href="#contributors">Contributors</A></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">7. <a href="#files">Files listed and shortly
+explained</A></P></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">8. <a href="#database">SourceAgency's
+database</A></P></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.1. <A
+HREF="#active_sessions">Table active_sessions</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.2. <a href="#auth_user">Table auth_user</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.3. <a href="#comments">Table comments</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.4. <a href="#consultants">Table consultants</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.5. <a href="#counter">Table counter</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.6. <a href="#counter_check">Table counter_check</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.7. <a href="#decisions">Table decisions</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.8. <a href="#description">Table description</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.9. <a href="#developing">Table developing</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.10. <a href="#table_faq">Table faq</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.11. <a href="#history">Table history</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.12. <a href="#licenses">Table licenses</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.13. <a href="#milestones">Table milestones</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.14. <a href="#news">Table news</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.15. <a href="#preferences">Table preferences</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.16. <a href="#referees">Table referees</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.17. <a href="#sponsoring">Table sponsoring</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">8.18. <a href="#tech_content">Table tech_content</A></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">9. <a href="#developers">For Developers</A></P></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">9.1. <A
+HREF="#source_contribution">Source contribution</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">9.2. <A
+HREF="#structure_of_a_page">Main structure of a page</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">9.3. <A
+HREF="#sourceagency_functions">SourceAgency Functions</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.1 <a href="#box">Functions in box.inc</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.2 <a href="#commentstlib">Functions in commentslib.inc</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.3 <a href="#configurelib">Functions in configurelib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.4 <a href="#consultantslib">Functions in consultantslib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.5 <a href="#decisionslib">Functions in decisionslib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.6 <a href="#developinglib">Functions in developinglib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.7 <a href="#faqlib">Functions in faqlib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.8 <a href="#followmentlib">Functions in followmentlib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.9 <a href="#historylib">Functions in historylib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.10 <a href="#html">Functions in html</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.11 <a href="#insertlib">Functions in insertlib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.12 <a href="#lang">Functions in lang.inc</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.13 <a href="#lib">Functions in lib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.14 <a href="#milestones">Functions in milestones</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.15 <a href="#newslib">Functions in newslib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.16 <a href="#refereeslib">Functions in refereeslib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.17 <a href="#sponsoringlib">Functions in sponsoringlib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.18 <a href="#statslib">Functions in statslib</A></td></tr>
+<tr><TD width=5%>&nbsp;</td><TD width=5%>&nbsp;</td><td><P CLASS="index">9.3.19 <a href="#translation">Functions in translation</A></td></tr>
+
+<tr><TD width=5%>&nbsp;</td><TD colspan=2><P CLASS="index">9.4. <a href="#translations_for_developers">Supporting translations</A></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">10. <a href="#version_numbering">Version numbering policy</A></P></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">11. <a href="#faq">FAQ</A></P></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">12. <a href="#todo">TODO</A></P></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">13. <A
+HREF="#references">References</A></P></td></tr>
+
+<tr><TD colspan=3><P CLASS="index">14. <a href="#authors">About the authors</A></P></td></tr>
+
+</table></center>
+
+<p>&nbsp;
+<A NAME="about">
+<P CLASS="subtitle">0. About this manual
+
+<p>This manual has been made with the idea of covering as many aspects of
+SourceAgency as possible. If you are a user who's only aim is to install
+and use the SourceAgency system, you may not have to read it
+as a whole, because advanced features for developers are
+also explained.
+
+<p>&nbsp;
+<A NAME="copyleft">
+<P CLASS="subtitle">1. Copyright
+
+<p>SourceAgency is distributed under the GNU General Public License 2.0 or later.
+Its author is Gregorio Robles (<a href="mailto:grex at scouts-es.org">grex at scouts-es.org</A>.
+
+<p>This program is free software; you can redistribute it and/or modify  it under the terms of the GNU General Public License as published by  the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+
+<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+<p>You should have received a copy of the GNU General Public License
+along with this program; if not, write to the
+<PRE>
+              Free Software Foundation, Inc.
+	      59 Temple Place, Suite 330
+	      Boston, MA
+	      02111-1307 USA
+</PRE>
+
+<p>&nbsp;
+<A NAME="introduction">
+<P CLASS="subtitle">2. Introduction
+
+<p>SourceAgency is a highly configurable, well documented Open Source project announcement and retrieval system entirely writen in <a href="http://www.php.net/">PHP3</A> and database independent. It includes user authentication and autherization system (devel/sponsor/editor/admin), sessions with and without cookies, high configurability, multilangual support, ease of administration, RDF-type document backend, advanced statistics, announcing mailing lists, project indexing by sorts and many other useful features.
+
+<p>SourceAgency depends on the <a href="http://phplib.netuse.de/">PHPLib library</A> (version 7.2 or later). Only if you want to have diary and weekly mailing lists with the announcements, you should also have Mailman installed in your box.
+
+<p>You can see a fully working example of the SourceAgency system at BerliOS
+SourceAgency by visiting <a href="http://sourceagency.berlios.de">http://sourceagency.berlios.de</A>. A close look at it will show you what
+you can do with SourceAgency. BerliOS SourceAgency has at this moment more
+than ... projects inserted and has been the main reason why we have
+made this software.
+
+<p>BerliOS SourceAgency is part of the BerliOS project at GMD FOKUS. Please, have
+a look at <a href="http://www.berlios.de">http://www.berlios.de</A> for further information.
+
+<p>You can download the latest version of SourceAgency at:
+<a href="http://developer.berlios.de/projects/sourceagency">http://developer.berlios.de/projects/sourceagency</A>
+
+<p>SourceAgency Features:
+<ul>
+<li>Different type of users (nonauthorized users, developers, sponsors, editors and administrators) with different functions
+<li>Session management with and without cookies
+<li>Database independence
+<li>Advanced configurability from a single file
+<li>Simple, intuitive use of the system
+<li>Documentation for further development and/or adjustment
+<li>Comments on projects
+<li>Through-the-web reviewing and project administration for editors
+<li>Through-the-web administration of projects, comments and licenses
+<li>system FAQ and through-the-web administration of it
+<li>Dynamic order of projects by date (default), interest, urgency or
+by alphabetical order
+<li>"true" project counter for hits, etc.
+<li>Multilingual support
+<li>Dynamic permission configuration
+<li>XML Backend (RDF-document format)
+<li>Daily and Weekly automatic Newsletters
+<li>EMail advice for editors when projects are inserted or updated
+<li>EMail advice for administrators when new users register
+<li>Web browser independence
+<li>Cache avoidance
+</ul>
+
+<p>&nbsp;
+<A NAME="installation">
+<P CLASS="subtitle">3. Installation
+
+<p>Important note about security:
+<ul>
+<li>SourceAgency's main directory and all its subdirectories are not protected in
+any way by us! Please make sure that you can put propperly <i>.htaccess</i>
+files in these directories (especially the include subdirectory). If someone
+is able to read the local.inc file in the include
+directory, operator (user name) and password for your database could be known and
+misused. For further information about <i>.htaccess</i> look at the Apache's documentation.
+</ul>
+
+<A NAME="fast_installation">
+<P CLASS="subsubtitle">3.1 Fast installation (for MySQL)
+
+<p>You need to have a webserver (we have tested the system with Apache), PHP3,
+PHPLib and MySQL installed in your system. Mailman is only needed if you want
+to use mailing lists.
+
+<ul>
+<li>user$ mysql -h <i>host</i> -u <i>database_superuser</i> -p
+<br>(insert <i>superuser_password</i>)
+<li>mysql> USE mysql;
+<li>mysql> INSERT INTO user VALUES ( '<i>host</i>', '<i>operator</i>',
+PASSWORD('<i>operator_password</i>'), 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'N', 'N', 'N', 'N', 'N', 'N', 'N');
+<li>mysql> FLUSH PRIVILEGES;
+<li>mysql> CREATE DATABASE sourceagency;
+<li>mysql> exit;
+<li>user$ tar -zxvf sourceagency-0.3.tar.gz
+<li>user$ mysql -h <i>host</i> -u <i>operator</i> -p < sourceagency/sql/mysql.sql
+<br>(insert the <i>operator_password</i>)
+<li>user$ vi sourceagency/include/local.inc
+<br>(insert the correct database parameters; please, keep <i>sourceagency</i>
+as the database name)
+<PRE>
+   var $Host     = "<i>host</i>";
+   var $Database = "sourceagency";
+   var $User     = "<i>operator</i>";
+   var $Password = "<i>password</i>";
+</PRE>
+</ul>
+
+<p>Ok, that's it. You've finished installing and configuring SourceAgency. Start your browser and visit 
+<i>http://yourserver/sourceagency/index.php3</i>. As you'll see, SourceAgency
+comes with some inserted example projects and licenses. You
+can delete or modify them by entering as an administrator. To do so, login as the
+default administrator with <i>admin</U> permissions.
+At the prompt use the following ID to login (case sensitive):
+<PRE>
+        Username: <i>admin</i>
+	Password: <i>admin</i>
+</PRE>
+
+<p>Very important: Be sure of inmediately changing the login and password by
+clicking on the <i>User Admin</i> link. You'll notice this is quite easy to do ;-)
+
+<p>If things do not work, maybe you'll have to read the whole
+installation chapter :-(.
+
+<A NAME="before_starting">
+<P CLASS="subsubtitle">3.2. Before starting
+
+<p>You've got to look if your web server is correctly configurated and running. That means that:
+
+<ul>
+<li>The web server is capable of recognising and executing PHP3 scripts in user directories
+<li>PHP is compliled to work with the database your are going to work with.
+</ul>
+
+<p>Please, attend to the respective manuals and documentation for a propper installation.
+
+<A NAME="phplib">
+<P CLASS="subsubsubtitle">3.2.1. About PHPLib
+
+<p>For a correct functioning of SourceAgency, PHPLib has to be installed. PHPLib
+is an usefull library which permits SourceAgency to have sessions,
+authentication and database independence. PHPLib is
+published under the terms of the GNU Lesser General Public License
+(LGPL). For more information about PHPLib follow this link: <a href="http://phplib.netuse.de/">http://phplib.netuse.de/</A>.
+
+<p>SourceAgency has been developed with the 7.2c version of PHPLib, which
+can be downlodaded from
+<a href="http://phplib.netuse.de/download/phplib-7.2c.tar.gz">http://phplib.netuse.de/download/phplib-7.2c.tar.gz</A>. As SourceAgency strictly
+uses the API given by PHPLib, future versions of PHPLib should also
+work without problem.
+
+<p>Please read carefully the documentation provided for PHPLib for a
+successfull installation. The installation of PHPLib is sufficient;
+you don't need to know more about PHPLib and its functioning for
+using the SourceAgency system.
+
+<A NAME="database_installation">
+<P CLASS="subsubsubtitle">3.2.2. About the Database
+
+<p>The next step is to install and configure the database system. SourceAgency has been tested in BerliOS SourceAgency with MySQL, so that the following explanations are to be followed with that RDBMS. For other systems, the philosophy will be the same, but you will have to particularize the instructions.
+
+<p>You can download MySQL from:
+<a href="http://www.mysql.com/downloads">http://www.mysql.com/downloads</A>.
+
+<p>1. Install and configure the RDBMS
+
+<p>2. Create the user SourceAgency needs:
+   <ul>
+   <li>Login as MySQL's superuser (<i>host</i> should be <i>localhost</i> in
+   the default case)
+   <br>user$ mysql -h <i>host</i> -u <i>database_superuser</i> -p
+   <br>(insert <i>superuser_password</i>)
+   <li>Choose the mysql database
+   <br>(that's where the database users and their privileges are)
+   <br>mysql> USE mysql;
+   <li>Insert an operator user for SourceAgency, its password and its privileges
+   <br>mysql> INSERT INTO user VALUES ( '<i>host</i>', '<i>operator</i>',
+PASSWORD('<i>operator_password</i>'), 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'N', 'N', 'N', 'N', 'N', 'N', 'N');
+   <li>"Commit" the changes
+   <br>mysql> FLUSH PRIVILEGES;
+   </ul>
+
+<p>3. Create the data base:
+   <ul>
+   <li>Create the data base (with sourceagency as its name; see note below)
+   <br>mysql> CREATE DATABASE sourceagency;
+   <li>Exit MySQL
+   <br>mysql> exit;
+   </ul>
+
+<p>Note: It is important for a simple configuration of the system to name this database
+"sourceagency". A different database name would imply editing and modifying many
+of the
+default configuration parameters in the local.inc file, which is not recommended.
+
+<A NAME="obtaining_sourceagency">
+<P CLASS="subsubtitle">3.3. Obtaining SourceAgency
+
+<p>You can get the latest version of SourceAgency at:
+<a href="http://developer.berlios.de/projects/sourceagency">http://developer.berlios.de/projects/sourceagency</A>
+
+<A NAME="file_extraction">
+<P CLASS="subsubtitle">3.4. File extraction
+
+<p>Due to security reasons you should not install or execute SourceAgency
+as root. It's not even necessary.
+
+<p>The installation process is as following:
+
+<OL>
+<li>choose the parent directory where you want SourceAgency to be and cd into it
+<li>verify that the user public_html exists and is accesible from the
+web
+<li>uncompress SourceAgency in the parent directory
+<br>user$ tar -zvxf sourceagency-0.3.tar.gz
+<li>List the content of the directories. You should have a directory
+sourceagency with five subdirectories. Read the point "Files listed and shortly explained" for further information about the files.
+<br>user$ ls -R
+<li>create the database structures in the database
+<br>user$ mysql -h <i>host</i> -u <i>operator</i> -p < sourceagency/sql/mysql.sql
+<br>(insert the <i>operator_password</i>)
+</OL>
+
+<A NAME="database_configuration">
+<P CLASS="subsubtitle">3.5. Database configuration
+
+<p>The database configuration has to be done in local.inc; both are in the include directory. Please, at this point read another time the security note given at the beginning of point 3.
+
+<ul>
+<li>user$ vi sourceagency/include/local.inc
+<br>(insert the correct database parameters; please, keep <i>sourceagency</i>
+as the database name)
+<PRE>
+   var $Host     = "<i>host</i>";
+   var $Database = "sourceagency";
+   var $User     = "<i>operator</i>";
+   var $Password = "<i>password</i>";
+</PRE>
+</ul>
+
+<p>Congratulations, you've finished installing and configuring SourceAgency. Start your browser and visit http://yourserver/sourceagency/index.php3. As you'll see, SourceAgency comes with some inserted example projects and licenses. You can delete or modify them by entering as an administrator. To do so, login as the default administrator with <i>devel,sponsor,editor,admin</i> permissions. At the prompt use the following ID to login (case sensitive):
+<PRE>
+        Username: <i>admin</i>
+	Password: <i>admin</i>
+</PRE>
+
+<p>Vert important: Be sure of inmediately changing the login and password by
+clicking on the link <i>User Admin</i>. You'll notice this is quite easy to do ;-)
+
+<p>&nbsp;
+<A NAME="configuration">
+<P CLASS="subtitle">4. Configuration
+
+<p>If you want to personalize SourceAgency, you will have to edit the
+config.inc file in the include directory. The configuration file is
+carefully commented; please, take your time for configuring the SourceAgency system right.
+
+<p>(FIXME)
+
+<p>&nbsp;
+<A NAME="functionality">
+<P CLASS="subtitle">5. Main Functionality
+
+<p>Note: In the following, we are going to talk about the default permission configuration of the system (which is also the recommended setting). The permission configuration has been implemented to be dinamically, so that the site administrator can easily modify the permissions needed at his will from the include/config.inc file.
+
+<p>Authorisation is based on registration. The SourceAgency system has two sets of users: unregistered users and registered users. Between registered
+users we have different permission levels:
+        <ul>
+	<li>developer
+	<li>sponsor
+        <li>editor
+	<li>admin
+        </ul>
+
+<p>Permissions are independent and do not have to be unique for a certain registered user. That means that a registered user with only administrator permissions is not allowed to perform actions that are restricted to registered users with editor or user permissions, but a single registered user can have <i>devel</i>, <i>sponsor</i>, <i>editor</i> and <i>admin</i> permissions.
+
+<p>Each level of authorisation comprises certain actions that are listed below. Again, we want the reader to notice, that this is the default configuration. The administrator can change it at his will at the include/config.inc file:
+
+<p>Unregistered users can:
+        <ul>
+	<li>Retrieve OpenSource projects
+	<li>Retrieve already finished OpenSource projects
+	<li>View the comments on projets
+	<li>Read the FAQ
+	<li>Choose language
+	<li>Login
+	<li>Obtain the forgotten password
+	<li>Become authorised user by entering a form
+	<li>Read the XML Backend
+	<li>Search for projects
+        <li>See list of developers and sponsors
+	<li>See developers' and sponsors' information
+        </ul>
+
+<p>Registered users with <i>developer</i> permission can:
+	<ul>
+        <li>Do everything what unregistered user can do
+        <li>Insert and update projects
+	<li>Write comments on projects
+	<li>Change their user registration data
+	<li>Rate the sponsor when they finish a project
+	<li>See further information of projects they are related in
+	<li>Have a personal page
+	<li>Make their rating public/private
+        </ul>
+
+<p>Registered users with <i>sponsor</i> permission can:
+	<ul>
+        <li>Do everything what unregistered user can do
+        <li>Insert and update projects
+	<li>Write comments on projects
+	<li>Change their user registration data
+	<li>Rate the developers when they finish a project
+	<li>See further information of projects they are related in
+	<li>Have a personal/institutional page
+	<li>Make their rating public/private
+        </ul>
+
+<p>Editors (<i>editor</i> permission) are able to:
+        <ul>
+        <li>Do everything what unregistered users can do
+	<li>Review pending projects (inserted or updated by registered users)
+	<li>Delete and undelete projects
+        </ul>
+
+<p>Administrators (<i>admin</i> permission) are able to:
+        <ul>
+        <li>Do everything what unregistered users can do
+	<li>Administrate users and their permissions
+	<li>Administrate (insert, rename, change URL and delete) licenses
+	<li>Administrate (modify and delete) comments on projects
+        </ul>
+ 
+<p>As explained before, SourceAgency's registered users can have several
+roles. So it is possible (and recommendable) that editors (<i>editor</i>) have also <i>devel</i> and <i>sponsor</i> permissions and that administrators (<i>admin</i>) have also <i>developer</i>, <i>sponsor</i> and <i>editor</i> permissions. This becomes even more important if you personalize the permissions of your system in the include/config.inc file as you can only choose one permission type at a time (whether <i>user</i> (developer or sponsor), <i>editor</i>, <i>admin</i> or <i>all</i>) for every type of functionality.
+
+<p>&nbsp;
+<A NAME="international">
+<P CLASS="subtitle">5. International support
+
+<p>SourceAgency can be easily translated into different
+languages. If you see that SourceAgency does not have support in your
+language, you're gladly invited to help us with the
+internationalization of SourceAgency by sending us your translation.
+
+<p>You don't need to have any computer or programming experience to do a
+translation. Keep on reading and you'll find out how easy it is.
+
+<A NAME="normal_outputs">
+<P CLASS="subsubtitle">5.1. Main outputs
+
+<p>Download the lang-translate.inc file (it also comes in SourceAgency's
+0.3 tarball) . If you edit it, you'll find lines
+like this:
+
+<PRE>
+     case "Home": $tmp = ""; break;
+</PRE>
+
+<p>We will explain it briefly: after the <i>case</i> you will see the English text to translate writen in
+quotes (in our example, the English text is "Home"). Then you'll find a
+sort of equation. The content of your translation from English into your language should
+be placed in between these second quotes. For example, in the case you were making a translation into German, this would be the result for this line:
+
+<PRE>
+     case "Home": $tmp = "Heim"; break;
+</PRE>
+
+<p>Ok, now that you're an expert, you'll notice that "Home" is translated
+into German as "Heim" ;-). The procedure just explained should be repeated with
+all the lines in this file. 
+
+<p>Once you're finished, save it as <i>YourLanguage-lang.inc</i> and please send it to the authors. We will include
+it in the next releases so that everybody can benefit of your work.
+
+<A NAME="faq_file">
+<P CLASS="subsubtitle">5.2. Translation of the FAQ
+
+<p>(FIXME)
+
+<A NAME="contributors">
+<P CLASS="subsubtitle">5.3. Contributors
+
+<p>Here's a list of all the people that have contributed to the
+translation of SourceAgency.
+
+<p>Main files:
+<br>&nbsp;
+
+<center>
+<table width=95%>
+<tr><td>Language</td><td>Translator</td><td>Version</td><td>Last Modified</td></tr>
+<tr><td>German</td><td>Lutz Henckel &lt;<a href="mailto:lutz.henckel at fokus.gmd.de">lutz.henckel at fokus.gmd.de</A>&gt;</td><td>x.x.x</td><td>15 September 2001</td></tr>
+<tr><td>Spanish</td><td>Gregorio Robles &lt;<a href="mailto:grex at scouts-es.org">grex at scouts-es.org</A>&gt;</td><td>x.x.x</td><td>15 September 2001</td></tr>
+</table></center>
+
+
+<P class="Authors"><font SIZE=-2>Edited in HTML using GNU Emacs 20.7.1 on an i386 SuSE Linux</font>
+</BODY>
+</HTML>

@@ -1,0 +1,43 @@
+Fast installation guide
+
+(These paragraphs are taken from the SourceAgency documentation point 3.1)
+
+You need to have a webserver (we have tested the system with Apache),
+PHP3, PHPLib and MySQL installed in your system.
+
+
+* user$ mysql -h host -u database_superuser -p
+  (insert superuser_password)
+* mysql> USE mysql;
+* mysql> INSERT INTO user VALUES ( 'host', 'operator', PASSWORD('operator_password'), 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'N', 'N', 'N', 'N', 'N', 'N', 'N');
+* mysql> FLUSH PRIVILEGES;
+* mysql> CREATE DATABASE sourceagency;
+* mysql> exit;
+* user$ tar -zxvf sourceagency-1.0.tar.gz
+* user$ mysql -h host -u operator -p < sourceagency/sql/sw.sql
+  (insert the operator_password)
+* user$ vi sourceagency/include/local.inc
+  (insert the correct database parameters; please, keep sourceagency as the database name)
+
+   var $Host     = "host";
+   var $Database = "sourceagency";
+   var $User     = "operator";
+   var $Password = "password";
+
+Ok, that's it. You've finished installing and configuring
+SourceAgency. Start your browser and visit
+http://yourserver/sourceagency/index.php3. As you'll see, SourceAgency
+comes with some inserted example applications and licenses. You can
+delete or modify them by entering as an administrator. To do so, login
+as the default administrator with user,editor,admin permissions.
+At the prompt use the following ID to login (case sensitive):
+
+        Username: admin
+	Password: admin
+
+
+Vert important: Be sure of inmediately changing the login and password by
+clicking on the User Admin link. You'll notice this is quite easy to do ;-)
+
+If things do not work, maybe you'll have to read the whole
+installation chapter from the SourceAgency documentation.

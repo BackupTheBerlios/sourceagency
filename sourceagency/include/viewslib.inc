@@ -1,0 +1,247 @@
+<?php
+
+######################################################################
+# SourceAgency:
+# ================================================
+#
+# Copyright (c) 2001 by
+#                Gregorio Robles (grex@scouts-es.org)
+#
+# BerliOS SourceAgency: http://sourceagency.berlios.de
+# BerliOS - The OpenSource Mediator: http://www.berlios.de
+#
+# Library with the functions for news
+#
+# This program is free software. You can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 or later of the GPL.
+######################################################################
+
+function views_form($proid) {
+  global $bx, $t, $sess, $db, $preview, $configure, $news, $comments, $history, $step3, $step4, $step5, $cooperation, $views;
+
+  if(!isset($preview)) {
+	$db->query("SELECT * FROM views WHERE proid='$proid'");
+	$db->next_record();
+  }
+
+  $bx->box_begin();
+  $bx->box_title($t->translate("Configure Information Access in this Project"));
+  $bx->box_body_begin();
+  htmlp_form_action("PHP_SELF",array("proid" => $proid),"POST");
+
+  $bx->box_columns_begin(2);
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("View Project Configuration")."</b>: ");
+  $bx->box_column ("left","70%","",views_select_view($proid,"configure",$configure)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Project Participants</i>)");
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("Write and Modify news")."</b>: ");
+  $bx->box_column ("left","70%","",views_select_view($proid,"news",$news)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Project Initiator</i>)");
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("Write comments")."</b>: ");
+  $bx->box_column ("left","70%","",views_select_view($proid,"comments",$comments)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Registered</i>)");
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("See Project History")."</b>: ");
+  $bx->box_column ("left","70%","",views_select_view($proid,"history",$history)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Everybody</i>)");
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("See Step 3 (Milestones)")."</b>: ");
+  $bx->box_column ("left","70%","",views_select_view($proid,"step3",$step3)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Everybody</i>)");
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("See Step 4 (Referees)")."</b>: ");
+  $bx->box_column ("left","70%","",views_select_view($proid,"step4",$step4)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Everybody</i>)");
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("See Step 5 (Project Follow-up)")."</b>: ");
+  $bx->box_column ("left","70%","",views_select_view($proid,"step5",$step5)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Everybody</i>)");
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("See Developing Cooperation Proposals")."</b>: ");
+  $bx->box_column ("left","70%","",views_select_view($proid,"cooperation",$cooperation)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Everybody</i>)");
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("Project Permission Access")."</b>: ");
+  $bx->box_column ("left","70%","",views_select_view($proid,"views",$views)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Project Participants</i>)");
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column("right","30%","","&nbsp;");
+  $bx->box_column("left","70%","",html_form_submit("Preview","preview").html_form_submit("Submit","submit"));
+  htmlp_form_end();
+  $bx->box_columns_end();
+  $bx->box_body_end();
+  $bx->box_end();
+}
+
+function views_preview($proid) {
+  global $t, $auth, $bx, $db, $sess, $configure, $news, $comments, $history, $step3, $step4, $step5, $cooperation, $views;
+
+  $bx->box_begin();
+  $bx->box_title("<center><b>".$t->translate("PREVIEW")."</b></center>");
+  $bx->box_title($t->translate("Project Information Access"));
+  $bx->box_body_begin();
+  $timestamp = time();
+  echo "<b>";
+  lib_pnick($auth->auth["uname"]);
+  echo " - ".timestr($timestamp)."</b><br>&nbsp;\n";
+
+  $bx->box_columns_begin(2);
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("View Project Configuration")."</b>: ");
+  $bx->box_column ("left","70%","",$configure);
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("Write and Modify news")."</b>: ");
+  $bx->box_column ("left","70%","",$news);
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("Write comments")."</b>: ");
+  $bx->box_column ("left","70%","",$comments);
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("See Project History")."</b>: ");
+  $bx->box_column ("left","70%","",$history);
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("See Step 3 (Milestones)")."</b>: ");
+  $bx->box_column ("left","70%","",$step3);
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("See Step 4 (Referees)")."</b>: ");
+  $bx->box_column ("left","70%","",$step4);
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("See Step 5 (Project Follow-up)")."</b>: ");
+  $bx->box_column ("left","70%","",$step5);
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("See Developing Cooperation Proposals")."</b>: ");
+  $bx->box_column ("left","70%","",$cooperation);
+  $bx->box_next_row_of_columns();
+
+  $bx->box_column ("right","30%","","<b>".$t->translate("Project Permission Access")."</b>: ");
+  $bx->box_column ("left","70%","",$views);
+
+  $bx->box_columns_end();
+
+  $bx->box_body_end();
+  $bx->box_end();
+
+  lib_comment_it($proid,"Views","","0","","Comments on the views?");
+
+  lib_show_comments_on_it($proid,"Views",$db->f("FIXME"),"0");
+}
+
+function views_show($proid) {
+  global $t, $bx, $db, $sess;
+
+  $query = "SELECT * FROM views,description WHERE views.proid=description.proid AND views.proid='$proid'";
+  $db->query($query);
+  while($db->next_record()) {
+	$bx->box_begin();
+	$bx->box_title($t->translate("Project Information Access"));
+	$bx->box_body_begin();
+   	$timestamp = mktimestamp($db->f("creation"));
+        echo "<b>";
+	lib_pnick($db->f("description_user"));
+        echo " - ".timestr($timestamp)."</b><br>&nbsp;\n";
+
+	$bx->box_columns_begin(2);
+
+	$bx->box_column ("right","30%","","<b>".$t->translate("View Project Configuration")."</b>: ");
+	$bx->box_column ("left","70%","",$db->f("configure"));
+	$bx->box_next_row_of_columns();
+
+	$bx->box_column ("right","30%","","<b>".$t->translate("Write and Modify news")."</b>: ");
+	$bx->box_column ("left","70%","",$db->f("news"));
+	$bx->box_next_row_of_columns();
+
+	$bx->box_column ("right","30%","","<b>".$t->translate("Write comments")."</b>: ");
+	$bx->box_column ("left","70%","",$db->f("comments"));
+	$bx->box_next_row_of_columns();
+
+	$bx->box_column ("right","30%","","<b>".$t->translate("See Project History")."</b>: ");
+	$bx->box_column ("left","70%","",$db->f(history));
+	$bx->box_next_row_of_columns();
+
+	$bx->box_column ("right","30%","","<b>".$t->translate("See Step 3 (Milestones)")."</b>: ");
+	$bx->box_column ("left","70%","",$db->f("step3"));
+	$bx->box_next_row_of_columns();
+
+	$bx->box_column ("right","30%","","<b>".$t->translate("See Step 4 (Referees)")."</b>: ");
+	$bx->box_column ("left","70%","",$db->f("step4"));
+	$bx->box_next_row_of_columns();
+
+	$bx->box_column ("right","30%","","<b>".$t->translate("See Step 5 (Project Follow-up)")."</b>: ");
+	$bx->box_column ("left","70%","",$db->f("step5"));
+	$bx->box_next_row_of_columns();
+
+	$bx->box_column ("right","30%","","<b>".$t->translate("See Developing Cooperation Proposals")."</b>: ");
+	$bx->box_column ("left","70%","",$db->f("cooperation"));
+	$bx->box_next_row_of_columns();
+
+	$bx->box_column ("right","30%","","<b>".$t->translate("Project Permission Access")."</b>: ");
+	$bx->box_column ("left","70%","",$db->f("views"));
+
+  	$bx->box_columns_end();
+
+    	$bx->box_body_end();
+    	$bx->box_end();
+
+	lib_comment_it($proid,"Views","","0","","Comments on the views?");
+
+	lib_show_comments_on_it($proid,"Views",$db->f("FIXME"),"0");
+  }
+
+  if ($db->num_rows() == 0) {
+	print "<p>The views have not been configured yet.<p>\n";
+  }
+}
+
+function views_insert($proid,$configure,$views,$news,$comments,$history,$step3,$step4,$step5,$cooperation) {
+  global $db;
+
+  views_modify($proid,$configure,$views,$news,$comments,$history,$step3,$step4,$step5,$cooperation);
+}
+
+function views_modify($proid,$configure,$views,$news,$comments,$history,$step3,$step4,$step5,$cooperation) {
+  global $db;
+
+  $db->query("UPDATE views SET  configure='$configure', views='$views', news='$news', comments='$comments', history='$history', step3='$step3', step4='$step4', step5='$step5',cooperation='$cooperation' WHERE proid='$proid'");
+  views_show($proid);
+}
+
+function views_select_view($proid,$on_what,$selected) {
+
+  $return = html_select($on_what);
+
+  if (!isset($selected) || empty($selected)) {
+	$db_local = new DB_SourceAgency;
+	$db_local->query("SELECT $on_what FROM views WHERE proid='$proid'");
+	$db_local->next_record();
+	$selected = $db_local->f($on_what);
+  }
+
+  /* FIXME FIXME FIXME */
+  include("config.inc");
+
+  while (list(, $value) = each($views_array)) {
+	if ($on_what=="news") {
+		if ($value!="Project Participants" && $value!="Project Sponsors" && $value!="Project Developers" && $value !="Project Initiator") continue; 
+	} else if ($on_what=="comments") {
+		if ($value=="Everybody") continue;
+	}
+
+	if ($value == $selected) $select="selected";
+	else $select="";
+	$return .= html_select_option($value,$select,$value);
+  }
+  $return .= html_select_end();
+
+  return($return);
+}
+
+?>
