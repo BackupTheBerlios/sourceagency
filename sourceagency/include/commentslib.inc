@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: commentslib.inc,v 1.3 2001/11/09 20:33:31 riessen Exp $
+# $Id: commentslib.inc,v 1.4 2001/11/29 15:37:34 grex Exp $
 #
 ######################################################################
 
@@ -180,11 +180,11 @@ function comments_insert($proid,$user,$type_cmt,$number,$ref,$subject,$text) {
 
   include("monitorlib.inc");
   include("config.inc");
-  // FIXME: is 'numbe=' a typo in the following url?
+
   monitor_mail($proid,"comments", "New Comment", "New Comment on project "
                ."$proid\n Subject: $subject\n by $user\n\n You can see it "
                ."at: $sys_urlcomments.php3?proid=$proid&type=$type_cmt&"
-               ."numbe=$number&id=$id");
+               ."number=$number&id=$id");
 
   comments_show($proid,$type_cmt,$number,$id,$ref);
 }
@@ -199,11 +199,11 @@ function comments_modify($proid,$user,$type_cmt,$number,$cmt_id,
 
   include("monitorlib.inc");
   include("config.inc");
-  // FIXME: is 'numbe=' a typo in the following
+
   monitor_mail($proid,"comments", "Comment modified", "Modification on a "
                ."comment on project $proid\n Subject: $subject\n by "
                ."$user\n\n You can see it at: $sys_urlcomments.php3?"
-               ."proid=$proid&type=$type_cmt&numbe=$number&id=$id");
+               ."proid=$proid&type=$type_cmt&number=$number&id=$id");
 
   comments_show($proid,$type_cmt,$number,$cmt_id,$ref);
 }

@@ -16,11 +16,13 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisionslib.inc,v 1.4 2001/11/08 16:17:41 riessen Exp $
+# $Id: decisionslib.inc,v 1.5 2001/11/29 15:37:45 grex Exp $
 #
 ######################################################################
 
-/* FIXME: the colors have to be changed into a configurable colors */
+// WISH: table colors when listing decisions should have to be changed into configurable ones
+// the configuration should be done through the config.inc file
+// this will allow to change the appearience of the whole site by changing only one parameter!
 
 #####
 #
@@ -305,7 +307,8 @@ function show_decision_milestones($proid,$devid) {
 
   if ($db->num_rows() != 0) {
 	$bx->box_begin();
-	$bx->box_title($t->translate("Milestones proposed by ".$milestone_user)." (FIXME: Link to proposal)");
+	// TODO: link to the page with the proposal of these milestones
+	$bx->box_title($t->translate("Milestones proposed by ".$milestone_user));
 	$bx->box_body_begin();
 	$bx->box_columns_begin(8);
 
