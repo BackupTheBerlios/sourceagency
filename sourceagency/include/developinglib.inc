@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: developinglib.inc,v 1.6 2002/06/06 08:14:33 riessen Exp $
+# $Id: developinglib.inc,v 1.7 2002/06/26 09:57:26 riessen Exp $
 #
 ######################################################################
 
@@ -83,18 +83,26 @@ function show_developings($proid, $content_id)
    	    $timestamp = mktimestamp($db->f("creation"));
 	    lib_pnick($db->f("username"));
             echo ' - '.timestr($timestamp)."</b>\n";
-    	    echo '<p><b>Cost:</b> '.$db->f("cost")." euros\n";
-    	    echo '<br><b>License:</b> '.$db->f("license")."\n";
-    	    echo '<br><b>Cooperation:</b> '.$db->f("cooperation")."\n";
-    	    echo '<br><b>Status:</b> '.show_status($db->f("status"))."\n";
-    	    echo '<br><b>Validity:</b> '.timestr_middle(mktimestamp($db->f("valid")))."\n";
-    	    echo '<br><b>Start possible:</b> '.timestr_middle(mktimestamp($db->f("start")))."\n";
-    	    echo '<br><b>Duration:</b> '.$db->f("duration")." weeks\n";
+    	    echo '<p><b>'.$t->translate('Cost').':</b> '
+              .$db->f("cost")." euros\n";
+    	    echo '<br><b>'.$t->translate('License').':</b> '
+              .$db->f("license")."\n";
+    	    echo '<br><b>'.$t->translate('Cooperation').':</b> '
+              .$db->f("cooperation")."\n";
+    	    echo '<br><b>'.$t->translate('Status').':</b> '
+              .show_status($db->f("status"))."\n";
+    	    echo '<br><b>'.$t->translate('Validity').':</b> '
+              .timestr_middle(mktimestamp($db->f("valid")))."\n";
+    	    echo '<br><b>'.$t->translate('Start possible').':</b> '
+              .timestr_middle(mktimestamp($db->f("start")))."\n";
+    	    echo '<br><b>'.$t->translate('Duration').':</b> '
+              .$db->f("duration")." weeks\n";
     	    $bx->box_body_end();
     	    $bx->box_end();
         }
     } else {
-	print "There have not been posted any developement proposals to this project.\n";
+	print "There have not been posted any developement proposals "
+          ."to this project.\n";
     }
 }
 
@@ -173,7 +181,7 @@ function developing_form($proid, $content_id)
     global $cost, $license, $cooperation, $valid_day, $valid_month, $valid_year, $start_day, $start_month, $start_year, $duration;
 
     $bx->box_begin();
-    $bx->box_title($t->translate('Developement proposal'));
+    $bx->box_title($t->translate('Development proposal'));
     $bx->box_body_begin();
     print html_form_action('PHP_SELF',array('proid' => $proid),'POST');
 
@@ -317,21 +325,27 @@ function developing_modify_form($proid, $content_id)
  *
  * @access  public
  */
-function developing_insert($proid, $user,$content_id, $cost, $license, $cooperation, $valid_day, $valid_month, $valid_year, $start_day, $start_month, $start_year, $duration)
+function developing_insert($proid, $user,$content_id, $cost, $license, 
+                           $cooperation, $valid_day, $valid_month, 
+                           $valid_year, $start_day, $start_month, 
+                           $start_year, $duration)
 {
     global $db;
 
     $valid = date_to_timestamp($valid_day, $valid_month, $valid_year);
     $start = date_to_timestamp($start_day, $start_month, $start_year);
 
-    $db->query("INSERT developing SET proid='$proid',developer='$user',content_id='$content_id', cost='$cost', license='$license', cooperation='$cooperation', valid='$valid', start='$start', duration='$duration',status='P'");
+    $db->query("INSERT developing SET proid='$proid',developer='$user',"
+               ."content_id='$content_id', cost='$cost', license='$license', "
+               ."cooperation='$cooperation', valid='$valid', start='$start', "
+               ."duration='$duration',status='P'");
 
-    // WISH: config.inc should not be required another time,
-    // as it is done at the beginning of every page.
-    include('config.inc');
-    include('monitorlib.inc');
-    monitor_mail($proid, 'developing', "New Developing proposal for project $proid", 'Event has happened');
-
+    if ( !function_exists('monitor_mail' ) ) {
+        include('monitorlib.inc');
+    }
+    monitor_mail($proid, 'developing', 
+                  "New Developing proposal for project $proid", 
+                   'Event has happened');
     show_developings($proid, $content_id);
 }
 
@@ -394,7 +408,7 @@ function show_selected_developing($proid)
         echo '<br><b>License:</b> '.$db->f("license")."\n";
         echo '<br><b>Cooperation:</b> '.$db->f("cooperation")."\n";
         echo '<br><b>Status:</b> '.show_status($db->f("status"))."\n";
-        echo '<br><b>Validity</b> '.timestr_middle(mktimestamp($db->f("valid")))."\n";
+        echo '<br><b>Validity:</b> '.timestr_middle(mktimestamp($db->f("valid")))."\n";
         echo '<br><b>Start possible:</b> '.timestr_middle(mktimestamp($db->f("start")))."\n";
         echo '<br><b>Duration:</b> '.$db->f("duration")." weeks\n";
         $bx->box_body_end();

@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConfigurelib.php,v 1.7 2002/06/20 12:07:16 riessen Exp $
+// $Id: TestConfigurelib.php,v 1.8 2002/06/26 09:57:26 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -361,6 +361,77 @@ extends UnitTest
         $this->_check_db( $db_config );
     }
 
+    function testConfigure_show() {
+        global $t, $bx, $db, $sess;
+        
+        $qs=array( 0 => "SELECT * FROM configure WHERE proid='%s'" );
+        $args=$this->_generate_records( array( 'proid' ), 3 );
+        $dat=$this->_generate_records( array( 'quorum', 'consultants',
+                                              'other_tech_contents','sponsor',
+                                              'other_developing_proposals',
+                                              'developer'), 2 );
+        $db_config = new mock_db_configure( 3 );
+        // test one
+        $db_config->add_query( sprintf( $qs[0], $args[0]['proid']), 0 );
+        $db_config->add_num_row( 0, 0 );
+        // test two
+        $db_config->add_query( sprintf( $qs[0], $args[1]['proid']), 1 );
+        $db_config->add_num_row( 1, 1 );
+        $db_config->add_record( $dat[0], 1 );
+        $db_config->add_record( false, 1 );
+        // test three
+        $db_config->add_query( sprintf( $qs[0], $args[2]['proid']), 2 );
+        $db_config->add_num_row( 1, 2 );
+        $dat[1]['quorum'] = '';
+        $dat[1]['sponsor'] = '';
+        $dat[1]['developer'] = '';
+        $db_config->add_record( $dat[1], 2 );
+        $db_config->add_record( false, 2 );
+
+        // test one: no results
+        $str = "<p>".$t->translate("The project parameters have not been "
+                                   ."configured by the project owner(s)")
+             .".<p>\n";
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $this->capture_call( 'configure_show', strlen( $str ), $args[0] );
+        $this->assertEquals( $str, $this->get_text(), "test 1" );
+
+        // test two: one record with all values set
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $this->capture_call( 'configure_show', 944, $args[1] );
+        $this->_checkFor_configure_show( $dat[0] );
+
+        // test three: one record with unset values
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $this->capture_call( 'configure_show', 975, $args[2] );
+        $this->_checkFor_configure_show( $dat[1] );
+
+        $this->_check_db( $db_config );
+    }
+
+    function _checkFor_configure_show( &$dat ) {
+        global $t;
+        $this->_checkFor_a_box( 'Project Configuration' );
+        $titles = array('Developer' => ($dat['developer'] != '' ? 
+                     $dat['developer'] : $t->translate( 'No main developer' )),
+                        'Consultants' =>   $t->translate( $dat['consultants']),
+                        'Other Technical Contents'=>
+                                   $t->translate( $dat['other_tech_contents']),
+                        'Other Developing Proposals'=>
+                            $t->translate( $dat['other_developing_proposals']),
+                        'First Sponsor'=> ($dat['sponsor'] != '' ? 
+                              $dat['sponsor'] : $t->translate( 'No sponsors')),
+                        'Quorum'=> ($dat['quorum'] != '' ? $dat['quorum']."%" :
+                          $t->translate("Decision to be taken by Sponsors")));
+        while ( list( $title, $val ) = each( $titles ) ) {
+            $str = "<b>" . $t->translate($title) . "</b>: " . $val . "\n";
+            $this->_testFor_pattern( "[<]..?[>]".$this->_to_regexp( $str ) );
+        }
+    }
+    
     function testConfigure_insert() {
         $this->_test_to_be_completed();
     }
@@ -369,10 +440,6 @@ extends UnitTest
         $this->_test_to_be_completed();
     }
 
-    function testConfigure_show() {
-        $this->_test_to_be_completed();
-    }
-    
 }
 
 define_test_suite( __FILE__ );

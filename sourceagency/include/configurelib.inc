@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: configurelib.inc,v 1.7 2002/06/20 12:06:01 riessen Exp $
+# $Id: configurelib.inc,v 1.8 2002/06/26 09:57:26 riessen Exp $
 #
 ######################################################################
 
@@ -237,13 +237,15 @@ function configure_modify($proid,$user) {
             $query = "developer='$user'";
         }
     } else {
-      $query = ( is_sponsor() ? "quorum='$quorum'" : "developer='$user'" );
+        $query = ( is_sponsor() ? "quorum='$quorum'" : "developer='$user'" );
     }
 
     $db->query("UPDATE configure SET $query WHERE proid='$proid'");
     configure_show($proid);
     
-    include("monitorlib.inc");
+    if ( !function_exists( 'monitor_mail' ) ) {
+        include("monitorlib.inc");
+    }
     include("config.inc");
     monitor_mail($proid,"configure", 
                  $t->translate('Configuration modified for project')." $proid",

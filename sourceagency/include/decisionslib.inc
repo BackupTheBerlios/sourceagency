@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisionslib.inc,v 1.13 2002/06/11 12:05:11 grex Exp $
+# $Id: decisionslib.inc,v 1.14 2002/06/26 09:57:26 riessen Exp $
 #
 ######################################################################
 
@@ -667,8 +667,13 @@ function put_decision_into_database($proid,$step,$your_vote,$what,$table)
     global $db,$auth;
 
     $db->query("SELECT DISTINCT($what) FROM $table");
+    // TODO: should be a if????
     while ($db->next_record()) {
 	if (!strcmp($your_vote,$db->f($what))) { 
+            // FIXME: this changes the query from the one that entered
+            // FIXME: this while statement, that means that the next_record
+            // FIXME: of the while-condition does not refer to the original
+            // FIXME: query.
 	    $db->query("SELECT * FROM decisions WHERE proid='$proid' AND step = '$step' AND decision_user='".$auth->auth["uname"]."'");
 	    if ($db->num_rows() == 0) {
                 $db->query("INSERT decisions SET proid='$proid', step ='$step', decision_user='".$auth->auth["uname"]."', decision='$your_vote'"); 
@@ -684,9 +689,14 @@ function put_decision_into_database($proid,$step,$your_vote,$what,$table)
 	}
     }
 
-    include("monitorlib.inc");
+    if ( !function_exists( 'monitor_mail' ) ) {
+        include("monitorlib.inc");
+    }
     include("config.inc");
-    monitor_mail($proid,"decisions", "Decision", "Decision made in project $proid\n Sponsor ".$auth->auth["uname"]." has made a decision (step $step)\n\n You can see it at: $sys_urldecisions.php3?proid=$proid");
+    monitor_mail($proid,"decision", "Decision", 
+                 "Decision made in project $proid\n Sponsor "
+                 .$auth->auth["uname"]." has made a decision (step $step)\n\n"
+                 ." You can see it at: $sys_url/decisions.php3?proid=$proid");
 }
 
 function put_into_next_step($proid,$project_status,$what,$table)
@@ -762,133 +772,196 @@ function are_you_sure_message($proid) {
 }
 
 function decision_accepted_milestones($proid,$devid) {
- 	global $auth;
-
-	$db_local = new DB_SourceAgency;
-	$db_local2 = new DB_SourceAgency;
-
-	$total = 0;
-	$db_local->query("SELECT * FROM sponsoring WHERE proid='$proid'");
-	$number_of_sponsors = $db_local->num_rows();
-
-	$db_local->query("SELECT number,payment FROM milestones WHERE proid='$proid' AND devid='$devid'");
-	while ($db_local->next_record()) {
-		$db_local2->query("SELECT COUNT(*) FROM decisions_milestones WHERE proid='$proid' AND devid='$devid' AND number='".$db_local->f("number")."' AND decision='Yes' AND decision_user='".$auth->auth["uname"]."'");
-		$db_local2->next_record();
-		$total +=  $db_local2->f("COUNT(*)") * $db_local->f("payment");
-	}
-
-	if ($total != 0) return (round(($total*100))/100);
-	else return 0;
+    global $auth;
+    
+    $db_local = new DB_SourceAgency;
+    $db_local2 = new DB_SourceAgency;
+    
+    $total = 0;
+    
+    $db_local->query("SELECT number,payment FROM milestones WHERE "
+                     ."proid='$proid' AND devid='$devid'");
+    while ($db_local->next_record()) {
+        $db_local2->query("SELECT COUNT(*) FROM decisions_milestones "
+                          ."WHERE proid='$proid' AND devid='$devid' "
+                          ."AND number='".$db_local->f("number")
+                          ."' AND decision='Yes' AND decision_user='"
+                          .$auth->auth["uname"]."'");
+        $db_local2->next_record();
+        $total +=  $db_local2->f("COUNT(*)") * $db_local->f("payment");
+    }
+    
+    return ( $total == 0 ? 0 : (round(($total*100))/100) );
 }
 
-function decision_milestone_insert($proid,$devid,$decision_user,$number,$decision) {
-
-	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT * FROM decisions_milestones WHERE proid='$proid' AND devid='$devid' AND decision_user='$decision_user' AND number='$number'");
-	if ($db_local->affected_rows() == 0) {
-		$db_local->query("INSERT decisions_milestones SET proid='$proid', devid='$devid', decision_user='$decision_user', number='$number', decision='$decision'");
-	} else {
-		$db_local->query("UPDATE decisions_milestones SET decision='$decision' WHERE proid='$proid' AND devid='$devid' AND decision_user='$decision_user' AND number='$number'");
-	}
-
-/*
-  	include("monitorlib.inc");
-	include("config.inc");
-	monitor_mail($proid,"decision_milestone", "Decision met on a Milestone", "Decision met on a Milestone in project $proid\n By sponsor $decision_user\n\n You can see it at: $sys_urldecisions.php3?proid=$proid");
-*/
+function decision_milestone_insert($proid,$devid,$decision_user,
+                                                      $number,$decision) {
+    
+    $db_local = new DB_SourceAgency;
+    $db_local->query("SELECT * FROM decisions_milestones WHERE proid='$proid'"
+                     ." AND devid='$devid' AND decision_user='$decision_user'"
+                     ." AND number='$number'");
+    // FIXME: changed affected_rows call to num_rows call
+    if ($db_local->num_rows() == 0) {
+        $db_local->query("INSERT decisions_milestones SET proid='$proid', "
+                         ."devid='$devid', decision_user='$decision_user', "
+                         ."number='$number', decision='$decision'");
+    } else {
+        $db_local->query("UPDATE decisions_milestones SET decision="
+                         ."'$decision' WHERE proid='$proid' AND devid="
+                         ."'$devid' AND decision_user='$decision_user' AND "
+                         ."number='$number'");
+    }
 }
 
-function put_decision_step5_into_database($proid,$your_vote,$milestone_number,$count) {
-	global $db,$auth;
+function put_decision_step5_into_database($proid,$your_vote,
+                                           $milestone_number,$count) {
+    global $db,$auth;
 
-	$db->query("SELECT * FROM decisions_step5 WHERE proid='$proid' AND decision_user='".$auth->auth["uname"]."' AND number='$milestone_number' AND count='$count'");
-
-	if ($db->num_rows() == 0) $db->query("INSERT decisions_step5 SET proid='$proid', decision_user='".$auth->auth["uname"]."', number='$milestone_number', count='$count', decision='$your_vote'"); 
-	else {
-		$db->next_record();
-		if(!strcmp($your_vote,$db->f("decision"))) print "You have already voted that\n";
-		else {
-			$db->query("UPDATE decisions_step5 SET  decision='$your_vote' WHERE proid='$proid' AND decision_user='".$auth->auth["uname"]."' AND number='$milestone_number' AND count='$count'");
-			print "Vote changed. Old: <b>".$db->f("decision")."</b> New: <b>".$your_vote."</b>";
-		}
-	}
-
-  	include("monitorlib.inc");
-	include("config.inc");
-	monitor_mail($proid,"decision_step_5", "Decision met in step 5 (follow-up) on project $proid", "Decision met by $decision_user\n\n You can see it at: $sys_urldecisions.php3?proid=$proid");
+    $db->query("SELECT * FROM decisions_step5 WHERE proid='$proid' AND "
+               ."decision_user='".$auth->auth["uname"]."' AND number="
+               ."'$milestone_number' AND count='$count'");
+    
+    if ($db->num_rows() == 0) {
+        $db->query("INSERT decisions_step5 SET proid='$proid', decision_user"
+                   ."='".$auth->auth["uname"]."', number='$milestone_number',"
+                   ." count='$count', decision='$your_vote'"); 
+    } else {
+        $db->next_record();
+        if(!strcmp($your_vote,$db->f("decision"))) print "You have already voted that\n";
+        else {
+            $db->query("UPDATE decisions_step5 SET  decision='$your_vote' WHERE proid='$proid' AND decision_user='".$auth->auth["uname"]."' AND number='$milestone_number' AND count='$count'");
+            print "Vote changed. Old: <b>".$db->f("decision")."</b> New: <b>".$your_vote."</b>";
+        }
+    }
+    
+    if ( !function_exists( 'monitor_mail' ) ) {
+        include("monitorlib.inc");
+    }
+    include("config.inc");
+    monitor_mail($proid,"decision_step_5","Decision met in step 5 (follow-up)"
+                 ." on project $proid", "Decision met by $auth->auth['uname']"
+                 ."\n\n You can see it at: $sys_url/decisions.php3?proid="
+                 ."$proid");
 }
 
 function decisions_step5_votes($proid,$milestone_number,$count,$decision) {
 
   $db_local = new DB_SourceAgency;
-  $db_local->query("SELECT SUM(budget) AS sum_step5 FROM sponsoring,decisions_step5 WHERE decisions_step5.proid='$proid' AND sponsoring.proid='$proid' AND sponsoring.sponsor=decisions_step5.decision_user AND decisions_step5.number='$milestone_number' AND count='$count' AND decision='$decision' GROUP BY decision");
-  if ($db_local->num_rows() == 0) return 0;
+  $db_local->query("SELECT SUM(budget) AS sum_step5 FROM sponsoring,"
+                   ."decisions_step5 WHERE decisions_step5.proid='$proid' "
+                   ."AND sponsoring.proid='$proid' AND sponsoring.sponsor="
+                   ."decisions_step5.decision_user AND decisions_step5."
+                   ."number='$milestone_number' AND count='$count' AND "
+                   ."decision='$decision' GROUP BY decision");
+  if ($db_local->num_rows() == 0) {
+      return 0;
+  }
   $db_local->next_record();
+  // FIXME: why is there a times 100 in the following equation ?
   return 100*$db_local->f("sum_step5")/project_budget($proid);
 }
 
 function are_you_sure_message_step5($proid) {
-  global $bx, $t;
+    global $bx, $t;
 
-	$bx->box_begin();
- 	$bx->box_title("<b>".$t->translate("Warning! The decision has been made")."</b>");
-	$bx->box_body_begin();
-	$bx->box_columns_begin(2);
-
-	htmlp_form_action("PHP_SELF", array("proid" => $proid), "POST");
-	$bx->box_column("left","70%","",$t->translate("Are you sure you want to decide yet?<br>Press <b>Yes</b> to put into the next step and <b>No</b> to stay in the current one."));
-	$bx->box_column("right","30%","",html_form_submit("Yes","Yes").html_form_submit("No","No"));
-	htmlp_form_end();
-	$bx->box_columns_end();
-	$bx->box_body_end();
-	$bx->box_end();
+    $bx->box_begin();
+    $bx->box_title("<b>".$t->translate("Warning! The decision has been made")
+                   ."</b>");
+    $bx->box_body_begin();
+    $bx->box_columns_begin(2);
+    
+    htmlp_form_action("PHP_SELF", array("proid" => $proid), "POST");
+    $bx->box_column("left","70%","",
+                    $t->translate("Are you sure you want to decide yet?"
+                                  ."<br>Press <b>Yes</b> to put into the "
+                                  ."next step and <b>No</b> to stay in the "
+                                  ."current one."));
+    $bx->box_column("right","30%","",
+                    html_form_submit("Yes","Yes").html_form_submit("No","No"));
+    htmlp_form_end();
+    $bx->box_columns_end();
+    $bx->box_body_end();
+    $bx->box_end();
 }
 
 function decisions_step5_sponsors($proid,$milestone_number,$count) {
 
-  $db_quota = new DB_SourceAgency;
+    $db_quota = new DB_SourceAgency;
 
-		// accepted
+    // TODO: decision_value was not defined in this function, so took
+    // TODO: the following to set the value of decision_value
+    $db_quota->query("SELECT quorum FROM configure WHERE proid='$proid'");/** query 1 **/
+    $db_quota->next_record();
+    $decision_value = $db_quota->f('quorum');
 
-  $db_quota->query("SELECT SUM(budget) FROM sponsoring,decisions_step5 WHERE sponsor=decision_user AND decision='accept' AND count='$count' AND sponsoring.proid='$proid' AND decisions_step5.proid='$proid' AND decisions_step5.number='$milestone_number'");
-  $db_quota->next_record();
-  if ($db_quota->f("SUM(budget)") > $decision_value) { 
-	$db_quota->query("UPDATE follow_up SET iteration='5' WHERE proid='$proid' AND milestone_number='$milestone_number'");
+    // accepted
+    $db_quota->query("SELECT SUM(budget) FROM sponsoring,decisions_step5 "
+                     ."WHERE sponsor=decision_user AND decision='accept' "
+                     ."AND count='$count' AND sponsoring.proid='$proid' "
+                     ."AND decisions_step5.proid='$proid' AND "
+                     ."decisions_step5.number='$milestone_number'");/** query 2 **/
+    $db_quota->next_record();
+    // FIXME: decision_value is not defined in this function!!!!
+    if ($db_quota->f("SUM(budget)") > $decision_value) { 
+	$db_quota->query("UPDATE follow_up SET iteration='5' WHERE "
+                         ."proid='$proid' AND milestone_number="
+                         ."'$milestone_number'"); /** query 3 **/
 
-			// Looking for the last milestone
-        $db_quota->query("SELECT MAX(number) FROM milestones WHERE proid='$proid'");
+        // Looking for the last milestone
+        $db_quota->query("SELECT MAX(number) FROM milestones WHERE "
+                         ."proid='$proid'"); /** query 4 **/
         $db_quota->next_record();
-			// If it is not the last milestone, we start the next iteration
+        // If it is not the last milestone, we start the next iteration
         if ($db_quota->f("MAX(number)") != $milestone_number) {
 	    $milestone_number++;
-	    $db_quota->query("INSERT follow_up SET iteration='0',proid='$proid',milestone_number='$milestone_number',count='1'");
-			// ... but if it was the last milestone... then we are finished with step 5
+	    $db_quota->query("INSERT follow_up SET iteration='0',"
+                             ."proid='$proid',milestone_number="
+                             ."'$milestone_number',count='1'"); /** query 5 **/
+            // ... but if it was the last milestone... then we are 
+            // finished with step 5
         } else {
-	    $db_quota->query("UPDATE description SET status='6' WHERE proid='$proid'");
+	    $db_quota->query("UPDATE description SET status='6' WHERE "
+                             ."proid='$proid'"); /** query 6 **/
         }
-  } else {
-
-		// minor problems
-
-	 $db_quota->query("SELECT SUM(budget) FROM sponsoring,decisions_step5 WHERE sponsor=decision_user AND decision='minor' AND count='$count' AND sponsoring.proid='$proid' AND sponsoring.proid='$proid' AND decisions_step5.number='$milestone_number'");
+    } else {
+        
+        // minor problems
+        $db_quota->query("SELECT SUM(budget) FROM sponsoring,decisions_step5 "
+                         ."WHERE sponsor=decision_user AND decision='minor' "
+                         ."AND count='$count' AND sponsoring.proid='$proid' "
+                         ."AND sponsoring.proid='$proid' AND "
+                         ."decisions_step5.number='$milestone_number'"); /** query 7 **/
   	$db_quota->next_record();
+        // FIXME: decision_value is not defined in this function!!!!
 	if ($db_quota->f("SUM(budget)") > $decision_value) { 
-		$db_quota->query("SELECT * FROM follow_up WHERE proid='$proid' AND milestone_number='$milestone_number'");
-		$db_quota->next_record();
-		$count = $db_quota->f("count") + 1;
-		$db_quota->query("UPDATE follow_up SET iteration='0',count='$count',location='' WHERE proid='$proid' AND milestone_number='$milestone_number'");
+            $db_quota->query("SELECT * FROM follow_up WHERE proid='$proid' "
+                             ."AND milestone_number='$milestone_number'"); /** query 8 **/
+            $db_quota->next_record();
+            $count = $db_quota->f("count") + 1;
+            // FIXME: is the location is reset to '' in the following update,
+            // FIXME: should that be the case???
+            $db_quota->query("UPDATE follow_up SET iteration='0',count="
+                             ."'$count',location='' WHERE proid='$proid' "
+                             ."AND milestone_number='$milestone_number'"); /** query 9 **/
   	} else {
-
-		// severe problems
-
-		 $db_quota->query("SELECT SUM(budget) FROM sponsoring,decisions_step5 WHERE sponsor=decision_user AND decision='severe'  AND count='$count' AND sponsoring.proid='$proid' AND sponsoring.proid='$proid' AND decisions_step5.number='$milestone_number'");
-  		$db_quota->next_record();
-		if ($db_quota->f("SUM(budget)") > $decision_value) { 
-			$db_quota->query("UPDATE follow_up SET iteration='2' WHERE proid='$proid' AND milestone_number='$milestone_number'");
-		}
+            
+            // severe problems
+            $db_quota->query("SELECT SUM(budget) FROM sponsoring,"
+                             ."decisions_step5 WHERE sponsor=decision_user "
+                             ."AND decision='severe'  AND count='$count' AND "
+                             ."sponsoring.proid='$proid' AND sponsoring.proid"
+                             ."='$proid' AND decisions_step5.number="
+                             ."'$milestone_number'"); /** query 10 **/
+            $db_quota->next_record();
+            // FIXME: decision_value is not defined in this function!!!!
+            if ($db_quota->f("SUM(budget)") > $decision_value) { 
+                $db_quota->query("UPDATE follow_up SET iteration='2' "
+                                 ."WHERE proid='$proid' AND "
+                                 ."milestone_number='$milestone_number'");/** query 11 **/
+            }
 	}
-  }
+    }
 }
 
 function decisions_milestone_into_db($proid,$devid,$number,$status) {
@@ -911,70 +984,89 @@ function decisions_milestone_into_db($proid,$devid,$number,$status) {
 
 function decision_insert_main_developer($proid) {
 
-	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT developer FROM configure WHERE proid='$proid'");
-	$db_local->next_record();
-	if ($db_local->f("developer") != "") return 0;
-	else {
-		$db_local->query("SELECT developer FROM developing WHERE proid='$proid' AND status='A'");
-		$db_local->next_record();
-		$developer = $db_local->f("developer");
-
-		$db_local->query("UPDATE configure SET developer='$developer' WHERE proid='$proid'");
-	}
+    $db_local = new DB_SourceAgency;
+    $db_local->query("SELECT developer FROM configure WHERE proid='$proid'");
+    $db_local->next_record();
+    if ($db_local->f("developer") != "") {
+        return 0;
+    } else {
+        $db_local->query("SELECT developer FROM developing WHERE "
+                         ."proid='$proid' AND status='A'");
+        $db_local->next_record();
+        $developer = $db_local->f("developer");
+        $db_local->query("UPDATE configure SET developer='$developer' "
+                         ."WHERE proid='$proid'");
+    }
 }
 
 function decision_developer_voted($proid,$referee) {
 
-	$db_local = new DB_SourceAgency;
-
-	$db_local->query("SELECT developer FROM developing WHERE proid='$proid' AND status='A'");		
-	$db_local->next_record();
-	$developer = $db_local->f("developer");
-
-	$db_local->query("SELECT * FROM decisions WHERE proid='$proid' AND decision='$referee' AND decision_user='$developer'");
-	if ($db_local->num_rows() == 1) return 1;
-	else return 0;
+    $db_local = new DB_SourceAgency;
+    
+    $db_local->query("SELECT developer FROM developing WHERE proid='$proid' "
+                     ."AND status='A'");		
+    $db_local->next_record();
+    $developer = $db_local->f("developer");
+    
+    $db_local->query("SELECT * FROM decisions WHERE proid='$proid' AND "
+                     ."decision='$referee' AND decision_user='$developer'");
+    if ($db_local->num_rows() == 1) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 function decisions_decision_met($proid) {
 
-	$first=0;
-	$second=0;
-
-	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT status FROM description WHERE proid='$proid'");
-	$db_local->next_record();
-	$first = $db_local->f("status");
-
-	$db_local->query("SELECT step FROM decisions WHERE proid='$proid'");
-	while ($db_local->next_record()) {
-		if ($second < $db_local->f("step")) $second =$db_local->f("step");
-	}
-
-	if ($first == 1) {
-		$db_local->query("SELECT consultants FROM configure WHERE proid='$proid'");
-		$db_local->next_record();
-		if ($db_local->f("consultants") == No) $second =1;
-	}
-
-	if ($first == $second) return 1;
-	else return 0;
+    $first=0;
+    $second=0;
+    
+    $db_local = new DB_SourceAgency;
+    $db_local->query("SELECT status FROM description WHERE proid='$proid'");
+    $db_local->next_record();
+    $first = $db_local->f("status");
+    
+    $db_local->query("SELECT step FROM decisions WHERE proid='$proid'");
+    while ($db_local->next_record()) {
+        if ($second < $db_local->f("step")) {
+            $second =$db_local->f("step");
+        }
+    }
+    
+    if ($first == 1) {
+        $db_local->query("SELECT consultants FROM configure WHERE "
+                         ."proid='$proid'");
+        $db_local->next_record();
+        if ($db_local->f("consultants") == 'No') {
+            $second = 1;
+        }
+    }
+    
+    if ($first == $second) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 function decisions_decision_met_on_step5 ($proid, $milestone_number, $count) {
+    // FIXME: the count argument is not used in this function
     global $db;
 
-    $db->query("SELECT iteration FROM follow_up WHERE proid='$proid' AND milestone_number='$milestone_number'");
+    $db->query("SELECT iteration FROM follow_up WHERE proid='$proid' "
+               ."AND milestone_number='$milestone_number'");
     $db->next_record();
 
     if ($db->f("iteration") == "5") {
         return "The milestone has been <b>accepted</b>";
     } elseif ($db->f("iteration") == "2") {
-        return "<b>Severe</b> problems have been found.<p>The referee has been switched to decide.";
+        return ("<b>Severe</b> problems have been found.<p>The referee has "
+                ."been switched to decide.");
     } else {
 	// Clarification: for this to happen $db->f("iteration") should be 0
-        return "<b>Minor</b> changes are required.<p>Developers have some days to enhance their program propperly.";
+        return ("<b>Minor</b> changes are required.<p>Developers have some "
+                ."days to enhance their program propperly.");
     }
 }
 

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: cooperationlib.inc,v 1.5 2002/06/06 08:13:31 riessen Exp $
+# $Id: cooperationlib.inc,v 1.6 2002/06/26 09:57:26 riessen Exp $
 #
 ######################################################################
 
@@ -132,29 +132,35 @@ function cooperation_show($proid, $devid)
 {
     global $t, $bx, $db, $sess;
 
-    $query = "SELECT * FROM cooperation,auth_user WHERE devid='$devid' AND developer=username ORDER BY creation DESC";
+    $query = "SELECT * FROM cooperation,auth_user WHERE devid='$devid' "
+         ."AND developer=username ORDER BY creation DESC";
     $db->query($query);
-    while($db->next_record()) {
-	$bx->box_begin();
-	$bx->box_title($t->translate('Cooperation'));
-	$bx->box_body_begin();
-   	$timestamp = mktimestamp($db->f('creation'));
-        echo '<b>';
-	lib_pnick($db->f('developer'));
-        echo ' - '.timestr($timestamp)."</b>\n";
-    	echo '<p><b>Cost</b>: '.$db->f('cost')." euro\n";
-    	echo '<br><b>Status</b>: '.show_status($db->f('status'))."\n";
-    	$bx->box_body_end();
-    	$bx->box_end();
-
-	lib_comment_it($proid, 'Cooperation', $db->f('creation'), 0,
-                       '', 'Comment This Cooperation!');
-
-	lib_show_comments_on_it($proid, 'Cooperation', $db->f('creation'), 0);
-    }
 
     if ($db->num_rows() == 0) {
-	print "<p>There have not been posted any cooperation proposals by any developer.<p>\n";
+        print "<p>There have not been posted any cooperation proposals "
+            ."by any developer.<p>\n";
+    } else {
+        while($db->next_record()) {
+            $bx->box_begin();
+            $bx->box_title($t->translate('Cooperation'));
+            $bx->box_body_begin();
+            $timestamp = mktimestamp($db->f('creation'));
+            echo '<b>';
+            lib_pnick($db->f('developer'));
+            echo ' - '.timestr($timestamp)."</b>\n";
+            echo '<p><b>'.$t->translate('Cost').'</b>: '.$db->f('cost')
+                ." euro\n";
+            echo '<br><b>'.$t->translate('Status').'</b>: '
+                .show_status($db->f('status'))."\n";
+            $bx->box_body_end();
+            $bx->box_end();
+            
+            lib_comment_it($proid, 'Cooperation', $db->f('creation'), 0,
+                           '', $t->translate('Comment This Cooperation!'));
+            
+            lib_show_comments_on_it($proid, 'Cooperation', 
+                                            $db->f('creation'), 0);
+        }
     }
 }
 
@@ -173,8 +179,10 @@ function cooperation_insert($devid, $developer, $cost)
 {
     global $db;
 
-    $db->query("INSERT cooperation SET devid='$devid',developer='$developer',cost='$cost',status='P'");
-    cooperation_show($proid, $devid);
+    $db->query("INSERT cooperation SET devid='$devid',developer='$developer',"
+               ."cost='$cost',status='P'");
+    //FIXME: proid is not defined in this method ....
+    cooperation_show(/** $proid **/ -1, $devid);
 }
 
 /**
@@ -193,7 +201,9 @@ function cooperation_modify($devid, $developer, $cost, $creation)
 {
     global $db;
 
-    $db->query("UPDATE cooperation SET developer='$developer', cost='$cost' WHERE devid='$devid' AND creation='$creation'");
-    cooperation_show($proid, $devid);
+    $db->query("UPDATE cooperation SET developer='$developer', cost='$cost' "
+               ."WHERE devid='$devid' AND creation='$creation'");
+    // FIXME: proid is not defined in this function ...
+    cooperation_show(/** $proid **/ -1, $devid);
 }
 ?>
