@@ -22,8 +22,8 @@ CREATE TABLE active_sessions (
 #
 
 INSERT INTO active_sessions VALUES ('ea29c47f067c5d7c5f819d2c7cd1fc2f','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0dlcm1hbic7ICRHTE9CQUxTWydhdXRoJ10gPSBuZXcgU291cmNlQWdlbmN5X0F1dGg7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGggPSBhcnJheSgpOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1aWQnXSA9ICc0OGRiN2FjMDJlOTc0NjQ4ZTM0NTRjMDIwMjFiNjMyYSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICdzcG9uc29yJzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsnZXhwJ10gPSAnMTAzMTI1NzEwNic7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3JlZnJlc2gnXSA9ICcxMDMxMjQ3OTY4JzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsndW5hbWUnXSA9ICduaWxpeCc7IA==','20020905194827');
-INSERT INTO active_sessions VALUES ('72fe751b44fb0a7c1812c7b31dfcea07','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20020905111818');
 INSERT INTO active_sessions VALUES ('b3626a6807504e138e9977068453128d','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnR2VybWFuJzsg','20020906003407');
+INSERT INTO active_sessions VALUES ('035788176cc1d0adf929deba6fbf3930','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0dlcm1hbic7ICRHTE9CQUxTWydhdXRoJ10gPSBuZXcgU291cmNlQWdlbmN5X0F1dGg7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGggPSBhcnJheSgpOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1aWQnXSA9ICczNWIzZGI0ODk0NGRiYTdhNGUyNzI5MjZmZDBkMjgzOSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICdkZXZlbCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ2V4cCddID0gJzEwMzEzMzMzMTcnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydyZWZyZXNoJ10gPSAnMTAzMTMyMTM4NCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3VuYW1lJ10gPSAnaGVsaXgnOyA=','20020906165838');
 
 #
 # Table structure for table 'auth_user'
@@ -46,7 +46,7 @@ CREATE TABLE auth_user (
 # Dumping data for table 'auth_user'
 #
 
-INSERT INTO auth_user VALUES ('c8a174e0bdda2011ff798b20f219adc5','admin','admin','admin','grex@scouts-es.org',20020510140142,20010419103000,'editor,admin');
+INSERT INTO auth_user VALUES ('c8a174e0bdda2011ff798b20f219adc5','admin','admin%sa','admin','grex@scouts-es.org',20020906123927,20010419103000,'editor,admin');
 INSERT INTO auth_user VALUES ('42b3cdc7658ed6b3e07b9441c7679b28','devel','devel','devel','devel@scouts-es.org',20010426182520,20010426182520,'devel');
 INSERT INTO auth_user VALUES ('740156f449ebc5950546517021fda49d','sponsor','sponsor','sponsor','sponsor@scouts-es.org',20010426182533,20010426182533,'sponsor');
 INSERT INTO auth_user VALUES ('f4c756dfc8e55a131d2a7d4be9e3e11b','riessen','fu23bar','Gerrit Riessen','gerrit.riessen@web.de',20020326143032,20011004150815,'devel');
@@ -101,6 +101,8 @@ INSERT INTO comments VALUES (8,'admin','General','0',2,0,'klingt sehr ineressant
 INSERT INTO comments VALUES (8,'admin','News','20011120171701',1,0,'Re:erste Erfolge erziehlt','ich bin der Meinung das heisst erzielt.',20011120172226);
 INSERT INTO comments VALUES (7,'riessen','General','0',1,0,'sasd','sadasd',20020424115101);
 INSERT INTO comments VALUES (7,'riessen','News','20020424115123',1,0,'Re:ddddaa','zxZX',20020424115129);
+INSERT INTO comments VALUES (5,'nilix','News','20020906144945',1,0,'Re:About the project status','fine',20020906145406);
+INSERT INTO comments VALUES (5,'nilix','News','20020906144945',2,0,'Re:About the project status','fb rzkbtj',20020906145638);
 
 #
 # Table structure for table 'configure'
@@ -123,7 +125,7 @@ CREATE TABLE configure (
 INSERT INTO configure VALUES (1,90,'No','No','No','sponsor','devel');
 INSERT INTO configure VALUES (2,75,'No','Yes','Yes','sponsor','');
 INSERT INTO configure VALUES (4,70,'No','No','No','sponsor','devel');
-INSERT INTO configure VALUES (3,60,'No','No','No','nilix','helix');
+INSERT INTO configure VALUES (3,65,'No','No','No','nilix','helix');
 INSERT INTO configure VALUES (5,60,'Yes','Yes','Yes','nilix','helix');
 INSERT INTO configure VALUES (6,80,'No','No','Yes','sponsor','devel');
 INSERT INTO configure VALUES (7,80,'No','Yes','Yes','sponsor','riessen');
@@ -142,6 +144,7 @@ INSERT INTO configure VALUES (23,NULL,'No','Yes','Yes',NULL,'riessen');
 INSERT INTO configure VALUES (24,55,'No','Yes','Yes','sponsor','admin');
 INSERT INTO configure VALUES (25,55,'Yes','Yes','Yes','sponsor','');
 INSERT INTO configure VALUES (26,NULL,'No','Yes','Yes',NULL,'riessen');
+INSERT INTO configure VALUES (27,NULL,'No','Yes','',NULL,'admin');
 
 #
 # Table structure for table 'consultants'
@@ -218,6 +221,7 @@ INSERT INTO counter VALUES (23,0,0);
 INSERT INTO counter VALUES (24,0,0);
 INSERT INTO counter VALUES (25,0,0);
 INSERT INTO counter VALUES (26,0,0);
+INSERT INTO counter VALUES (27,0,0);
 
 #
 # Table structure for table 'counter_check'
@@ -358,6 +362,7 @@ INSERT INTO description VALUES (23,'asdasdas','Adaption','asdasdasd','riessen','
 INSERT INTO description VALUES (24,'Test of  the view attribute ...','Adaption','adsasd','sponsor','< 0.25 Man Month',3,20020327110123);
 INSERT INTO description VALUES (25,'and again a test','Adaption','adsad','sponsor','< 0.25 Man Month',-1,20020327110121);
 INSERT INTO description VALUES (26,'asdasd','Adaption','sadasd','riessen','< 0.25 Man Month',-1,20020424124758);
+INSERT INTO description VALUES (27,'DevCounter','Expansion','DevCounter befragt Open-Source-Entwickler nach ihren Kentnissen und Erfahrungen sowie der Mitarbeit an Open-Source-Projekten. Außerdem erlaubt DevCounter die zielgerichtete Suche nach Entwicklern mit definierten Know-How. Man kann dort weitere Entwickler für die eigenen Projekte suchen oder einfach jemand, der bei bestimmten Aufgaben kurz aushelfen kann, wie z.B. bei der Netzwerkprogrammierung, dem Schreiben von Dokumentation oder dem Erstellen von Übersetzungen.\r\n\r\nEntwickler, die Projekte suchen und helfen wollen, können sich bei DevCounters unter Angaben ihrer Kenntnisse eintragen.','admin','< 1 Man Month',0,20020906130357);
 
 #
 # Table structure for table 'developing'
@@ -584,6 +589,18 @@ INSERT INTO history VALUES (26,'riessen','Configure','Project configuration',200
 INSERT INTO history VALUES (7,'riessen','sponsoring','Sponsor sponsor2 accepted as sponsor',20020411153957);
 INSERT INTO history VALUES (7,'riessen','sponsoring','Sponsor sponsor accepted as sponsor',20020411154004);
 INSERT INTO history VALUES (7,'riessen','sponsoring','Sponsor admin accepted as sponsor',20020412134138);
+INSERT INTO history VALUES (27,'admin','Configure','Project configuration',20020906140140);
+INSERT INTO history VALUES (27,'admin','Configure','Project configuration modified',20020906140213);
+INSERT INTO history VALUES (27,'admin','Configure','Project configuration modified',20020906141051);
+INSERT INTO history VALUES (27,'admin','Configure','Project configuration modified',20020906141101);
+INSERT INTO history VALUES (27,'admin','Configure','Project configuration modified',20020906141107);
+INSERT INTO history VALUES (27,'admin','Configure','Project configuration modified',20020906141151);
+INSERT INTO history VALUES (27,'admin','Configure','Project configuration modified',20020906141302);
+INSERT INTO history VALUES (3,'nilix','Configure','Project configuration modified',20020906141436);
+INSERT INTO history VALUES (5,'nilix','Configure','Project configuration modified',20020906142519);
+INSERT INTO history VALUES (5,'nilix','Configure','Project configuration modified',20020906142531);
+INSERT INTO history VALUES (5,'nilix','Configure','Project configuration modified',20020906142601);
+INSERT INTO history VALUES (5,'helix','Configure','Project configuration modified',20020906161441);
 
 #
 # Table structure for table 'involved'
@@ -707,6 +724,7 @@ CREATE TABLE monitor (
 # Dumping data for table 'monitor'
 #
 
+INSERT INTO monitor VALUES (5,'helix','medium',20020906165837);
 
 #
 # Table structure for table 'news'
@@ -728,6 +746,8 @@ INSERT INTO news VALUES (3,'helix','OS Machine is started','The project is start
 INSERT INTO news VALUES (8,'admin','erste Erfolge erziehlt','war heute zwischenzeitlich locker',20011120171701);
 INSERT INTO news VALUES (26,'riessen','sadasd','asdasd',20020411124706);
 INSERT INTO news VALUES (7,'riessen','ddddaa','sads',20020424115123);
+INSERT INTO news VALUES (5,'nilix','About the project status','success',20020906144945);
+INSERT INTO news VALUES (5,'nilix','About the project status','success',20020906145227);
 
 #
 # Table structure for table 'ratings'
@@ -883,4 +903,5 @@ INSERT INTO views VALUES (23,'Project Participants','Project Participants','Proj
 INSERT INTO views VALUES (24,'Sponsors','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20020327114156);
 INSERT INTO views VALUES (25,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20020327110020);
 INSERT INTO views VALUES (26,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20020327133631);
+INSERT INTO views VALUES (27,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20020906130357);
 
