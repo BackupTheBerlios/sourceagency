@@ -1,4 +1,9 @@
 <?php
+#
+# personallib.inc
+#
+# $Id: personallib.inc,v 1.2 2001/10/17 14:18:23 ger Exp $
+#
 
 ######################################################################
 # SourceAgency:
@@ -26,15 +31,21 @@ function personal_ratings_short($username) {
 	$i=0;
 
 	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT rating FROM ratings WHERE to_whom='$username'");
-	if ($db_local->num_rows() == 0) print "Not rated yet\n";
+	$db_local->query("SELECT rating FROM ratings WHERE "
+                         ."to_whom='$username'");
+	if ($db_local->num_rows() == 0) {
+          print "Not rated yet\n";
+        }
 	else {
 		while ($db_local->next_record()) {
 			$i+=1;
 			$sum += $db_local->f("rating");
 		}
-		print "Global personal rating: ".$sum/$i." (rated $i times)<p align=right>\n";
-		htmlp_link("personal_ratings.php3",array("username" => $username),"See complete ratings...");
+		print ( "Global personal rating: " . $sum/$i
+                        . " (rated $i times)<p align=right>\n" );
+		htmlp_link("personal_ratings.php3",
+                           array("username" => $username),
+                           "See complete ratings...");
 	}
 	$bx->box_body_end();
 	$bx->box_end();
@@ -50,16 +61,26 @@ function personal_ratings_long($username) {
 	$i=0;
 
 	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT * FROM ratings,description WHERE to_whom='$username' AND ratings.proid=description.proid");
-	if ($db_local->num_rows() == 0) print "No rating yet\n";
+	$db_local->query("SELECT * FROM ratings,description WHERE "
+                         . "to_whom='$username' AND ratings.proid="
+                         . "description.proid");
+	if ($db_local->num_rows() == 0) {
+          print "No rating yet\n";
+        }
 	else {
-		while ($db_local->next_record()) {
-			print "Rated <b>".$db_local->f("rating")."</b> in <b>".$db_local->f("on_what")."</b> by <b>".$db_local->f("by_whom")."</b> on project ".html_link("summary.php3",array("proid" => $db_local->f("proid")),$db_local->f("project_title"))."<br>\n";
-		}
+          while ($db_local->next_record()) {
+            print ("Rated <b>".$db_local->f("rating")
+                   . "</b> in <b>".$db_local->f("on_what")
+                   . "</b> by <b>".$db_local->f("by_whom")
+                   . "</b> on project "
+                   . html_link("summary.php3",
+                               array("proid" => $db_local->f("proid")),
+                               $db_local->f("project_title"))
+                   . "<br>\n");
+          }
 	}
 	$bx->box_body_end();
 	$bx->box_end();
-
 }
 
 function personal_related_projects($username,$status) {
@@ -79,14 +100,24 @@ function personal_related_projects($username,$status) {
 		$table = "developing";
 	}
 
-	$db_local->query("SELECT * FROM $table,description WHERE $user_type='$username' AND $table.status='$status' AND $table.proid=description.proid  ORDER BY creation DESC");
-	if ($db_local->num_rows() == 0) print "Not related to any project with ".show_status($status)." status\n";
+	$db_local->query("SELECT * FROM $table,description WHERE "
+                         . "$user_type='$username' AND $table.status='$status'"
+                         . " AND $table.proid=description.proid  ORDER BY "
+                         . "creation DESC");
+	if ($db_local->num_rows() == 0) {
+          print ( "Not related to any project with "
+                  . show_status($status)." status\n" );
+        }
 	while ($db_local->next_record()) {
-		print "Project: ".html_link("summary.php3",array("proid" => $db_local->f("proid")), $db_local->f("project_title"))." (step <b>".$db_local->f("status")."</b>)<br>\n";
+		print ( "Project: " 
+                        . html_link("summary.php3",
+                                    array("proid" => $db_local->f("proid")), 
+                                    $db_local->f("project_title"))
+                        . " (step <b>" . $db_local->f("status") 
+                        . "</b>)<br>\n");
 	}
 	$bx->box_body_end();
 	$bx->box_end();
-
 }
 
 
@@ -98,8 +129,11 @@ function personal_comments_short($username) {
 	$bx->box_body_begin();
 
 	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT * FROM comments WHERE user_cmt='$username' AND comments.proid");
-	if ($db_local->num_rows() == 0) print "no comments posted\n";
+	$db_local->query("SELECT * FROM comments WHERE user_cmt='$username' "
+                         . "AND comments.proid");
+	if ($db_local->num_rows() == 0) {
+          print "no comments posted\n";
+        }
 	$i=0;
 	print "<ul>\n";
 	while ($db_local->next_record() AND $i<11) {
