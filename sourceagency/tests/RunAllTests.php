@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: RunAllTests.php,v 1.7 2002/01/09 16:07:49 riessen Exp $
+# $Id: RunAllTests.php,v 1.8 2002/01/11 13:35:38 riessen Exp $
 #
 ######################################################################
 
@@ -95,5 +95,6 @@ scan_directory( );
 // run all defined tests....
 $testRunner = new TestRunner;
 $testRunner->run( $suite );
+mkdb_check_did_db_fail_calls();
 
 ?>

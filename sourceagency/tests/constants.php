@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: constants.php,v 1.16 2002/01/09 16:10:59 riessen Exp $
+# $Id: constants.php,v 1.17 2002/01/11 13:35:38 riessen Exp $
 #
 ######################################################################
 
@@ -74,6 +74,7 @@ function define_test_suite( $filename ) {
         $suite = new TestSuite(_filename_to_classname( $filename ));
         $testRunner = new TestRunner;
         $testRunner->run( $suite );
+        mkdb_check_did_db_fail_calls();
     }
 }
 
