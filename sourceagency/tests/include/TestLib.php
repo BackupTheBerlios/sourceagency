@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.9 2002/01/11 13:41:00 riessen Exp $
+# $Id: TestLib.php,v 1.10 2002/01/28 02:11:11 riessen Exp $
 #
 ######################################################################
 
@@ -41,7 +41,7 @@ class UnitTestLib
 extends UnitTest
 {
     function UnitTestLib( $name ) {
-        $this->TestCase( $name );
+        $this->UnitTest( $name );
     }
 
     function setup() {
@@ -254,9 +254,7 @@ extends UnitTest
         $db_config->add_query( sprintf( $db_q[1], $dat["r1"] ), 1 );
         $db_config->add_query( sprintf( $db_q[0], $dat["r2"] ), 2 );
         $db_config->add_query( sprintf( $db_q[1], $dat["r3"] ), 3 );
-        $db_config->add_num_row( $dat["e0"], 0 );
         $db_config->add_num_row( $dat["e1"], 1 );
-        $db_config->add_num_row( $dat["e2"], 2 );
         $db_config->add_num_row( $dat["e3"], 3 );
 
         $row1 = $this->_generate_array(array("description_user", "volume",

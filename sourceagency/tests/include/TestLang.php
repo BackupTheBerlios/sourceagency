@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLang.php,v 1.5 2001/11/08 16:17:42 riessen Exp $
+# $Id: TestLang.php,v 1.6 2002/01/28 02:11:11 riessen Exp $
 #
 ######################################################################
 
@@ -29,10 +29,10 @@ if ( !defined("BEING_INCLUDED" ) ) {
 }
 
 class UnitTestLang
-extends TestCase
+extends UnitTest
 {
     function UnitTestHtml( $name ) {
-        $this->TestCase( $name );
+        $this->UnitTest( $name );
     }
     
     function testDefault() {

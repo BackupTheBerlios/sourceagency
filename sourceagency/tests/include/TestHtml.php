@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.10 2002/01/09 16:22:19 riessen Exp $
+# $Id: TestHtml.php,v 1.11 2002/01/28 02:11:11 riessen Exp $
 #
 ######################################################################
 
@@ -35,7 +35,7 @@ class UnitTestHtml
 extends UnitTest
 {
     function UnitTestHtml( $name ) {
-        $this->TestCase( $name );
+        $this->UnitTest( $name );
     }
 
     function setup() {

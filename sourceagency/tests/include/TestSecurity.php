@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.8 2002/01/11 13:41:00 riessen Exp $
+# $Id: TestSecurity.php,v 1.9 2002/01/28 02:11:11 riessen Exp $
 #
 ######################################################################
 
@@ -38,7 +38,7 @@ extends UnitTest
         "SELECT * FROM developing WHERE proid='%s' AND status='A' AND developer='%s'";
 
     function UnitTestSecurity( $name ) {
-        $this->TestCase( $name );
+        $this->UnitTest( $name );
     }
 
     function testIs_sponsor() {

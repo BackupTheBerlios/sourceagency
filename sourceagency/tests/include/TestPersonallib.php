@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestPersonallib.php,v 1.18 2002/01/11 13:41:00 riessen Exp $
+# $Id: TestPersonallib.php,v 1.19 2002/01/28 02:11:11 riessen Exp $
 #
 ######################################################################
 
@@ -58,7 +58,7 @@ extends UnitTest
     var $p_comment_line_template = "<br><li>Comment [(]%s[)]: <b><a href=\"comments[.]php3[?]proid=%s&type=%s&number=%s&ref=%s\">%s<\/a>\\n<\/b>  [(]<b>%s<\/b> comments on it[)][\\n]+<br>&nbsp; &nbsp; &nbsp; posted to <a href=\"summary[.]php3[?]proid=%s\">%s<\/a>\\n<br>";
 
     function UnitTestPersonallib( $name ) {
-        $this->TestCase( $name );
+        $this->UnitTest( $name );
     }
     
     function setup() {
