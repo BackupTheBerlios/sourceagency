@@ -33,7 +33,7 @@ $bx = new box("80%",$th_box_frame_color,$th_box_frame_width,
 
 start_content();
 
-$msg = ( $t->translate("You have been logged in as")
+$msg =   $t->translate("You have been logged in as")
          ." <b>".$auth->auth["uname"]."</b> ".$t->translate("with")." <b>"
          .$auth->auth["perm"]."</b> ".$t->translate("permission").".<br>"
          .$t->translate("Your authentication was valid until")." <b>"
