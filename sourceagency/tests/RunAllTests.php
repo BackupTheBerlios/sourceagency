@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: RunAllTests.php,v 1.8 2002/01/11 13:35:38 riessen Exp $
+# $Id: RunAllTests.php,v 1.9 2002/01/28 02:18:43 riessen Exp $
 #
 ######################################################################
 
@@ -71,22 +71,22 @@ $suite = new TestSuite;
 // function for scanning a directory and including all 
 // files that begin with 'Test'
 function scan_directory( ) {
-
-  $d = opendir( "." );
-  while ( $entry = readdir( $d ) ) {
-    if ( $entry == "." || $entry == ".." ) {
-      /** ignore these directories **/
-    } else if ( is_dir($entry ) ) {
-      chdir( $entry );
-      scan_directory( );
-      chdir( ".." );
-    } else if ( preg_match( "/^[T|t]est/", $entry ) 
-                && preg_match( "/[.]php3?$/", $entry ) ) {
-      print "Requiring file ... $entry\n";
-      require_once( $entry );
+    $d = opendir( "." );
+    while ( $entry = readdir( $d ) ) {
+        if ( $entry == "." || $entry == ".." ) {
+            /** ignore these directories **/
+        } else if ( is_dir($entry ) ) {
+            chdir( $entry );
+            scan_directory( );
+            chdir( ".." );
+        } else if ( preg_match( "/^[T|t]est/", $entry ) 
+                    && (preg_match( "/[.]php3?$/", $entry)
+                        || preg_match( "/[.]inc$/", $entry ))) {
+            print "Requiring file ... $entry\n";
+            require_once( $entry );
+        }
     }
-  }
-  closedir( $d );
+    closedir( $d );
 }
 
 // load in all available test files.
