@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: admprojectslib.inc,v 1.10 2002/06/10 15:35:52 riessen Exp $
+# $Id: admprojectslib.inc,v 1.11 2002/06/13 09:55:30 riessen Exp $
 #
 ######################################################################
 
@@ -282,10 +282,12 @@ function admprojects_insert($proid, $status)
                ."WHERE username=description_user AND proid='$proid'");	
     $db->next_record();
 
-    mail($db->f("email_usr"),"[".$GLOBALS["sys_name"]
-         ."] ".$t->translate('Project')." $project_title "
-         .$t->translate('has been reviewed'), $message, "From: "
-         .$GLOBALS["ml_fromaddr"]."\nReply-To: ".$GLOBALS["ml_replyaddr"]
-         ."\nX-Mailer: PHP");
+    if ( $db->f('email_usr') != '' ) {
+        mail($db->f("email_usr"),"[".$GLOBALS["sys_name"]
+             ."] ".$t->translate('Project')." $project_title "
+             .$t->translate('has been reviewed'), $message, "From: "
+             .$GLOBALS["ml_fromaddr"]."\nReply-To: ".$GLOBALS["ml_replyaddr"]
+             ."\nX-Mailer: PHP");
+    }
 }
 ?>
