@@ -11,20 +11,18 @@
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
-# Library with the functions for developing proposals
+# Library with the functions for developing proposals (step 2)
 #
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: developinglib.inc,v 1.3 2002/03/27 15:56:38 grex Exp $
+# $Id: developinglib.inc,v 1.4 2002/03/27 16:12:58 grex Exp $
 #
 ######################################################################
 
 /**
  * Functions for developing proposal submission, display, update, etc. (Step 2)
- * There are some functions also for milestone delivery during the follow-up
- * process (step5)
  *
  * This step handles data from the 'developing' table in the database
  * Table database contains following data:
@@ -445,162 +443,4 @@ function developing_select_cooperation($selected)
 
     return($return);
 }
-
-/**
- * Preview for the milestione delivering in step 5 (project follow-up)
- *
- * @param   int       $id              Project ID
- *
- * @global  object    $t               Translation Object
- * @global  object    $bx              Box Object
- * @global  object    $auth            PHPLib Authentication Object
- *
- * @global  int       $milestone_number
- * @global  string    $url             URL where the milestone has been delivered
- * @global  int       $time            Counts the number of times this milestone
- *                                     has been delivered (number of rejected times +1)
- *                FIXME - grex: didn't I rename 'ime' into 'count'?
- *
- * @access  public
- */
-function developing_milestone_delivery_preview($proid)
-{
-    global $t, $bx, $auth, $milestone_number, $url, $time;
-
-    $bx->box_begin();
-    $bx->box_title('<center><b>'.$t->translate('PREVIEW').'</b></center>');
-    $bx->box_title($t->translate('Milestone Delivery'));
-    $bx->box_body_begin();
-    $timestamp = time();
-    echo '<b>';
-    lib_pnick($auth->auth["uname"]);
-    echo ' - '.timestr($timestamp)."</b>\n";
-    echo "<p><b>Milestone number:</b> $milestone_number\n";
-    echo '<br><b>URL:</b> '.html_link($url,array(),$url)."\n";
-    echo "<br><b>Time:</b> $time\n";
-    $bx->box_body_end();
-    $bx->box_end();
-}
-
-/**
- * Form for delivering milestones in step 5 (project follow-up)
- *
- * @param   int       $id              Project ID
- *
- * @global  object    $t               Translation Object
- * @global  object    $bx              Box Object
- *
- * @global  int       $milestone_number
- * @global  string    $url             URL where the milestone has been delivered
- * @global  int       $time            Counts the number of times this milestone
- *                                     has been delivered (number of rejected times +1)
- *                FIXME - grex: didn't I rename 'ime' into 'count'?
- *
- * @access  public
- */
-function developing_milestone_delivery_form($proid)
-{
-    global $bx, $t, $milestone_number, $url, $time;
-
-    $bx->box_begin();
-    $bx->box_title($t->translate('Milestone Delivery'));
-    $bx->box_body_begin();
-    htmlp_form_action('PHP_SELF',array('proid' => $proid),'POST');
-
-    $bx->box_columns_begin(2);
-
-    $bx->box_column ('right','30%','','<b>'.$t->translate('Milestone Number').'</b>: ');
-    $bx->box_column ('left','70%','',$milestone_number);
-
-    $bx->box_next_row_of_columns();
-
-    $bx->box_column ('right','30%','','<b>'.$t->translate('URL').'</b> (255): ');
-    $bx->box_column ('left','70%','',html_input_text('url',40,255,$url));
-
-    $bx->box_next_row_of_columns();
-
-    $bx->box_column ('right','30%','','<b>'.$t->translate('Time').'</b>: ');
-    $bx->box_column ('left','70%','',$time);
-
-    $bx->box_next_row_of_columns();
-
-    $bx->box_column ('right','30%','','&nbsp;');
-    $bx->box_column ('left','70%','',html_form_submit('Preview','preview').html_form_submit('Submit','submit'));
-    htmlp_form_end();
-    $bx->box_columns_end();
-
-    $bx->box_body_end();
-    $bx->box_end();
-}
-
-/**
- * Returns the current milestone that has to be delivered
- *
- * @param   int       $id              Project ID
- * @return  int                        Milestone to be delivered
- * @access  public
- */
-function developing_milestone_delivery_current_milestone($proid)
-{
-    $db_local = new DB_SourceAgency;
-    $db_local->query("SELECT * FROM follow_up WHERE proid='$proid' ORDER BY milestone_number DESC");
-    if ($db_local->num_rows() == 0) {
-        /* no entry -> then it's the first one to be delivered */
-        return 1;
-    }
-    $db_local->next_record();
-    $temp = $db_local->f('milestone_number');
-    if ($db_local->f("iteration") == 3) {
-        /* iteration is 3, then the next milestone has to be delivered */
-        $temp += 1;
-    }
-    return $temp;
-}
-
-/**
- * Returns the number of times current milestone is being delivered
- * TODO: see if 'time' has not been renamed into 'count'!!
- *
- * @param   int       $id              Project ID
- * @param   int       $milestone_number
- * @return  int                        Count of the times that the milestone is delivered
- * @access  public
- */
-function developing_milestone_delivery_current_time($proid, $milestone_number)
-{
-    $db_local = new DB_SourceAgency;
-    $db_local->query("SELECT time FROM follow_up WHERE milestone_number='$milestone_number'");
-    if ($db_local->num_rows() == 0) {
-        /* no entry, then it's the firs time */
-        return 1;
-    }
-    $db_local->next_record();
-    return $db_local->f("time");
-}
-
-/**
- * Inserts a milestone delivery into the database
- * TODO: see if 'time' has not been renamed into 'count'!!
- *
- * @param   int       $id              Project ID
- * @param   int       $milestone_number
- * @param   string    $url             URL where the milestone is accessible
- * @param   int       $time            Number of times the milestone has been delivered
- *
- * @global  object    $db              PHPLib database object
- * @access  public
- */
-function developing_milestone_delivery_insert($proid, $milestone_number, $url, $time)
-{
-    global $db;
-
-    $db->query("INSERT follow_up SET proid='$proid',milestone_number='$milestone_number',iteration='1',url='$url',time='$time'");
-
-    // WISH: config.inc should not be required another time,
-    // as it is done at the beginning of every page.
-    include('config.inc');
-    include('monitorlib.inc');
-    monitor_mail($proid, 'milestone_delivery', "Milestone $milestone_number has been delivered on project $proid", 'Event has happened');
-}
-
 ?>
