@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.32 2002/04/20 13:07:50 grex Exp $
+# $Id: lib.inc,v 1.33 2002/04/20 13:17:40 grex Exp $
 #
 ######################################################################
 
@@ -1496,14 +1496,30 @@ function lib_show_comments_on_it($proid, $type_cmt, $number, $cmt_id)
 /**
  * Our 'die' function
  * Should be called when something anomalous happens
+ * It mails the sys admins with the error message
  *
  * @param   string    $error_message    Error message
+ * @global  object    $t                Translation object
  * @access public
  */
 function lib_die($error_message)
 {
-    /* REFACTOR: it should contain a legible error message for the visitor */
-    /* REFACTOR: and an e-mail message to the administrators */
-    die($error_message);
+    global $t;
+    /* WISH: to do not have to include config.inc another time */
+    require('config.inc');
+    $be = new box('80%',$th_box_frame_color,$th_box_frame_width,
+                  $th_box_title_bgcolor,$th_box_title_font_color,
+                  $th_box_title_align,$th_box_body_bgcolor,
+                  $th_box_error_font_color,$th_box_body_align);
+
+    $be->box_full($t->translate('An error has ocurred'),
+		  $error_message
+		  .'<p>'
+		  .$t->translate('This error is being mailed to the system administrators.'));
+
+    /* Mails the sys admins */
+    include('monitorlib.inc');
+    mailuser('admin', 'An error has ocurred', $error_message)
+
 }
 ?>
