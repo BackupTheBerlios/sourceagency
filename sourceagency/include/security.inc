@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.13 2002/02/07 12:21:19 riessen Exp $
+# $Id: security.inc,v 1.14 2002/03/19 17:08:03 riessen Exp $
 #
 ######################################################################
 
@@ -187,6 +187,7 @@ function check_proid ($proid) {
 function check_permission($proid,$page) {
   global $perm, $auth;
 
+  // FIXME: is calling perm->have_perm("editor") a typo??
   if (isset($perm) && ($perm->have_perm("editor") 
        || $perm->have_perm("editor"))) {
       return 1;
@@ -494,86 +495,60 @@ function check_permission($proid,$page) {
   }
 }
 
-function invalid_project_id($proid,$page) {
+function generate_failed_box( $error, $msg ) {
   global $t;
-  top_bar($proid,$page);
 
   require("config.inc");
   $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
                 $th_box_title_bgcolor,$th_box_title_font_color,
                 $th_box_title_align,$th_box_body_bgcolor,
                 $th_box_error_font_color,$th_box_body_align);
+  
+  $be->box_full($t->translate( $error ), $t->translate( $msg ));
+}
 
-  $be->box_full($t->translate("Permission denied"),
-                $t->translate("Project does not exist"));
+function generate_permission_denied_box( $msg ) {
+  generate_failed_box( "Permission denied", $msg );
+}
+
+function invalid_project_id($proid,$page) {
+  top_bar($proid,$page);
+  generate_permission_denied_box( "Project does not exist"  );
   return 0;	
 }
 
 function permission_denied($proid,$page) {
-  global $t;
   top_bar($proid,$page);
-
-  require("config.inc");
-  $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
-                $th_box_title_bgcolor,$th_box_title_font_color,
-                $th_box_title_align,$th_box_body_bgcolor,
-                $th_box_error_font_color,$th_box_body_align);
-
-  $be->box_full($t->translate("Permission denied"),
-                $t->translate("You do not have rights to enter this page."));
+  generate_permission_denied_box("You do not have rights to enter this page.");
   return 0;	
 }
 
 function step_not_open($proid,$page) {
-  global $t;
-
   top_bar($proid,$page);
-
-  require("config.inc");
-
-  $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
-                $th_box_title_bgcolor,$th_box_title_font_color,
-                $th_box_title_align,$th_box_body_bgcolor,
-                $th_box_error_font_color,$th_box_body_align);
-
-  $be->box_full($t->translate("Permission denied"),
-                $t->translate("This action can not be made at this time."));
+  generate_permission_denied_box("This action can not be made at this time.");
   return 0;
 }
 
 function projects_only_by_project_initiator($proid,$page) {
-  global $t;
   top_bar($proid,$page);
-
-  require("config.inc");
-
-  $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
-                $th_box_title_bgcolor,$th_box_title_font_color,
-                $th_box_title_align,$th_box_body_bgcolor,
-                $th_box_error_font_color,$th_box_body_align);
-
-  $be->box_full($t->translate("Permission denied"), 
-                $t->translate("The project has been configured so that "
-                              . "only the project initiator can post one "
-                              ."specification."));
+  generate_permission_denied_box("The project has been configured so that "
+                                 . "only the project initiator can post one "
+                                 ."specification.");
   return 0;
 }
 
 function proposals_only_by_project_initiator($proid,$page) {
-  global $t;
   top_bar($proid,$page);
+  generate_permission_denied_box("The project has been configured so that "
+                                 ."only the project initiator can post one "
+                                 ."developing proposal.");
+  return 0;
+}
 
-  require("config.inc");
-
-  $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
-                $th_box_title_bgcolor,$th_box_title_font_color,
-                $th_box_title_align,$th_box_body_bgcolor,
-                $th_box_error_font_color,$th_box_body_align);
-
-  $be->box_full($t->translate( "Permission denied" ), 
-                $t->translate("The project has been configured so that "
-                              ."only the project initiator can post one "
-                              ."developing proposal."));
+function already_involved_message($proid,$page) {
+  top_bar($proid,$page);
+  generate_permission_denied_box("You are not allowed to make this action "
+                                 ."more than one time.");
   return 0;
 }
 
@@ -733,21 +708,6 @@ function already_involved_in_this_content($proid,$page,$username,$content_id) {
   	else return 0;
 }
 
-function already_involved_message($proid,$page) {
-  global $t;
-  top_bar($proid,$page);
-  require("config.inc");
-
-  $be = new box("",$th_box_frame_color,$th_box_frame_width,
-                $th_box_title_bgcolor,$th_box_title_font_color,
-                $th_box_title_align,$th_box_body_bgcolor,
-                $th_box_error_font_color,$th_box_body_align);
-
-  $be->box_full($t->translate("Permission denied"),
-                $t->translate("You are not allowed to make this action "
-                              ."more than one time."));
-  return 0;
-}
 
 
 function security_accept_by_view($proid,$page) {

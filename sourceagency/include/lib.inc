@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.21 2002/01/11 13:33:00 riessen Exp $
+# $Id: lib.inc,v 1.22 2002/03/19 17:08:03 riessen Exp $
 #
 ######################################################################
 
@@ -35,33 +35,23 @@ function mktimestamp($time) {
 }
 
 function timestr($timestamp) {
-    global $t;
-    $time = strftime("%A, %e. %B %Y, %H:%M:%S %Z", $timestamp);
-    return $time;
+    return strftime("%A, %e. %B %Y, %H:%M:%S %Z", $timestamp);
 }
 
 function timestr_middle($timestamp) {
-    global $t;
-    $time = strftime("%e. %B %Y", $timestamp);
-    return $time;
+    return strftime("%e. %B %Y", $timestamp);
 }
 
 function timestr_short($timestamp){
-    global $t;
-    $time = strftime("%a,%e.%b,%H:%M:%S", $timestamp);
-    return $time;
+    return strftime("%a,%e.%b,%H:%M:%S", $timestamp);
 }
 
 function timestr_comment($timestamp){
-    global $t;
-    $time = strftime("%e. %b %Y, %H:%M", $timestamp);
-    return $time;
+    return strftime("%e. %b %Y, %H:%M", $timestamp);
 }
 
 function timestr_shortest($timestamp){
-    global $t;
-    $time = strftime("%e. %b", $timestamp);
-    return $time;
+    return strftime("%e. %b", $timestamp);
 }
 
 // 
@@ -371,11 +361,12 @@ function draw_top_bar( $project_title, $page, $proid = "",
 }
 
 function top_bar($proid, $page) {
-    global $sess, $t;
+    global $t;
 
-    $db_top = new DB_SourceAgency;
-    $db_top->query("SELECT * FROM description WHERE proid='$proid'");
-    $db_top->next_record();
+// FIXME: is it correct to remove one query?
+//      $db_top = new DB_SourceAgency;
+//      $db_top->query("SELECT * FROM description WHERE proid='$proid'");
+//      $db_top->next_record();
 
     $db_top = new DB_SourceAgency;
     $db_top->query("SELECT * FROM description WHERE proid='$proid'");
@@ -385,7 +376,7 @@ function top_bar($proid, $page) {
     } else {
         $db_top->next_record();
         draw_top_bar( $db_top->f("project_title"), $page, 
-        $proid, $db_top->f("status") );
+                      $proid, $db_top->f("status") );
     
     }
 }

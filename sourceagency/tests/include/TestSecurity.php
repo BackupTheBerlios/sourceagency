@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.10 2002/02/07 12:24:17 riessen Exp $
+# $Id: TestSecurity.php,v 1.11 2002/03/19 17:08:03 riessen Exp $
 #
 ######################################################################
 
@@ -27,8 +27,12 @@ if ( !defined("BEING_INCLUDED" ) ) {
     $bx = new box;
     include_once( 'session.inc' );
     $sess = new session;
+    include_once( "translation.inc" );
+    $t = new translation("English");
 } 
 
+include_once( 'lib.inc' );
+include_once( 'html.inc' );
 include_once( 'security.inc' );
 
 class UnitTestSecurity
@@ -61,7 +65,9 @@ extends UnitTest
                     "no_other_specification_yet" =>
                     ("SELECT * FROM tech_content WHERE proid='%s'"),
                     "no_other_proposal_yet" =>
-                    ("SELECT * FROM developing WHERE proid='%s'"));
+                    ("SELECT * FROM developing WHERE proid='%s'"),
+                    "valid_proid" =>
+                    ("SELECT * FROM description WHERE proid='%s'"));
         $this->UnitTest( $name );
     }
 
@@ -71,16 +77,81 @@ extends UnitTest
 //      }
 //      function testCheck_permission() {
 //      }
-//      function testInvalid_project_id() {
-//      }
-//      function testPermission_denied() {
-//      }
-//      function testStep_not_open() {
-//      }
-//      function testProjects_only_by_project_initiator() {
-//      }
-//      function testProposals_only_by_project_initiator() {
-//      }
+    function _test_error_message_boxes( $funct, $head_text, 
+                                        $body_text, $len ) {
+        global $t;
+
+        $db_config = new mock_db_configure( 1 );
+
+        $db_q = array( 0 => $this->query["valid_proid"] );
+        $dat = $this->_generate_records( array( "proid", "page" ), 3 );
+
+        $db_config->add_query( sprintf( $db_q[0], $dat[0]["proid"] ), 0 );
+        $db_config->add_num_row( 0, 0 );
+
+        capture_reset_and_start();
+        $funct( $dat[0]["proid"], $dat[0]["page"] );
+        $text = capture_stop_and_get();
+
+        $this->_testFor_length( $len );
+                                          
+        $pats = array( 0 => ("<font color=\"#000000\"><b>"
+                             .$t->translate($head_text)
+                             ."<\/b><\/font>"), 
+                       1 => ("<font color=\"#FF2020\">"
+                             .$t->translate($body_text)."<\/font>") );
+
+        $this->_testFor_patterns( $text, $pats, 2 );
+        $this->_check_db( $db_config );
+    }
+    function testInvalid_project_id() {
+        $this->_test_error_message_boxes( "invalid_project_id", 
+                                          "Permission denied",
+                                          "Project does not exist",
+                                          2630 );
+    }
+    function testPermission_denied() {
+        $this->_test_error_message_boxes( "permission_denied", 
+                                          "Permission denied",
+                                          "You do not have rights to enter "
+                                          ."this page.",
+                                          2650 );
+    }
+    function testStep_not_open() {
+        $this->_test_error_message_boxes( "step_not_open", 
+                                          "Permission denied",
+                                          "This action can not be made "
+                                          ."at this time.",
+                                          2649 );
+    }
+    function testProjects_only_by_project_initiator() {
+        $this->_test_error_message_boxes( "projects_only_by_project_initiator",
+                                          "Permission denied",
+                                          "The project has been configured "
+                                          . "so that "
+                                          . "only the project initiator "
+                                          . "can post one "
+                                          . "specification.",
+                                          2702 );
+    }
+    function testProposals_only_by_project_initiator() {
+        $this->_test_error_message_boxes("proposals_only_by_project_initiator",
+                                         "Permission denied",
+                                         "The project has been configured "
+                                         ."so that "
+                                         ."only the project initiator "
+                                         ."can post one "
+                                         ."developing proposal.",
+                                         2708 );
+    }
+    function testAlready_involved_message() {
+        $this->_test_error_message_boxes("already_involved_message",
+                                         "Permission denied",
+                                         "You are not allowed to make "
+                                         ."this action "
+                                         ."more than one time.",
+                                         2667 );
+    }
 //      function testIs_project_initiator() {
 //      }
 //      function testIs_administrator() {
@@ -94,8 +165,6 @@ extends UnitTest
 //      function testAlready_involved_in_this_step() {
 //      }
 //      function testAlready_involved_in_this_content() {
-//      }
-//      function testAlready_involved_message() {
 //      }
 //      function testSecurity_accept_by_view() {
 //      }

@@ -16,16 +16,15 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMilestoneslib.inc,v 1.8 2002/02/01 08:40:52 riessen Exp $
+# $Id: TestMilestoneslib.inc,v 1.9 2002/03/19 17:08:03 riessen Exp $
 #
 ######################################################################
 
 include_once( "../constants.php" );
 
 if ( !defined("BEING_INCLUDED" ) ) {
-//      // required for the $sess global variable
-//      include_once( "session.inc" );
-//      $sess = new Session;
+    include_once( "session.inc" );
+    $sess = new Session;
     
     // global translation object
     include_once( "translation.inc" );
@@ -174,6 +173,98 @@ extends UnitTest
                        16=>("<td align=\"center\" width=\"\" bgcolor=\""
                             ."#FFFFFF\"><b>payment_4% <\/b><\/td>"));
         $this->_testFor_patterns( $text, $pats, 17 );
+
+        // finally check that everything went smoothly with the DB
+        $this->_check_db( $db_config );
+    }
+
+    function testMilestones_insert() {
+        global $db;
+
+        $db_config = new mock_db_configure( 4 );
+        
+        $db_q = array( 0 => ("INSERT milestones SET proid='%s',devid='%s',"
+                             . "number='%s',goals='%s',release='%s',"
+                             . "product='%s',payment='%s',status='P',"
+                             . "creation=NOW()"),
+                       1 => ("SELECT * FROM milestones WHERE number='%s'"));
+
+        $ln = ( "<p align=right>[[] <a href=\"step3_edit[.]php3[?]proid=%s"
+                ."[&]a=1\"><b>Propose Milestones<\/b><\/a>\n []]<\/p>" );
+
+        $dat = $this->_generate_records( array("pid","dev","num","goals",
+                                               "rday", "rmon", "ryear",
+                                               "prod","pay"), 4);
+        //
+        // test 1 -- everything is fine
+        //
+        $db_config->add_query( sprintf( $db_q[1], $dat[0]["num"]), 0 );
+        $db_config->add_query( sprintf( $db_q[0], $dat[0]["pid"],
+                                        $dat[0]["dev"], $dat[0]["num"], 
+                                        $dat[0]["goals"], 
+                           date_to_timestamp( $dat[0]["rday"], $dat[0]["rmon"],
+                           $dat[0]["ryear"]), $dat[0]["prod"], $dat[0]["pay"]),
+                               0 );
+        $db_config->add_num_row( 0, 0 );
+
+        $db = new DB_SourceAgency;
+        capture_reset_and_start();
+        milestones_insert( $dat[0]["pid"], $dat[0]["dev"], $dat[0]["num"], 
+                           $dat[0]["goals"], $dat[0]["rday"], $dat[0]["rmon"],
+                           $dat[0]["ryear"], $dat[0]["prod"], $dat[0]["pay"]);
+        $text = capture_stop_and_get();
+        $this->_testFor_length( 95 );
+        $pats = array( 0 => (sprintf( $ln, $dat[0]["pid"])));
+        $this->_testFor_patterns( $text, $pats, 1 );
+
+        //
+        // test 2 -- goals is not set and therefore no database insert happens
+        //
+        $dat[1]["goals"] = "";
+
+        $db_config->add_query( sprintf( $db_q[1], $dat[1]["num"]), 1 );
+        $db_config->add_num_row( 0, 1 );
+
+        $db = new DB_SourceAgency;
+        capture_reset_and_start();
+        milestones_insert( $dat[1]["pid"], $dat[1]["dev"], $dat[1]["num"], 
+                           $dat[1]["goals"], $dat[1]["rday"], $dat[1]["rmon"],
+                           $dat[1]["ryear"], $dat[1]["prod"], $dat[1]["pay"]);
+        $text = capture_stop_and_get();
+        $this->_testFor_length( 95 );
+        $pats = array( 0 => (sprintf( $ln, $dat[1]["pid"])));
+        $this->_testFor_patterns( $text, $pats, 1 );
+
+        //
+        // test 3 -- number used is already taken
+        //
+        $db_config->add_query( sprintf( $db_q[1], $dat[2]["num"]), 2 );
+        $db_config->add_num_row( 1, 2 );
+
+        $db = new DB_SourceAgency;
+        capture_reset_and_start();
+        milestones_insert( $dat[2]["pid"], $dat[2]["dev"], $dat[2]["num"], 
+                           $dat[2]["goals"], $dat[2]["rday"], $dat[2]["rmon"],
+                           $dat[2]["ryear"], $dat[2]["prod"], $dat[2]["pay"]);
+        $text = capture_stop_and_get();
+        $this->_testFor_length( 95 );
+        $pats = array( 0 => (sprintf( $ln, $dat[2]["pid"])));
+        $this->_testFor_patterns( $text, $pats, 1 );
+
+        //
+        // test 4 -- number parameter is not set, no queries
+        //
+        $dat[3]["num"] = "";
+
+        $db = new DB_SourceAgency;
+        capture_reset_and_start();
+        milestones_insert( $dat[3]["pid"], $dat[3]["dev"], $dat[3]["num"], 
+                           $dat[3]["goals"], $dat[3]["rday"], $dat[3]["rmon"],
+                           $dat[3]["ryear"], $dat[3]["prod"], $dat[3]["pay"]);
+        $text = capture_stop_and_get();
+        $this->_testFor_length( 95 );
+        $pats = array( 0 => (sprintf( $ln, $dat[3]["pid"])));
+        $this->_testFor_patterns( $text, $pats, 1 );
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );

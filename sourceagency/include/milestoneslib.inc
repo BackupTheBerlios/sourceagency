@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.7 2002/03/19 10:41:14 riessen Exp $
+# $Id: milestoneslib.inc,v 1.8 2002/03/19 17:08:03 riessen Exp $
 #
 ######################################################################
 
@@ -219,25 +219,42 @@ function form_milestones($proid,$devid) {
 
 function milestones_propose_milestone( $proid ) {
   global $t;
-  
-  print ( "<p align=right>[ <b>".html_link("step3_edit.php3",
-                                           array("proid" => $proid,"a" => "1"),
-                                           "<b>"
-                                           .$t->translate("Propose Milestones")
-                                           ."</b>")
-          ."</b> ]" );
+
+  print ( "<p align=right>[ ".html_link("step3_edit.php3",
+                                        array("proid" => $proid,"a" => "1"),
+                                        "<b>"
+                                        .$t->translate("Propose Milestones")
+                                        ."</b>")." ]</p>");
 }
 
 function milestones_insert($proid,$devid,$number,$goals,$release_day,
                            $release_month,$release_year,$product,$payment) {
   global $db;
+  if ( is_set_and_not_empty( $number ) ) {
+      
+      $db->query( "SELECT * FROM milestones WHERE number='$number'" );
 
-  $release = date_to_timestamp($release_day,$release_month,$release_year);
+      if ( $db->num_rows() > 0 ) {
+          // number value is already in use
+      } else {
 
-  $db->query("INSERT milestones SET proid='$proid',devid='$devid',"
-             . "number='$number',goals='$goals',release='$release',"
-             . "product='$product',payment='$payment',status='P',"
-             . "creation=NOW()");
+          if ( is_set_and_not_empty( $goals ) ) {
+
+              $release = date_to_timestamp($release_day,
+                                           $release_month,$release_year);
+              
+              $db->query("INSERT milestones SET proid='$proid',devid='$devid',"
+                         . "number='$number',goals='$goals',"
+                         . "release='$release',"
+                         . "product='$product',payment='$payment',status='P',"
+                         . "creation=NOW()");
+          } else {
+              // goals was not set or was empty
+          }
+      } 
+  } else {
+      // number parameter was not set or was empty
+  }
 
   milestones_propose_milestone( $proid );
 }
