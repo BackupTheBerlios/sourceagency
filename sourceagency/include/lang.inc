@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lang.inc,v 1.8 2001/11/20 14:38:38 riessen Exp $
+# $Id: lang.inc,v 1.9 2001/12/13 15:40:02 riessen Exp $
 #
 ######################################################################
 
@@ -42,5 +42,5 @@ switch($la) {
    case "Spanish": $locale = "es_ES"; break;
    default: $locale = "en_EN"; break;
 }
-setlocale ("LC_TIME", $locale);
+setlocale (LC_TIME, $locale);
 ?>
