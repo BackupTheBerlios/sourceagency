@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: doco.php3,v 1.6 2002/04/18 11:18:23 riessen Exp $
+# $Id: doco.php3,v 1.7 2002/04/18 11:25:51 riessen Exp $
 #
 ######################################################################
 
@@ -62,13 +62,13 @@ if ( is_not_set_or_empty( $page ) ) {
             $be->box_full($page, $t->translate('Has no documentation'));
         } else {
             $db->next_record();
-            $box_doco->box_strip('Our apologies. Documentation only available '
-                                 .'in English.');
-            $box_doco->box_full($db->f('header'), $db->f('doco'));
+            $box_doco->box_strip($t->translate('Our apologies. Documentation '
+                                               .'only available in English.'));
+            $box_doco->box_full( $db->f('header'), $db->f('doco') );
 	}
     } else {
         $db->next_record();
-        $box_doco->box_full( $db->f('header'), $db->f('doco'));
+        $box_doco->box_full( $db->f('header'), $db->f('doco') );
     }
 }
 
