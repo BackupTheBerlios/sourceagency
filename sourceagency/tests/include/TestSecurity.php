@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.18 2002/05/13 10:29:01 riessen Exp $
+# $Id: TestSecurity.php,v 1.19 2002/05/15 09:32:20 riessen Exp $
 #
 ######################################################################
 
@@ -99,7 +99,19 @@ extends UnitTest
                     ("SELECT other_tech_contents FROM configure WHERE "
                      ."proid='%s'"),
                     'security_accept_by_view' =>
-                    ("SELECT %s FROM views WHERE proid='%s'")
+                    ("SELECT %s FROM views WHERE proid='%s'"),
+                    'allowed_actions_1' =>
+                    ("SELECT consultants FROM configure WHERE proid='proid'"),
+                    'allowed_actions_1b' =>
+                    ("SELECT COUNT(*) FROM consultants WHERE proid='proid'"),
+                    'allowed_actions_2' =>
+                    ("SELECT COUNT(*) FROM tech_content WHERE proid='proid'"),
+                    'allowed_actions_2b' =>
+                    ("SELECT COUNT(*) FROM developing WHERE proid='proid'"),
+                    'allowed_actions_3' =>
+                    ("SELECT COUNT(*) FROM milestones WHERE proid='proid'"),
+                    'allowed_actions_4' =>
+                    ("SELECT COUNT(*) FROM referees WHERE proid='proid'")
                  );
         $this->UnitTest( $name );
     }
@@ -280,7 +292,327 @@ extends UnitTest
         $this->_check_db( $db_config );
     }
     function testAllowed_actions() {
-        $this->_test_to_be_completed();
+        global $t, $g_step_explanation, $g_step_text;
+
+        // some common patterns
+        $p_i = 'src="images\/ic\/%s.png"';
+        $p_i_g = 'src="images\/ic\/%sgrey.png"';
+        $p_f_g = '<font color="#CCCCCC">';
+        $p_l = '<a href="step%s.php3[?]proid=proid">';
+        $p_exp = ( "return ('<i>'.\$t->translate( \$g_step_explanation[%s] )"
+                   .".'<\\/i>');" );
+        $p_text = ( "return ('&nbsp;'.\$t->translate( \$g_step_text[%s] )"
+                    .".'<\/');");
+
+        $db_config = new mock_db_configure( 24 );
+        
+        //************************************************************
+        //******* tests 1 to 9: test action number = 0 and 1 *********
+        //************************************************************
+        // test one: project status = 0, action_number = 0, no consultants
+        $db_config->add_query($this->query['allowed_actions_1'], 0 );
+        $rows=$this->_generate_records(array("consultants"), 1 );
+        $rows[0]["consultants"] = "No";
+        $db_config->add_record( $rows[0], 0 );
+        capture_reset_and_start();
+        allowed_actions( 0, 0, "proid" );
+        $text = capture_stop_and_get();
+        $this->_testFor_captured_length( 185, "test 1" );
+        $ps=array(0=>sprintf( $p_i_g, '1' ),
+                  1=>$p_f_g,
+                  2=>eval( sprintf( $p_exp, "1" ) ),
+                  3=>eval( sprintf( $p_text, "1" )));
+        $this->_testFor_patterns( $text, $ps, 4, "test 1" );
+        $text_0_0 = $text;
+
+        // test two: project status = -1, action number = 0, no consultants
+        $db_config->add_query($this->query['allowed_actions_1'], 1 );
+        $rows[0]["consultants"] = "No";
+        $db_config->add_record( $rows[0], 1 );
+        capture_reset_and_start();
+        allowed_actions( -1, 0, "proid" );
+        $text = capture_stop_and_get();
+        $this->assertEquals( $text_0_0, $text, "test 2" );
+
+        // test three: project status = 0, action number = 1, no consultants
+        $db_config->add_query($this->query['allowed_actions_1'], 2 );
+        $rows[0]["consultants"] = "No";
+        $db_config->add_record( $rows[0], 2 );
+        capture_reset_and_start();
+        allowed_actions( 0, 1, "proid" );
+        $text = capture_stop_and_get();
+        $this->assertEquals( $text_0_0, $text, "test 3" );
+
+        // test four: project status = 0, action number = 1, yes consultants
+        $db_config->add_query($this->query['allowed_actions_1'], 3 );
+        $rows[0]["consultants"] = "Yes";
+        $db_config->add_record( $rows[0], 3 );
+        $db_config->add_query( $this->query['allowed_actions_1b'], 3 );
+        $row0=$this->_generate_records(array("COUNT(*)"), 1 );
+        $db_config->add_record( $row0[0], 3 );
+        capture_reset_and_start();
+        allowed_actions( 0, 1, "proid" );
+        $text = capture_stop_and_get();
+        $this->assertEquals( $text_0_0, $text, "test 4" );
+
+        // test five: project status = 1, action_number = 1, no consultants
+        $db_config->add_query($this->query['allowed_actions_1'], 4 );
+        $rows[0]["consultants"] = "No";
+        $db_config->add_record( $rows[0], 4 );
+        capture_reset_and_start();
+        allowed_actions( 1, 1, "proid" );
+        $text = capture_stop_and_get();
+        $this->_testFor_captured_length( 249, "test 5" );
+        $ps[0] = sprintf( $p_i, "1" );
+        $ps[1] = sprintf( $p_l, "1" );
+        $ps[4] = $t->translate('this project is configured to have '
+                               .'<b>no<\/b> consultants');
+        $this->_testFor_patterns( $text, $ps, 5, "test 5" );
+        $text_1_1 = $text;
+
+        // test six: project status = 2, action num = 1, no consultants
+        $db_config->add_query($this->query['allowed_actions_1'], 5 );
+        $rows[0]["consultants"] = "No";
+        $db_config->add_record( $rows[0], 5 );
+        capture_reset_and_start();
+        allowed_actions( 2, 1, "proid" );
+        $text = capture_stop_and_get();
+        $this->assertEquals( $text_1_1, $text, "test 6" );
+
+        // test seven: project status = 1, action num = 1, yes consultants
+        $db_config->add_query($this->query['allowed_actions_1'], 6 );
+        $rows[0]["consultants"] = "Yes";
+        $db_config->add_record( $rows[0], 6 );
+        $db_config->add_query( $this->query['allowed_actions_1b'], 6 );
+        $row0=$this->_generate_records(array("COUNT(*)"), 1 );
+        $db_config->add_record( $row0[0], 6 );
+        capture_reset_and_start();
+        allowed_actions( 1, 1, "proid" );
+        $text = capture_stop_and_get();
+        $ps[4] = '<B>COUNT[(][*][)]_0<\/B> '
+           .$t->translate('consultant offerings');
+        $this->_testFor_patterns( $text, $ps, "test 7" );
+        $this->_testFor_captured_length( 231, "test 7" );
+        $text_1_1_yes = $text;
+
+        // test eight: project status = 2, action num = 1, yes consultants
+        $db_config->add_query($this->query['allowed_actions_1'], 7 );
+        $rows[0]["consultants"] = "Yes";
+        $db_config->add_record( $rows[0], 7 );
+        $db_config->add_query( $this->query['allowed_actions_1b'], 7 );
+        $row0=$this->_generate_records(array("COUNT(*)"), 1 );
+        $db_config->add_record( $row0[0], 7 );
+        capture_reset_and_start();
+        allowed_actions( 2, 1, "proid" );
+        $text = capture_stop_and_get();
+        $this->assertEquals( $text_1_1_yes, $text, "test 8" );
+
+        // test nine: project status = 2, action num = 0, yes consultants
+        $db_config->add_query($this->query['allowed_actions_1'], 8 );
+        $rows[0]["consultants"] = "Yes";
+        $db_config->add_record( $rows[0], 8 );
+        $db_config->add_query( $this->query['allowed_actions_1b'], 8 );
+        $row0=$this->_generate_records(array("COUNT(*)"), 1 );
+        $db_config->add_record( $row0[0], 8 );
+        capture_reset_and_start();
+        allowed_actions( 2, 0, "proid" );
+        $text = capture_stop_and_get();
+        $this->assertEquals( $text_1_1_yes, $text, "test 9" );
+
+        //************************************************************
+        //********** tests 10 to 12: test action number = 2 **********
+        //************************************************************
+        // test 10: project status 1, action number 2
+        $db_config->add_query($this->query['allowed_actions_2'], 9 );
+        $rows=$this->_generate_records(array("COUNT(*)"), 2 );
+        $db_config->add_record( $rows[0], 9 );
+        $db_config->add_query( $this->query['allowed_actions_2b'], 9 );
+        $db_config->add_record( $rows[1], 9 );
+        capture_reset_and_start();
+        allowed_actions( 1, 2, "proid" );
+        $text = capture_stop_and_get();
+        $ps=array(0=>sprintf( $p_i_g, '2' ),
+                  1=>$p_f_g,
+                  2=>eval( sprintf( $p_exp, "2" ) ),
+                  3=>eval( sprintf( $p_text, "2" )));
+        $this->_testFor_patterns( $text, $ps, 4, "test 10" );
+        $this->_testFor_captured_length( 265, "test 10" );
+
+        // test 11: project status 2, action number 2
+        $db_config->add_query($this->query['allowed_actions_2'], 10 );
+        $rows=$this->_generate_records(array("COUNT(*)"), 2 );
+        $db_config->add_record( $rows[0], 10 );
+        $db_config->add_query( $this->query['allowed_actions_2b'], 10 );
+        $db_config->add_record( $rows[1], 10 );
+        capture_reset_and_start();
+        allowed_actions( 2, 2, "proid" );
+        $text = capture_stop_and_get();
+        $ps[0] = sprintf( $p_i, "2" );
+        $ps[1] = sprintf( $p_l, "2" );
+        $ps[4] = ( '<B>COUNT[(][*][)]_0<\/B> '
+                   .$t->translate('suggested project contents').', '
+                   .'<B>COUNT[(][*][)]_1<\/B> '
+                   .$t->translate('developing proposals') );
+        $this->_testFor_patterns( $text, $ps, 5, "test 11" );
+        $this->_testFor_captured_length( 358, "test 11" );
+        $text_2_2 = $text;
+
+        // test 12: project status 3, action number 2
+        $db_config->add_query($this->query['allowed_actions_2'], 11 );
+        $rows=$this->_generate_records(array("COUNT(*)"), 2 );
+        $db_config->add_record( $rows[0], 11 );
+        $db_config->add_query( $this->query['allowed_actions_2b'], 11 );
+        $db_config->add_record( $rows[1], 11 );
+        capture_reset_and_start();
+        allowed_actions( 3, 2, "proid" );
+        $text = capture_stop_and_get();
+        $this->assertEquals( $text_2_2, $text, "test 12" );
+
+        //************************************************************
+        //********** tests 13 to 15: test action number = 3 **********
+        //************************************************************
+        // test 13: project status 2, action number 3
+        $db_config->add_query($this->query['allowed_actions_3'], 12 );
+        $rows=$this->_generate_records(array("COUNT(*)"), 2 );
+        $db_config->add_record( $rows[0], 12 );
+        capture_reset_and_start();
+        allowed_actions( 2, 3, "proid" );
+        $text = capture_stop_and_get();
+        $ps=array(0=>sprintf( $p_i_g, '3' ),
+                  1=>$p_f_g,
+                  2=>eval( sprintf( $p_exp, "3" ) ),
+                  3=>eval( sprintf( $p_text, "3" )));
+        $this->_testFor_patterns( $text, $ps, 4, "test 13" );
+        $this->_testFor_captured_length( 175, "test 13" );
+
+        // test 14: project status 3, action number 3
+        $db_config->add_query($this->query['allowed_actions_3'], 13 );
+        $rows=$this->_generate_records(array("COUNT(*)"), 1 );
+        $db_config->add_record( $rows[0], 13 );
+        capture_reset_and_start();
+        allowed_actions( 3, 3, "proid" );
+        $text = capture_stop_and_get();
+        $ps[0] = sprintf( $p_i, '3' );
+        $ps[1] = sprintf( $p_l, '3' );
+        $ps[4] = "<B>COUNT[(][*][)]_0<\/B> "
+           .$t->translate("suggested milestones");
+        $this->_testFor_patterns( $text, $ps, 5, "test 14" );
+        $this->_testFor_captured_length( 222, "test 14" );
+        $text_3_3 = $text;
+
+        // test 15: project status 4, action number 3
+        $db_config->add_query($this->query['allowed_actions_3'], 14 );
+        $rows=$this->_generate_records(array("COUNT(*)"), 1 );
+        $db_config->add_record( $rows[0], 14 );
+        capture_reset_and_start();
+        allowed_actions( 4, 3, "proid" );
+        $text = capture_stop_and_get();
+        $this->assertEquals( $text_3_3, $text, "test 15" );
+
+        //************************************************************
+        //********** tests 16 to 18: test action number = 4 **********
+        //************************************************************
+        // test 16: project status 3, action number 4
+        $db_config->add_query($this->query['allowed_actions_4'], 15 );
+        $rows=$this->_generate_records(array("COUNT(*)"), 1 );
+        $db_config->add_record( $rows[0], 15 );
+        capture_reset_and_start();
+        allowed_actions( 3, 4, "proid" );
+        $text = capture_stop_and_get();
+        $ps=array(0=>sprintf( $p_i_g, '4' ),
+                  1=>$p_f_g,
+                  2=>eval( sprintf( $p_exp, "4" ) ),
+                  3=>eval( sprintf( $p_text, "4" )));
+        $this->_testFor_patterns( $text, $ps, 4, "test 16" );
+        $this->_testFor_captured_length( 225, "test 16" );
+
+        // test 17: project status 4, action number 4
+        $db_config->add_query($this->query['allowed_actions_4'], 16 );
+        $rows=$this->_generate_records(array("COUNT(*)"), 1 );
+        $db_config->add_record( $rows[0], 16 );
+        capture_reset_and_start();
+        allowed_actions( 4, 4, "proid" );
+        $text = capture_stop_and_get();
+        $ps[0] = sprintf( $p_i, "4" );
+        $ps[1] = sprintf( $p_l, "4" );
+        $ps[4] = "<B>COUNT[(][*][)]_0<\/B> ".$t->translate("referees offered");
+        $this->_testFor_patterns( $text, $ps, 5, "test 17" );
+        $this->_testFor_captured_length( 268, "test 17" );
+        $text_4_4 = $text;
+
+        // test 18: project status 5, action number 4
+        $db_config->add_query($this->query['allowed_actions_4'], 17 );
+        $rows=$this->_generate_records(array("COUNT(*)"), 1 );
+        $db_config->add_record( $rows[0], 17 );
+        capture_reset_and_start();
+        allowed_actions( 5, 4, "proid" );
+        $text = capture_stop_and_get();
+        $this->assertEquals( $text_4_4, $text, "test 18" );
+
+        //************************************************************
+        //********** tests 19 to 21: test action number = 5 **********
+        //************************************************************
+        // test 19: project status 4, action number 5
+        capture_reset_and_start();
+        allowed_actions( 4, 5, "proid" );
+        $text = capture_stop_and_get();
+        $ps=array(0=>sprintf( $p_i_g, '5' ),
+                  1=>$p_f_g,
+                  2=>eval( sprintf( $p_exp, "5" ) ),
+                  3=>eval( sprintf( $p_text, "5" )));
+        $this->_testFor_patterns( $text, $ps, 4, "test 19" );
+        $this->_testFor_captured_length( 208, "test 19" );
+
+        // test 20: project status 5, action number 5
+        capture_reset_and_start();
+        allowed_actions( 5, 5, "proid" );
+        $text = capture_stop_and_get();
+        $ps[0] = sprintf( $p_i, "5" );
+        $ps[1] = sprintf( $p_l, "5" );
+        $ps[4] = ( "<B>x<\/B> ".$t->translate("milestones of")
+                   ." <b>x<\/b> ".$t->translate("total milestones fulfilled"));
+        $this->_testFor_patterns( $text, $ps, 5, "test 20" );
+        $this->_testFor_captured_length( 275, "test 20" );
+        $text_5_5 = $text;
+
+        // test 21: project status 6, action number 5
+        capture_reset_and_start();
+        allowed_actions( 6, 5, "proid" );
+        $text = capture_stop_and_get();
+        $this->assertEquals( $text_5_5, $text, "test 21" );
+
+        //************************************************************
+        //********** tests 22 to 24: test action number = 6 **********
+        //************************************************************
+        // test 22: project status 5, action number 6
+        capture_reset_and_start();
+        allowed_actions( 5, 6, "proid" );
+        $text = capture_stop_and_get();
+        $ps=array(0=>sprintf( $p_i_g, '6' ),
+                  1=>$p_f_g,
+                  2=>eval( sprintf( $p_exp, "6" ) ),
+                  3=>eval( sprintf( $p_text, "6" )));
+        $this->_testFor_patterns( $text, $ps, 4, "test 22" );
+        $this->_testFor_captured_length( 174, "test 22" );
+
+        // test 23: project status 6, action number 6
+        capture_reset_and_start();
+        allowed_actions( 6, 6, "proid" );
+        $text = capture_stop_and_get();
+        $ps[0] = sprintf( $p_i, "6" );
+        $ps[1] = sprintf( $p_l, "6" );
+        $ps[4] = ( "<br>" );
+        $this->_testFor_captured_length( 179, "test 23" );
+        $this->_testFor_patterns( $text, $ps, 5, "test 23" );
+        $text_6_6 = $text;
+
+        // test 24: project status 7, action number 6
+        capture_reset_and_start();
+        allowed_actions( 7, 6, "proid" );
+        $text = capture_stop_and_get();
+        $this->assertEquals( $text_6_6, $text, "test 24" );
+
+        $this->_check_db( $db_config );
     }
     function testCheck_permission() {
         $this->_test_to_be_completed();
@@ -401,11 +733,184 @@ extends UnitTest
         $this->_check_db( $db_config );
     }
     function testSecurity_accept_by_view() {
-        $this->_test_to_be_completed();
-//          $db_config = new mock_db_configure( 1 );
+        global $auth;
 
-//          $db_q=array(0=>$this->query['security_accept_by_view']);
-//          $this->_check_db( $db_config );
+        $db_config = new mock_db_configure( 23 );
+
+        $db_q=array(0=>$this->query['security_accept_by_view']);
+
+        $args=$this->_generate_records( array("proid", "page" ), 11 );
+        $rows=$this->_generate_records( array("news"), 1 );
+
+        $args[0]["page"] = "news_edit";
+        $args[1]["page"] = "news_mod";
+        $args[2]["page"] = "comments_edit";
+
+        $rows[0]["news"] = "Everybody";
+
+        // test one: page news_edit becomes news, DB instance: 0
+        $db_config->add_query( sprintf( $db_q[0], "news",$args[0]["proid"]),0);
+        $db_config->add_record( $rows[0], 0 );
+        $this->assertEquals( 1, security_accept_by_view( $args[0]["proid"],
+                                        $args[0]["page"]), "test 1" );
+        
+        // test two: page news_mod becomes news, DB instance: 1
+        $db_config->add_query( sprintf( $db_q[0], "news",$args[1]["proid"]),1);
+        $db_config->add_record( $rows[0], 1 );
+        $this->assertEquals( 1, security_accept_by_view( $args[1]["proid"],
+                                        $args[1]["page"]), "test 2");
+
+        // test three: page comments_edit becomes comments, DB instance: 2
+        $rows=$this->_generate_records( array("comments"), 1 );
+        $rows[0]["comments"] = "Everybody";
+        $db_config->add_query( sprintf( $db_q[0], "comments",
+                                        $args[2]["proid"]),2);
+        $db_config->add_record( $rows[0], 2 );
+        $this->assertEquals( 1, security_accept_by_view( $args[2]["proid"],
+                                        $args[2]["page"]), "test 3" );
+
+        auth_set();
+        $GLOBALS['auth']->set_perm( 'fubar' );
+        $GLOBALS['auth']->set_uname( 'username' );
+        
+        //
+        // what we test is that all or calls are made to the sub-conditions,
+        // i.e. is_XXXXX(). These are normalled OR'ed together, and
+        // what we do is make sure that all calls return false and therefore
+        // we ensure that all calls are made. 
+        //
+        // test four: case Developers, DB instances: 3,4,5
+        // is_developer call, returns 0
+        $db_config->add_query( "SELECT * FROM auth_user WHERE perms LIKE "
+                               ."'%devel%' AND username='username'", 4 );
+        $db_config->add_num_row( 0, 4 );
+        // is_accepted_sponsor call, returns 0
+        $db_config->add_query( "SELECT * FROM sponsoring WHERE proid="
+                               ."'proid_3' AND status='A' AND "
+                               ."sponsor='username'", 5 );
+        $db_config->add_num_row( 0, 5 );
+        
+        $rows=$this->_generate_records( array($args[3]["page"]), 1 );
+        $rows[0][$args[3]["page"]] = "Developers";
+        $db_config->add_query( sprintf( $db_q[0], $args[3]["page"],
+                                        $args[3]["proid"]),3);
+        $db_config->add_record( $rows[0], 3 );
+        $this->assertEquals( 0, security_accept_by_view( $args[3]["proid"],
+                                        $args[3]["page"]), "test 4" );
+        
+        // test five: case Sponsors, DB instances 6,7,8
+        // is_sponser call returns 0
+        $db_config->add_query( "SELECT * FROM auth_user WHERE perms LIKE "
+                               ."'%sponsor%' AND username='username'", 7 );
+        $db_config->add_num_row( 0, 7 );
+        // is_involved_developer call returns 0
+        $db_config->add_query( "SELECT * FROM developing WHERE proid="
+                               ."'proid_4' AND developer='username'", 8 );
+        $db_config->add_num_row( 0, 8 );
+
+        $rows=$this->_generate_records( array($args[4]["page"]), 1 );
+        $rows[0][$args[4]["page"]] = "Sponsors";
+        $db_config->add_query( sprintf( $db_q[0], $args[4]["page"],
+                                        $args[4]["proid"]), 6);
+        $db_config->add_record( $rows[0], 6 );
+        $this->assertEquals( 0, security_accept_by_view( $args[4]["proid"],
+                                        $args[4]["page"]), "test 5" );
+        
+        // test six: case "Project Participants", DB instances: 9,10,11,12
+        // is_involved_developer returns 0
+        $db_config->add_query( "SELECT * FROM developing WHERE proid="
+                               ."'proid_5' AND developer='username'", 10 );
+        $db_config->add_num_row( 0, 10 );
+        // is_accepted_sponsor returns 0
+        $db_config->add_query( "SELECT * FROM sponsoring WHERE proid="
+                               ."'proid_5' AND status='A' AND sponsor="
+                               ."'username'", 11 );
+        $db_config->add_num_row( 0, 11 );
+        // is_project_initiator returns 0
+        $db_config->add_query( "SELECT * FROM description WHERE proid="
+                               ."'proid_5' AND description_user="
+                               ."'username'", 12 );
+        $db_config->add_num_row( 0, 12 );
+
+        $rows=$this->_generate_records( array($args[5]["page"]), 1 );
+        $rows[0][$args[5]["page"]] = "Project Participants";
+        $db_config->add_query( sprintf( $db_q[0], $args[5]["page"],
+                                        $args[5]["proid"]), 9);
+        $db_config->add_record( $rows[0], 9 );
+        $this->assertEquals( 0, security_accept_by_view( $args[5]["proid"],
+                                        $args[5]["page"]), "test 6" );
+
+        // test seven: case "Project Developers", DB instance 13, 14
+        // is_involved_developer returns 0
+        $db_config->add_query( "SELECT * FROM developing WHERE proid="
+                               ."'proid_6' AND developer='username'", 14 );
+        $db_config->add_num_row( 0, 14 );
+
+        $rows=$this->_generate_records( array($args[6]["page"]), 1 );
+        $rows[0][$args[6]["page"]] = "Project Developers";
+        $db_config->add_query( sprintf( $db_q[0], $args[6]["page"],
+                                        $args[6]["proid"]), 13);
+        $db_config->add_record( $rows[0], 13 );
+        $this->assertEquals( 0, security_accept_by_view( $args[6]["proid"],
+                                        $args[6]["page"]), "test 7" );
+
+        // test eight: case "Project Sponsors", DB instance: 15, 16
+        // is_accepted_sponsor returns 0
+        $db_config->add_query( "SELECT * FROM sponsoring WHERE proid="
+                               ."'proid_7' AND status='A' AND sponsor="
+                               ."'username'", 16 );
+        $db_config->add_num_row( 0, 16 );
+
+        $rows=$this->_generate_records( array($args[7]["page"]), 1 );
+        $rows[0][$args[7]["page"]] = "Project Sponsors";
+        $db_config->add_query( sprintf( $db_q[0], $args[7]["page"],
+                                        $args[7]["proid"]), 15);
+        $db_config->add_record( $rows[0], 15 );
+        $this->assertEquals( 0, security_accept_by_view( $args[7]["proid"],
+                                        $args[7]["page"]), "test 8" );
+        
+        // test nine: case "Project Initiator", DB instances: 17, 18
+        $db_config->add_query( "SELECT * FROM description WHERE proid="
+                               ."'proid_8' AND description_user="
+                               ."'username'", 18 );
+        $db_config->add_num_row( 0, 18 );
+
+        $rows=$this->_generate_records( array($args[8]["page"]), 1 );
+        $rows[0][$args[8]["page"]] = "Project Initiator";
+        $db_config->add_query( sprintf( $db_q[0], $args[8]["page"],
+                                        $args[8]["proid"]), 17);
+        $db_config->add_record( $rows[0], 17 );
+        $this->assertEquals( 0, security_accept_by_view( $args[8]["proid"],
+                                        $args[8]["page"]), "test 9" );
+
+        // test ten: case "Registered", returns 1, DB instance 19
+        $rows=$this->_generate_records( array($args[9]["page"]), 1 );
+        $rows[0][$args[9]["page"]] = "Registered";
+        $db_config->add_query( sprintf( $db_q[0], $args[9]["page"],
+                                        $args[9]["proid"]), 19);
+        $db_config->add_record( $rows[0], 19 );
+        $this->assertEquals( 1, security_accept_by_view( $args[9]["proid"],
+                                        $args[9]["page"]), "test 10" );
+
+        // test eleven: case "Registered", returns 0, DB instances: 20
+        $GLOBALS['auth']->set_perm( 'devel_pending' );
+        $db_config->add_query("SELECT * FROM auth_user WHERE perms LIKE "
+                              ."'%devel%' AND username='username'", 21 );
+        $db_config->add_num_row( 0, 21 );
+        $db_config->add_query( "SELECT * FROM sponsoring WHERE proid="
+                               ."'proid_10' AND status='A' AND sponsor="
+                               ."'username'", 22 );
+        $db_config->add_num_row( 0, 22 );
+
+        $rows=$this->_generate_records( array($args[10]["page"]), 1 );
+        $rows[0][$args[10]["page"]] = "Registered";
+        $db_config->add_query( sprintf( $db_q[0], $args[10]["page"],
+                                        $args[10]["proid"]), 20);
+        $db_config->add_record( $rows[0], 20 );
+        $this->assertEquals( 0, security_accept_by_view( $args[10]["proid"],
+                                        $args[10]["page"]), "test 11" );
+
+        $this->_check_db( $db_config );
     }
 
     function testStep5_iteration() {
@@ -446,8 +951,108 @@ extends UnitTest
     }
 
     function testStep5_not_your_iteration() {
-        $this->_test_to_be_completed();
+        global $t;
+
+        $db_config = new mock_db_configure( 14 );
+        
+        for ( $idx = 0; $idx < 14; $idx+=2 ) {
+            // query required for top_bar(...)
+            $db_config->add_query("SELECT * FROM description WHERE "
+                                  ."proid='proid'", $idx);
+            $db_config->add_num_row( 0, $idx ); // invalid project id
+
+            // query required for step5_iteration(...)
+            $db_config->add_query( "SELECT milestone_number,iteration FROM "
+                                   ."follow_up WHERE proid='proid'", $idx+1 );
+            $db_config->add_num_row( 1, $idx+1 );
+
+            $rows=$this->_generate_records(array("milestone_number",
+                                                 "iteration"), 1);
+            $rows[0]["milestone_number"] = 1;
+            $rows[0]["iteration"] = $idx/2;
+            $db_config->add_record( $rows[0], $idx+1 );
+        }
+
+        $ps=array( 0=>'<b>'.$t->translate('Not your turn').'<\/b>',1=>"");
+        $p = '<font color="#FF2020">[ \n]*%s[ \n]*<\/font>';
+
+        // step5_iteration(..) returns 0
+        capture_reset_and_start();
+        $this->assertEquals( 0, step5_not_your_iteration( "proid", "page" ),
+                             "test 1" );
+        $text = capture_stop_and_get();
+        $ps[1] = sprintf( $p, $t->translate("The milestone has not "
+                                            ."been posted by the developer"));
+        $this->_testFor_patterns( $text, $ps, 2, "test 1" );
+        $this->_testFor_captured_length( 2978, "test 1" );
+
+        // step5_iteration(..) returns 1
+        capture_reset_and_start();
+        $this->assertEquals( 0, step5_not_your_iteration( "proid", "page" ),
+                             "test 2" );
+        $text = capture_stop_and_get();
+        $ps[1] = sprintf( $p, $t->translate('The milestone has been posted. '
+                                            .'Sponsors are studying whether '
+                                            .'to accept it or not.'));
+        $this->_testFor_patterns( $text, $ps, 2, "test 2" );
+        $this->_testFor_captured_length( 3009, "test 2" );
+
+        // step5_iteration(..) returns 2
+        capture_reset_and_start();
+        $this->assertEquals( 0, step5_not_your_iteration( "proid", "page" ),
+                             "test 3" );
+        $text = capture_stop_and_get();
+        $ps[1] = sprintf( $p, $t->translate('Sponsors have rejected the '
+                                            .'current milestone. The referee '
+                                            .'is studying it.'));
+        $this->_testFor_patterns( $text, $ps, 2, "test 3" );
+        $this->_testFor_captured_length( 3001, "test 3" );
+
+        // step5_iteration(..) returns 3
+        capture_reset_and_start();
+        $this->assertEquals( 0, step5_not_your_iteration( "proid", "page" ),
+                             "test 4" );
+        $text = capture_stop_and_get();
+        $ps[1] = sprintf( $p, $t->translate('The referee has decided that '
+                                            .'the milestone posted by the '
+                                            .'developer does not fulfill '
+                                            .'the promised goals. Sponsors '
+                                            .'are deciding what is going to '
+                                            .'happen to the project'));
+        $this->_testFor_patterns( $text, $ps, 2, "test 4" );
+        $this->_testFor_captured_length( 3092, "test 4" );
+
+        // step5_iteration(..) returns 4
+        capture_reset_and_start();
+        $this->assertEquals( 0, step5_not_your_iteration( "proid", "page" ),
+                             "test 5" );
+        $text = capture_stop_and_get();
+        $ps[1] = sprintf( $p, $t->translate('Unknown iteration'));
+        $this->_testFor_patterns( $text, $ps, 2, "test 5" );
+        $this->_testFor_captured_length( 2945, "test 5" );
+
+        // step5_iteration(..) returns 5
+        capture_reset_and_start();
+        $this->assertEquals( 0, step5_not_your_iteration( "proid", "page" ),
+                             "test 6" );
+        $text = capture_stop_and_get();
+        $ps[1] = sprintf( $p, $t->translate('The follow_up process is '
+                                            .'finished'));
+        $this->_testFor_patterns( $text, $ps, 2, "test 6" );
+        $this->_testFor_captured_length( 2961, "test 6" );
+
+        // step5_iteration(..) returns 6
+        capture_reset_and_start();
+        $this->assertEquals( 0, step5_not_your_iteration( "proid", "page" ),
+                             "test 7" );
+        $text = capture_stop_and_get();
+        $ps[1] = sprintf( $p, $t->translate('Unknown iteration'));
+        $this->_testFor_patterns( $text, $ps, 2, "test 7" );
+        $this->_testFor_captured_length( 2945, "test 7" );
+        
+        $this->_check_db( $db_config );
     }
+
     function testIs_your_milestone() {
         $this->_test_is_something( 'is_your_milestone' );
     }
