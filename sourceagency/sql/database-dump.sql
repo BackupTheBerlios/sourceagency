@@ -21,19 +21,7 @@ CREATE TABLE active_sessions (
 # Dumping data for table 'active_sessions'
 #
 
-INSERT INTO active_sessions VALUES ('499c63d324f9c89a8fec6bf2c3efd9e3','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030324212435');
-INSERT INTO active_sessions VALUES ('1d1e5683abde66d2901e457e21896bf3','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030326111627');
-INSERT INTO active_sessions VALUES ('ab28981f85454de8add8353033d359fa','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0VuZ2xpc2gnOyAkR0xPQkFMU1snYXV0aCddID0gbmV3IFNvdXJjZUFnZW5jeV9BdXRoOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoID0gYXJyYXkoKTsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsndWlkJ10gPSAnZm9ybSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICcnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydleHAnXSA9ICcyMTQ3NDgzNjQ3JzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsncmVmcmVzaCddID0gJzIxNDc0ODM2NDcnOyA=','20030326192511');
-INSERT INTO active_sessions VALUES ('0b2c84c9e4f81b69e6cc27998bc63faa','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030327083208');
-INSERT INTO active_sessions VALUES ('968cf7ddf7bb199af12e812c1f53b98e','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0VuZ2xpc2gnOyAkR0xPQkFMU1snYXV0aCddID0gbmV3IFNvdXJjZUFnZW5jeV9BdXRoOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoID0gYXJyYXkoKTsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsndWlkJ10gPSAnZm9ybSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICcnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydleHAnXSA9ICcyMTQ3NDgzNjQ3JzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsncmVmcmVzaCddID0gJzIxNDc0ODM2NDcnOyA=','20030323111716');
-INSERT INTO active_sessions VALUES ('a6b30d4e8771f17a741c217d419233c8','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030322123209');
-INSERT INTO active_sessions VALUES ('e610c375c52cb56bbbd8750a826e8dd6','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030322133639');
-INSERT INTO active_sessions VALUES ('76f44609055702f4388d76f69e57abc3','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030323094033');
-INSERT INTO active_sessions VALUES ('daf02342ca5bccf991b64c7e9193538f','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0VuZ2xpc2gnOyAkR0xPQkFMU1snYXV0aCddID0gbmV3IFNvdXJjZUFnZW5jeV9BdXRoOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoID0gYXJyYXkoKTsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsndWlkJ10gPSAnZm9ybSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICcnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydleHAnXSA9ICcyMTQ3NDgzNjQ3JzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsncmVmcmVzaCddID0gJzIxNDc0ODM2NDcnOyA=','20030323045454');
-INSERT INTO active_sessions VALUES ('6ee566c10f9754a2458c1849132c9b9f','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030323092549');
-INSERT INTO active_sessions VALUES ('8ab1f17fb79e2682bed127004c9cd8d6','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030323092528');
-INSERT INTO active_sessions VALUES ('384907023951d2083294bb217fc088ee','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnYXV0aCddID0gJzEnOyAkdGhpcy0+cHRbJ2xhJ10gPSAnMSc7ICRHTE9CQUxTWydhdXRoJ10gPSBuZXcgU291cmNlQWdlbmN5X0F1dGg7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGggPSBhcnJheSgpOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1aWQnXSA9ICdmb3JtJzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsncGVybSddID0gJyc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ2V4cCddID0gJzIxNDc0ODM2NDcnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydyZWZyZXNoJ10gPSAnMjE0NzQ4MzY0Nyc7ICRHTE9CQUxTWydsYSddID0gJ0VuZ2xpc2gnOyA=','20030322182815');
-INSERT INTO active_sessions VALUES ('d4f4c1ebc28c29ddcf2ef24240a78e90','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030323030151');
+INSERT INTO active_sessions VALUES ('f78cc7589880b5821c6332cd0b625fd6','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030329221024');
 INSERT INTO active_sessions VALUES ('0fbd4b92a0e12af3c500f59ad87de13c','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030328214520');
 
 #
@@ -81,6 +69,7 @@ INSERT INTO auth_user VALUES ('2e15df500015a7e8e19d9b1bae53af70','Tatanka','alfa
 INSERT INTO auth_user VALUES ('c79c8de5518212e79a7f31fe17a761d7','alexey0321','alexa45','Alexey','alexey0321@yandex.ru',20030217101525,20030217101449,'devel');
 INSERT INTO auth_user VALUES ('a09109e3a7c3b482696589c60c316402','Micro','rudi66','Mirko Glotz','microg@gmx.net',20030218215857,20030218214607,'devel');
 INSERT INTO auth_user VALUES ('397fe75e863147a5b3edfba4ed1d1d94','skypher','4bssravi4','Leslie Polzer','leslie.polzer@gmx.net',20030309145805,20030309145657,'devel');
+INSERT INTO auth_user VALUES ('d5f8b56f8f11a912ffa399cca20dddd5','hburde1','thisiscool','Holger Burde','hburde@uni-bremen.de',20030329184633,20030329184411,'devel');
 
 #
 # Table structure for table 'categories'
@@ -179,6 +168,7 @@ INSERT INTO configure VALUES (30,NULL,'No','Yes','Yes',NULL,'helix');
 INSERT INTO configure VALUES (31,NULL,'No','Yes','Yes','nilix','erik');
 INSERT INTO configure VALUES (32,NULL,'No','Yes','Yes',NULL,'308624857');
 INSERT INTO configure VALUES (33,NULL,'No','No','No',NULL,'Tatanka');
+INSERT INTO configure VALUES (34,NULL,'No','No','No',NULL,'hburde1');
 
 #
 # Table structure for table 'consultants'
@@ -262,6 +252,7 @@ INSERT INTO counter VALUES (30,0,0);
 INSERT INTO counter VALUES (31,0,0);
 INSERT INTO counter VALUES (32,0,0);
 INSERT INTO counter VALUES (33,0,0);
+INSERT INTO counter VALUES (34,0,0);
 
 #
 # Table structure for table 'counter_check'
@@ -410,6 +401,7 @@ INSERT INTO description VALUES (30,'qqqq','Adaption','rusr tejn 73k zu','helix',
 INSERT INTO description VALUES (31,'Lokalisierung des Scoop CMS','Adaption','Das Content Management System (CMS) Scoop muss für die Übersetzung in verschiedene Sprachen angepasst werden. Hauptproblem sind existierende Text-Blöcke im Quellcode, die in die Datenbank oder evtl., falls es sich um kürzere Textketten handelt, in eine Textdatei verschoben werden müssen.\r\n\r\nWeiterhin muss es einem Benutzer möglich sein, eine Sprachpräferenz auszuwählen. Anonyme Nutzer sollten das System in der in ihrem Browser eingestellten Sprache sehen. \r\n\r\nEine deutsche Übersetzung von Scoop ist Teil dieses Projekts. Fehlermeldungen bzw. Warnhinweise, die im Apache-Error-Log gespeichert werden, müssen nicht übersetzt werden.\r\n\r\nEs wäre u.U. wünschenswert, auch für von Nutzern beigesteuerte Kommentare und Stories ein Sprachattribut zu verwalten und Nutzern und Administratoren zu gestatten, Sprachfilter zu definieren. Dies ist jedoch kein unbedingt/sofort notwendiges Feature.','erik','< 2 Man Months',2,20021106151536);
 INSERT INTO description VALUES (32,'Reflective memory','Expansion','There are many problems facing the design of a good distributed file system. Transporting many files over the net can easily create sluggish performance and latency, network bottlenecks and server overload can result. The security of data is another important issue: how can we be sure that a client is really authorized to have access to information and how can we prevent data being sniffed off the network? Two further problems facing the design are related to failures. Often client computers are more reliable than the network connecting them and network failures can render a client useless. Similarly a server failure can be very unpleasant, since it can disable all clients from accessing crucial information. This project has paid attention to many of these issues and implemented them as a research prototype.','308624857','< 6 Man Months',0,20030113151547);
 INSERT INTO description VALUES (33,'Collaboration Systems','Documentation','There is a need to deploy a collaborating system. First to do to evaluate the existing solutions. Non public use included.','Tatanka','< 0.25 Man Month',0,20030214020544);
+INSERT INTO description VALUES (34,'cfsadm - Gnome2 GUI for CFS Crypto FS','Other','GNOME2 GUI to handle all of the non-NFS related CFS Setup and maintainance steps.\r\n\r\nOperations :\r\n- Creating new crypto FS (supporting all cmkir options like ciphers, keylen etc.\r\nexcepet for backward compat to 1.3.x)\r\n- Mount, unmount (cattach, cdetach)\r\n- Display CFS Properties\r\n- Remove unneeded CFS entrys\r\n\r\nCFS is a crypto FS (3des,blowfish,..) for *NIX that only depends on NFS. \r\nSee http://www.crypto.com/papers/index.html \r\nfor infos on CFS.','hburde1','< 6 Man Months',0,20030329190348);
 
 #
 # Table structure for table 'developing'
@@ -686,6 +678,7 @@ INSERT INTO history VALUES (31,'BerliOS editor','Review','Project reviewed by a 
 INSERT INTO history VALUES (32,'308624857','Configure','Project configuration',20030113151634);
 INSERT INTO history VALUES (32,'308624857','Configure','Project configuration modified',20030113151753);
 INSERT INTO history VALUES (33,'Tatanka','Configure','Project configuration',20030214020615);
+INSERT INTO history VALUES (34,'hburde1','Configure','Project configuration',20030329190450);
 
 #
 # Table structure for table 'involved'
@@ -1001,4 +994,5 @@ INSERT INTO views VALUES (30,'Project Participants','Project Participants','Proj
 INSERT INTO views VALUES (31,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20021025172802);
 INSERT INTO views VALUES (32,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20030113151547);
 INSERT INTO views VALUES (33,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20030214020544);
+INSERT INTO views VALUES (34,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20030329190348);
 
