@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.5 2002/04/08 21:32:47 grex Exp $
+# $Id: config.inc,v 1.6 2002/05/02 09:31:25 riessen Exp $
 #
 ######################################################################
 
@@ -37,10 +37,10 @@ $sys_name = "SourceAgency Project Page";
 $sys_title = "Open Source Project Mediation & Management";
 $sys_url_title = "http://www.berlios.de/";
 $sys_url = "http://sourceagency.berlios.de/beta/";
-$sys_logo_image = "../images/berlios.jpg";
+$sys_logo_image = "../images/berlios_logo.jpg";
 $sys_logo_alt = "BerliOS";
 $sys_logo_width = "238";
-$sys_logo_height = "104";
+$sys_logo_height = "61";
 
 ######################################################################
 # Organisation Config
@@ -53,12 +53,12 @@ $sys_logo_height = "104";
 # org_logo_height  Height of the image of your Organisation
 ######################################################################
 
-$org_name = "FhG/GMD FOKUS";
+$org_name = "FOKUS";
 $org_url = "http://www.fokus.fhg.de/";
-$org_logo_image = "../images/logo_fokus.gif";
+$org_logo_image = "../images/logo_fokus.png";
 $org_logo_alt = $org_name;
-$org_logo_width = "66";
-$org_logo_height = "73";
+$org_logo_width = "60";
+$org_logo_height = "60";
 
 ######################################################################
 # Top Strip
@@ -93,7 +93,7 @@ $th_font_color = "#333333";
 $th_hover_font_color = "#FF0000";
 
 $th_nav_bgcolor = "#FFCC33";
-$th_navstrip_bgcolor = "#000000";
+$th_navstrip_bgcolor = "#7B7B7B";
 $th_nav_font_color = "#333333";
 $th_navstrip_font_color = "#FFFFFF";
 
