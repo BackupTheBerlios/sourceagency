@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: step5_sponsor.php3,v 1.7 2002/04/10 13:02:48 grex Exp $
+# $Id: step5_sponsor.php3,v 1.8 2002/05/06 12:46:35 riessen Exp $
 #
 ######################################################################  
 
@@ -32,7 +32,10 @@ require('header.inc');
 require('followuplib.inc');
 require('decisionslib.inc');
 
-$bx = new box('100%',$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
+$bx = new box('100%',$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
 start_content();
 
@@ -42,7 +45,7 @@ if (check_permission($proid, $page)) {
     top_bar($proid, $page);
 
     if (step5_iteration($proid) != 3) {
-	print "This is the page where sponsors accept or reject milestones.\n";
+	print $t->translate("This is the page where sponsors accept or reject milestones").".\n";
 
 	$db->query("SELECT quorum FROM configure WHERE proid='$proid'");
 	$db->next_record();
@@ -70,7 +73,7 @@ if (check_permission($proid, $page)) {
                 are_you_sure_message_step5($proid);
             } else {
                 decisions_step5_sponsors($proid,$milestone_number,$count);
-                $bx->box_full('<b>A decision has been made</b>','And this is the decision: '.decisions_decision_met_on_step5 ($proid,$milestone_number,$count));
+                $bx->box_full('<b>'.$t->translate('A decision has been made').'</b>',$t->translate('And this is the decision').': '.decisions_decision_met_on_step5 ($proid,$milestone_number,$count));
             }
 	}
         $bx->box_full($t->translate('Information Box'),

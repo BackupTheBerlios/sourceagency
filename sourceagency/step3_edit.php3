@@ -39,8 +39,8 @@ $page = "step3_edit";
 if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
-  print "The main developer can propose the milestone planning.\n";
-  print "<br><p>\n";
+  print $t->translate("The main developer can propose the milestone planning");
+  print ".\n<br><p>\n";
 
   if ( is_not_set_or_empty( $devid ) ) {
       $db->query("SELECT devid FROM developing WHERE proid='$proid' "
@@ -63,5 +63,5 @@ if (check_permission($proid,$page)) {
 
 end_content();
 require("footer.inc");
-page_close();
+@page_close();
 ?>

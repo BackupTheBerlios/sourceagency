@@ -28,35 +28,29 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require("followuplib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
+$bx = new box('100%',$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-?>
-
-<!-- content -->
-
-<?php
-
+start_content();
 $page = "project followment";
 
 if (check_proid($proid)) {
-  top_bar($proid,$page);
-
-  print "You can see in a view what is this project about.<p>\n";
-
-  $milestone_number = followup_current_milestone($proid);
-  $count = followup_current_count($proid,$milestone_number);
-
-  followup_milestone_schedule($proid,$milestone_number,$count);
-
-  followup($proid);
-
+    top_bar($proid,$page);
+    
+    print $t->translate("You can see in a view what is this project about")
+        .".<p>\n";
+    
+    $milestone_number = followup_current_milestone($proid);
+    $count = followup_current_count($proid,$milestone_number);
+    
+    followup_milestone_schedule($proid,$milestone_number,$count);
+    
+    followup($proid);
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 @page_close();
 ?>

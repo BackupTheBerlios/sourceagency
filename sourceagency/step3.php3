@@ -40,11 +40,12 @@ $page = "milestones";
 if (check_permission($proid,$page)) {
     top_bar($proid,$page);
     
-    print "Milestone suggestions and agreement.\n";
+    print $t->translate('Milestone suggestions and agreement').".\n";
     
     print ("<p align=right>[ <b>"
            .html_link("step3_edit.php3",array("proid" => $proid),
-                      "<b>Propose Milestones</b>")."</b> ]");
+                      "<b>".$t->translate('Propose Milestones')
+                      ."</b>")."</b> ]");
     
     $db->query("SELECT DISTINCT(devid) FROM milestones WHERE proid='$proid'");
     while($db->next_record()) {
@@ -56,15 +57,15 @@ if (check_permission($proid,$page)) {
 	show_milestones($proid,$db->f("devid"),$who);
     }
 
-  print "<p><b>About what you can see and what not</b>\n";
-  print "<ul><li>Non-involved (registered and unregistered) users can see only the accepted milestones.\n";
-  print "<li>Project owners can see all milestones (proposed and accepted ones).\n";
-  print "<li>Involved developers can see their own milestones and the accepted milestones from other developers.\n";
-  print "</ul>\n";
-
-  if (is_accepted_sponsor($proid)) {
-      create_decision_link( $proid );
-  }
+    print "<p><b>".$t->translate('About what you can see and what not')."</b>\n";
+    print "<ul><li>".$t->translate('Non-involved (registered and unregistered) users can see only the accepted milestones').".\n";
+    print "<li>".$t->translate('Project owners can see all milestones (proposed and accepted ones)').".\n";
+    print "<li>".$t->translate('Involved developers can see their own milestones and the accepted milestones from other developers').".\n";
+    print "</ul>\n";
+    
+    if (is_accepted_sponsor($proid)) {
+        create_decision_link( $proid );
+    }
 }
 
 end_content();

@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: register.php3,v 1.2 2001/11/12 13:00:05 riessen Exp $
+# $Id: register.php3,v 1.3 2002/05/06 12:46:35 riessen Exp $
 #
 ######################################################################
 
@@ -180,8 +180,9 @@ if (!$reg) {
 <input type="text" name="username" size="20" maxlength="32" value=""></td>
 </tr>
 <td align="right"><?php echo $t->translate("Type") ?>:</td><td nowrap>
-<input type="radio" name="user_type" value="devel" checked>Developer 
-<input type="radio" name="user_type" value="sponsor">Sponsor</td>
+<input type="radio" name="user_type" value="devel" checked><?php echo $t->translate("Developer") ?> 
+<input type="radio" name="user_type" value="sponsor"><?php echo $t->translate("Sponsor") ?>
+</td>
 </tr>
 <tr valign="middle" align="left">
 <td align="right"><?php echo $t->translate("Password") ?>:</td><td>

@@ -40,13 +40,15 @@ $page = "referees";
 if (check_proid($proid)) {
   top_bar($proid,$page);
 
-  print "Referee registration and selection. Any developer who has "
-      ."the skills to be a referee can propose himself as one.\n";
+  print $t->translate("Referee registration and selection. Any developer "
+                      ."who has the skills to be a referee can propose "
+                      ."himself as one").".\n";
 
-  print "<p align=right>[ <b>".html_link("step4_edit.php3",
-                                         array("proid" => $proid),
-                                         "Propose yourself as referee")
-      ."</b> ]\n";
+  print ( "<p align=right>[ <b>"
+          .html_link("step4_edit.php3",
+                     array("proid" => $proid),
+                     $t->translate("Propose yourself as referee"))
+          ."</b> ]\n");
 
   show_referees($proid);
 

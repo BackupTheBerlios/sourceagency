@@ -28,14 +28,12 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require("ratingslib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-?>
-
-<!-- content -->
-
-<?php
-
+start_content();
 $page = "step6_edit";
 
 /*
@@ -46,37 +44,35 @@ print "<br><b>ID_number: </b>".$id_number;
 */
 
 if (check_permission($proid,$page)) {
-  top_bar($proid,$page);
+    top_bar($proid,$page);
+    
+    if (isset($submit) && !empty($submit)) {
+        ratings_insert($proid,$dev_or_spo,$id_number,$auth->auth["uname"]);
+        ratings_look_for_next_one($proid,&$id_number);
+    }
+    
+    if(!isset($dev_or_spo) || empty($dev_or_spo) 
+       || is_not_set_or_empty( $id_number )) {
+        $id_number = ratings_look_for_first_one($proid);
+    }
 
-  if (isset($submit) && !empty($submit)) {
-	ratings_insert($proid,$dev_or_spo,$id_number,$auth->auth["uname"]);
-	ratings_look_for_next_one($proid,&$id_number);
-  }
-
-  if(!isset($dev_or_spo) || empty($dev_or_spo) || is_not_set_or_empty( $id_number )) {
-     $id_number = ratings_look_for_first_one($proid);
-  }
-
-  print "Project participants have the opportunity to rate the other project members.\n";
+    print $t->translate("Project participants have the opportunity to rate "
+                        ."the other project members").".\n";
 
 /*
 // Debugging information
 print "<p><b>Dev_or_spo2: </b>".$dev_or_spo;
 print "<br><b>ID_number2: </b>".$id_number;
 */
-
-  if (!isset($finished) && empty($finished)) {
-      ratings_form($proid,$dev_or_spo,$id_number);
-  } else {
-     ratings_in_history($proid,$auth->auth["uname"]);
-  }
+    
+    if (!isset($finished) && empty($finished)) {
+        ratings_form($proid,$dev_or_spo,$id_number);
+    } else {
+        ratings_in_history($proid,$auth->auth["uname"]);
+    }
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
-page_close();
+@page_close();
 ?>

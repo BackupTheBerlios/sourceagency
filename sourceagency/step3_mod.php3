@@ -39,8 +39,8 @@ $page = "step3_mod";
 if (check_permission($proid,$page)) {
     top_bar($proid,$page);
 
-    print "The main developer can modify the milestone planning.\n";
-    print "<br><b>Warning</b>: Any modified milestone will change its status to \"Proposed\".\n";
+    print $t->translate("The main developer can modify the milestone planning").".\n";
+    print "<br><b>".$t->translate("Warning")."</b>: ".$t->translate("Any modified milestone will change its status to \"Proposed\"").".\n";
     print "<br><p>\n";
 
     if ( is_not_set_or_empty( $preview ) && is_not_set_or_empty( $submit ) ) {

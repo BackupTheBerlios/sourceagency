@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: summary.php3,v 1.2 2001/11/26 13:56:54 riessen Exp $
+# $Id: summary.php3,v 1.3 2002/05/06 12:46:35 riessen Exp $
 #
 ######################################################################  
 
@@ -45,12 +45,14 @@ if (check_proid($proid)) {
   $db->query("SELECT * FROM description WHERE proid='$proid'");
   $db->next_record();
   htmlp_image("ic/a.png",0,48,48,"Summary");
-  print "<b>Project description:</b> ";
+  print '<b>'.$t->translate('Project description').':</b> ';
   $db->p("description");
+
 //  step_information ($db->f("status"));
   summary($proid);
 
-  lib_comment_it($proid,"General","0","0","","General Comments");
+  lib_comment_it($proid,"General","0","0","",
+                  $t->translate('General Comments'));
 }
 
 end_content();

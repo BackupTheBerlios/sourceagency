@@ -42,13 +42,14 @@ $page = 'content suggestions';
 if (check_proid($proid)) {
     top_bar($proid,$page);
 
-    print ( 'Project technical content suggestions. They can be made '
-            . 'either by developers or by a sponsor (if the sponsor is '
-            . "owner of the project).\n" );
+    print ( $t->translate('Project technical content suggestions. They can '
+                          .'be made either by developers or by a sponsor '
+                          .'(if the sponsor is owner of the project)').".\n");
 
-    print ( '<p align=right>[<b> '. html_link('step2_edit.php3',
-                                              array('proid' => $proid),
-                                              'Suggest a Technical Content')
+    print ( '<p align=right>[<b> '
+            . html_link('step2_edit.php3',
+                        array('proid' => $proid),
+                        $t->translate('Suggest a Technical Content'))
             ." </b>] &nbsp;<p>\n" );
 
     show_content($proid, $show_proposals, $which_proposals);
@@ -60,5 +61,5 @@ if (check_proid($proid)) {
 
 end_content();
 require('footer.inc');
-page_close();
+@page_close();
 ?>

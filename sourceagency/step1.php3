@@ -41,17 +41,18 @@ $page = "consultants";
 if (check_proid($proid)) {
   top_bar($proid,$page);
 
-  print ( "A sponsor may require help to submit a project in a proper way. "
-          ."If he wishes, he can ask $sys_name registered developers to "
-          ."assist him on this topic.\n");
+  print( $t->translate( "A sponsor may require help to submit a project "
+                        ."in a proper way. If he wishes, he can ask "
+                        ."registered developers to "
+                        ."assist him on this topic.\n"));
 
   if (consultants_wanted($proid)) {
 
-	print "<p align=right>[ <b>".html_link("step1_edit.php3",
-                                               array("proid" => $proid),
-                                               "Propose yourself "
-                                               ."as consultant")
-          ."</b> ]\n";
+	print ( "<p align=right>[ <b>"
+                .html_link("step1_edit.php3",
+                           array("proid" => $proid),
+                           $t->translate("Propose yourself as consultant"))
+                ."</b> ]\n");
 
   	show_consultants($proid);
   }

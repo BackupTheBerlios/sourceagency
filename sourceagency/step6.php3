@@ -40,17 +40,19 @@ $page = "rating";
 if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
-  print ( "The sponsor rates the developers and the developers rates "
-          ."the sponsors. Sponsors and developers can rate also sponsor "
-          ."and developers that have taken part in the project. Everybody "
-          ."is able to make his rating private.\n");
+  print ( $t->translate("The sponsor rates the developers and the "
+                        ."developers rates the sponsors. Sponsors and "
+                        ."developers can rate also sponsor and developers "
+                        ."that have taken part in the project. Everybody "
+                        ."is able to make his rating private").".\n");
 
   print ( "<p align=right>[ <b>".html_link("step6_edit.php3",
                                            array("proid" => $proid),
-                                           "<b>Rate!</b>")."</b> ]");
+                                           "<b>".$t->translate("Rate")
+                                           ."!</b>")."</b> ]");
 
   $bx->box_begin();
-  $bx->box_title("Project Participants");
+  $bx->box_title($t->translate("Project Participants"));
   $bx->box_body_begin();
   $bx->box_columns_begin(3);
   $bx->box_column_start("right","33%","");

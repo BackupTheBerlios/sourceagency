@@ -39,8 +39,9 @@ $page = "step1_edit";
 if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
-  print "Registered developers can offer themselves as consultants.\n";
-  print "<br><p>\n";
+  print $t->translate('Registered developers can offer themselves '
+                      .'as consultants');
+  print ".\n<br><p>\n";
   
   if (consultants_wanted($proid)) {
       $bx->box_full($t->translate("Info box"), 

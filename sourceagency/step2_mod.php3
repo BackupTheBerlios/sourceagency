@@ -28,46 +28,44 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require("contentlib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box('100%',$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-
-<?php
+start_content();
 
 $page = "modify contents";
 
 if (check_proid($proid)) {
-  top_bar($proid,$page);
+    top_bar($proid,$page);
 
-  print "Technical contents can be modified by xxxxxx.\n";
-  print "<br><p>\n";
-
-  if ((!isset($preview) || empty($preview)) && (!isset($submit) || empty($submit))) {
-	$db->query("SELECT * FROM tech_content WHERE content_id='4'");
-	$db->next_record();
-	$content_id = $db->f("content_id");
-	$skills = $db->f("skills");
-	$platform = $db->f("platform");
-	$architecture = $db->f("architecture");
-	$environment = $db->f("environment");
-	$docs = $db->f("docs");
-	$specification = $db->f("specification");
-	$creation = $db->f("creation");
-  }
-
-  if (!isset($submit) || empty($submit)) {
-	content_modify_form($proid);
-  } else {
-	content_modify($proid,"devel",$license,$skills,$platform,$architecture,$environment,$docs,$specification,$cost,$creation);
-  }
+    print $t->translate('Technical contents')."\n<br><p>\n";
+    
+    if ((!isset($preview) || empty($preview)) 
+        && (!isset($submit) || empty($submit))) {
+        $db->query("SELECT * FROM tech_content WHERE content_id='4'");
+        $db->next_record();
+        $content_id = $db->f("content_id");
+        $skills = $db->f("skills");
+        $platform = $db->f("platform");
+        $architecture = $db->f("architecture");
+        $environment = $db->f("environment");
+        $docs = $db->f("docs");
+        $specification = $db->f("specification");
+        $creation = $db->f("creation");
+    }
+    
+    if (!isset($submit) || empty($submit)) {
+        content_modify_form($proid);
+    } else {
+        content_modify($proid,"devel",$license,$skills,$platform,
+        $architecture,$environment,$docs,$specification,
+        $cost,$creation);
+    }
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 @page_close();
 ?>
