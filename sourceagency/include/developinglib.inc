@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: developinglib.inc,v 1.5 2002/03/27 17:04:41 grex Exp $
+# $Id: developinglib.inc,v 1.6 2002/06/06 08:14:33 riessen Exp $
 #
 ######################################################################
 
@@ -414,12 +414,7 @@ function select_duration($selected)
     $return = html_select('duration');
 
     for ($i=1; $i <= 100; $i++) {
- 	if ($i == $selected) {
-            $select='selected';
-	} else {
-            $select='';
-	}
-	$return .= html_select_option($i, $select, $i);
+	$return .= html_select_option($i, ($i==$selected), $i);
     }
     $return .= html_select_end();
 
@@ -436,14 +431,11 @@ function select_duration($selected)
  */
 function developing_select_cooperation($selected)
 {
+    global $t;
+
     $return = html_select('cooperation');
-    if($selected=='No') {
-        $select='selected';
-    } else {
-        $select = '';
-    }
-    $return .= html_select_option('No',$select,'No');
-    $return .=htmlp_select_end();
+    $return .= html_select_option('No',($selected=='No'),$t->translate('No'));
+    $return .= html_select_end();
 
     return($return);
 }
