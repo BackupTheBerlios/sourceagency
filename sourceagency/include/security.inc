@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.7 2001/11/14 12:26:40 riessen Exp $
+# $Id: security.inc,v 1.8 2001/11/15 15:38:31 riessen Exp $
 #
 ######################################################################
 
@@ -435,9 +435,11 @@ function is_sponsor() {
 
   $db_local = new DB_SourceAgency;
 
+  // modified to allow multiple permissions, problems occur if
+  // another permission contains the string 'sponsor'
   if (isset($auth) && !empty($auth->auth["perm"])) { 
-	$db_local->query("SELECT * FROM auth_user WHERE perms='sponsor' "
-                         ."AND username='".$auth->auth["uname"]."'");
+	$db_local->query("SELECT * FROM auth_user WHERE perms like '%sponsor%'"
+                         ." AND username='".$auth->auth["uname"]."'");
 	if ($db_local->num_rows() > 0) return 1;
   }
   return 0;
@@ -475,9 +477,10 @@ function is_developer() {
   global $auth;
 
   $db_local = new DB_SourceAgency;
-
+  // modification to allow for multiple permissions, problems
+  // occur if other permissions _contain_ the string 'devel'  
   if (isset($auth) && !empty($auth->auth["perm"])) { 
-	$db_local->query("SELECT * FROM auth_user WHERE perms='devel' "
+	$db_local->query("SELECT * FROM auth_user WHERE perms LIKE '%devel%' "
                          ."AND username='".$auth->auth["uname"]."'");
 	if ($db_local->num_rows() > 0) return 1;
   }
