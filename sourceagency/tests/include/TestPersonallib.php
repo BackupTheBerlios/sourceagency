@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestPersonallib.php,v 1.20 2002/02/01 08:40:52 riessen Exp $
+# $Id: TestPersonallib.php,v 1.21 2002/04/22 13:41:02 riessen Exp $
 #
 ######################################################################
 
@@ -43,19 +43,19 @@ extends UnitTest
 {
     // can't split the value for p_line_template, it generates a parse error
     // Arg: 1=proid,2=project title,3=status
-    var $p_line_template = "Project:[^\\n]*summary[.]php3[?]proid=%s[^\\n]*%s[^\\n]*\\n [(]step <b>%s<\\/b>[^\\n]*<br>";
+    var $p_line_template = "Project:[^\\n]*summary[.]php3[?]proid=%s[^\\n]*%s[^\\n]* [(]step <b>%s<\\/b>[^\\n]*<br>";
     // Arg: 1=proid,2=project title,3=proid,4=devid
-    var $p_cooperation_line_template = "Project:[^\\n]*step2[.]php3[?]proid=%s[^\\n]*%s<\/a>\\n[^\\n]*[(]to this[^\\n]*step2[.]php3[?]proid=%s&show_proposals=yes&which_proposals=%s[^\\n]*development<\/a>\\n[)]<br>";
+    var $p_cooperation_line_template = "Project:[^\\n]*step2[.]php3[?]proid=%s[^\\n]*%s<\/a>[^\\n]*[(]to this[^\\n]*step2[.]php3[?]proid=%s&show_proposals=yes&which_proposals=%s[^\\n]*development<\/a>[)]<br>";
     // Arg: 1=proid,2=project title,3=status
-    var $p_referee_line_template = "Project:[^\\n]*step4[.]php3[?]proid=%s[^\\n]*%s<\/a>[^\\n]*\\n [(]step <b>%s<\/b>[)]<br>";
+    var $p_referee_line_template = "Project:[^\\n]*step4[.]php3[?]proid=%s[^\\n]*%s<\/a>[^\\n]* [(]step <b>%s<\/b>[)]<br>";
     // Arg: 1=proid,2=project title,3=status
-    var $p_consultant_line_template = "Project:[^\\n]*step1[.]php3[?]proid=%s[^\\n]*%s<\/a>[^\\n]*\\n [(]step <b>%s<\/b>[)]<br>";
+    var $p_consultant_line_template = "Project:[^\\n]*step1[.]php3[?]proid=%s[^\\n]*%s<\/a>[^\\n]* [(]step <b>%s<\/b>[)]<br>";
     // Arg: 1=project id,2=subject news,3=count star,4=reference project id(2),
     // Arg: 5=reference project title
-    var $p_news_long_template = "<br><li>News: <b><a href=\"news.php3[?]proid=%s\">%s<\/a>\\n<\/b>[^(]*[(]<b>%s<\/b>[ \\n]*comments on it[)][^<]*<br>[^o\\n]*osted to <a href=\"summary.php3[?]proid=%s\">%s<\/a>\\n<br>";
+    var $p_news_long_template = "<br><li>News: <b><a href=\"news.php3[?]proid=%s\">%s<\/a><\/b>[ ]*[(]<b>%s<\/b>[ ]*comments on it[)][ \\n]*<br>[^o\\n]*osted to <a href=\"summary.php3[?]proid=%s\">%s<\/a><br>";
     // Arg: 1=type, 2=proid, 3=type, 4=number, 5=reference, 6=subject cmt
     // Arg: 7=count star, 8=proid(from description) 9=project title
-    var $p_comment_line_template = "<br><li>Comment [(]%s[)]: <b><a href=\"comments[.]php3[?]proid=%s&type=%s&number=%s&ref=%s\">%s<\/a>\\n<\/b>  [(]<b>%s<\/b> comments on it[)][\\n]+<br>&nbsp; &nbsp; &nbsp; posted to <a href=\"summary[.]php3[?]proid=%s\">%s<\/a>\\n<br>";
+    var $p_comment_line_template = "<br><li>Comment [(]%s[)]: <b><a href=\"comments[.]php3[?]proid=%s&type=%s&number=%s&ref=%s\">%s<\/a><\/b>  [(]<b>%s<\/b> comments on it[)][\\n]+<br>&nbsp; &nbsp; &nbsp; posted to <a href=\"summary[.]php3[?]proid=%s\">%s<\/a><br>";
 
     function UnitTestPersonallib( $name ) {
         $this->UnitTest( $name );
@@ -168,7 +168,7 @@ extends UnitTest
         $auth->set_perm( "hell yes!" );
         personal_related_projects( $auth->auth['uname'], $status1 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 566 );
+        $this->_testFor_length( 633, "test 1" );
         $this->_testFor_pattern( $text, ("<b>Involved ".show_status($status1)
                                          ." Projects<\/b>" ));
         $this->_testFor_line( $text, ("Not related to any project with "
@@ -185,7 +185,7 @@ extends UnitTest
         $auth->set_perm( "hell yes!" );
         personal_related_projects( $auth->auth['uname'], $status2 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 564 );
+        $this->_testFor_length( 631, "test 2" );
         $this->_testFor_pattern( $text, ("<b>Involved ".show_status($status2)
                                          ." Projects<\/b>" ));
         $this->_testFor_line( $text, ("Not related to any project with "
@@ -310,7 +310,7 @@ extends UnitTest
         // here next_record will not be called
         personal_comments_short( $user1 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 563 );
+        $this->_testFor_length( 630, "test 1" );
         $this->_testFor_pattern( $text, "Last 10 Comments by " . $user1 );
         $this->_testFor_line( $text, "no comments posted" );
         $this->assertNotRegexp( "/See all the comments.../", $text, 
@@ -323,7 +323,7 @@ extends UnitTest
         // here next_record will not be called
         personal_comments_short( $user2 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1106 );
+        $this->_testFor_length( 1169, "test 2" );
 
         $this->_testFor_pattern( $text, "Last 10 Comments by " . $user2 );
         $this->assertNotRegexp( "/no comments posted/", $text );
@@ -406,7 +406,7 @@ extends UnitTest
         // here next_record will not be called
         personal_comments_long( $user1 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 559 );
+        $this->_testFor_length( 626, "test 1" );
         $this->_testFor_pattern( $text, "All Comments by " . $user1 );
         $this->_testFor_line( $text, "no comments posted" );
         $this->assertNotRegexp( "/See all the comments.../", $text, 
@@ -419,7 +419,7 @@ extends UnitTest
         // here next_record will not be called
         personal_comments_long( $user2 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1102 );
+        $this->_testFor_length( 1165, "test 2" );
 
         $this->_testFor_pattern( $text, "All Comments by " . $user2 );
         $this->assertNotRegexp( "/no comments posted/", $text );
@@ -587,7 +587,7 @@ extends UnitTest
         // here next_record will not be called
         personal_news_short( $user1 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 554 );
+        $this->_testFor_length( 621, "test 1" );
         $this->_testFor_pattern( $text, "Last 5 News by " . $user1 );
         $this->_testFor_line( $text, "no news posted" );
         $this->assertNotRegexp( "/See all the comments.../", $text, 
@@ -600,7 +600,7 @@ extends UnitTest
         // here next_record will not be called
         personal_news_short( $user2 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 999 );
+        $this->_testFor_length( 1062, "test 2" );
         $this->_testFor_pattern( $text, "Last 5 News by " . $user2 );
         $this->assertNotRegexp( "/no news posted/", $text, 
                                 "[User: ".$user2."] has news posted");
@@ -620,7 +620,7 @@ extends UnitTest
         // here next_record will not be called
         personal_news_short( $user3 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1780 );
+        $this->_testFor_length( 1836, "test 3" );
         $this->_testFor_pattern( $text, "Last 5 News by " . $user3 );
         $this->assertNotRegexp( "/no news posted/", $text, 
                                 "[User: ".$user3."] has news posted");
@@ -713,7 +713,7 @@ extends UnitTest
         // here next_record will not be called
         personal_news_long( $user1 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 551 );
+        $this->_testFor_length( 618, "test 1" );
         $this->_testFor_pattern( $text, "All news by " . $user1 );
         $this->_testFor_line( $text, "no news posted" );
 
@@ -724,7 +724,7 @@ extends UnitTest
         // here next_record will not be called
         personal_news_long( $user2 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1012 );
+        $this->_testFor_length( 1075, "test 2" );
         $this->_testFor_pattern( $text, "All news by " . $user2 );
 
         $this->_testFor_news_link( $text, $row1['proid'],$row1['subject_news'],
@@ -777,7 +777,7 @@ extends UnitTest
         // here next_record will not be called
         personal_consultants( $user1, $status1 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 552 );
+        $this->_testFor_length( 619, "test 1" );
         // check title string
         $this->_testFor_pattern( $text, ("Consultant [(]"
                                          .show_status( $status1 )."[)]")); 
@@ -790,7 +790,7 @@ extends UnitTest
         // here next_record will not be called
         personal_consultants( $user2, $status2 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 605 );
+        $this->_testFor_length( 671, "test 2" );
         // check title string
         $this->_testFor_pattern( $text, ("Consultant [(]"
                                          .show_status( $status2 )."[)]")); 
@@ -804,7 +804,7 @@ extends UnitTest
         // here next_record will not be called
         personal_consultants( $user3, $status3 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 697 );
+        $this->_testFor_length( 762, "test 3" );
         // check title string
         $this->_testFor_pattern( $text, ("Consultant [(]"
                                          .show_status( $status3 )."[)]")); 
@@ -857,7 +857,7 @@ extends UnitTest
         // here next_record will not be called
         personal_referees( $user1, $status1 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 546 );
+        $this->_testFor_length( 613, "test 1" );
         // check title string
         $this->_testFor_pattern( $text, ("Referee [(]"
                                          .show_status( $status1 )."[)]")); 
@@ -870,7 +870,7 @@ extends UnitTest
         // here next_record will not be called
         personal_referees( $user2, $status2 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 602 );
+        $this->_testFor_length( 668, "test 2" );
         // check title string
         $this->_testFor_pattern( $text, ("Referee [(]"
                                          .show_status( $status2 )."[)]")); 
@@ -884,7 +884,7 @@ extends UnitTest
         // here next_record will not be called
         personal_referees( $user3, $status3 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 694 );
+        $this->_testFor_length( 759, "test 3" );
         // check title string
         $this->_testFor_pattern( $text, ("Referee [(]"
                                          .show_status( $status3 )."[)]")); 
@@ -938,7 +938,7 @@ extends UnitTest
         // here next_record will not be called
         personal_cooperation( $user1, $status1 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 576 );
+        $this->_testFor_length( 643, "test 1" );
         // check title string
         $this->_testFor_pattern( $text, ("Developing Cooperation [(]"
                                          .show_status( $status1 )."[)]")); 
@@ -948,7 +948,7 @@ extends UnitTest
         capture_reset_and_start();
         personal_cooperation( $user2, $status2 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 699 );
+        $this->_testFor_length( 764, "test 2" );
         // check the title string
         $this->_testFor_pattern( $text, ("Developing Cooperation [(]"
                                          .show_status( $status2 )."[)]")); 
@@ -961,7 +961,7 @@ extends UnitTest
         capture_reset_and_start();
         personal_cooperation( $user3, $status3 );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 873 );
+        $this->_testFor_length( 936, "test 3" );
         // check the title string
         $this->_testFor_pattern( $text, ("Developing Cooperation [(]"
                                          .show_status( $status3 )."[)]")); 
@@ -1012,7 +1012,7 @@ extends UnitTest
         // here next_record will not be called
         personal_my_projects( "fubar" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 524 );
+        $this->_testFor_length( 591, "test 1" );
         $this->_testFor_pattern( $text, "My Projects" ); // title
         $this->_testFor_line( $text, "No personal projects" );
         
@@ -1020,7 +1020,7 @@ extends UnitTest
         // here next_record should be called once --> num_row == 1
         personal_my_projects( "snafu" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 597 );
+        $this->_testFor_length( 663, "test 2" );
         $this->_testFor_pattern( $text, "My Projects" ); // title
         $this->_testFor_project_link($text,$row1['proid'],
                                      $row1['project_title'], $row1['status']);
@@ -1029,7 +1029,7 @@ extends UnitTest
         // here next_record should be called once --> num_row == 1
         personal_my_projects( "fritz" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 691 );
+        $this->_testFor_length( 756, "test 3" );
         $this->_testFor_pattern( $text, "My Projects" ); // title
         $this->_testFor_project_link($text,$row2['proid'],
                                      $row2['project_title'],$row2['status']);
@@ -1077,7 +1077,7 @@ extends UnitTest
         personal_monitored_projects( "fubar" );
         $text = capture_stop_and_get();
 
-        $this->_testFor_length( 532 );
+        $this->_testFor_length( 599, "test 1" );
         $this->_testFor_pattern( $text, "Monitored Projects" ); // title
         $this->_testFor_line( $text, "No monitored projects" );
 
@@ -1085,7 +1085,7 @@ extends UnitTest
         // here next_record should be called once --> num_row == 1
         personal_monitored_projects( "snafu" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 604 );
+        $this->_testFor_length( 670, "test 2" );
         $this->_testFor_pattern( $text, "Monitored Projects" ); // title
         $this->_testFor_project_link($text,$row1['proid'],
                                      $row1['project_title'], $row1['status']);
@@ -1094,7 +1094,7 @@ extends UnitTest
         // here next_record should be called once --> num_row == 1
         personal_monitored_projects( "fritz" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 698 );
+        $this->_testFor_length( 763, "test 3" );
         $this->_testFor_pattern( $text, "Monitored Projects" ); // title
         $this->_testFor_project_link($text,$row2['proid'],
                                      $row2['project_title'], $row2['status']);
