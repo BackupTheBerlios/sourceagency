@@ -17,6 +17,9 @@
 # the Free Software Foundation; either version 2 or later of the GPL.
 ######################################################################  
 
+// TODO: do we need this page ???
+// TODO: can this page be removed?
+
 page_open(array("sess" => "SourceAgency_Session"));
 if (isset($auth) && !empty($auth->auth["perm"])) {
   page_close();
