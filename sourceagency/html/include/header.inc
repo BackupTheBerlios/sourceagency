@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: header.inc,v 1.2 2001/11/06 19:15:46 riessen Exp $
+# $Id: header.inc,v 1.3 2002/05/02 09:55:33 riessen Exp $
 #
 ######################################################################
 
@@ -31,7 +31,8 @@ require("config.inc");
    <title><?php echo $sys_name;?> - <?php echo $sys_title;?></title>
 <link rel="stylesheet" type="text/css" href="berlios.css">
 </head>
-<body bgcolor="<?php echo $th_body_bgcolor;?>" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<body bgcolor="<?php echo $th_body_bgcolor;?>" topmargin="0" bottommargin="0" 
+  leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
 
 <?php
 require("top_strip.inc");
@@ -44,7 +45,7 @@ require("top_title.inc");
 <?php
 require("menubar.inc");
 ?>
-<td WIDTH="10"><img SRC="images/blank.gif" BORDER=0 height=1 width=10></td>
+<td WIDTH="10"><img SRC="../images/blank.gif" BORDER=0 height=1 width=10></td>
 
 <td WIDTH="99%">
 <p>&nbsp;
