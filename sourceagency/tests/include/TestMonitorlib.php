@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMonitorlib.php,v 1.3 2002/02/07 12:24:17 riessen Exp $
+# $Id: TestMonitorlib.php,v 1.4 2002/02/25 16:10:04 riessen Exp $
 #
 ######################################################################
 
@@ -256,7 +256,7 @@ extends UnitTest
     }
     
     function testMonitor_form() {
-        global $importance;
+      global $importance, $sess;
         
         //
         // first call
@@ -265,14 +265,17 @@ extends UnitTest
         $importance = "low";
         monitor_form( "proid_0" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1477 );
+        $this->_testFor_length( 1477 + strlen( $sess->self_url() ));
 
         $this->_testFor_pattern( $text, ("<select name=\"importance\">\n"
                                          ."<option selected value=\"low\">"
                                          ."low\n<option value=\"medium\">"
                                          ."medium\n<option value=\"high\">"
                                          ."high\n<\/select>"));
-        $this->_testFor_pattern( $text, ("<form action=\"[?]proid=proid_0\" "
+        $this->_testFor_pattern( $text, ("<form action=\""
+                                         .ereg_replace( "/", "\/", 
+                                                        $sess->self_url() )
+                                         ."[?]proid=proid_0\" "
                                          ."method=\"POST\">"));
 
         //
@@ -282,7 +285,7 @@ extends UnitTest
         $importance = "medium";
         monitor_form( "proid_1" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1477 );
+        $this->_testFor_length( 1477 + strlen( $sess->self_url() ) );
 
         $this->_testFor_pattern( $text, ("<select name=\"importance\">\n"
                                          ."<option value=\"low\">"
@@ -290,7 +293,10 @@ extends UnitTest
                                          ."value=\"medium\">"
                                          ."medium\n<option value=\"high\">"
                                          ."high\n<\/select>"));
-        $this->_testFor_pattern( $text, ("<form action=\"[?]proid=proid_1\" "
+        $this->_testFor_pattern( $text, ("<form action=\""
+                                         .ereg_replace( "/", "\/", 
+                                                        $sess->self_url() )
+                                         ."[?]proid=proid_1\" "
                                          ."method=\"POST\">"));
         //
         // third call
@@ -299,14 +305,17 @@ extends UnitTest
         $importance = "fubar";
         monitor_form( "proid_2" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1468 );
+        $this->_testFor_length( 1468 + strlen( $sess->self_url() ) );
 
         $this->_testFor_pattern( $text, ("<select name=\"importance\">\n"
                                          ."<option value=\"low\">"
                                          ."low\n<option value=\"medium\">"
                                          ."medium\n<option value=\"high\">"
                                          ."high\n<\/select>"));
-        $this->_testFor_pattern( $text, ("<form action=\"[?]proid=proid_2\" "
+        $this->_testFor_pattern( $text, ("<form action=\""
+                                         .ereg_replace( "/", "\/", 
+                                                        $sess->self_url() )
+                                         ."[?]proid=proid_2\" "
                                          ."method=\"POST\">"));
     }
 }
