@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestBox.php,v 1.15 2002/05/15 13:23:58 riessen Exp $
+# $Id: TestBox.php,v 1.16 2002/05/15 16:09:29 riessen Exp $
 #
 ######################################################################
 
@@ -287,7 +287,10 @@ extends UnitTest
     }
 
     function testBox_set_body_valign() {
-        $this->_test_to_be_completed();
+        $this->box->box_set_body_valign( "left" );
+        $this->assertEquals( "left", $this->box->box_body_valign, "test 1" );
+        $this->box->box_set_body_valign( );
+        $this->assertEquals( "top", $this->box->box_body_valign, "test 2" );
     }
 }
 
