@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMonitorlib.php,v 1.6 2002/04/23 10:03:52 riessen Exp $
+# $Id: TestMonitorlib.php,v 1.7 2002/05/06 07:59:21 riessen Exp $
 #
 ######################################################################
 
@@ -195,7 +195,7 @@ extends UnitTest
         capture_reset_and_start();
         monitor_show( $proid[1] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 5170, "test 2" );
+        $this->_testFor_captured_length( 5202, "test 2" );
         
         $color = array( 0 => "gold", 1 => "#FFFFFF" );
 
@@ -238,7 +238,7 @@ extends UnitTest
         capture_reset_and_start();
         monitor_preview( $row[0]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 898 + strlen( timestr( time() )), 
+        $this->_testFor_captured_length( 920 + strlen( timestr( time() )), 
                                          "test 1");
 
         $this->_testFor_pattern( $text, "<b>by uname_0<\/b>", "test 1" );
@@ -254,7 +254,7 @@ extends UnitTest
         $importance = "low";
         monitor_form( "proid_0" );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1812 + strlen( $sess->self_url() ), 
+        $this->_testFor_captured_length( 1844 + strlen( $sess->self_url() ), 
                                          "test 1");
 
         $ps=array( 0=>("<select name=\"importance\" size=\"0\">"
@@ -275,7 +275,7 @@ extends UnitTest
         $importance = "medium";
         monitor_form( "proid_1" );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1812 + strlen( $sess->self_url()),
+        $this->_testFor_captured_length( 1844 + strlen( $sess->self_url()),
                                          "test 2" );
 
         $ps=array( 0=>("<select name=\"importance\" size=\"0\">"
@@ -296,7 +296,7 @@ extends UnitTest
         $importance = "fubar";
         monitor_form( "proid_2" );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1803 + strlen($sess->self_url()), 
+        $this->_testFor_captured_length( 1835 + strlen($sess->self_url()), 
                                          "test 3" );
 
         $ps=array( 0=> ("<select name=\"importance\" size=\"0\">"

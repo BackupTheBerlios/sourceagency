@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestBox.php,v 1.12 2002/04/23 12:00:31 riessen Exp $
+# $Id: TestBox.php,v 1.13 2002/05/06 07:59:21 riessen Exp $
 #
 ######################################################################
 
@@ -52,11 +52,12 @@ extends UnitTest
     // for the individual tests, the reason for splitting them away from
     // the tests is that some of them are reused.
     function _testFor_box_begin( $text ) {
-        $pats =array( 0=>("<table border=0 cellspacing=0 cellpadding=0 "
-                          . "bgcolor=\"frame_color\" width=\"box_width\" "
-                          . "align=center>"),
-                      1=>("<table border=0 cellspacing=\"frame_width\" "
-                          . "cellpadding=3 align=\"center\" width=\"100%\">"));
+        $pats =array( 0=>("<table border=\"0\" cellspacing=\"0\" "
+                          . "cellpadding=\"0\" bgcolor=\"frame_color\" "
+                          . "width=\"box_width\" align=\"center\">"),
+                      1=>("<table border=\"0\" cellspacing=\"frame_width\" "
+                          . "cellpadding=\"3\" align=\"center\" "
+                          . "width=\"100%\">"));
         $this->_testFor_patterns( $text, $pats, 2 );
         
     }
@@ -79,7 +80,7 @@ extends UnitTest
     }
     function _testFor_box_body_begin( $text ) {
         $this->assertRegexp( "/<tr bgcolor=\"body_bgcolor\">[ \n]+<td align=\""
-                             . "body_align\"><font color="
+                             . "body_align\" valign=\"\"><font color="
                              . "\"body_font_color\">/",$text, 
                              "box body begin mismatch");
     }
@@ -95,7 +96,7 @@ extends UnitTest
         $ps=array( 0=>"<!-- table with " . $nr_cols . " columns -->",
                    1=>("<table border=\"0\" cellspacing=\"0\" cellpadding=\""
                        ."3\" align=\"center\" width=\"100%\" valign=\"top\">"),
-                   2=>"<tr colspan=\"".$nr_cols."\">");
+                   2=>"<tr colspan=\"".$nr_cols."\" valign=\"\">");
         $this->_testFor_patterns( $text, $ps, 3 );
     }
     function _testFor_box_column_start($text,$align,$width,$bgcolor="#FFFFFF"){
@@ -130,7 +131,7 @@ extends UnitTest
     function testBox_begin() {
         $this->box->box_begin();
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 212 );
+        $this->_testFor_captured_length( 224 );
         $this->_testFor_box_begin( $text );
     }
 
@@ -171,7 +172,7 @@ extends UnitTest
     function testBox_body_begin() {
         $this->box->box_body_begin();
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 121 );
+        $this->_testFor_captured_length( 131 );
         $this->_testFor_box_body_begin( $text );
     }
 
@@ -186,7 +187,7 @@ extends UnitTest
         $body = "text for body";
         $this->box->box_body($body);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 269 );
+        $this->_testFor_captured_length( 279 );
         $this->_testFor_box_body_begin( $text );
         $this->_testFor_box_body( $text, $body);
         $this->_testFor_box_body_end( $text );
@@ -197,7 +198,7 @@ extends UnitTest
         $body = "this is the body";
         $this->box->box_full($title, $body);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 739 );
+        $this->_testFor_captured_length( 761 );
         $this->_testFor_box_begin( $text );
         $this->_testFor_box_title( $text, $title );
         $this->_testFor_box_body( $text, $body );
@@ -208,17 +209,17 @@ extends UnitTest
         $title = "thsi is teh title";
         $this->box->box_strip( $title );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 467 );
+        $this->_testFor_captured_length( 479 );
         $this->_testFor_box_begin( $text );
         $this->_testFor_box_title( $text, $title );
         $this->_testFor_box_end( $text );
     }
 
-    function testBox_colums_begin() {
+    function testBox_columns_begin() {
         $nr_cols = "four or five";
         $this->box->box_columns_begin( $nr_cols );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 174 );
+        $this->_testFor_captured_length( 184 );
         $this->_testFor_box_columns_begin( $text, $nr_cols );
     }
 

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSponsoringlib.php,v 1.9 2002/04/24 16:39:05 riessen Exp $
+# $Id: TestSponsoringlib.php,v 1.10 2002/05/06 07:59:21 riessen Exp $
 #
 ######################################################################
 
@@ -65,7 +65,7 @@ extends UnitTest
         capture_reset_and_start();
         sponsoring_form( "proid" );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 8304 + strlen( $sess->self_url() ),
+        $this->_testFor_captured_length( 8336 + strlen( $sess->self_url() ),
                                          "test 1" );
 
         $ps=array( 0=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
@@ -219,7 +219,7 @@ extends UnitTest
         $db = new DB_SourceAgency;
         show_sponsorings( $db_d[1]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 992, "test 2" );
+        $this->_testFor_captured_length( 1014, "test 2" );
         $ps=array( 0=>"<b>by username_0<\/b> - <\/b>\n",
                    1=>"<p><b>Max. sum of money:<\/b> budget_0 euros\n",
                    2=>"<br><b>Status:<\/b> Deleted\n",
@@ -244,7 +244,7 @@ extends UnitTest
         $db = new DB_SourceAgency;
         show_sponsorings( $db_d[2]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1302, "test 3" );
+        $this->_testFor_captured_length( 1324, "test 3" );
         $ps=array(0=>("<font color=\"#000000\"><b>Sponsor Involvement<\/b>"
                       ."<\/font>\n"),
                   1=>"<b>by username_1<\/b> - <\/b>\n",
@@ -272,7 +272,7 @@ extends UnitTest
         $db = new DB_SourceAgency;
         show_sponsorings( $db_d[3]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1027, "test 4" );
+        $this->_testFor_captured_length( 1049, "test 4" );
         $ps=array( 0=>("<font color=\"#000000\"><b>Sponsor Involvement<\/b>"
                        ."<\/font>\n"),
                    1=>"<b>by username_2<\/b> - <\/b>\n",
@@ -313,7 +313,7 @@ extends UnitTest
         capture_reset_and_start();
         sponsoring_preview( "dasdsa" );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1073 + strlen( timestr( time() ) ),
+        $this->_testFor_captured_length( 1095 + strlen( timestr( time() ) ),
                                          "test 1" );
         $ps=array( 0=>("<font color=\"#000000\"><b><center><b>PREVIEW<\/b>"
                        ."<\/center><\/b><\/font>"),

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestNewslib.php,v 1.13 2002/04/24 16:39:05 riessen Exp $
+# $Id: TestNewslib.php,v 1.14 2002/05/06 07:59:21 riessen Exp $
 #
 ######################################################################
 
@@ -61,7 +61,7 @@ extends UnitTest
         capture_start();
         newsform( "proid" ); 
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 2222 + strlen( $sess->self_url() ), 
+        $this->_testFor_captured_length( 2254 + strlen( $sess->self_url() ), 
                                          "test 1");
 
         $ps=array( 0=> "<font color=\"#000000\"><b>Editing News<\/b><\/font>",
@@ -104,7 +104,7 @@ extends UnitTest
         capture_start();
         news_modify_form( "proid" ); 
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 2281 + strlen( $sess->self_url() ), 
+        $this->_testFor_captured_length( 2313 + strlen( $sess->self_url() ), 
                                          "test 1");
 
         $ps=array( 0=>("<font color=\"#000000\"><b>Modifying News<\/b>"
@@ -148,7 +148,7 @@ extends UnitTest
         capture_start();
         news_preview( "fubar" );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 3089 + strlen(timestr(time()))
+        $this->_testFor_captured_length( 3143 + strlen(timestr(time()))
                                          + strlen( $sess->self_url() ), 
                                          "test 1");
         $ps=array( 0=>("<font color=\"#000000\"><b><center><b>PREVIEW<\/b>"
@@ -157,16 +157,16 @@ extends UnitTest
                        ."[ \n]+<font color="
                        ."\"#000000\"><b>News: this is the subject<\/b><\/"
                        ."font>[ \n]+<\/td>[ \n]+<\/tr>\n"),
-                   2=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align=\"\">"
-                       ."<font color="
+                   2=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align=\"\" "
+                       ."valign=\"\"><font color="
                        ."\"#000000\">\n<b>by username<\/b> -"),
                    3=>("<tr bgcolor=\"#CCCCCC\">[ \n]+<td align=\"\">"
                        ."[ \n]+<font color"
                        ."=\"#000000\"><b>Modifying News<\/b><\/font>"
                        ."[ \n]+<\/td>[ \n]+<\/tr>\n"),
-                   4=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align=\"\">"
-                       ."<font color="
-                       ."\"#000000\">[ \n]+<form action=\""
+                   4=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align=\"\" "
+                       ."valign=\"\"><font color=\"#000000\">[ \n]+"
+                       ."<form action=\""
                        .ereg_replace( "/", "\/", $sess->self_url() )
                        ."[?]proid=proid\" method=\"POST\">[ \n]+<input type=\""
                        ."hidden\" name=\"creation\" value=\"asdasd\">"
@@ -174,8 +174,7 @@ extends UnitTest
                        ."[ \n]+<table border=\"0\" "
                        ."cellspacing=\"0\" cellpadding=\"3\" align=\"center"
                        ."\" width=\"100%\" valign=\"top\">[ \n]+"
-                       ."<tr colspan=\"2\""
-                       .">\n"),
+                       ."<tr colspan=\"2\" valign=\"\">\n"),
                    5=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
                        ."\">[ \n]+<b>Subject<\/b> [(]128[)]:[ \n]+"
                        ."<\/td>[ \n]+".$this->p_regexp_html_comment
@@ -280,12 +279,12 @@ extends UnitTest
         capture_reset_and_start();
         newsshow( $proid[1] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 797, "test 2" );
+        $this->_testFor_captured_length( 819, "test 2" );
 
         $ps=array( 0=>("<font color=\"#000000\"><b>News: "
                        ."subject_news_0<\/b><\/font>"),
                    1=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align"
-                       ."=\"\"><font color=\"#000000\">[ \n]+"
+                       ."=\"\" valign=\"\"><font color=\"#000000\">[ \n]+"
                        ."<b><b>by user_news_0<\/b> - <\/b>"
                        ."[ \n]+<p>text_news_0[ \n]+<\/font>[ \n]+<\/td>"
                        ."[ \n]+<\/tr>\n"),
@@ -295,7 +294,7 @@ extends UnitTest
                        ."creation_news_0[&]ref=0[&]subject="
                        ."Re%3Asubject_news_0\" class=\"\">Comment "
                        ."This News!<\/a> []]<\/FONT>\n"));
-        $this->_testFor_patterns( $text, $ps, 3 );
+        $this->_testFor_patterns( $text, $ps, 3, "test 2" );
 
         //
         // third call, two records, the second has a comment which makes
@@ -305,12 +304,12 @@ extends UnitTest
         capture_reset_and_start();
         newsshow( $proid[2] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1749, "test 3" );
+        $this->_testFor_captured_length( 1793, "test 3" );
 
         $ps=array( 0=>("<font color=\"#000000\"><b>News: "
                        ."subject_news_1<\/b><\/font>"),
                    1=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align"
-                       ."=\"\"><font color=\"#000000\">[ \n]+"
+                       ."=\"\" valign=\"\"><font color=\"#000000\">[ \n]+"
                        ."<b><b>by user_news_1<\/b> - <\/b>"
                        ."[ \n]+<p>text_news_1[ \n]+<\/font>[ \n]+<\/td>"
                        ."[ \n]+<\/tr>\n"),
@@ -323,7 +322,7 @@ extends UnitTest
                    3=>("<font color=\"#000000\"><b>News: "
                        ."subject_news_2<\/b><\/font>"),
                    4=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align"
-                       ."=\"\"><font color=\"#000000\">[ \n]+"
+                       ."=\"\" valign=\"\"><font color=\"#000000\">[ \n]+"
                        ."<b><b>by user_news_2<\/b> - <\/b>"
                        ."[ \n]+<p>text_news_2[ \n]+<\/font>[ \n]+<\/td>"
                        ."[ \n]+<\/tr>\n"),
@@ -338,7 +337,7 @@ extends UnitTest
                        ."number=creation_news_2[&]ref=0\" class=\"\">"
                        ."subject_cmt_3<\/a> by <b>"
                        ."user_cmt_3<\/b> on <b><\/b>\n"));
-        $this->_testFor_patterns( $text, $ps, 7 );
+        $this->_testFor_patterns( $text, $ps, 7, "test 3" );
         
         // check that the database component did not fail
         $this->_check_db( $db_config );
