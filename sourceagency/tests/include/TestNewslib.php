@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestNewslib.php,v 1.8 2002/02/25 16:01:36 riessen Exp $
+# $Id: TestNewslib.php,v 1.9 2002/04/12 13:35:34 riessen Exp $
 #
 ######################################################################
 
@@ -129,21 +129,13 @@ extends UnitTest
 
     function testNews_preview() {
         global $subject, $text, $auth, $sess;
-        
-        $db_config = new mock_db_configure( 1 );
-
-        $db_q = array( 0 => ("SELECT email_usr FROM auth_user WHERE username="
-                             . "'%s'") );
-        
-        $db_config->add_query( sprintf( $db_q[0], "username" ), 0);
-        $db_config->add_record( array(), 0 );
-        
+                
         $auth->set_uname( "username" );
 
         capture_start();
         news_preview( "fubar" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 2578 + strlen(timestr(time()))
+        $this->_testFor_length( 2575 + strlen(timestr(time()))
                                 + strlen( $sess->self_url() ) );
         $ps=array( 0=>("<font color=\"#000000\"><b><center><b>PREVIEW<\/b>"
                        ."<\/center><\/b><\/font>"),
@@ -151,7 +143,7 @@ extends UnitTest
                        ."\"#000000\"><b>News: this is the subject<\/b><\/"
                        ."font>\n<\/td><\/tr>\n"),
                    2=>("<tr bgcolor=\"#FFFFFF\"><td align=\"\"><font color="
-                       ."\"#000000\">\n<b><b>by username<\/b> -"),
+                       ."\"#000000\">\n<b>by username<\/b> -"),
                    3=>("<tr bgcolor=\"#CCCCCC\"><td align=\"\">\n<font color"
                        ."=\"#000000\"><b>Modifying News<\/b><\/font>\n"
                        ."<\/td><\/tr>\n"),
@@ -184,8 +176,6 @@ extends UnitTest
                        ."\" name=\"submit\">\n<\/td>\n"));
 
         $this->_testFor_patterns( $text, $ps, 8 );
-        // check that the database component did not fail
-        $this->_check_db( $db_config );
     }
 
     function testNewsshow() {
