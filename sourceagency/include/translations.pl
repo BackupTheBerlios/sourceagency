@@ -12,7 +12,7 @@ while ($file = glob "*.inc") {
 	} elsif (/$t->translate\(\$/) {
 	    # print "Tranlation is a variable: line $i\n";
 	} elsif (/$t->translate/) {
-	    push @uncomplete, "File $file at line $i <----";
+	    push @uncomplete, "File $file at line $i";
 	}
     }
     close FILE;
@@ -32,17 +32,24 @@ while ($file = glob "*.php3") {
 	} elsif (/$t->translate\(\$/) {
 	    # print "Tranlation is a variable: line $i\n";
 	} elsif (/$t->translate/) {
-	    push @uncompleted, "File $file at line $i <----";
+	    push @uncompleted, "File $file at line $i";
 	}
     }
     close FILE;
 }
 
 @complete = sort @complete;
+$last = "";
 foreach $line (@complete) {
-    print $line."\n";
+    if ($line eq $last) {
+	# print "Repeated string ".$line."\n";
+    } else {
+        print $line."\n";
+    }
+    $last = $line;
 }
 
+print "\n\nUncomplete translations (have to be added manually so far):\n\n";
 foreach $line (@uncomplete) {
     print $line."\n";
 }
