@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.5 2001/11/07 18:48:52 riessen Exp $
+# $Id: config.inc,v 1.6 2001/11/09 20:26:39 riessen Exp $
 #
 ######################################################################
 
@@ -37,9 +37,8 @@
 ######################################################################
 
 $sys_name = "SourceAgency";
-$sys_title = "Open Source Software Projects";
+$sys_title = "Open Source Project Mediation & Management";
 $sys_url_title = "http://www.berlios.de/";
-#$sys_url = "http://bolian/sw/sourceagency/";
 $sys_url = "http://sourceagency.berlios.de/beta/";
 $sys_logo_image = "images/berlios.jpg";
 $sys_logo_alt = "BerliOS";
@@ -96,6 +95,11 @@ $ts_array = array (
 #
 ######################################################################
 
+// WISH: this should obtain the list of languages from the *-lang.inc
+// WISH: files in the include directory. But this might be too expensive
+// WISH: since this file is read in for each page .... further: it might
+// WISH: be possible to do this and store the results in an environmental
+// WISH: variable, ofcourse updating the variable once set would be a problem
 $la_array[] = "English";
 $la_array[] = "German";
 # $la_array[] = "Spanish";
@@ -122,16 +126,19 @@ $project_types[] = "Other";
 #
 ######################################################################
 
-$project_volume[] = "Very Small";
-$project_volume[] = "Small";
-$project_volume[] = "Regular";
-$project_volume[] = "Big";
-$project_volume[] = "Very Big";
+$project_volume[] = "< 0.25 Man Month (5 Man Days)";
+$project_volume[] = "< 1 Man Month";
+$project_volume[] = "< 2 Man Months";
+$project_volume[] = "< 6 Man Months";
+$project_volume[] = "> 6 Man Months";
 
 ######################################################################
 # Platforms
 #
 # List of platforms
+# this is assumed to be the operating system on a hardware configuration,
+# if this becomes too long, think about split hardware and OS.
+#
 # You can add/delete/modify as long as you mantain the syntax
 #
 ######################################################################
