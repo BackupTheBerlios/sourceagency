@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: box.inc,v 1.9 2002/05/02 11:12:41 riessen Exp $
+# $Id: box.inc,v 1.10 2002/05/02 11:23:41 riessen Exp $
 #
 ######################################################################
 
@@ -264,7 +264,7 @@ class box {
      * Prints a full box (title + body)
      * It is the same as calling (but in one function):
      *       box_title($title)
-     *       box_body($text, $valign)
+     *       box_body($text)
      *
      * @param    string      $title    Text that will be the title of the table
      * @param    string      $text     Text that will be in the body
@@ -298,11 +298,11 @@ class box {
      * @param    int         $number_of_columns     Number of columns
      * @access public
      */
-    function box_columns_begin($number_of_columns)
+    function box_columns_begin($number_of_columns, $valign = '')
     {
 	echo "\n   <!-- table with ".$number_of_columns." columns -->\n";
 	echo "   <table border=\"0\" cellspacing=\"0\" cellpadding=\"3\" align=\"center\" width=\"100%\" valign=\"top\">\n";
-	echo "      <tr colspan=\"".$number_of_columns."\">\n";
+	echo "      <tr colspan=\"$number_of_columns\" valign=\"$valign\">\n";
     }
 
     /**
