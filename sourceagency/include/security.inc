@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.21 2002/04/10 11:17:18 grex Exp $
+# $Id: security.inc,v 1.22 2002/05/13 10:26:36 riessen Exp $
 #
 ######################################################################
 
@@ -182,7 +182,8 @@ function check_proid($proid)
     $db_check->query("SELECT * FROM description WHERE proid='$proid'"); 
     $db_check->next_record();
     if ($db_check->num_rows() == 0 || empty($proid)) {
-        // WISH: config.inc should not be required another time, as it is done at the beginning of every page.
+        // WISH: config.inc should not be required another time, 
+        // WISH: as it is done at the beginning of every page.
         require("config.inc");
         $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
                       $th_box_title_bgcolor,$th_box_title_font_color,
@@ -193,9 +194,8 @@ function check_proid($proid)
         return 0;
     } elseif ($db_check->f("status") == 0) {
         /* Project pending. It is waiting for an editor to review it */
-        if ((isset($perm) && ($perm->have_perm("editor") 
-			      || $perm->have_perm("editor")))
-                                || is_project_initiator($proid)) {
+        if ( (isset($perm) && $perm->have_perm("editor"))
+             || is_project_initiator($proid)) {
             /* only editors and the project initiator have access to it */
             return 1;
         }
@@ -211,8 +211,7 @@ function check_proid($proid)
         return 0;
     } elseif ($db_check->f("status") == "-1") {
         /* project was denied by a system editor */
-        if (isset($perm) && ($perm->have_perm("editor") 
-             || $perm->have_perm("editor"))) {
+        if (isset($perm) && $perm->have_perm("editor") ) {
             return 1;
         }
 
@@ -455,7 +454,7 @@ function check_permission($proid, $page)
                 return permission_denied($proid,$page);
             }
         case "step3_mod":
-            if (is_your_milestone($proid,$devid)) {
+            if (is_your_milestone($proid)) {
                 return 1;
             } else {
                 return permission_denied($proid,$page);
@@ -703,11 +702,12 @@ function is_project_initiator($proid)
 {
     global $auth;
 
-    $db_local = new DB_SourceAgency;
+    if (isset($auth) && !empty($auth->auth["perm"])) {   
+        $db_local = new DB_SourceAgency;
 
-    if (isset($auth) && !empty($auth->auth["perm"])) { 
         $db_local->query("SELECT * FROM description WHERE proid='$proid' "
                          ."AND description_user='".$auth->auth["uname"]."'");
+
         if ($db_local->num_rows() > 0) {
             return 1;
         }
@@ -777,12 +777,14 @@ function _check_permissions($perm)
 {
     global $auth;
 
-    $db_local = new DB_SourceAgency;
     // modification to allow for multiple permissions, problems
     // occur if other permissions _contain_ the string 'devel'  
     if (isset($auth) && !empty($auth->auth["perm"])) { 
+        $db_local = new DB_SourceAgency;
+
         $db_local->query("SELECT * FROM auth_user WHERE perms LIKE '%"
                          .$perm."%' AND username='".$auth->auth["uname"]."'");
+
         return $db_local->num_rows();
     }
     return 0;
@@ -962,7 +964,7 @@ function already_involved_in_this_step($proid, $page, $username)
  * Returns true if the given username is already involved in the content listed
  * 
  * @param   int     $proid             Project identifier
- * @param   string  $page
+ * @param   string  $page *NOT USED* FIXME
  * @param   string  $username
  * @param  int     $content_id        Content identifier
  * @return  boolean
@@ -1008,7 +1010,8 @@ function security_accept_by_view($proid, $page)
     // FIXME: Any idea of how I can solve this problem?
     // FIXME: making an array and looking if $page is in the array?
     // FIXME:    --> but that will make configuration harder as adding
-    // FIXME         something means to change the SQL and the config.inc file
+    // FIXME:        something means to change the SQL and the config.inc file
+    // FIXME: ====> then do it! <====
     $db_local = new DB_SourceAgency;
     $db_local->query("SELECT $page FROM views WHERE proid='$proid'");
     $db_local->next_record();
@@ -1016,55 +1019,49 @@ function security_accept_by_view($proid, $page)
     switch ($db_local->f($page)) {
     case "Everybody":
         return 1;
-        break;
     case "Registered":
         if (isset ($auth) && isset($auth->auth["uname"]) 
            && !empty($auth->auth["uname"]) 
            && $auth->auth["perm"]!="devel_pending" 
            && $auth->auth["perm"]!="sponsor_pending") {
-           return 1;
+            return 1;
         }
+        // FIXME: should there be a 'break' here?
     case "Developers":
         if (is_developer() || is_accepted_sponsor($proid)) {
             return 1;
-	} else {
-            return 0;
-	}
+	} 
+        break;
     case "Sponsors":  
         if (is_sponsor() || is_involved_developer($proid)) {
             return 1;
-	} else {
-            return 0;
-	}
+	} 
+        break;
     case "Project Participants": 
         if (is_involved_developer($proid) 
             || is_accepted_sponsor($proid) 
             || is_project_initiator($proid)) {
             return 1;
-        } else {
-            return 0;
-        }
+        } 
+        break;
     case "Project Developers":
         if (is_involved_developer($proid)) {
             return 1;
-	} else {
-            return 0;
-	}
+	} 
+        break;
     case "Project Sponsors":
         if (is_accepted_sponsor($proid)) {
             return 1;
-	} else {
-            return 0;
-	}
+	} 
+        break;
     case "Project Initiator":
         if (is_project_initiator($proid)) {
             return 1;
-        } else {
-            return 0;
-	}
+        } 
+        break;
     default:
-        return 0;
     }
+    return 0;
 }
 
 /**
@@ -1076,22 +1073,21 @@ function security_accept_by_view($proid, $page)
  */
 function step5_iteration($proid)
 {
-    $current_milestone = 0;
     $current_iteration = 0;
 
     $db_local = new DB_SourceAgency;
-    $db_local->query("SELECT milestone_number,iteration FROM follow_up WHERE proid='$proid'");
+    $db_local->query("SELECT milestone_number,iteration FROM "
+                     ."follow_up WHERE proid='$proid'");
     if ($db_local->num_rows() == 0) { 
         return 0;
     } else {
         while ($db_local->next_record()) {
-            if ($current_milestone < $db_local->f("milestone_number")) {
+            if ( $db_local->f("milestone_number") > 0 ) {
                 $current_iteration = $db_local->f("iteration");
             }
         }
         return $current_iteration;
     }
-    return 0;
 }
 
 /**
@@ -1137,18 +1133,18 @@ function step5_not_your_iteration($proid, $page)
  * Returns if it is the visitors milestone
  * 
  * @param   int     $proid             Project identifier
- * @param   int     $devid             Developing identifier
  * @global  object  $auth              PHPLib authetication object
  * @return  boolean
  * @access  public
  */
-function is_your_milestone($proid, $devid)
+function is_your_milestone($proid)
 {
     global $auth;
 
     if (isset($auth) && !empty($auth->auth["perm"])) { 
         $db_local = new DB_SourceAgency;
-        $db_local->query("SELECT * FROM developing WHERE proid='$proid' AND developer='".$auth->auth["uname"]."'");
+        $db_local->query("SELECT * FROM developing WHERE proid='$proid' "
+                         ."AND developer='".$auth->auth["uname"]."'");
         if ($db_local->num_rows() > 0) { 
             return 1;
 	}
@@ -1169,15 +1165,23 @@ function is_milestone_possible($proid)
 {
     global $auth;
 
-    $db_local = new DB_SourceAgency;
-    $db_local->query("SELECT SUM(payment) FROM milestones,developing WHERE developing.proid='$proid' AND milestones.devid=developing.devid AND developer='".$auth->auth["uname"]."'");
-    $db_local->next_record();
+    if ( isset( $auth ) ) {
+        $db_local = new DB_SourceAgency;
 
-    if ($db_local->f("SUM(payment)") < 100) {
-        return 1;
-    } else {
-        return 0;
+        $db_local->query("SELECT SUM(payment) FROM milestones,developing "
+                         ."WHERE developing.proid='$proid' AND "
+                         ."milestones.devid=developing.devid AND "
+                         ."developer='".$auth->auth["uname"]."'");
+
+        $db_local->next_record();
+        
+        if ($db_local->f("SUM(payment)") < 100) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
+    return 0;
 }
 
 /**
@@ -1192,14 +1196,23 @@ function is_milestone_possible($proid)
  */
 function milestone_not_possible($proid, $page)
 {
+    global $t;
     top_bar($proid, $page);
 
-    // WISH: config.inc should not be required another time, as it is done at the beginning of every page.
+    // WISH: config.inc should not be required another time, 
+    // as it is done at the beginning of every page.
     require('config.inc');
 
-    $be = new box('',$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
+    $be = new box('',$th_box_frame_color,$th_box_frame_width,
+                  $th_box_title_bgcolor,$th_box_title_font_color,
+                  $th_box_title_align,$th_box_body_bgcolor,
+                  $th_box_error_font_color,$th_box_body_align);
 
-    $be->box_full('Milestone not possible', 'Your milestones already reach 100%. You should modify your existing milestones before creating a new one.');
+    $be->box_full($t->translate('Milestone not possible'), 
+                  $t->translate( 'Your milestones already '
+                                 .'reach 100%. You should modify your '
+                                 .'existing milestones before creating '
+                                 .'a new one.'));
     return 0;     
 }
 
