@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browse.php3,v 1.3 2001/11/12 13:00:05 riessen Exp $
+# $Id: browse.php3,v 1.4 2001/11/22 17:09:13 riessen Exp $
 #
 ######################################################################  
 
@@ -78,7 +78,6 @@ $page = "browse";
   $bx->box_columns_end();
   $bx->box_body_end();
   $bx->box_end();
-
 
   if (isset($$through)) {
       browse_list($through,$$through);
