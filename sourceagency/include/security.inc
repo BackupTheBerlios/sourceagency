@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.16 2002/03/26 13:31:21 riessen Exp $
+# $Id: security.inc,v 1.17 2002/03/26 16:09:38 grex Exp $
 #
 ######################################################################
 
@@ -151,8 +151,9 @@ function check_proid ($proid) {
                       $t->translate("No project with this id."));
         return 0;
     } elseif ($db_check->f("status") == 0) {
-        if (isset($perm) && ($perm->have_perm("editor") 
-                                || $perm->have_perm("editor"))) {
+        if ((isset($perm) && ($perm->have_perm("editor") 
+			      || $perm->have_perm("editor")))
+                                || is_project_initiator($proid)) {
             return 1;
         }
 
