@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.8 2002/04/08 21:32:47 grex Exp $
+# $Id: browselib.inc,v 1.9 2002/04/17 10:47:58 grex Exp $
 #
 ######################################################################
 
@@ -48,7 +48,7 @@ function browse_through($through)
     $bx->box_body_begin();
     switch ($through) {
     case 'license':
-        _browse_licenses();
+        browse_licenses();
         break;
     case 'type':
         _browse_type();
@@ -93,9 +93,9 @@ function browse_through($through)
  * @global  object    $bx            Box object
  * @global  object    $db            PHPLib database object
  *
- * @access  private
+ * @access  public
  */
-function _browse_licenses()
+function browse_licenses()
 {
     global $bx, $db, $t;
     
