@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: personal.php3,v 1.2 2001/11/15 17:23:49 riessen Exp $
+# $Id: personal.php3,v 1.3 2001/11/29 15:34:29 grex Exp $
 #
 ######################################################################  
 
@@ -64,7 +64,9 @@ $page = "personal";
   personal_monitored_projects($auth->auth["uname"]);
   $bx->box_column_finish();
   $bx->box_column_start("center","33%","");
-#  print "(FIXME: Possible actions)\n";
+#   WISH: It would be nice to have here a list of actions that may interest the user
+#   these actions correspond to actions in projects that he is related in or in projects he is monitoring
+#  print "(Possible actions)\n";
   $bx->box_column_finish();
   $bx->box_columns_end();
   $bx->box_body_end();
