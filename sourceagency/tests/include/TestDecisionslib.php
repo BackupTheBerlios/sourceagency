@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDecisionslib.php,v 1.11 2002/07/09 11:15:33 riessen Exp $
+// $Id: TestDecisionslib.php,v 1.12 2002/07/17 12:41:01 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -173,7 +173,54 @@ extends UnitTest
             'put_into_next_step_8' =>
             ("SELECT email_usr FROM auth_user,monitor WHERE monitor."
              ."username=auth_user.username AND proid='%s' AND "
-             ."importance='high'")
+             ."importance='high'"),
+            'show_decision_consultants_1' =>
+            ("SELECT consultants FROM configure WHERE proid='%s'"),
+            'show_decision_consultants_2' =>
+            ("SELECT * FROM consultants,auth_user WHERE proid='%s' AND "
+             ."consultant=username ORDER BY creation"),
+            'show_decision_consultants_3' =>
+            ("SELECT SUM(budget) AS sum_consultant FROM sponsoring,decisions "
+             ."WHERE decisions.proid='%s' AND sponsoring.proid='%s' AND "
+             ."sponsoring.sponsor=decisions.decision_user AND step='1' AND "
+             ."decision='%s' GROUP BY decision"),
+            'show_decision_contents_1' =>
+            ("SELECT * FROM tech_content,auth_user WHERE proid='%s' AND "
+             ."content_user=username ORDER BY creation"),
+            'show_decision_contents_2' =>
+            ("SELECT SUM(budget) AS sum_content FROM sponsoring,decisions "
+             ."WHERE decisions.proid='%s' AND sponsoring.proid='%s' AND "
+             ."sponsoring.sponsor=decisions.decision_user AND decision='%s' "
+             ."AND step='2' GROUP BY decision"),
+            'show_decision_milestones_1' =>
+            ("SELECT * FROM milestones WHERE proid='%s' AND devid='%s' "
+             ."ORDER BY number"),
+            'show_decision_milestones_2' =>
+            ("SELECT SUM(budget) AS sum_milestone FROM sponsoring,"
+             ."decisions_milestones WHERE decisions_milestones.proid='%s' "
+             ."AND sponsoring.proid='%s' AND decisions_milestones.devid='%s' "
+             ."AND sponsoring.sponsor=decisions_milestones.decision_user AND "
+             ."number='%s' AND decision='Yes' GROUP BY decision"),
+            'show_decision_proposals_1' =>
+            ("SELECT * FROM tech_content,developing,auth_user WHERE "
+             ."tech_content.proid='%s' AND developer=username AND "
+             ."tech_content.content_id=developing.content_id AND "
+             ."tech_content.status='A' ORDER BY developing.creation"),
+            'show_decision_proposals_2' =>
+            ("SELECT SUM(budget) AS sum_content FROM sponsoring,decisions "
+             ."WHERE decisions.proid='%s' AND sponsoring.proid='%s' AND "
+             ."sponsoring.sponsor=decisions.decision_user AND decision='%s' "
+             ."AND step='3' GROUP BY decision"),
+            'show_decision_referees_1' =>
+            ("SELECT * FROM referees,auth_user WHERE proid='%s' AND "
+             ."referee=username ORDER BY creation"),
+            'show_decision_referees_2' =>
+            ("SELECT SUM(budget) AS sum_referee FROM sponsoring,decisions "
+             ."WHERE decisions.proid='%s' AND sponsoring.proid='%s' AND "
+             ."sponsoring.sponsor=decisions.decision_user AND decision='%s' "
+             ."AND step='4' GROUP BY decision"),
+            'show_decision_step5' =>
+            ("SELECT * FROM milestones WHERE proid='%s' AND number='%s'"),
             );
     }
     
@@ -1073,28 +1120,1159 @@ extends UnitTest
         $this->_check_db( $db_config );
     }
 
-    function testShow_decision_consultants() {
-        $this->_test_to_be_completed();
+    function _config_db_show_decision_consultants( &$db_config, $inst_nr, &$qs,
+                       $proid, $quorum, $project_budget, $has_consultants, 
+                       &$row_data, &$sum_budget ) {
+        $db_i_global = $inst_nr;
+        /** quorum query **/
+        $db_config->add_query( sprintf( $qs[0], $proid ), $db_i_global );
+        $db_config->add_record( array( 'quorum' => $quorum ), $db_i_global );
+        /** project budget **/
+        $db_config->add_query( sprintf( $qs[4], $proid ), $db_i_global );
+        $db_config->add_record( array( 'SUM(budget)' => $project_budget),
+                                $db_i_global );
+        /** configured to have consultants ? **/
+        $db_config->add_query( sprintf( $qs[1], $proid ), $db_i_global );
+        $db_config->add_record( array( 'consultants' =>
+                                       ($has_consultants ? 'Yes' : 'No')),
+                                $db_i_global );
+        $row_cnt = count( $row_data );
+        /** retrieve consultant data query **/
+        $db_config->add_query( sprintf( $qs[2], $proid ), $db_i_global );
+        $db_config->add_num_row( $row_cnt, $db_i_global );
+        if ( $row_cnt != 0 ) {
+            for ( $idx = 0; $idx < $row_cnt; $idx++ ) {
+                $db_config->add_record( $row_data[$idx], $db_i_global );
+                $inst_nr++;
+                $db_config->add_query( sprintf( $qs[3], $proid, $proid, 
+                                    $row_data[$idx]['consultant']), $inst_nr );
+                $db_config->add_record( $sum_budget[$idx], $inst_nr );
+            }
+            $db_config->add_record( false, $db_i_global );
+        }
+
+        /** num_row call if the 'flag' variable was not set **/
+        if ( $has_consultants ) {
+            $db_config->add_num_row( $row_cnt, $db_i_global );
+        }
+        return ++$inst_nr;
     }
+
+    function _checkFor_show_decision_consultants() {
+        // TODO: fill in this method .....
+    }
+
+    function testShow_decision_consultants() {
+        global $t, $bx, $db, $sess;
+        global $voted_yet, $your_vote;
+        
+        $voted_yet = 0;
+        $your_vote = 'adsad';
+
+        $fname = 'show_decision_consultants';
+        $qs = array( 0 => $this->queries[ 'decisions_step5_sponsors_1' ],
+                     1 => $this->queries[ $fname . '_1' ],
+                     2 => $this->queries[ $fname . '_2' ],
+                     3 => $this->queries[ $fname . '_3' ],
+                     4 => $this->queries[ 'project_budget' ]);
+        $db_config = new mock_db_configure( 10 );
+        $inst_nr = 0;
+        $args = $this->_generate_records( array( 'proid' ), 10 );
+
+        // test one: no consultant data, no consultants required
+        $voted_yet = 0;
+        $your_vote = '';
+        $d1 = array();
+        $d2 = array();
+        $inst_nr = 
+             $this->_config_db_show_decision_consultants( $db_config, $inst_nr,
+                          $qs, $args[1]['proid'], 10, 10, false, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 163 + strlen( $sess->self_url()), 
+                                     $args[1] );
+        $this->assertEquals( 0, $voted_yet );
+        $this->assertEquals( 100, $rval );
+        $this->_checkFor_show_decision_consultants();
+
+        // test two: one data point, consultants required, voting less than
+        // test two: decision_value, your_vote does not match
+        $voted_yet = 0;
+        $your_vote = '';
+        $d1 = $this->_generate_records( array( 'consultant', 'status',
+                                               'creation' ), 1 );
+        $d2 = $this->_generate_records( array( 'sum_consultant' ), 1 );
+        $d2[0]['sum_consultant'] = -10;
+        $inst_nr = 
+             $this->_config_db_show_decision_consultants( $db_config, $inst_nr,
+                          $qs, $args[0]['proid'], 10, 10, true, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3285 + strlen($sess->self_url()),
+                                     $args[0] );
+        $this->assertEquals( -100, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_consultants();
+
+        // test three: one data point, consultants not required, voting less 
+        // test three: than decision_value, your_vote does not match
+        $voted_yet = 0;
+        $your_vote = '';
+        $d1 = $this->_generate_records( array( 'consultant', 'status',
+                                               'creation' ), 1 );
+        $d2 = $this->_generate_records( array( 'sum_consultant' ), 1 );
+        $d2[0]['sum_consultant'] = -10;
+        $inst_nr = 
+             $this->_config_db_show_decision_consultants( $db_config, $inst_nr,
+                          $qs, $args[2]['proid'], 10, 10, false, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3399 + strlen($sess->self_url()),
+                                     $args[2] );
+        $this->assertEquals( -100, $voted_yet );
+        $this->assertEquals( 100, $rval );
+        $this->_checkFor_show_decision_consultants();
+
+        // test four: one data point, consultants not required, voting less 
+        // test four: than decision_value, your_vote matches consultant
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'consultant', 'status',
+                                               'creation' ), 1 );
+        $d2 = $this->_generate_records( array( 'sum_consultant' ), 1 );
+        $your_vote = $d1[0]['consultant'];
+        $d2[0]['sum_consultant'] = -10;
+        $inst_nr = 
+             $this->_config_db_show_decision_consultants( $db_config, $inst_nr,
+                          $qs, $args[3]['proid'], 10, 10, false, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3408 + strlen($sess->self_url()),
+                                     $args[3] );
+        $this->assertEquals( -100, $voted_yet );
+        $this->assertEquals( 100, $rval );
+        $this->_checkFor_show_decision_consultants();
+
+        // test five: one data point, consultants not required, voting greater 
+        // test five: than decision_value, your_vote matches consultant
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'consultant', 'status',
+                                               'creation' ), 1 );
+        $d2 = $this->_generate_records( array( 'sum_consultant' ), 1 );
+        $your_vote = $d1[0]['consultant'];
+        $d2[0]['sum_consultant'] = 10;
+        $inst_nr = 
+             $this->_config_db_show_decision_consultants( $db_config, $inst_nr,
+                          $qs, $args[3]['proid'], 1, 10, false, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3407 + strlen($sess->self_url()),
+                                     $args[3] );
+        $this->assertEquals( 100, $voted_yet );
+        $this->assertEquals( 1, $rval );
+        $this->_checkFor_show_decision_consultants();
+
+        // test six: no consultant data, but consultants required
+        $voted_yet = 0;
+        $your_vote = '';
+        $d1 = array();
+        $d2 = array();
+        $inst_nr = 
+             $this->_config_db_show_decision_consultants( $db_config, $inst_nr,
+                          $qs, $args[1]['proid'], 10, 10, true, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 110 + strlen( $sess->self_url()), 
+                                     $args[1] );
+        $this->assertEquals( 0, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_consultants();
+        
+        $this->_check_db( $db_config );
+    }
+
+    function _config_db_show_decision_contents( &$db_config, $inst_nr,
+                                      &$qs, $proid, $quorum, $project_budget, 
+                                      &$row_data, &$sum_budget ) {
+
+        $db_i_global = $inst_nr;
+        /** quorum query **/
+        $db_config->add_query( sprintf( $qs[0], $proid ), $db_i_global );
+        $db_config->add_record( array( 'quorum' => $quorum ), $db_i_global );
+        /** project budget **/
+        $db_config->add_query( sprintf( $qs[1], $proid ), $db_i_global );
+        $db_config->add_record( array( 'SUM(budget)' => $project_budget),
+                                $db_i_global );
+        /** tech content query **/
+        $db_config->add_query( sprintf( $qs[2], $proid ), $db_i_global );
+        $row_cnt = count( $row_data );
+        $db_config->add_num_row( $row_cnt, $db_i_global );
+        if ( $row_cnt > 0 ) {
+            for ( $idx = 0; $idx < $row_cnt; $idx++ ) {
+                $db_config->add_record( $row_data[$idx], $db_i_global );
+                $inst_nr++;
+                $db_config->add_query( sprintf( $qs[3], $proid, $proid,
+                                    $row_data[$idx]['content_id']), $inst_nr );
+                $db_config->add_record( $sum_budget[$idx], $inst_nr );
+            }
+            $db_config->add_record( false, $db_i_global );
+        }
+
+        $db_config->add_num_row( $row_cnt, $db_i_global );
+        return ++$inst_nr;
+    }
+
 
     function testShow_decision_contents() {
-        $this->_test_to_be_completed();
+        global $t, $bx, $db, $sess;
+        global $voted_yet, $your_vote;
+
+        $fname = 'show_decision_contents';
+        $qs = array( 0 => $this->queries[ 'decisions_step5_sponsors_1' ],
+                     1 => $this->queries[ 'project_budget' ],
+                     2 => $this->queries[ $fname . '_1' ],
+                     3 => $this->queries[ $fname . '_2' ]);
+        $db_config = new mock_db_configure( 9 );
+        $inst_nr = 0;
+        $args=$this->_generate_records( array( 'proid' ), 10 );
+        
+        // test one: no data points
+        $your_vote = '';
+        $voted_yet = 0;
+        $d1 = array();
+        $d2 = array();
+        $inst_nr =
+             $this->_config_db_show_decision_contents( $db_config, $inst_nr,
+                                    $qs, $args[0]['proid'], 10, 10, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 119, $args[0] );
+        $this->assertEquals( 0, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_contents();
+
+        // test two: one data point, voting less than decision value, 
+        // test two: your_vote does not match content_id
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'content_id', 'platform', 
+                                               'architecture', 'environment',
+                                               'creation' ), 1 );
+        $d2 = $this->_generate_records( array( 'sum_content' ), 1 );
+        $your_vote = $d1[0]['content_id'] . 'DONT MATCH';
+        $d2[0]['sum_content'] = -10;
+        $inst_nr =
+             $this->_config_db_show_decision_contents( $db_config, $inst_nr,
+                                    $qs, $args[1]['proid'], 10, 10, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3939 +strlen( $sess->self_url()), 
+                                     $args[1] );
+        $this->assertEquals( -100, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_contents();
+
+        // test three: one data point, voting greater than decision_value,
+        // test three: your_vote does not match content_id
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'content_id', 'platform', 
+                                               'architecture', 'environment',
+                                               'creation' ), 1 );
+        $d2 = $this->_generate_records( array( 'sum_content' ), 1 );
+        $your_vote = $d1[0]['content_id'] . 'DONT MATCH';
+        $d2[0]['sum_content'] = 20;
+        $inst_nr =
+             $this->_config_db_show_decision_contents( $db_config, $inst_nr,
+                                    $qs, $args[2]['proid'], 10, 10, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3938+ strlen( $sess->self_url()), 
+                                      $args[2] );
+        $this->assertEquals( 200, $voted_yet );
+        $this->assertEquals( 1, $rval );
+        $this->_checkFor_show_decision_contents();
+
+        // test four: one data point, voting greater than decision_value,
+        // test four: your_vote matches content_id
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'content_id', 'platform', 
+                                               'architecture', 'environment',
+                                               'creation' ), 1 );
+        $d2 = $this->_generate_records( array( 'sum_content' ), 1 );
+        $your_vote = $d1[0]['content_id'];
+        $d2[0]['sum_content'] = 20;
+        $inst_nr =
+             $this->_config_db_show_decision_contents( $db_config, $inst_nr,
+                                    $qs, $args[3]['proid'], 10, 10, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3947+ strlen( $sess->self_url()), 
+                                      $args[3] );
+        $this->assertEquals( 200, $voted_yet );
+        $this->assertEquals( 1, $rval );
+        $this->_checkFor_show_decision_contents();
+
+        // test five: one data point, voting less than decision value,
+        // test five: your_vote matches content_id
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'content_id', 'platform', 
+                                               'architecture', 'environment',
+                                               'creation' ), 1 );
+        $d2 = $this->_generate_records( array( 'sum_content' ), 1 );
+        $your_vote = $d1[0]['content_id'];
+        $d2[0]['sum_content'] = -20;
+        $inst_nr =
+             $this->_config_db_show_decision_contents( $db_config, $inst_nr,
+                                    $qs, $args[4]['proid'], 10, 10, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3948+ strlen( $sess->self_url()), 
+                                      $args[4] );
+        $this->assertEquals( -200, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_contents();
+        
+        $this->_check_db( $db_config );
     }
 
+    function _checkFor_show_decision_contents() {
+        // TODO: complete this function
+    }
+
+    function _config_db_show_decision_milestones( &$db_config, $inst_nr,
+                   &$qs, $proid, $devid, $quorum, $project_budget, 
+                   &$row_data, &$sum_budget ) {
+        $db_i_global = $inst_nr;
+        /** quorum query **/
+        $db_config->add_query( sprintf( $qs[0], $proid ), $db_i_global );
+        $db_config->add_record( array( 'quorum' => $quorum ), $db_i_global );
+        /** project budget **/
+        $db_config->add_query( sprintf( $qs[1], $proid ), $db_i_global );
+        $db_config->add_record( array( 'SUM(budget)' => $project_budget),
+                                $db_i_global );
+        /** query milestone table **/
+        $db_config->add_query(sprintf( $qs[2], $proid, $devid ), $db_i_global);
+        $row_cnt = count( $row_data );
+        $db_config->add_num_row( $row_cnt, $db_i_global );
+        if ( $row_cnt > 0 ) {
+            for ( $idx = 0; $idx < $row_cnt; $idx++ ) {
+                $db_config->add_record( $row_data[$idx], $db_i_global );
+                $inst_nr++;
+                $db_config->add_query( sprintf( $qs[3], $proid, $proid, 
+                                $devid, $row_data[$idx]['number']), $inst_nr );
+                $db_config->add_record( $sum_budget[$idx], $inst_nr );
+
+                /** decision milestone into db call **/
+                $voting = ((round(($sum_budget[$idx]['sum_milestone']
+                                               /$project_budget)*10000))/100);
+                if (($voting > $quorum && $row_data[$idx]['status'] != 'A')
+                    ||($voting <= $quorum && $row_data[$idx]['status']!='P')) {
+                    $inst_nr++;
+                    $db_config->add_query( sprintf( $qs[4], $proid, $devid,
+                    $row_data[$idx]['number']), $inst_nr);
+                    $db_config->add_record(array('creation' => 'c',
+                                                 'release' => 'r'), $inst_nr);
+                    $status = ( $row_data[$idx]['status'] != 'A' ? 'A' : 'P');
+                    $db_config->add_query( sprintf( $qs[5], $status,'c','r',
+                                   $proid, $devid, $row_data[$idx]['number']),
+                                           $inst_nr);
+                }
+            }
+            $db_config->add_record( false, $db_i_global );
+        }
+
+        $db_config->add_num_row( $row_cnt, $db_i_global );
+        return ++$inst_nr;
+    }
+    
     function testShow_decision_milestones() {
-        $this->_test_to_be_completed();
+        global $t, $bx, $db, $sess;
+        global $voted_yet, $your_vote;
+
+        $fname = 'show_decision_milestones';
+        $qs = array( 0 =>$this->queries[ 'decisions_step5_sponsors_1' ],
+                     1 =>$this->queries[ 'project_budget' ],
+                     2 =>$this->queries[ $fname . '_1' ],
+                     3 =>$this->queries[ $fname . '_2' ],
+                     4 =>$this->queries['decisions_milestone_into_db_select'],
+                     5 =>$this->queries['decisions_milestone_into_db_update']);
+
+        $db_config = new mock_db_configure( 21 );
+        $inst_nr = 0;
+        $args = $this->_generate_records( array( 'proid','devid'), 10 );
+        
+        // test one: no data points
+        $your_vote = '';
+        $voted_yet = 0;
+        $d1 = array();
+        $d2 = array();
+        $inst_nr =
+             $this->_config_db_show_decision_milestones( $db_config, $inst_nr,
+                                                  $qs, $args[0]['proid'], 
+                                          $args[0]['devid'], 5, 10, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 116, $args[0] );
+        $this->assertEquals( 0, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_milestones();
+
+        // test two: one data point, voting greater than decision_value,
+        // test two: status == 'A', milestone number is 'No'
+        $your_vote = '';
+        $voted_yet = 0;
+        $d1 = $this->_generate_records(array('number','goals','release',
+                                             'product','payment','status'),1);
+        $d2 = $this->_generate_records( array( 'sum_milestone' ), 1 );
+        $d1[0]['status'] = 'A';
+        $GLOBALS['milestone_'.$d1[0]['number']] = 'No';
+        $d2[0]['sum_milestone'] = 20;
+        $inst_nr =
+             $this->_config_db_show_decision_milestones( $db_config, $inst_nr,
+                                          $qs, $args[1]['proid'], 
+                                          $args[1]['devid'], 5, 10, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3993 + strlen($sess->self_url()), 
+                                     $args[1] );
+        $this->assertEquals( 200, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_milestones();
+
+        // test three: one data point, voting greater than decision_value,
+        // test three: status == 'P', milestone number is 'No'
+        $your_vote = '';
+        $voted_yet = 0;
+        $d1 = $this->_generate_records(array('number','goals','release',
+                                             'product','payment','status'),1);
+        $d2 = $this->_generate_records( array( 'sum_milestone' ), 1 );
+        $d1[0]['status'] = 'P';
+        $GLOBALS['milestone_'.$d1[0]['number']] = 'No';
+        $d2[0]['sum_milestone'] = 20;
+        $inst_nr =
+             $this->_config_db_show_decision_milestones( $db_config, $inst_nr,
+                                          $qs, $args[2]['proid'], 
+                                          $args[2]['devid'], 5, 10, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3993 + strlen($sess->self_url()), 
+                                     $args[2] );
+        $this->assertEquals( 200, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_milestones();
+
+        // test four: one data point, voting greater than decision_value,
+        // test four: status == 'A', milestone number is 'Yes'
+        $your_vote = '';
+        $voted_yet = 0;
+        $d1 = $this->_generate_records(array('number','goals','release',
+                                             'product','payment','status'),1);
+        $d2 = $this->_generate_records( array( 'sum_milestone' ), 1 );
+        $d1[0]['status'] = 'A';
+        $GLOBALS['milestone_'.$d1[0]['number']] = 'Yes';
+        $d2[0]['sum_milestone'] = 20;
+        $inst_nr =
+             $this->_config_db_show_decision_milestones( $db_config, $inst_nr,
+                                          $qs, $args[3]['proid'], 
+                                          $args[3]['devid'], 5, 10, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 4002 + strlen($sess->self_url()), 
+                                     $args[3] );
+        $this->assertEquals( 200, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_milestones();
+
+        // test five: one data point, voting greater than decision_value,
+        // test five: status == 'P', milestone number is 'Yes'
+        $your_vote = '';
+        $voted_yet = 0;
+        $d1 = $this->_generate_records(array('number','goals','release',
+                                             'product','payment','status'),1);
+        $d2 = $this->_generate_records( array( 'sum_milestone' ), 1 );
+        $d1[0]['status'] = 'P';
+        $GLOBALS['milestone_'.$d1[0]['number']] = 'Yes';
+        $d2[0]['sum_milestone'] = 20;
+        $inst_nr =
+             $this->_config_db_show_decision_milestones( $db_config, $inst_nr,
+                                          $qs, $args[4]['proid'], 
+                                          $args[4]['devid'], 5, 10, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 4002 + strlen($sess->self_url()), 
+                                     $args[4] );
+        $this->assertEquals( 200, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_milestones();
+
+        // test six: one data point, voting less than decision_value,
+        // test six: status == 'A', milestone number is 'No'
+        $your_vote = '';
+        $voted_yet = 0;
+        $d1 = $this->_generate_records(array('number','goals','release',
+                                             'product','payment','status'),1);
+        $d2 = $this->_generate_records( array( 'sum_milestone' ), 1 );
+        $d1[0]['status'] = 'A';
+        $GLOBALS['milestone_'.$d1[0]['number']] = 'No';
+        $d2[0]['sum_milestone'] = -20;
+        $inst_nr =
+             $this->_config_db_show_decision_milestones( $db_config, $inst_nr,
+                                          $qs, $args[5]['proid'], 
+                                          $args[5]['devid'], 5, 10, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3994 + strlen($sess->self_url()), 
+                                     $args[5] );
+        $this->assertEquals( -200, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_milestones();
+
+        // test seven: one data point, voting less than decision_value,
+        // test seven: status == 'P', milestone number is 'No'
+        $your_vote = '';
+        $voted_yet = 0;
+        $d1 = $this->_generate_records(array('number','goals','release',
+                                             'product','payment','status'),1);
+        $d2 = $this->_generate_records( array( 'sum_milestone' ), 1 );
+        $d1[0]['status'] = 'P';
+        $GLOBALS['milestone_'.$d1[0]['number']] = 'No';
+        $d2[0]['sum_milestone'] = -20;
+        $inst_nr =
+             $this->_config_db_show_decision_milestones( $db_config, $inst_nr,
+                                          $qs, $args[6]['proid'], 
+                                          $args[6]['devid'], 5, 10, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3994 + strlen($sess->self_url()), 
+                                     $args[6] );
+        $this->assertEquals( -200, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_milestones();
+
+        // test eight: one data point, voting less than decision_value,
+        // test eight: status == 'A', milestone number is 'Yes'
+        $your_vote = '';
+        $voted_yet = 0;
+        $d1 = $this->_generate_records(array('number','goals','release',
+                                             'product','payment','status'),1);
+        $d2 = $this->_generate_records( array( 'sum_milestone' ), 1 );
+        $d1[0]['status'] = 'A';
+        $GLOBALS['milestone_'.$d1[0]['number']] = 'Yes';
+        $d2[0]['sum_milestone'] = -20;
+        $inst_nr =
+             $this->_config_db_show_decision_milestones( $db_config, $inst_nr,
+                                          $qs, $args[7]['proid'], 
+                                          $args[7]['devid'], 5, 10, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 4003 + strlen($sess->self_url()), 
+                                     $args[7] );
+        $this->assertEquals( -200, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_milestones();
+
+        // test nine: one data point, voting less than decision_value,
+        // test nine: status == 'P', milestone number is 'Yes'
+        $your_vote = '';
+        $voted_yet = 0;
+        $d1 = $this->_generate_records(array('number','goals','release',
+                                             'product','payment','status'),1);
+        $d2 = $this->_generate_records( array( 'sum_milestone' ), 1 );
+        $d1[0]['status'] = 'P';
+        $GLOBALS['milestone_'.$d1[0]['number']] = 'Yes';
+        $d2[0]['sum_milestone'] = -20;
+        $inst_nr =
+             $this->_config_db_show_decision_milestones( $db_config, $inst_nr,
+                                          $qs, $args[8]['proid'], 
+                                          $args[8]['devid'], 5, 10, $d1, $d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 4003 + strlen($sess->self_url()), 
+                                     $args[8] );
+        $this->assertEquals( -200, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_milestones();
+
+        $this->_check_db( $db_config );
+    }
+
+    function _checkFor_show_decision_milestones() {
+        // TODO: define this function
+    }
+
+    function _config_db_show_decision_proposals( &$db_config, $inst_nr,
+                                     &$qs, $proid, $quorum, $project_budget, 
+                                     &$row_data, &$sum_content, 
+                                     &$ams_call_1, &$ams_call_2 ) {
+        global $auth;
+        $db_i_global = $inst_nr;
+        /** quorum query **/
+        $db_config->add_query( sprintf( $qs[0], $proid ), $db_i_global );
+        $db_config->add_record( array( 'quorum' => $quorum ), $db_i_global );
+        /** project budget querry **/
+        $db_config->add_query( sprintf( $qs[1], $proid ), $db_i_global );
+        $db_config->add_record( array( "SUM(budget)" => $project_budget),
+                                $db_i_global );
+        /** tech_content query **/
+        $row_cnt = count( $row_data );
+        $db_config->add_query( sprintf( $qs[2], $proid ), $db_i_global );
+        $db_config->add_num_row( $row_cnt, $db_i_global );
+        if ( $row_cnt > 0 ) {
+            for ( $idx = 0; $idx < $row_cnt; $idx++ ) {
+                $db_config->add_record( $row_data[$idx], $db_i_global );
+                $inst_nr++;
+                $devid = $row_data[$idx]['devid'];
+                $db_config->add_query( sprintf( $qs[3], $proid, $proid, 
+                                                            $devid), $inst_nr);
+                $db_config->add_record( $sum_content[$idx], $inst_nr );
+                /** call 1 to decision accepted milestone **/
+                $inst_nr++;
+                $db_config->add_query( sprintf( $qs[4], $proid, $devid ), 
+                                       $inst_nr );
+                $db_config->add_record(array('number'=>1,'payment'=>1),
+                                       $inst_nr);
+                $db_config->add_record( false, $inst_nr );
+                $inst_nr++; 
+                $db_config->add_query( sprintf( $qs[5], $proid, $devid,'1',
+                                        $auth->auth['uname']), $inst_nr );
+                $db_config->add_record( array('COUNT(*)'=>$ams_call_1[$idx]),
+                                        $inst_nr);
+                /** call 2 to decision accepted milestone **/
+                $inst_nr++;
+                $db_config->add_query( sprintf( $qs[4], $proid, $devid ), 
+                                       $inst_nr );
+                $db_config->add_record( array('number'=>1,'payment'=>1),
+                                        $inst_nr);
+                $db_config->add_record( false, $inst_nr );
+                $inst_nr++;  
+                $db_config->add_query( sprintf( $qs[5], $proid, $devid,'1',
+                                        $auth->auth['uname']), $inst_nr );
+                $db_config->add_record( array('COUNT(*)'=>$ams_call_2[$idx]),
+                                        $inst_nr);
+            }
+            $db_config->add_record( false, $db_i_global );
+        }
+
+        $db_config->add_num_row( $row_cnt, $db_i_global );
+        return ++$inst_nr;
+    }
+
+    function _checkFor_show_decision_proposals() {
+        // TODO: definne this function
     }
 
     function testShow_decision_proposals() {
-        $this->_test_to_be_completed();
+        global $t, $bx, $db, $sess;
+        global $voted_yet, $your_vote;
+        
+        $fname = 'show_decision_proposals';
+        $args = $this->_generate_records( array( 'proid' ), 10 );
+        $qs = array( 0 => $this->queries[ 'decisions_step5_sponsors_1' ],
+                     1 => $this->queries[ 'project_budget' ],
+                     2 => $this->queries[ $fname . '_1' ],
+                     3 => $this->queries[ $fname . '_2' ],
+                     4 => $this->queries[ 'decision_accepted_milestones_1'],
+                     5 => $this->queries[ 'decision_accepted_milestones_2'] );
+                     
+        $db_config = new mock_db_configure( 37 );
+        $inst_nr = 0;
+
+        // test one: no data points
+        $voted_yet = 0;
+        $your_vote = '';
+        $d1 = array();
+        $d2 = $d1;
+        $d3 = $d1;
+        $d4 = $d1;
+        $inst_nr =
+             $this->_config_db_show_decision_proposals( $db_config, $inst_nr,
+                          $qs, $args[0]['proid'], 10, 10, $d1, $d2, $d3, $d4 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 220, $args[0] );
+        $this->assertEquals( 0, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_proposals();
+
+        // test two: one data point, voting is less than decision_value,
+        // test two: decision_accepted_milestones returns 100, your_vote
+        // test two: does not match devid
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'devid', 'developer', 'license',
+                                               'cost','start','duration',
+                                               'valid','creation'), 1 );
+        $d2 = $this->_generate_records( array( 'sum_content' ), 1 );
+        $d3 = array( 10 );
+        $d4 = array( 100 );
+        $your_vote = $d1[0]['devid'] . 'NO MATCH';
+        $d2[0]['sum_content'] = -10;
+        $inst_nr =
+             $this->_config_db_show_decision_proposals( $db_config, $inst_nr,
+                          $qs, $args[1]['proid'], 10, 10, $d1, $d2, $d3, $d4 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 5315 + strlen($sess->self_url()), 
+                                     $args[1] );
+        $this->assertEquals( -100, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_proposals();
+
+        // test three: one data point, voting is less than decision_value,
+        // test three: decision_accepted_milestones returns 100, your_vote
+        // test three: matches devid
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'devid', 'developer', 'license',
+                                               'cost','start','duration',
+                                               'valid','creation'), 1 );
+        $d2 = $this->_generate_records( array( 'sum_content' ), 1 );
+        $d3 = array( 10 );
+        $d4 = array( 100 );
+        $your_vote = $d1[0]['devid'];
+        $d2[0]['sum_content'] = -10;
+        $inst_nr =
+             $this->_config_db_show_decision_proposals( $db_config, $inst_nr,
+                          $qs, $args[2]['proid'], 10, 10, $d1, $d2, $d3, $d4 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 5324 + strlen($sess->self_url()), 
+                                     $args[2] );
+        $this->assertEquals( -100, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_proposals();
+
+        // test four: one data point, voting is greater than decision_value,
+        // test four: decision_accepted_milestones returns 100, your_vote
+        // test four: matches devid
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'devid', 'developer', 'license',
+                                               'cost','start','duration',
+                                               'valid','creation'), 1 );
+        $d2 = $this->_generate_records( array( 'sum_content' ), 1 );
+        $d3 = array( 10 );
+        $d4 = array( 100 );
+        $your_vote = $d1[0]['devid'];
+        $d2[0]['sum_content'] = 20;
+        $inst_nr =
+             $this->_config_db_show_decision_proposals( $db_config, $inst_nr,
+                          $qs, $args[3]['proid'], 10, 10, $d1, $d2, $d3, $d4 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 5323 + strlen($sess->self_url()), 
+                                     $args[3] );
+        $this->assertEquals( 200, $voted_yet );
+        $this->assertEquals( 1, $rval );
+        $this->_checkFor_show_decision_proposals();
+
+        // test five: one data point, voting is greater than decision_value,
+        // test five: decision_accepted_milestones returns 100, your_vote
+        // test five: does not match devid
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'devid', 'developer', 'license',
+                                               'cost','start','duration',
+                                               'valid','creation'), 1 );
+        $d2 = $this->_generate_records( array( 'sum_content' ), 1 );
+        $d3 = array( 10 );
+        $d4 = array( 100 );
+        $your_vote = $d1[0]['devid'] . 'NO MATCH';
+        $d2[0]['sum_content'] = 20;
+        $inst_nr =
+             $this->_config_db_show_decision_proposals( $db_config, $inst_nr,
+                          $qs, $args[4]['proid'], 10, 10, $d1, $d2, $d3, $d4 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 5314 + strlen($sess->self_url()), 
+                                     $args[4] );
+        $this->assertEquals( 200, $voted_yet );
+        $this->assertEquals( 1, $rval );
+        $this->_checkFor_show_decision_proposals();
+
+        // test six: one data point, voting is greater than decision_value,
+        // test six: decision_accepted_milestones does not returns 100
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'devid', 'developer', 'license',
+                                               'cost','start','duration',
+                                               'valid','creation'), 1 );
+        $d2 = $this->_generate_records( array( 'sum_content' ), 1 );
+        $d3 = array( 10 );
+        $d4 = array( 10 );
+        $your_vote = '';
+        $d2[0]['sum_content'] = 20;
+        $inst_nr =
+             $this->_config_db_show_decision_proposals( $db_config, $inst_nr,
+                          $qs, $args[5]['proid'], 10, 10, $d1, $d2, $d3, $d4 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 5257 + strlen($sess->self_url()), 
+                                     $args[5] );
+        $this->assertEquals( 200, $voted_yet );
+        $this->assertEquals( 1, $rval );
+        $this->_checkFor_show_decision_proposals();
+
+        // test seven: one data point, voting is less than decision_value,
+        // test seven: decision_accepted_milestones does not returns 100
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'devid', 'developer', 'license',
+                                               'cost','start','duration',
+                                               'valid','creation'), 1 );
+        $d2 = $this->_generate_records( array( 'sum_content' ), 1 );
+        $d3 = array( 10 );
+        $d4 = array( 10 );
+        $your_vote = '';
+        $d2[0]['sum_content'] = -10;
+        $inst_nr =
+             $this->_config_db_show_decision_proposals( $db_config, $inst_nr,
+                          $qs, $args[6]['proid'], 10, 10, $d1, $d2, $d3, $d4 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 5258 + strlen($sess->self_url()), 
+                                     $args[6] );
+        $this->assertEquals( -100, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_proposals();
+
+        $this->_check_db( $db_config );
     }
 
+    function _checkFor_show_decision_referees() {
+        // TODO: complete this method
+    }
+    function _config_db_show_decision_referees( &$db_config, $inst_nr, &$qs,
+                                 $proid, $quorum, $project_budget, &$row_data,
+                                 &$sum_referee, &$d_dev_voted ) {
+        $db_i_global = $inst_nr;
+        /** quorum **/
+        $db_config->add_query( sprintf( $qs[0], $proid ), $db_i_global );
+        $db_config->add_record( array( 'quorum' => $quorum ), $db_i_global );
+        /** project budget **/
+        $db_config->add_query( sprintf( $qs[1], $proid ), $db_i_global );
+        $db_config->add_record( array( 'SUM(budget)' => $project_budget),
+                                $db_i_global );
+        $row_cnt = count( $row_data );
+        $db_config->add_query( sprintf( $qs[2], $proid ), $db_i_global );
+        $db_config->add_num_row( $row_cnt, $db_i_global );
+        if ( $row_cnt > 0 ) {
+            for ( $idx = 0; $idx < $row_cnt; $idx++ ) {
+                $db_config->add_record( $row_data[$idx], $db_i_global );
+                $inst_nr++;
+                $referee = $row_data[$idx]['referee'];
+                $uname = $row_data[$idx]['username'];
+                $db_config->add_query( sprintf( $qs[3], $proid, $proid, 
+                                                      $referee), $inst_nr );
+                $db_config->add_record( $sum_referee[$idx], $inst_nr );
+                /** decision developer voted call **/
+                $inst_nr++;
+                $db_config->add_query( sprintf( $qs[4], $proid ), $inst_nr );
+                $db_config->add_record( array('developer'=>'d'), $inst_nr );
+                $db_config->add_query( sprintf( $qs[5], $proid, $uname, 'd'),
+                                       $inst_nr );
+                $db_config->add_num_row( $d_dev_voted[$idx] ? 1 : 0, $inst_nr);
+            }
+            $db_config->add_record( false, $db_i_global );
+        }
+        $db_config->add_num_row( $row_cnt, $db_i_global );
+        return ++$inst_nr;
+    }
     function testShow_decision_referees() {
-        $this->_test_to_be_completed();
+        global $t, $bx, $db, $sess;
+        global $voted_yet, $your_vote;
+        
+        $fname = 'show_decision_referees';
+        $args = $this->_generate_records( array( 'proid' ), 10 );
+        $db_config = new mock_db_configure( 25 );
+        $inst_nr = 0;
+        $qs = array( 0 => $this->queries[ 'decisions_step5_sponsors_1' ],
+                     1 => $this->queries[ 'project_budget' ],
+                     2 => $this->queries[ $fname . '_1' ],
+                     3 => $this->queries[ $fname . '_2' ],
+                     4 => $this->queries[ 'decision_developer_voted_1' ],
+                     5 => $this->queries[ 'decision_developer_voted_2' ] );
+                     
+        // test one: no data points
+        $voted_yet = 0;
+        $your_vote = '';
+        $d1 = array();
+        $d2 = $d1;
+        $d3 = $d1;
+        $inst_nr = 
+             $this->_config_db_show_decision_referees( $db_config, $inst_nr,
+                               $qs, $args[0]['proid'], 10, 10, $d1, $d2, $d3 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 125, $args[0] );
+        $this->assertEquals( 0, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_referees();
+
+        // test two: one data point, decision_developer_voted returns true,
+        // test two: voting is less than decision_value, your_vote does not
+        // test two: match referee
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'referee','username','status',
+                                               'creation'), 1 );
+        $d2 = $this->_generate_records( array( 'sum_referee' ), 1 );
+        $d3 = array( true );
+        $d2[0]['sum_referee'] = -10;
+        $your_vote = $d1[0]['referee'] . 'NO MATCH';
+        $inst_nr = 
+             $this->_config_db_show_decision_referees( $db_config, $inst_nr,
+                               $qs, $args[1]['proid'], 10, 10, $d1, $d2, $d3 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3274 + strlen($sess->self_url()), 
+                                     $args[1] );
+        $this->assertEquals( -50, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_referees();
+
+        // test three: one data point, decision_developer_voted returns true,
+        // test three: voting is greater than decision_value, your_vote 
+        // test three: matches referee
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'referee','username','status',
+                                               'creation'), 1 );
+        $d2 = $this->_generate_records( array( 'sum_referee' ), 1 );
+        $d3 = array( true );
+        $d2[0]['sum_referee'] = 20;
+        $your_vote = $d1[0]['referee'];
+        $inst_nr = 
+             $this->_config_db_show_decision_referees( $db_config, $inst_nr,
+                               $qs, $args[2]['proid'], 10, 10, $d1, $d2, $d3 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3285 + strlen($sess->self_url()), 
+                                     $args[2] );
+        $this->assertEquals( 250, $voted_yet );
+        $this->assertEquals( 1, $rval );
+        $this->_checkFor_show_decision_referees();
+
+        // test four: one data point, decision_developer_voted returns true,
+        // test four: voting is greater than decision_value, your_vote does
+        // test four: not match referee
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'referee','username','status',
+                                               'creation'), 1 );
+        $d2 = $this->_generate_records( array( 'sum_referee' ), 1 );
+        $d3 = array( true );
+        $d2[0]['sum_referee'] = 20;
+        $your_vote = $d1[0]['referee'] . "NO MATCH";
+        $inst_nr = 
+             $this->_config_db_show_decision_referees( $db_config, $inst_nr,
+                               $qs, $args[3]['proid'], 10, 10, $d1, $d2, $d3 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3276 + strlen($sess->self_url()), 
+                                     $args[3] );
+        $this->assertEquals( 250, $voted_yet );
+        $this->assertEquals( 1, $rval );
+        $this->_checkFor_show_decision_referees();
+
+        // test five: one data point, decision_developer_voted returns true,
+        // test five: voting is less than decision_value, your_vote 
+        // test five: matches referee
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'referee','username','status',
+                                               'creation'), 1 );
+        $d2 = $this->_generate_records( array( 'sum_referee' ), 1 );
+        $d3 = array( true );
+        $d2[0]['sum_referee'] = -20;
+        $your_vote = $d1[0]['referee'] . "NO MATCH";
+        $inst_nr = 
+             $this->_config_db_show_decision_referees( $db_config, $inst_nr,
+                               $qs, $args[4]['proid'], 10, 10, $d1, $d2, $d3 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3276 + strlen($sess->self_url()), 
+                                     $args[4] );
+        $this->assertEquals( -150, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_referees();
+
+        // test six: one data point, decision_developer_voted returns false,
+        // test six: voting is less than decision_value, your_vote does not
+        // test six: match referee
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'referee','username','status',
+                                               'creation'), 1 );
+        $d2 = $this->_generate_records( array( 'sum_referee' ), 1 );
+        $d3 = array( false );
+        $d2[0]['sum_referee'] = -20;
+        $your_vote = $d1[0]['referee'] . "NO MATCH";
+        $inst_nr = 
+             $this->_config_db_show_decision_referees( $db_config, $inst_nr,
+                               $qs, $args[5]['proid'], 10, 10, $d1, $d2, $d3 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3277 + strlen($sess->self_url()), 
+                                     $args[5] );
+        $this->assertEquals( -200, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_referees();
+
+        // test seven: one data point, decision_developer_voted returns false,
+        // test seven: voting is greater than decision_value, your_vote does
+        // test seven: not match referee
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'referee','username','status',
+                                               'creation'), 1 );
+        $d2 = $this->_generate_records( array( 'sum_referee' ), 1 );
+        $d3 = array( false );
+        $d2[0]['sum_referee'] = 20;
+        $your_vote = $d1[0]['referee'] . "NO MATCH";
+        $inst_nr = 
+             $this->_config_db_show_decision_referees( $db_config, $inst_nr,
+                               $qs, $args[6]['proid'], 10, 10, $d1, $d2, $d3 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3276 + strlen($sess->self_url()), 
+                                     $args[6] );
+        $this->assertEquals( 200, $voted_yet );
+        $this->assertEquals( 1, $rval );
+        $this->_checkFor_show_decision_referees();
+
+        // test eight: one data point, decision_developer_voted returns false,
+        // test eight: voting is greater than decision_value, your_vote 
+        // test eight: matches referee
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'referee','username','status',
+                                               'creation'), 1 );
+        $d2 = $this->_generate_records( array( 'sum_referee' ), 1 );
+        $d3 = array( false );
+        $d2[0]['sum_referee'] = 20;
+        $your_vote = $d1[0]['referee'];
+        $inst_nr = 
+             $this->_config_db_show_decision_referees( $db_config, $inst_nr,
+                               $qs, $args[7]['proid'], 10, 10, $d1, $d2, $d3 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3285 + strlen($sess->self_url()), 
+                                     $args[7] );
+        $this->assertEquals( 200, $voted_yet );
+        $this->assertEquals( 1, $rval );
+        $this->_checkFor_show_decision_referees();
+
+        // test nine: one data point, decision_developer_voted returns false,
+        // test nine: voting is less than decision_value, your_vote 
+        // test nine: matches referee
+        $voted_yet = 0;
+        $d1 = $this->_generate_records( array( 'referee','username','status',
+                                               'creation'), 1 );
+        $d2 = $this->_generate_records( array( 'sum_referee' ), 1 );
+        $d3 = array( false );
+        $d2[0]['sum_referee'] = -20;
+        $your_vote = $d1[0]['referee'];
+        $inst_nr = 
+             $this->_config_db_show_decision_referees( $db_config, $inst_nr,
+                               $qs, $args[7]['proid'], 10, 10, $d1, $d2, $d3 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 3286 + strlen($sess->self_url()), 
+                                     $args[7] );
+        $this->assertEquals( -200, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_referees();
+
+        $this->_check_db( $db_config );
+    }
+
+    function _checkFor_show_decision_step5() {
+        // TODO: fill in this method
+    }
+    function _config_db_show_decision_step5( &$db_config, $inst_nr, &$qs,
+                           $proid, $m_num, $count, $quorum, $project_budget, 
+                           &$row_data, &$sum_step5 ) {
+        $db_i_global = $inst_nr;
+        /** quorum **/
+        $db_config->add_query( sprintf( $qs[0], $proid ), $db_i_global );
+        $db_config->add_record( array( 'quorum' => $quorum ), $db_i_global );
+        /** project budget **/
+        $db_config->add_query( sprintf( $qs[1], $proid ), $db_i_global );
+        $db_config->add_record( array( 'SUM(budget)' => $project_budget ),
+                                $db_i_global );
+        /** referee query **/
+        $db_config->add_query(sprintf( $qs[2], $proid, $m_num ), $db_i_global);
+        if ( count( $row_data ) ) {
+            $db_config->add_record( $row_data, $db_i_global );
+        } else {
+            $db_config->add_record( false, $db_i_global );
+        }
+
+        /** 5 calls to decisions_step5_votes **/
+        $dec=array(0=>'accept',1=>'minor',2=>'minor',3=>'severe',4=>'severe');
+        for ( $idx = 0; $idx < 5; $idx++ ) {
+            $inst_nr++;
+            $db_config->add_query( sprintf( $qs[3], $proid, $proid, $m_num,
+                                            $count, $dec[$idx] ), $inst_nr );
+            $row_cnt = count( $sum_step5[$idx] );
+            $db_config->add_num_row( $row_cnt, $inst_nr );
+            if ( $row_cnt ) {
+                $db_config->add_record( $sum_step5[$idx], $inst_nr );
+                $db_config->add_query(sprintf( $qs[1], $proid ), $db_i_global);
+                $db_config->add_record( array('SUM(budget)'=>$project_budget),
+                                        $db_i_global );
+            }
+        }
+        return ++$inst_nr;
     }
 
     function testShow_decision_step5() {
-        $this->_test_to_be_completed();
+        global $t, $bx, $db, $sess;
+        global $voted_yet, $decision;
+
+        $fname = 'show_decision_step5';
+        $qs = array( 0 => $this->queries[ 'decisions_step5_sponsors_1' ],
+                     1 => $this->queries[ 'project_budget' ],
+                     2 => $this->queries[ $fname ],
+                     3 => $this->queries[ 'decisions_step5_votes' ]);
+                     
+        $args=$this->_generate_records( array('proid', 'm_num', 'count'), 10);
+        $db_config = new mock_db_configure( 12 );
+        $inst_nr = 0;
+
+        // test one: one data point, voting is greater than decision_value
+        $voted_yet = 0;
+        $decision = '';
+        $d1 = $this->_generate_array( array( 'release', 'product','payment',
+                                             'goals' ), 10 );
+        $d2 = $this->_generate_records( array( 'sum_step5' ), 5 );
+        $d2[0]['sum_step5'] = -10;
+        $d2[1]['sum_step5'] = -10;
+        $d2[2]['sum_step5'] = -10;
+        $d2[3]['sum_step5'] = -10;
+        $d2[4]['sum_step5'] = -10;
+        $inst_nr = 
+             $this->_config_db_show_decision_step5( $db_config, $inst_nr, $qs,
+                                         $args[0]['proid'], $args[0]['m_num'], 
+                                         $args[0]['count'],10,10,$d1,$d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 4488 + strlen($sess->self_url()), 
+                                     $args[0] );
+        $this->assertEquals( 0, $voted_yet );
+        $this->assertEquals( 0, $rval );
+        $this->_checkFor_show_decision_step5();
+
+        // test two: one data point, voting is less than decision_value
+        $voted_yet = 0;
+        $decision = '';
+        $d1 = $this->_generate_array( array( 'release', 'product','payment',
+                                             'goals' ), 10 );
+        $d2 = $this->_generate_records( array( 'sum_step5' ), 5 );
+        $d2[0]['sum_step5'] = 10;
+        $d2[1]['sum_step5'] = 10;
+        $d2[2]['sum_step5'] = 10;
+        $d2[3]['sum_step5'] = 10;
+        $d2[4]['sum_step5'] = 10;
+        $inst_nr = 
+             $this->_config_db_show_decision_step5( $db_config, $inst_nr, $qs,
+                                         $args[1]['proid'], $args[1]['m_num'], 
+                                         $args[1]['count'],10,10,$d1,$d2 );
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $rval = $this->capture_call( $fname, 4485 + strlen($sess->self_url()), 
+                                     $args[1] );
+        $this->assertEquals( 0, $voted_yet );
+        $this->assertEquals( 1, $rval );
+        $this->_checkFor_show_decision_step5();
+
+        $this->_check_db( $db_config );
     }
 
 }
