@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.5 2001/11/12 13:20:22 riessen Exp $
+# $Id: TestHtml.php,v 1.6 2001/11/19 17:44:41 riessen Exp $
 #
 ######################################################################
 
@@ -47,21 +47,21 @@ extends TestCase
 
     function test__html_link() {
         $actual = html_link('fubar',array( 'one' => 'what'),'hello world' );
-        $expect = "<a href=\"fubar?one=what\">hello world</a>";
+        $expect = "<a href=\"fubar?one=what\">hello world</a>\n";
         $this->assertEquals( $expect, $actual );
         
         $actual = html_link( 'snafu', "", 'goodbye cruel world' );
-        $expect = "<a href=\"snafu\">goodbye cruel world</a>";
+        $expect = "<a href=\"snafu\">goodbye cruel world</a>\n";
         $this->assertEquals( $expect, $actual );
 
         $actual = html_link('fubar',array( 'one' => 'what the hell'),
                             'hello world' );
-        $expect = "<a href=\"fubar?one=what+the+hell\">hello world</a>";
+        $expect = "<a href=\"fubar?one=what+the+hell\">hello world</a>\n";
         $this->assertEquals( $expect, $actual );
 
         $actual = html_link('fubar',array( 'one' => 'what+the+hell'),
                             'hello world' );
-        $expect = "<a href=\"fubar?one=what%2Bthe%2Bhell\">hello world</a>";
+        $expect = "<a href=\"fubar?one=what%2Bthe%2Bhell\">hello world</a>\n";
         $this->assertEquals( $expect, $actual );
     }
 
@@ -74,7 +74,7 @@ extends TestCase
     function test__html_image() {
         $actual = html_image("file", "border", "width", "height", "alternate");
         $expect = ("<img src=\"images/file\" border=\"border\" width=\"width\""
-                   . " height=\"height\" alt=\"alternate\">");
+                   . " height=\"height\" alt=\"alternate\">\n");
         $this->assertEquals( $expect, $actual );
     }
 
