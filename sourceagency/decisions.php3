@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisions.php3,v 1.7 2002/04/20 13:07:50 grex Exp $
+# $Id: decisions.php3,v 1.8 2002/05/07 10:24:29 riessen Exp $
 #
 ######################################################################  
 
@@ -43,8 +43,8 @@ $page = 'decisions';
 if (check_permission($proid, $page)) {
     top_bar($proid, $page);
 
-    // NOI18N 'This is the page where sponsors make their decisions.
-    print "This is the page where sponsors make their decisions.\n";
+    print $t->translate('This is the page where sponsors make '
+                        .'their decisions').".\n";
 
     $db->query("SELECT status FROM description WHERE proid='$proid'");
     $db->next_record();
@@ -52,8 +52,8 @@ if (check_permission($proid, $page)) {
 
     if (is_set_and_not_empty($Yes) && decisions_decision_met($proid)) {
         $project_status +=1;
-        // NOI18N The next step has been reached
-        $bx->box_full('<b>The next step has been reached</b>',
+        $bx->box_full('<b>'.$t->translate('The next step has been reached')
+                      .'</b>',
                       $t->translate('You are now in step ').$project_status);
 	$project_status -=1;
     } else {
@@ -77,7 +77,8 @@ if (check_permission($proid, $page)) {
                 $table = 'referees';
                 break;
             default:
-	        lib_die('Error in decisions.php3: No decision can be put into database');
+	        lib_die('Error in decisions.php3: No decision can be '
+                        .'put into database');
             }
             put_decision_into_database($proid,$project_status,$your_vote,
                                        $what,$table);
@@ -110,17 +111,20 @@ if (check_permission($proid, $page)) {
             global $g_step_text;
             // NOI18N: 'Decision on step 5 (follow-up)'
             htmlp_link('step5_sponsor.php3',array('proid' => $proid),
-                       'Decision on step 5 ('.$g_step_text[5].')'); 
+                       $t->translate( 'Decision on step 5')
+                       .' ('.$g_step_text[5].')'); 
             break;
         case '6':  
             echo '<p>'; 
             global $g_step_text;
             // NOI18N: 'Decision on step 6 (rating)'
             htmlp_link('step6_edit.php3',array('proid' => $proid),
-                       'Decision on step 6 ('.$g_step_text[6].')'); 
+                       $t->translate('Decision on step 6')
+                       .' ('.$g_step_text[6].')'); 
             break;
         default:
-           lib_die('Error in decisions.php3: given project status is not possible');
+           lib_die('Error in decisions.php3: given project status '
+                   .'is not possible');
 	}
     }
 
@@ -159,26 +163,30 @@ if (check_permission($proid, $page)) {
     you_have_already_voted($proid,$project_status);
 
     if ($project_status!=4) {
-        print ('<p align=right>Not voted yet: <b>'
+        print ('<p align=right>'.$t->translate('Not voted yet').': <b>'
                .((round((100 - $voted_yet)*100))/100)."%</b>\n");
     } else {
-        print ( '<p align=right>Not voted yet: <b>'
+        print ( '<p align=right>'.$t->translate('Not voted yet').': <b>'
                 .((round((100 - $voted_yet)*100))/50)."%</b>\n");
     }
-    // NOI18N
-    // TODO: add explanation
-    print "<br><font size=-1>...Explanation...</font>\n";
-    
+
+    // TODO: add an explanation
+    //print "<br><font size=-1>...Explanation...</font>\n";
+
     $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
     $db->next_record();
 
     if ($project_status!=4) {
-        print '<p align=right>Decision making: <b>'.$db->f('quorum')."%</b>\n";
+        print '<p align=right>'.$t->translate('Decision making')
+          .': <b>'.$db->f('quorum')."%</b>\n";
     } else {
         $quorum = $db->f('quorum')/2 +50;
-        print '<p align=right>Decision making: <b>'.$quorum."%</b>\n";
+        print '<p align=right>'.$t->translate('Decision making')
+          .': <b>'.$quorum."%</b>\n";
     }
-    print "<br><font size=-1>(quota needed for reaching the next step)</font>\n";
+    print "<br><font size=-1>("
+          .$t->translate("quota needed for reaching the next step")
+          .")</font>\n";
 }
 
 end_content();

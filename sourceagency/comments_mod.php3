@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: comments_mod.php3,v 1.5 2002/04/10 13:02:48 grex Exp $
+# $Id: comments_mod.php3,v 1.6 2002/05/07 10:24:29 riessen Exp $
 #
 ######################################################################  
 
@@ -59,8 +59,8 @@ if (check_permission($proid, $page)) {
         // WISH: It would be nice, that comments could only be modified by 
         // WISH: its author and the project initiator!
         // WISH: Modification should be appended to the original comment
-        print "Comments can be modified by the project initator.\n";
-        print "<br><p>\n";
+        print $t->translate("Comments can be modified by the project initator");
+        print ".\n<br><p>\n";
 
         if ((!isset($preview) || empty($preview)) 
               && (!isset($submit) || empty($submit))) {

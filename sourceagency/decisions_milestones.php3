@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisions_milestones.php3,v 1.4 2002/04/10 13:02:48 grex Exp $
+# $Id: decisions_milestones.php3,v 1.5 2002/05/07 10:24:29 riessen Exp $
 #
 ######################################################################  
 
@@ -43,15 +43,14 @@ $page = 'decisions';
 if (check_permission($proid, $page)) {
     top_bar($proid, $page);
 
-    // NOI18N
-   print ( 'This is the page where sponsors make their decisions on '
-            ."the proposed milestones.\n");
+    print( $t->translate('This is the page where sponsors make '
+                         .'their decisions on the proposed milestones').".\n");
 
-    // NOI18N
-    print ('<p align=right>[ <b>'.html_link('decisions.php3',
-                                            array('proid' => $proid),
-                                            '<b>Proposal decision</b>')
-           .'</b> ]');
+    print ('<p align=right>[ '
+           .html_link('decisions.php3',
+                      array('proid' => $proid),
+                      '<b>'.$t->translate('Proposal decision').'</b>')
+           .' ]');
 
     if (is_set_and_not_empty($vote)) {
         $db->query("SELECT * FROM milestones WHERE proid='$proid' "
@@ -61,9 +60,11 @@ if (check_permission($proid, $page)) {
         for ($i=1; $i<$count; $i++) {
             $milestone_number = 'milestone_'.$i;
             if ($$milestone_number == 'Yes') {
-               decision_milestone_insert($proid, $devid, $auth->auth['uname'], $i, 'Yes');
+                decision_milestone_insert($proid, $devid, 
+                                          $auth->auth['uname'], $i, 'Yes');
             } else {
-               decision_milestone_insert($proid, $devid, $auth->auth['uname'], $i, 'No');
+                decision_milestone_insert($proid, $devid, 
+                                          $auth->auth['uname'], $i, 'No');
             }
         }
     } else {
@@ -82,17 +83,20 @@ if (check_permission($proid, $page)) {
     print "<br>\n";
     you_have_already_voted($proid,$project_status);
 
-    print ('<p align=right>Not voted yet: <b>'
+    print ('<p align=right>'.$t->translate('Not voted yet').': <b>'
            .((round((100 - $voted_yet)*100))/100)."%</b>\n");
-    print "<br><font size=-1>...Explanation...</font>\n";
+    // TODO: add an explanation
+    //print "<br><font size=-1>...Explanation...</font>\n";
 
     $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
     $db->next_record();
-    print '<p align=right>Decision making: <b>'.$db->f('quorum')."%</b>\n";
-    print "<br><font size=-1>(quota needed for reaching the next step)</font>\n";
+    print '<p align=right>'.$t->translate('Decision making')
+        .': <b>'.$db->f('quorum')."%</b>\n".'<br><font size=-1>('
+        .$t->translate('quota needed for reaching the next step')
+        .")</font>\n";
 }
 
 end_content();
 require('footer.inc');
-page_close();
+@page_close();
 ?>

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: cooperation_edit.php3,v 1.3 2001/11/15 17:25:03 riessen Exp $
+# $Id: cooperation_edit.php3,v 1.4 2002/05/07 10:24:29 riessen Exp $
 #
 ######################################################################  
 
@@ -43,9 +43,8 @@ $page = "cooperation_edit";
 if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
-  // NOI18N
-  print ("Developers can cooperate in developments if other developers "
-         ."require it.\n<br><p>\n");
+  print ($t->translate('Developers can cooperate in developments if '
+                       .'other developers require it').".\n<br><p>\n");
 
   if ( is_not_set_or_empty( $submit ) ) {
     if ( is_set_and_not_empty( $preview ) ) {

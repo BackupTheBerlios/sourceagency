@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: admdoco.php3,v 1.3 2002/04/19 11:03:58 riessen Exp $
+# $Id: admdoco.php3,v 1.4 2002/05/07 10:24:29 riessen Exp $
 #
 ######################################################################  
 
@@ -55,10 +55,11 @@ if (($config_perm_admdoco != 'all')
     $bx->box_column('left', '88%', '', $t->translate('Enter a new '
                                                      .'documentation entry '
                                                      .'for a page'));
-    $bx->box_column('right', '12%', '', html_form_action('insdoco.php3')
-    	 	                       .html_form_hidden('create', 1)
-                                       .html_form_submit('Insert', 'Insert')
-                                       .html_form_end());
+    $bx->box_column('right', '12%', '', 
+                    html_form_action('insdoco.php3')
+                    .html_form_hidden('create', 1)
+                    .html_form_submit($t->translate('Insert'), 'Insert')
+                    .html_form_end());
     $bx->box_columns_end();
     $bx->box_body_end();
     $bx->box_end();
@@ -70,22 +71,20 @@ if (($config_perm_admdoco != 'all')
         $bx->box_body_begin();
         $bx->box_columns_begin(2);
         $bx->box_column('left', '76%', '', $db->f('doco'));
-        $bx->box_column('right', '12%', '', html_form_action('insdoco.php3')
-    	 	                           .html_form_hidden('modify', 1)
-    	 	                           .html_form_hidden('delete', 0)
-    	 	                           .html_form_hidden('docoid', 
-                                                             $db->f('docoid'))
-                                           .html_form_submit('Change', 
-                                                             'Change')
-                                           .html_form_end());
-        $bx->box_column('right', '12%', '', html_form_action('insdoco.php3')
-    	 	                           .html_form_hidden('modify', 0)
-    	 	                           .html_form_hidden('delete', 1)
-    	 	                           .html_form_hidden('docoid', 
-                                                             $db->f('docoid'))
-                                           .html_form_submit('Delete', 
-                                                             'Delete')
-                                           .html_form_end());
+        $bx->box_column('right', '12%', '', 
+                        html_form_action('insdoco.php3')
+                        .html_form_hidden('modify', 1)
+                        .html_form_hidden('delete', 0)
+                        .html_form_hidden('docoid', $db->f('docoid'))
+                        .html_form_submit($t->translate('Change'), 'Change')
+                        .html_form_end());
+        $bx->box_column('right', '12%', '', 
+                        html_form_action('insdoco.php3')
+                        .html_form_hidden('modify', 0)
+                        .html_form_hidden('delete', 1)
+                        .html_form_hidden('docoid', $db->f('docoid'))
+                        .html_form_submit($t->translate('Delete'), 'Delete')
+                        .html_form_end());
         $bx->box_columns_end();
         $bx->box_body_end();
         $bx->box_end();
@@ -94,5 +93,5 @@ if (($config_perm_admdoco != 'all')
 
 end_content();
 require('footer.inc');
-page_close();
+@page_close();
 ?>

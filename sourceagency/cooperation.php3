@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: cooperation.php3,v 1.3 2002/04/10 13:02:48 grex Exp $
+# $Id: cooperation.php3,v 1.4 2002/05/07 10:24:29 riessen Exp $
 #
 ######################################################################  
 
@@ -43,13 +43,14 @@ $page = 'cooperation';
 if (check_proid($proid)) {
     top_bar($proid, $page);
 
-    // NOI18N
-    print ( 'Developers can cooperate with other developers if they are '
-            ."required to do it.\n"."<br><p>\n");
+    print ( $t->translate('Developers can cooperate with other '
+                          .'developers if they are required to do it')
+            .".\n<br><p>\n");
 
     cooperation_show($proid, $devid);
 
-    lib_comment_it($proid, 'General', 0, 0, '', 'General Comments');
+    lib_comment_it($proid, 'General', 0, 0, '', 
+                   $t->translate('General Comments'));
 }
 
 end_content();

@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: chguser.php3,v 1.3 2001/11/19 17:50:50 riessen Exp $
+# $Id: chguser.php3,v 1.4 2002/05/07 10:24:29 riessen Exp $
 #
 ######################################################################
 
@@ -78,10 +78,14 @@ while (is_array($HTTP_POST_VARS)
                           ." <b>". $auth->auth["uname"] ."</b> "
                           .$t->translate("is changed").".");
             if ($ml_notify) {
-                $message  = "Username: ".$auth->auth["uname"]."\n";
-                $message .= "Realname: $realname\n";
-                $message .= "E-Mail:   $email_usr\n";
-                mailuser("admin", "User parameters has changed", $message);
+                $message  = $t->translate("Username")
+                                .": ".$auth->auth["uname"]."\n";
+                $message .= $t->translate("Realname").": $realname\n";
+                $message .= $t->translate("E-Mail").":   $email_usr\n";
+
+                mailuser("admin", 
+                         $t->translate("User parameters has changed"), 
+                         $message);
             }
         } else {
             $be->box_full($t->translate("Error"), 
@@ -140,12 +144,15 @@ while ($db->next_record()) {
 <tr>
 <td></td>
 <td><input type="hidden" name="u_id" value="<?php $db->p("user_id") ?>">
+
 <?php
  echo ("<input type=\"submit\" name=\"u_edit\" value=\""
        .$t->translate("Change")."\">");
 ?>
+
 </td></tr>
 </form>
+
 <?php
 }
 ?>
@@ -154,9 +161,7 @@ while ($db->next_record()) {
 <?php
 $bx->box_body_end();
 $bx->box_end();
-
 end_content();
-
 require("footer.inc");
-page_close();
+@page_close();
 ?>

@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: comments.php3,v 1.4 2002/04/10 13:02:48 grex Exp $
+# $Id: comments.php3,v 1.5 2002/05/07 10:24:29 riessen Exp $
 #
 ######################################################################  
 
@@ -59,7 +59,8 @@ if (check_permission($proid, $page)) {
 
     comments_show($proid, $type, $number, $cmt_id, $ref);
 
-    lib_comment_it($proid,'General','0','0','','General Comments');
+    lib_comment_it($proid,'General','0','0','',
+                   $t->translate('General Comments'));
 }
 
 end_content();
