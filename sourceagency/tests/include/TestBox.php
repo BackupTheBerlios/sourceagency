@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestBox.php,v 1.13 2002/05/06 07:59:21 riessen Exp $
+# $Id: TestBox.php,v 1.14 2002/05/08 11:42:49 riessen Exp $
 #
 ######################################################################
 
@@ -80,7 +80,7 @@ extends UnitTest
     }
     function _testFor_box_body_begin( $text ) {
         $this->assertRegexp( "/<tr bgcolor=\"body_bgcolor\">[ \n]+<td align=\""
-                             . "body_align\" valign=\"\"><font color="
+                             . "body_align\" valign=\"top\"><font color="
                              . "\"body_font_color\">/",$text, 
                              "box body begin mismatch");
     }
@@ -95,8 +95,8 @@ extends UnitTest
     function _testFor_box_columns_begin( $text, $nr_cols ) {
         $ps=array( 0=>"<!-- table with " . $nr_cols . " columns -->",
                    1=>("<table border=\"0\" cellspacing=\"0\" cellpadding=\""
-                       ."3\" align=\"center\" width=\"100%\" valign=\"top\">"),
-                   2=>"<tr colspan=\"".$nr_cols."\" valign=\"\">");
+                       ."3\" align=\"center\" width=\"100%\">"),
+                   2=>"<tr valign=\"top\">");
         $this->_testFor_patterns( $text, $ps, 3 );
     }
     function _testFor_box_column_start($text,$align,$width,$bgcolor="#FFFFFF"){
@@ -172,7 +172,7 @@ extends UnitTest
     function testBox_body_begin() {
         $this->box->box_body_begin();
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 131 );
+        $this->_testFor_captured_length( 134 );
         $this->_testFor_box_body_begin( $text );
     }
 
@@ -187,7 +187,7 @@ extends UnitTest
         $body = "text for body";
         $this->box->box_body($body);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 279 );
+        $this->_testFor_captured_length( 282 );
         $this->_testFor_box_body_begin( $text );
         $this->_testFor_box_body( $text, $body);
         $this->_testFor_box_body_end( $text );
@@ -198,7 +198,7 @@ extends UnitTest
         $body = "this is the body";
         $this->box->box_full($title, $body);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 761 );
+        $this->_testFor_captured_length( 764 );
         $this->_testFor_box_begin( $text );
         $this->_testFor_box_title( $text, $title );
         $this->_testFor_box_body( $text, $body );
@@ -219,7 +219,7 @@ extends UnitTest
         $nr_cols = "four or five";
         $this->box->box_columns_begin( $nr_cols );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 184 );
+        $this->_testFor_captured_length( 151 );
         $this->_testFor_box_columns_begin( $text, $nr_cols );
     }
 

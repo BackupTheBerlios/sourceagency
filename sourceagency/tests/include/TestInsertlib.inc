@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestInsertlib.inc,v 1.5 2002/05/06 07:59:21 riessen Exp $
+# $Id: TestInsertlib.inc,v 1.6 2002/05/08 11:42:49 riessen Exp $
 #
 ######################################################################
 
@@ -58,7 +58,7 @@ extends UnitTest
         capture_reset_and_start();
         insert_form();
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 3637, "test 1" );
+        $this->_testFor_captured_length( 3618, "test 1" );
 
         $patterns = array( 0=>("<font color=\"#000000\"><b>New "
                                ."Project<\/b><\/font>"),
@@ -111,7 +111,7 @@ extends UnitTest
         capture_reset_and_start();
         project_title_not_set();
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 838, "test 1" );
+        $this->_testFor_captured_length( 841, "test 1" );
 
         $patterns = array( 0=>"<font color=\"#000000\"><b>Error<\/b><\/font>",
 
@@ -135,7 +135,7 @@ extends UnitTest
         capture_reset_and_start();
         description_not_set();
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 848, "test 1" );
+        $this->_testFor_captured_length( 851, "test 1" );
         
         $patterns = array( 0=>"<font color=\"#000000\"><b>Error<\/b><\/font>",
                            1=>("<font color=\"#FF2020\">[ \n]+No Project "
@@ -187,7 +187,7 @@ extends UnitTest
         $this->assertEquals( 0, no_other_project_with_same_title( 
             $pt[1]["project_title"] ));
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 774, "test 2" );
+        $this->_testFor_captured_length( 777, "test 2" );
         $this->_testFor_pattern( $text, ("<font color=\"#FF2020\">[ \n]+"
                                          ."Another "
                                          ."project with that title already "

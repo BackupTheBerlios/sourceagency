@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMilestoneslib.inc,v 1.17 2002/05/06 07:59:21 riessen Exp $
+# $Id: TestMilestoneslib.inc,v 1.18 2002/05/08 11:42:49 riessen Exp $
 #
 ######################################################################
 
@@ -169,7 +169,7 @@ extends UnitTest
         show_milestones( $dat[2]["proid"], $dat[2]["devid"],
                          $dat[2]["sponsor"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 4729, "test 3" );
+        $this->_testFor_captured_length( 4710, "test 3" );
         $pats = array( 0=> ("<td align=\"center\" width=\"7%\" bgcolor=\""
                             ."#FFFFFF\">[ \n]+<b>Number<\/b>[ \n]+<\/td>"),
                        1=> ("<td align=\"\" width=\"53%\" bgcolor=\""
@@ -269,7 +269,7 @@ extends UnitTest
                            $dat[1]["goals"], $dat[1]["rday"], $dat[1]["rmon"],
                            $dat[1]["ryear"], $dat[1]["prod"], $dat[1]["pay"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 792, "test 2" );
+        $this->_testFor_captured_length( 795, "test 2" );
         $pats = array( 0 => (sprintf( $ln, $dat[1]["pid"])),
                        1 => $t->translate("Insert Failed" ),
                        2 => $t->translate("No Goals defined."));
@@ -288,7 +288,7 @@ extends UnitTest
                            $dat[2]["goals"], $dat[2]["rday"], $dat[2]["rmon"],
                            $dat[2]["ryear"], $dat[2]["prod"], $dat[2]["pay"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 807, "test 3" );
+        $this->_testFor_captured_length( 810, "test 3" );
 
         $pats = array( 0 => (sprintf( $ln, $dat[2]["pid"])),
                        1 => $t->translate("Insert Failed" ),
@@ -306,7 +306,7 @@ extends UnitTest
                            $dat[3]["goals"], $dat[3]["rday"], $dat[3]["rmon"],
                            $dat[3]["ryear"], $dat[3]["prod"], $dat[3]["pay"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 804, "test 4" );
+        $this->_testFor_captured_length( 807, "test 4" );
         $pats = array( 0 => (sprintf( $ln, $dat[3]["pid"])),
                        1 => $t->translate("Insert Failed" ),
                        2 => $t->translate("Number parameter was not set."));

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.16 2002/05/06 07:59:21 riessen Exp $
+# $Id: TestSecurity.php,v 1.17 2002/05/08 11:42:49 riessen Exp $
 #
 ######################################################################
 
@@ -108,21 +108,21 @@ extends UnitTest
         $this->_test_error_message_boxes( "invalid_project_id", 
                                           "Permission denied",
                                           "Project does not exist",
-                                          2975 );
+                                          2959 );
     }
     function testPermission_denied() {
         $this->_test_error_message_boxes( "permission_denied", 
                                           "Permission denied",
                                           "You do not have rights to enter "
                                           ."this page.",
-                                          2995 );
+                                          2979 );
     }
     function testStep_not_open() {
         $this->_test_error_message_boxes( "step_not_open", 
                                           "Permission denied",
                                           "This action can not be made "
                                           ."at this time.",
-                                          2994 );
+                                          2978 );
     }
     function testProjects_only_by_project_initiator() {
         $this->_test_error_message_boxes( "projects_only_by_project_initiator",
@@ -132,7 +132,7 @@ extends UnitTest
                                           . "only the project initiator "
                                           . "can post one "
                                           . "specification.",
-                                          3047 );
+                                          3031 );
     }
     function testProposals_only_by_project_initiator() {
         $this->_test_error_message_boxes("proposals_only_by_project_initiator",
@@ -142,7 +142,7 @@ extends UnitTest
                                          ."only the project initiator "
                                          ."can post one "
                                          ."developing proposal.",
-                                         3053 );
+                                         3037 );
     }
     function testAlready_involved_message() {
         $this->_test_error_message_boxes("already_involved_message",
@@ -150,7 +150,7 @@ extends UnitTest
                                          "You are not allowed to make "
                                          ."this action "
                                          ."more than one time.",
-                                         3012 );
+                                         2996 );
     }
 //      function testIs_project_initiator() {
 //      }

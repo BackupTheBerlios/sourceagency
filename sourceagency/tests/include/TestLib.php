@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.19 2002/05/06 07:59:21 riessen Exp $
+# $Id: TestLib.php,v 1.20 2002/05/08 11:42:49 riessen Exp $
 #
 ######################################################################
 
@@ -281,7 +281,7 @@ extends UnitTest
         capture_start();
         calendar_box( $dat["r0"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 3309, "test 1" );
+        $this->_testFor_captured_length( 3287, "test 1" );
         $ps=array( 0=>("<b>Project Owner\(s\):<\/b>[ \n]+<\/td>[ \n]+"
                        . $this->p_regexp_html_comment . "[ \n]+"
                        . $this->p_regexp_html_comment . "[ \n]+"
@@ -320,7 +320,7 @@ extends UnitTest
         capture_reset_and_start();
         calendar_box( $dat["r2"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 3315, "test 2" );
+        $this->_testFor_captured_length( 3293, "test 2" );
         $ps=array( 0=>("<b>Project Owner\(s\):<\/b>[ \n]+<\/td>[ \n]+"
                        . $this->p_regexp_html_comment . "[ \n]+"
                        . $this->p_regexp_html_comment . "[ \n]+"
@@ -416,7 +416,7 @@ extends UnitTest
                        2=>("<b>Description<\/b>: description_0"),
                        3=>("<b>Volume<\/b>: volume_0" ));
         $this->_testFor_patterns($text, $pats, 4 );
-        $this->_testFor_captured_length( 753, "test 1" );
+        $this->_testFor_captured_length( 756, "test 1" );
 
         capture_reset_and_start();
         lib_show_description( sprintf( $db_q[0], "X", "Y") );

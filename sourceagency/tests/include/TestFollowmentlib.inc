@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowmentlib.inc,v 1.4 2002/05/06 07:59:21 riessen Exp $
+# $Id: TestFollowmentlib.inc,v 1.5 2002/05/08 11:42:49 riessen Exp $
 #
 ######################################################################
 
@@ -88,7 +88,7 @@ extends UnitTest
         $db = new DB_SourceAgency;
         show_followment($proid[1]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 881, "test 2" );
+        $this->_testFor_captured_length( 884, "test 2" );
 
         $patterns=array(0=>("<font color=\"#000000\"><b>Milestones<\/b>"
                             ."<\/font>"),
@@ -108,7 +108,7 @@ extends UnitTest
         $db = new DB_SourceAgency;
         show_followment($proid[2]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1421, "test 3" );
+        $this->_testFor_captured_length( 1424, "test 3" );
 
         $this->_testFor_pattern( $text, ("<td align=center><b>Number<\/b>"
                                          ."<\/td><td align=center><b>Goals"

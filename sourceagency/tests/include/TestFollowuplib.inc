@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowuplib.inc,v 1.8 2002/05/06 07:59:21 riessen Exp $
+# $Id: TestFollowuplib.inc,v 1.9 2002/05/08 11:42:49 riessen Exp $
 #
 ######################################################################\
 
@@ -190,7 +190,7 @@ extends UnitTest
         $db = new DB_SourceAgency;
         followup_devel_preview($proid[0]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 3770 + strlen(timestr(time())), 
+        $this->_testFor_captured_length( 3751 + strlen(timestr(time())), 
                                          "test 1");
         
         $pats = array_merge( $this->_com_pats_1, array( 
@@ -207,7 +207,7 @@ extends UnitTest
         $count = "this is the count";
         followup_devel_preview($proid[1]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 3795 + strlen(timestr(time())), 
+        $this->_testFor_captured_length( 3776 + strlen(timestr(time())), 
                                          "test 2" );
  
         $pats = array_merge( $this->_com_pats_2, array( 
@@ -254,7 +254,7 @@ extends UnitTest
         $db = new DB_SourceAgency;
         followup_referee_preview($proid[0]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 4194 + strlen(timestr(time())),
+        $this->_testFor_captured_length( 4175 + strlen(timestr(time())),
                                          "test 1");
 
         $pats = array_merge( $this->_com_pats_1, array( 
@@ -279,7 +279,7 @@ extends UnitTest
         $decision = "this is the decision";
         followup_referee_preview($proid[1]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 4219 + strlen(timestr(time())),
+        $this->_testFor_captured_length( 4200 + strlen(timestr(time())),
                                          "test 2" );
 
         $pats = array_merge( $this->_com_pats_2, array( 
