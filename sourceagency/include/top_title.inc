@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: top_title.inc,v 1.7 2001/11/14 12:28:49 riessen Exp $
+# $Id: top_title.inc,v 1.8 2001/11/29 15:37:22 grex Exp $
 #
 ######################################################################
 
@@ -33,7 +33,7 @@ valign="center" >
 <td>
 <a href="<?php echo $sys_url_title;?>">
 <img SRC="<?php echo $sys_logo_image;?>" BORDER="0" 
-height="<?php echo $sys_logo_heigth;?>" width="<?php echo $sys_logo_width;?>"
+height="<?php echo $sys_logo_height;?>" width="<?php echo $sys_logo_width;?>"
 ALT="<?php echo $sys_logo_alt;?>"></a>
 </td>
 
@@ -63,7 +63,7 @@ ALT="<?php echo $sys_logo_alt;?>"></a>
 <td VALIGN="middle">
 <a href="<?php echo $org_url;?>" TARGET="_blank">
 <img SRC="<?php echo $org_logo_image;?>" ALT="<?php echo $org_logo_alt;?>" 
-HSPACE="10" BORDER="0" height="<?php echo $org_logo_heigth;?>" 
+HSPACE="10" BORDER="0" height="<?php echo $org_logo_height;?>" 
 width="<?php echo $org_logo_width;?>" align="RIGHT"></a>
 </td>
 </tr>

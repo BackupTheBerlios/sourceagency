@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.10 2001/11/26 13:57:54 riessen Exp $
+# $Id: config.inc,v 1.11 2001/11/29 15:37:13 grex Exp $
 #
 ######################################################################
 
@@ -44,9 +44,7 @@ $sys_url = "http://sourceagency.berlios.de/beta/";
 $sys_logo_image = "images/berlios.jpg";
 $sys_logo_alt = "BerliOS";
 $sys_logo_width = "238";
-// FIXME: typo here: height instead of heigth, this needs to be
-// FIXME: changed wherever it's referenced
-$sys_logo_heigth = "104";
+$sys_logo_height = "104";
 
 ######################################################################
 # Organisation Config
@@ -64,9 +62,7 @@ $org_url = "http://www.fokus.fhg.de/";
 $org_logo_image = "images/logo_fokus.gif";
 $org_logo_alt = $org_name;
 $org_logo_width = "66";
-// FIXME: typo here: height instead of heigth, this needs to be
-// FIXME: changed wherever it's referenced
-$org_logo_heigth = "73";
+$org_logo_height = "73";
 
 ######################################################################
 # Top Strip
@@ -116,8 +112,6 @@ $la_array[] = "German";
 # The texts are sent through the translator before being used on the page.
 #
 ######################################################################
-$g_step_text[-1] = "Deleted";
-$g_step_text[0] = "Configuration";
 $g_step_text[1] = "Consultancy";
 $g_step_text[2] = "Technical Specifications";
 $g_step_text[3] = "Milestones";
@@ -125,8 +119,6 @@ $g_step_text[4] = "Referees";
 $g_step_text[5] = "Project Follow-up";
 $g_step_text[6] = "Rating";
 
-$g_step_explanation[-1] = "step_-1_explanation";
-$g_step_explanation[0] = "step_0_explanation";
 $g_step_explanation[1] = "step_1_explanation";
 $g_step_explanation[2] = "step_2_explanation";
 $g_step_explanation[3] = "step_3_explanation";
@@ -466,6 +458,16 @@ $config_perm_nladm = "admin";
 $config_perm_admfaq = "admin";
 $config_perm_admprojects = "admin";
 
+
+######################################################################
+# Parameter configuration
+#
+# $config_first_year	contains the first year in forms that can be selected by the users (f.e. "valid until", "start" and "finish")
+# $config_last_year		contains the last year in forms that can be selected by the users
+######################################################################
+
+$config_first_year = 2001;
+$config_last_year = 2005;
 
 ######################################################################
 # PHPLIB user authorization
