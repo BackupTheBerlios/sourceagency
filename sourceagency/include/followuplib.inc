@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: followuplib.inc,v 1.10 2002/04/08 22:14:34 grex Exp $
+# $Id: followuplib.inc,v 1.11 2002/05/13 10:23:48 riessen Exp $
 #
 ######################################################################
 
@@ -81,9 +81,8 @@ function followup_devel_preview($proid)
 {
     global $t, $db, $bx, $auth, $milestone_number, $location, $count;
 
-    /* ASSUME: there is a single record of information */
-    /* (this is controlled at the time records are inserted/updated in database */
-    $db->query("SELECT * FROM milestones WHERE proid='$proid' AND number='$milestone_number'");
+    $db->query("SELECT * FROM milestones WHERE proid='$proid' "
+               ."AND number='$milestone_number'");
     $db->next_record();
 
     $bx->box_begin();
@@ -97,7 +96,8 @@ function followup_devel_preview($proid)
 
     $bx->box_columns_begin(2);
 
-    $bx->box_column("right","30%","","<b>".$t->translate("Milestone number").":</b>");
+    $bx->box_column("right","30%","","<b>"
+                    .$t->translate("Milestone number").":</b>");
     $bx->box_column("left","70%","",$milestone_number);
 
     $bx->box_next_row_of_columns();
@@ -107,8 +107,10 @@ function followup_devel_preview($proid)
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column("right","30%","","<b>".$t->translate("Release Date").":</b>");
-    $bx->box_column("left","70%","",timestr_middle(mktimestamp($db->f("release"))));
+    $bx->box_column("right","30%","","<b>"
+                    .$t->translate("Release Date").":</b>");
+    $bx->box_column("left","70%","",
+                    timestr_middle(mktimestamp($db->f("release"))));
 
     $bx->box_next_row_of_columns();
 
@@ -156,11 +158,11 @@ function followup_devel_preview($proid)
 
 function followup_referee_preview($proid)
 {
-    global $t, $bx, $db, $auth, $milestone_number, $location, $count, $decision;
+    global $t, $bx, $db, $auth, $milestone_number, 
+      $location, $count, $decision;
 
-    /* ASSUME: there is a single record of information */
-    /* (this is controlled at the time records are inserted/updated in database */
-    $db->query("SELECT * FROM milestones WHERE proid='$proid' AND number='$milestone_number'");
+    $db->query("SELECT * FROM milestones WHERE proid='$proid' "
+               ."AND number='$milestone_number'");
     $db->next_record();
 
     $bx->box_begin();
@@ -174,7 +176,8 @@ function followup_referee_preview($proid)
 
     $bx->box_columns_begin(2);
 
-    $bx->box_column("right","30%","","<b>".$t->translate("Milestone number").":</b>");
+    $bx->box_column("right","30%","","<b>".
+                    $t->translate("Milestone number").":</b>");
     $bx->box_column("left","70%","",$milestone_number);
 
     $bx->box_next_row_of_columns();
@@ -184,8 +187,10 @@ function followup_referee_preview($proid)
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column("right","30%","","<b>".$t->translate("Release Date").":</b>");
-    $bx->box_column("left","70%","",timestr_middle(mktimestamp($db->f("release"))));
+    $bx->box_column("right","30%","","<b>".
+                    $t->translate("Release Date").":</b>");
+    $bx->box_column("left","70%","",
+                    timestr_middle(mktimestamp($db->f("release"))));
 
     $bx->box_next_row_of_columns();
 
