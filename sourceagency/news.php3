@@ -28,13 +28,12 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require ("newslib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-
-<?php
-
+start_content();
 $page = "news";
 
 if (check_proid($proid)) {
@@ -43,7 +42,11 @@ if (check_proid($proid)) {
   htmlp_image("ic/b.png",0,48,48,"Summary");
   // I18N
   print "News are posted by the project initiator. Any other contribution can be done by filling out a General Comment.\n";
-  if(is_project_initiator($proid))  print "<p align=right>[ ".html_link("news_edit.php3",array("proid" => $proid),"Submit News")." ]\n"; 
+  if(is_project_initiator($proid))  {
+    print "<p align=right>[ ".html_link("news_edit.php3",
+                                        array("proid" => $proid),
+                                        "Submit News")." ]\n"; 
+  }
 
   print "<br><p>\n";
 
@@ -52,11 +55,7 @@ if (check_proid($proid)) {
   lib_comment_it($proid,"General","0","0","","General Comments");
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 @page_close();
 ?>

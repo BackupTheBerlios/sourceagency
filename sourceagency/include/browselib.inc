@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.4 2001/11/20 16:41:15 riessen Exp $
+# $Id: browselib.inc,v 1.5 2001/11/21 19:45:34 riessen Exp $
 #
 ######################################################################
 
@@ -27,17 +27,17 @@ function browse_through ($through) {
   $bx->box_begin();
   $bx->box_body_begin();
   switch ($through) {
-	case "license": browse_licenses(); break;
-	case "type": browse_type(); break;
-	case "steps": browse_steps(); break;
-	case "volume": browse_volume(); break;
-	case "date": browse_not_yet(); break;
-	case "platform": browse_platform(); break;
+	case "license":      browse_licenses();     break;
+	case "type":         browse_type();         break;
+	case "steps":        browse_steps();        break;
+	case "volume":       browse_volume();       break;
+	case "date":         browse_not_yet();      break;
+	case "platform":     browse_platform();     break;
 	case "architecture": browse_architecture(); break;
-	case "environment": browse_environment(); break;
-	case "audience": browse_not_yet(); break;
-	case "os": browse_not_yet(); break;
-	case "programming": browse_not_yet(); break;
+	case "environment":  browse_environment();  break;
+	case "audience":     browse_not_yet();      break;
+	case "os":           browse_not_yet();      break;
+	case "programming":  browse_not_yet();      break;
   }
   $bx->box_body_end();
   $bx->box_end();

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisions_milestones.php3,v 1.2 2001/11/12 13:00:05 riessen Exp $
+# $Id: decisions_milestones.php3,v 1.3 2001/11/21 19:45:34 riessen Exp $
 #
 ######################################################################  
 
@@ -60,7 +60,6 @@ if (check_permission($proid,$page)) {
 
     for ($i=1;$i<$count;$i++) {
       $milestone_number = "milestone_".$i;
-      // FIXME: typo $$milestone_number instead of $milestone_number
       if ($$milestone_number == "Yes") {
         decision_milestone_insert($proid,$devid,$auth->auth["uname"],$i,"Yes");
       } else {
@@ -74,7 +73,6 @@ if (check_permission($proid,$page)) {
                ."decision_user='".$auth->auth["uname"]."'");
     while($db->next_record()) {
       $milestone_number = "milestone_".$db->f("number");
-      // FIXME??? another typo $$mile... instead of $mile...
       $$milestone_number = $db->f("decision");
     }
   }

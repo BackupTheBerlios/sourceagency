@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.10 2001/11/19 17:50:19 riessen Exp $
+# $Id: security.inc,v 1.11 2001/11/21 19:45:34 riessen Exp $
 #
 ######################################################################
 
@@ -134,31 +134,50 @@ function allowed_actions ($project_status, $action_number, $proid) {
 }
 
 function check_proid ($proid) {
-  global $perm;
-
-  $db_check = new DB_SourceAgency;
-
-  $db_check->query("SELECT * FROM description WHERE proid='$proid'"); 
-  $db_check->next_record();
-  if ($db_check->num_rows() == 0 || empty($proid)) {
-	// FIXME - FIXME - FIXME
+    global $perm, $t;
+    
+    $db_check = new DB_SourceAgency;
+    
+    $db_check->query("SELECT * FROM description WHERE proid='$proid'"); 
+    $db_check->next_record();
+    if ($db_check->num_rows() == 0 || empty($proid)) {
+	// FIXME: what???
 	require("config.inc");
-	$be = new box("",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
-	$be->box_full("Error", "No project with this id.");
+	$be = new box("80%",$th_box_frame_color,$th_box_frame_width,
+                      $th_box_title_bgcolor,$th_box_title_font_color,
+                      $th_box_title_align,$th_box_body_bgcolor,
+                      $th_box_error_font_color,$th_box_body_align);
+	$be->box_full($t->translate("Error"), 
+                      $t->translate("No project with this id."));
 	return 0;
-  } elseif ($db_check->f("status") == 0) {
-  	if (isset($perm) && ($perm->have_perm("editor") || $perm->have_perm("editor"))) return 1;
+    } elseif ($db_check->f("status") == 0) {
+  	if (isset($perm) && ($perm->have_perm("editor") 
+                                || $perm->have_perm("editor"))) {
+            return 1;
+        }
 
 	require("config.inc");
-	$be = new box("",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
-	$be->box_full("Error", "Project pending for review by a SourceAgency editor.");
+	$be = new box("80%",$th_box_frame_color,$th_box_frame_width,
+                      $th_box_title_bgcolor,$th_box_title_font_color,
+                      $th_box_title_align,$th_box_body_bgcolor,
+                      $th_box_error_font_color,$th_box_body_align);
+	$be->box_full($t->translate("Error"), 
+                      $t->translate("Project pending for review by "
+                                    ."an editor"));
 	return 0;
-  } elseif ($db_check->f("status") == "-1") {
-  	if (isset($perm) && ($perm->have_perm("editor") || $perm->have_perm("editor"))) return 1;
+    } elseif ($db_check->f("status") == "-1") {
+  	if (isset($perm) && ($perm->have_perm("editor") 
+             || $perm->have_perm("editor"))) {
+            return 1;
+        }
 
 	require("config.inc");
-	$be = new box("",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
-	$be->box_full("Error", "Project not accepted by a SourceAgency editor.");
+	$be = new box("80%",$th_box_frame_color,$th_box_frame_width,
+                      $th_box_title_bgcolor,$th_box_title_font_color,
+                      $th_box_title_align,$th_box_body_bgcolor,
+                      $th_box_error_font_color,$th_box_body_align);
+	$be->box_full($t->translate("Error"), 
+                      $t->translate("Project was not accepted."));
 	return 0;
   } else {
     	return 1;
@@ -181,184 +200,297 @@ function check_permission($proid,$page) {
   }
 
   $db_check->next_record();
-
+  
   $project_initiator = $db_check->f("description_user");
   $current_step = $db_check->f("status");
-
+  
   if ($db_check->num_rows() == 0 || empty($proid) 
-      || (($db_check->f("status") == 0 || $db_check->f("status") == "-1") 
-          && !is_project_initiator($proid))) {
+       || (($db_check->f("status") == 0 || $db_check->f("status") == "-1") 
+       && !is_project_initiator($proid))) {
       if (isset($auth) && !strcmp($db_check->f("description_user"),
                                   $auth->auth["uname"])) {
 		// FIXME - FIXME - FIXME what? fix what?
-		require("config.inc");
-		$be = new box("80%",$th_box_frame_color,$th_box_frame_width,
-                              $th_box_title_bgcolor,$th_box_title_font_color,
-                              $th_box_title_align,$th_box_body_bgcolor,
-                              $th_box_error_font_color,$th_box_body_align);
-		$be->box_full("Error", "No project id or project pending");
-		return 0;
-	}
+          require("config.inc");
+          $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
+                        $th_box_title_bgcolor,$th_box_title_font_color,
+                        $th_box_title_align,$th_box_body_bgcolor,
+                        $th_box_error_font_color,$th_box_body_align);
+          $be->box_full("Error", "No project id or project pending");
+          return 0;
+      }
   } else {
-	switch($page) {
-		case "news_edit":
-		case "news_mod":
-		case "comments_edit":
-		case "history":
-		case "step3":
-		case "step4":
-		case "step5":
-		case "cooperation":
-		case "views":
-			if (security_accept_by_view($proid,$page)) return 1;
-			else return permission_denied($proid,$page);
-		case "configure":
-			if (is_project_initiator($proid)) return 1;
-			elseif (security_accept_by_view($proid,$page)) return 1;
-			else return permission_denied($proid,$page);
-		case "configure_edit":
-			if (is_project_initiator($proid) || is_first_sponsor_or_dev($proid)) return 1;
-			else return permission_denied($proid,$page);
-		case "views_edit":
-			if (is_project_initiator($proid)) return 1;
-			else return permission_denied($proid,$page);
-		case "monitor":
-			if (is_accepted_sponsor($proid) || is_accepted_developer($proid)) return 1;
-			else return permission_denied($proid,$page);
-		case "monitor_edit":
-			if (is_sponsor() || is_developer()) return 1;
-			else return permission_denied($proid,$page);
-		case "summary":
-			break;
-		case "news_mod":
-			if (is_project_initiator($proid)) return 1;
-			else return permission_denied($proid,$page);
-			break;
-		case "comments":
-			break;
-		case "comments_mod":
-			if (is_project_initiator($proid)) return 1;
-			else return permission_denied($proid,$page);
-			break;
-		case "sponsoring":
-			break;
-		case "sponsoring_edit":
-			if (is_sponsor()) {
-				if (!already_involved_in_this_step($proid,"sponsoring_edit",$auth->auth["uname"])) return 1;
-				else return already_involved_message($proid,$page);
-			} else return permission_denied($proid,$page);
-			break;
-		case "sponsoring_mod":
-			if (is_project_initiator($proid)) return 1;
-			else return permission_denied($proid,$page);
-			break;
-		case "sponsoring_accepted":
-			if (is_accepted_sponsor($proid)) return 1;
-			else return permission_denied($proid,$page);
-		case "step1":
-			break;
-		case "step1_edit":
-			if (is_developer()) {
-				if ($current_step == 1) {;
-					if (!already_involved_in_this_step($proid,"step1_edit",$auth->auth["uname"])) return 1;
-					else return already_involved_message($proid,$page);
-				} else return step_not_open($proid,$page);
-			} else return permission_denied($proid,$page);
-			break;
-		case "step2":
-			break;
-		case "step2_edit":
-			if (is_developer() || is_project_initiator($proid)) { 
-				if ($current_step == 2) {
-					if (other_specifications_allowed($proid) || (is_project_initiator($proid) && no_other_specification_yet($proid))) return 1;
-					else return projects_only_by_project_initiator($proid,$page);
-				} else return step_not_open($proid,$page);
-			} else return permission_denied($proid,$page);
-			break;
-		case "developing_edit":
-			if (is_developer()) { 
-				if ($current_step == 2) {
-					if (!already_involved_in_this_content($proid,"developing_edit",$auth->auth["uname"],$GLOBALS["content_id"])) {
-						if (other_developing_proposals_allowed($proid) || (is_project_initiator($proid) && no_other_proposal_yet($proid))) return 1;
-						else return proposals_only_by_project_initiator($proid,$page);
-					} else return already_involved_message($proid,$page);
-				} else return step_not_open($proid,$page);
-			} else return permission_denied($proid,$page);
-			break;
-		case "developing_mod":
-			if (is_project_initiator($proid)) return 1;
-			else return permission_denied($proid,$page);
-			break;
-		case "step3_edit":
-			if (is_developer()) { 
-				if ($current_step == 3) {
-					if (is_involved_developer($proid)) {
-						if (is_milestone_possible($proid,$devid)) return 1;
-						else return milestone_not_possible($proid,$page);
-					} else return permission_denied($proid,$page);
-				} else return step_not_open($proid,$page);
-			} else return permission_denied($proid,$page);
-			break;
-		case "step3_mod":
-			if (is_your_milestone($proid,$devid)) return 1;
-			else return permission_denied($proid,$page);
-			break;
-		case "step4_edit":
-			if (is_developer() && !is_main_developer($proid)) { 
-				if ($current_step == 4) {
-					if (!already_involved_in_this_step($proid,"step4_edit",$auth->auth["uname"])) return 1;
-					return already_involved_message($proid,$page);
-				} else return step_not_open($proid,$page);
-			} else return permission_denied($proid,$page);
-			break;
-		case "step5_devel":
-			if (is_involved_developer($proid)) { 
-				if ($current_step == 5) {
-					if (step5_iteration($proid) == 0) return 1;
-					else return step5_not_your_iteration($proid,$page);
-				} else return step_not_open($proid,$page);
-			} else return permission_denied($proid,$page);
-			break;
-		case "step5_sponsor":
-			if (is_accepted_sponsor($proid)) { 
-				if ($current_step == 5) {
-					if (step5_iteration($proid) == 1 || step5_iteration($proid) == 3) return 1;
-					else return step5_not_your_iteration($proid,$page);
-				} else return step_not_open($proid,$page);
-			} else return permission_denied($proid,$page);
-			break;
-		case "step5_referee":
-			if (is_accepted_referee($proid)) { 
-				if ($current_step == 5) {
-					if (step5_iteration($proid) == 2) return 1;
-					else return step5_not_your_iteration($proid,$page);
-				} else return step_not_open($proid,$page);
-			} else return permission_denied($proid,$page);
-			break;
-		case "step6":
-			break;
-		case "step6_edit":
-			if (is_accepted_developer($proid) || is_accepted_sponsor($proid)) return 1;
-			else return permission_denied($proid,$page);
-			break;
-		case "decisions":
-			if (is_accepted_sponsor($proid) || (is_main_developer($proid) && $current_step == 4)) return 1;
-			else return permission_denied($proid,$page);
-			break;
-		case "personal":
-			if ($username == $auth->auth["uname"]) return 1;
-			else return permission_denied($proid,$page);
-			break;
-		case "sponsoring_accepted":
-			if (is_accepted_sponsor($proid)) return 1;
-			else return permission_denied($proid,$page);
-			break;
-		case "cooperation_edit":
-			if (is_developer()) return 1;
-			else return permission_denied($proid,$page);
-			break;
-	}
-    	return 1;
+      switch($page) {
+          case "news_edit":
+          case "news_mod":
+          case "comments_edit":
+          case "history":
+          case "step3":
+          case "step4":
+          case "step5":
+          case "cooperation":
+          case "views":
+              if (security_accept_by_view($proid,$page)) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "configure":
+              if (is_project_initiator($proid)) {
+                  return 1;
+              } elseif (security_accept_by_view($proid,$page)) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "configure_edit":
+              if (is_project_initiator($proid) 
+                  || is_first_sponsor_or_dev($proid)) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "views_edit":
+              if (is_project_initiator($proid)) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "monitor":
+              if (is_accepted_sponsor($proid) 
+                  || is_accepted_developer($proid)) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "monitor_edit":
+              if (is_sponsor() || is_developer()) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "summary":
+              break;
+          case "news_mod":
+              if (is_project_initiator($proid)) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "comments":
+              break;
+          case "comments_mod":
+              if (is_project_initiator($proid)) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "sponsoring":
+              break;
+          case "sponsoring_edit":
+              if (is_sponsor()) {
+                  if (!already_involved_in_this_step($proid,
+                  "sponsoring_edit",$auth->auth["uname"])) {
+                      return 1;
+                  } else {
+                      return already_involved_message($proid,$page);
+                  }
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "sponsoring_mod":
+              if (is_project_initiator($proid)) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "sponsoring_accepted":
+              if (is_accepted_sponsor($proid)) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "step1":
+              break;
+          case "step1_edit":
+              if (is_developer()) {
+                  if ($current_step == 1) {
+                      if (!already_involved_in_this_step($proid,
+                      "step1_edit",$auth->auth["uname"])) {
+                          return 1;
+                      } else {
+                          return already_involved_message($proid,$page);
+                      }
+                  } else {
+                      return step_not_open($proid,$page);
+                  }
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "step2":
+              break;
+          case "step2_edit":
+              if (is_developer() || is_project_initiator($proid)) { 
+                  if ($current_step == 2) {
+                      if (other_specifications_allowed($proid) 
+                          || (is_project_initiator($proid) 
+                              && no_other_specification_yet($proid))) {
+                          return 1;
+                      } else {
+                          return projects_only_by_project_initiator($proid,
+                          $page);
+                      }
+                  } else {
+                      return step_not_open($proid,$page);
+                  }
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "developing_edit":
+              if (is_developer()) { 
+                  if ($current_step == 2) {
+                      if (!already_involved_in_this_content($proid,
+                      "developing_edit",$auth->auth["uname"],
+                      $GLOBALS["content_id"])) {
+                          if (other_developing_proposals_allowed($proid) 
+                              || (is_project_initiator($proid) 
+                                  && no_other_proposal_yet($proid))) {
+                              return 1;
+                          } else {
+                              return proposals_only_by_project_initiator($proid,$page);
+                          }
+                      } else {
+                          return already_involved_message($proid,$page);
+                      }
+                  } else {
+                      return step_not_open($proid,$page);
+                  }
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "developing_mod":
+              if (is_project_initiator($proid)) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "step3_edit":
+              if (is_developer()) { 
+                  if ($current_step == 3) {
+                      if (is_involved_developer($proid)) {
+                          if (is_milestone_possible($proid,$devid)) {
+                              return 1;
+                          } else {
+                              return milestone_not_possible($proid,$page);
+                          }
+                      } else {
+                          return permission_denied($proid,$page);
+                      }
+                  } else {
+                      return step_not_open($proid,$page);
+                  }
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "step3_mod":
+              if (is_your_milestone($proid,$devid)) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "step4_edit":
+              if (is_developer() && !is_main_developer($proid)) { 
+                  if ($current_step == 4) {
+                      if (!already_involved_in_this_step($proid,
+                      "step4_edit",$auth->auth["uname"])) {
+                          return 1;
+                      }
+                      return already_involved_message($proid,$page);
+                  } else {
+                      return step_not_open($proid,$page);
+                  }
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "step5_devel":
+              if (is_involved_developer($proid)) { 
+                  if ($current_step == 5) {
+                      if (step5_iteration($proid) == 0) {
+                          return 1;
+                      } else {
+                          return step5_not_your_iteration($proid,$page);
+                      }
+                  } else {
+                      return step_not_open($proid,$page);
+                  }
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "step5_sponsor":
+              if (is_accepted_sponsor($proid)) { 
+                  if ($current_step == 5) {
+                      if (step5_iteration($proid) == 1 
+                          || step5_iteration($proid) == 3) {
+                          return 1;
+                      } else {
+                          return step5_not_your_iteration($proid,$page);
+                      }
+                  } else {
+                      return step_not_open($proid,$page);
+                  }
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "step5_referee":
+              if (is_accepted_referee($proid)) { 
+                  if ($current_step == 5) {
+                      if (step5_iteration($proid) == 2) {
+                          return 1;
+                      }
+                      else {
+                          return step5_not_your_iteration($proid,$page);
+                      }
+                  } else {
+                      return step_not_open($proid,$page);
+                  }
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "step6":
+              break;
+          case "step6_edit":
+              if (is_accepted_developer($proid) 
+                  || is_accepted_sponsor($proid)) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "decisions":
+              if (is_accepted_sponsor($proid) 
+                  || (is_main_developer($proid) && $current_step == 4)) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "personal":
+              if ($username == $auth->auth["uname"]) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "sponsoring_accepted":
+              if (is_accepted_sponsor($proid)) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+          case "cooperation_edit":
+              if (is_developer()) {
+                  return 1;
+              } else {
+                  return permission_denied($proid,$page);
+              }
+      }
+      return 1;
   }
 }
 
