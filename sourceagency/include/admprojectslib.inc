@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: admprojectslib.inc,v 1.5 2002/03/27 19:38:19 grex Exp $
+# $Id: admprojectslib.inc,v 1.6 2002/04/08 21:32:47 grex Exp $
 #
 ######################################################################
 
@@ -116,9 +116,8 @@ function show_admprojects()
 
 	    /* initialization */
             $configured_output = '<b>No</b><br>'; 
-            // FIXME: why do we check the permission here?
-            // FIXME2: should use reg exp instead of ==: user may have
-            // FIXME2: multiple permissions
+            // TODO: should use reg exp instead of ==: user may have
+            // TODO: multiple permissions
             if ($db->f('perms') == 'sponsor') {
                 switch ($configured) {
                     case 3: {

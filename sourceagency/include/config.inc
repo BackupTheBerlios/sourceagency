@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.20 2002/03/18 16:51:30 riessen Exp $
+# $Id: config.inc,v 1.21 2002/04/08 21:32:47 grex Exp $
 #
 ######################################################################
 
@@ -32,7 +32,7 @@
 # sys_logo_image	Image of your Site
 # sys_logo_alt		Alternative text for your site's image
 # sys_logo_width	Width of the image of your site
-# sys_logo_heigth	Heigth of the image of your site
+# sys_logo_height	Heigth of the image of your site
 #
 # (don't forget to put slashes at the end of the URLs)
 ######################################################################
@@ -54,7 +54,7 @@ $sys_logo_height = "61";
 # org_logo_image   Image of your Organisation
 # org_logo_alt	   Alternative text for the image of your Organisation
 # org_logo_width   Width of the image of your Organisation
-# org_logo_heigth  Height of the image of your Organisation
+# org_logo_height  Height of the image of your Organisation
 ######################################################################
 
 $org_name = "FOKUS";

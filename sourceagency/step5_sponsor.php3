@@ -86,7 +86,7 @@ if (check_permission($proid,$page)) {
 		      "</li><li>".$t->translate("<b>Severe</b>: The sponsors is very unhappy with the results of the current milestone and rejects it. The project referee will be switched.").
 		      "</li></ul><p>");
   } else {
-      print "<b>FIXME</b> If you see this line... then developers are in trouble!\n";
+      print "<b>TODO: explanation</b> If you see this line... then developers are in trouble!\n";
       print "<p>possible actions:\n";
       print "<ul>\n";
       print "<li>Delay all milestones x days</li>\n";

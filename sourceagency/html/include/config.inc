@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.4 2001/11/09 20:22:21 riessen Exp $
+# $Id: config.inc,v 1.5 2002/04/08 21:32:47 grex Exp $
 #
 ######################################################################
 
@@ -30,7 +30,7 @@
 # sys_logo_image	Image of your Site
 # sys_logo_alt		Alternative text for your site's image
 # sys_logo_width	Width of the image of your site
-# sys_logo_heigth	Heigth of the image of your site
+# sys_logo_height	Heigth of the image of your site
 ######################################################################
 
 $sys_name = "SourceAgency Project Page";
@@ -40,9 +40,7 @@ $sys_url = "http://sourceagency.berlios.de/beta/";
 $sys_logo_image = "../images/berlios.jpg";
 $sys_logo_alt = "BerliOS";
 $sys_logo_width = "238";
-// FIXME: typo here: height instead of heigth, this needs to be
-// FIXME: changed wherever it's referenced
-$sys_logo_heigth = "104";
+$sys_logo_height = "104";
 
 ######################################################################
 # Organisation Config
@@ -52,7 +50,7 @@ $sys_logo_heigth = "104";
 # org_logo_image   Image of your Organisation
 # org_logo_alt	   Alternative text for the image of your Organisation
 # org_logo_width   Width of the image of your Organisation
-# org_logo_heigth  Height of the image of your Organisation
+# org_logo_height  Height of the image of your Organisation
 ######################################################################
 
 $org_name = "FhG/GMD FOKUS";
@@ -60,9 +58,7 @@ $org_url = "http://www.fokus.fhg.de/";
 $org_logo_image = "../images/logo_fokus.gif";
 $org_logo_alt = $org_name;
 $org_logo_width = "66";
-// FIXME: typo here: height instead of heigth, this needs to be
-// FIXME: changed wherever it's referenced
-$org_logo_heigth = "73";
+$org_logo_height = "73";
 
 ######################################################################
 # Top Strip

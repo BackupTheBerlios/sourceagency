@@ -29,7 +29,7 @@ valign="center" >
 <td>
 <a href="<?php echo $sys_url_title;?>">
 <img SRC="<?php echo $sys_logo_image;?>" BORDER="0" 
-height="<?php echo $sys_logo_heigth;?>" width="<?php echo $sys_logo_width;?>"
+height="<?php echo $sys_logo_height;?>" width="<?php echo $sys_logo_width;?>"
 ALT="<?php echo $sys_logo_alt;?>"></a>
 </td>
 
@@ -59,7 +59,7 @@ please send any and all
 <td VALIGN="middle">
 <a href="<?php echo $org_url;?>" TARGET="_blank">
 <img SRC="<?php echo $org_logo_image;?>" ALT="<?php echo $org_logo_alt;?>" 
-HSPACE="10" BORDER="0" height="<?php echo $org_logo_heigth;?>" 
+HSPACE="10" BORDER="0" height="<?php echo $org_logo_height;?>" 
 width="<?php echo $org_logo_width;?>" align="RIGHT"></a>
 </td>
 </tr>
