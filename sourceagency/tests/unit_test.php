@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.6 2002/04/22 14:20:16 riessen Exp $
+# $Id: unit_test.php,v 1.7 2002/04/23 10:04:42 riessen Exp $
 #
 ######################################################################
 
@@ -48,7 +48,7 @@ extends TestCase
     }
     function _testFor_length( $length, $msg = '' ) {
         // TODO: replace the use of this function with _captured_length
-        $this->_check_length( capture_text_length(), $length, $msg );
+        $this->_testFor_captured_length( $length, $msg );
     }
     function _testFor_captured_length( $length, $msg = '' ) {
         $this->_check_length( capture_text_length(), $length, $msg );
@@ -60,15 +60,15 @@ extends TestCase
         $this->assertRegexp( "/" . $pattern . "/", $text, 
                                                 $msg . ' (Pattern not Found)');
     }
-    function _testFor_patterns( $text, $pattern_array, $check_size = -1 ) {
+    function _testFor_patterns( $text, $pattern_array, $check_size = -1, 
+                                $msg = '' ) {
         reset( $pattern_array );
         if ( $check_size > 0 ) {
             $this->assertEquals( $check_size, count( $pattern_array ), 
-                                 "pattern count mismatch" );
+                                 $msg . ' (pattern count mismatch)' );
         }
         while ( list( $key, $val ) = each( $pattern_array ) ) {
-            $this->_testFor_pattern( $text, $val, ("Pattern with key '" . $key
-                                                   . "' was not found"));
+            $this->_testFor_pattern( $text, $val, $msg.(' (Key "'.$key.'")'));
         }
     }
 
