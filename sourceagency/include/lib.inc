@@ -2,7 +2,7 @@
 #
 # lib.inc
 #
-# $Id: lib.inc,v 1.6 2001/10/16 12:51:39 ger Exp $
+# $Id: lib.inc,v 1.7 2001/10/31 12:23:50 riessen Exp $
 #
 
 ######################################################################
@@ -254,6 +254,8 @@ function typestr($type) {
   if ($type == "O") {
     $str = $t->translate("Other");
   }
+  // FIXME: this causes a warning if none of the above
+  // FIXME: ifs match ... 
   return $str;
 }
 
