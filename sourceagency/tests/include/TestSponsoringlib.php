@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSponsoringlib.php,v 1.11 2002/05/08 11:42:49 riessen Exp $
+# $Id: TestSponsoringlib.php,v 1.12 2002/05/15 09:33:31 riessen Exp $
 #
 ######################################################################
 
@@ -177,7 +177,7 @@ extends UnitTest
         // the lib_show_comments_on_it on the second call which is already 
         // tested so there is no need to test it here, therefore configure 
         // it's database to ignore all errors.
-        $db_config->ignore_errors( MKDB_ALL_ERRORS, 2 );
+        $db_config->ignore_all_errors( 2 );
 
         // third call configuration, here is_accepted_sponsor is called and
         // returns true
@@ -190,7 +190,7 @@ extends UnitTest
                                                   $auth->auth["uname"]), 4);
         $db_config->add_num_row( 1, 4 ); // is_accepted_sponsor returns true
         // instance for the lib_show_comments_on_it call
-        $db_config->ignore_errors( MKDB_ALL_ERRORS, 5 );
+        $db_config->ignore_all_errors( 5 );
 
         // fourth call configuration, is_accepted_sponsor returns false
         $db_config->add_query( sprintf( $db_q[0], $db_d[3]["proid"]), 6);
@@ -202,7 +202,7 @@ extends UnitTest
                                                   $auth->auth["uname"]), 7);
         $db_config->add_num_row( 0, 7 ); // is_accepted_sponsor returns true
         // instance for the lib_show_comments_on_it call
-        $db_config->ignore_errors( MKDB_ALL_ERRORS, 8 );
+        $db_config->ignore_all_errors( 8 );
         
         // first call, no records
         capture_reset_and_start();
@@ -393,7 +393,7 @@ extends UnitTest
         $db_config->add_query( sprintf( $db_q[4], $args[0]["proid"]), 0 );
 
         // instance for the monitor_mail call
-        $db_config->ignore_errors( MKDB_ALL_ERRORS, 1 );
+        $db_config->ignore_all_errors( 1 );
         // instance created by the is_project_initiator
         $db_config->add_query( sprintf( $db_q[3], $args[0]["proid"],
                                         $auth->auth["uname"]), 2 );
@@ -431,7 +431,7 @@ extends UnitTest
         $db_config->add_query( sprintf( $db_q[3], $args[1]["proid"],
                                         $auth->auth["uname"]), 4 );
         // instance for the monitor_mail call
-        $db_config->ignore_errors( MKDB_ALL_ERRORS, 5 );
+        $db_config->ignore_all_errors( 5 );
         // instance created by the second call to is_project_initiator
         $db_config->add_query( sprintf( $db_q[3], $args[1]["proid"],
                                         $auth->auth["uname"]), 6 );
@@ -468,8 +468,8 @@ extends UnitTest
         $db_config->add_query( sprintf( $db_q[4], $args[2]["proid"]), 7 );
 
         // instance for the monitor_mail call
-        $db_config->ignore_errors( MKDB_ALL_ERRORS, 8 );
-        $db_config->ignore_errors( MKDB_ALL_ERRORS, 9 );
+        $db_config->ignore_all_errors( 8 );
+        $db_config->ignore_all_errors( 9 );
         // instance created by the is_project_initiator
         $db_config->add_query( sprintf( $db_q[3], $args[2]["proid"],
                                         $auth->auth["uname"]), 10 );
@@ -499,8 +499,8 @@ extends UnitTest
         $db_config->add_query( sprintf( $db_q[4], $args[3]["proid"]), 11 );
 
         // instance for the monitor_mail call
-        $db_config->ignore_errors( MKDB_ALL_ERRORS, 11 );
-        $db_config->ignore_errors( MKDB_ALL_ERRORS, 12 );
+        $db_config->ignore_all_errors( 11 );
+        $db_config->ignore_all_errors( 12 );
         // instance created by the is_project_initiator
         $db_config->add_query( sprintf( $db_q[3], $args[3]["proid"],
                                         $auth->auth["uname"]), 13 );
