@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: translations.pl,v 1.6 2002/06/12 11:16:11 grex Exp $
+# $Id: translations.pl,v 1.7 2002/06/12 11:28:20 grex Exp $
 #
 ######################################################################
 
@@ -25,6 +25,11 @@ chdir "../";
 parse("php3");
 unique(@complete);
 
+# Subroutines
+
+# Subroutine parse
+# Looks in the files with the given extension
+# for lines that contain the translation function ($t->translate())
 
 sub parse {
     $extension = shift(@_);
@@ -58,6 +63,9 @@ sub parse {
     return @complete;
 }
 
+# Subroutine unique
+# Gets an array and returns the sorted array
+# with elements appearing only once
 
 sub unique {
     @array = sort @_;
@@ -73,12 +81,22 @@ sub unique {
     }
 }
 
+# Subroutine nextLine
+# Looks for the string to be translated in the current line
+# passed as argument
+
 sub nextLine {
     $_ = shift(@_);
 
     /\s?\.("|')(.*?)("|')\s?/;
     return $2;
 }
+
+# Subrouting ends
+# Gets a line and sees if the translation functions
+# finishes in this line (returning 0)
+# else it returns 1, which means, another line
+# has to be retrieved and parsed
 
 sub ends {
     $_ = shift(@_);
