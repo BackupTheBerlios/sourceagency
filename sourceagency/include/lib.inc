@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.19 2001/12/13 15:43:15 riessen Exp $
+# $Id: lib.inc,v 1.20 2002/01/09 16:04:47 riessen Exp $
 #
 ######################################################################
 
@@ -631,7 +631,9 @@ function calendar_box($proid) {
     $db_local->next_record();
     if ($db_local->num_rows() == 0) {
         $budget = 0;
-    }
+    } 
+    // FIXME: this needs an else???? i.e. if no rows, then don't 
+    // FIXME: request the sum of the budget!!!
     $budget = $db_local->f("SUM(budget)");
     
     $bx->box_column ("left","","","<b>"
