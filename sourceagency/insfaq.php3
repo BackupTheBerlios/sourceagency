@@ -1,8 +1,8 @@
 <?php
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 ######################################################################
-# SourceAgency: Software Announcement & Retrieval System
-# ======================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: insfaq.php3,v 1.4 2002/04/10 13:02:48 grex Exp $
+# $Id: insfaq.php3,v 1.5 2002/04/18 14:30:28 grex Exp $
 #
 ######################################################################  
 
@@ -57,26 +57,21 @@ if (($config_perm_admfaq != 'all')
             $bx->box_title($t->translate('Do you really want to delete this FAQ? '
                                    .'There is no way for undeletion.'));
             $bx->box_body_begin();
-            /* WISH: use html.inc and box.inc instead of raw HTML */	
-            echo "<table><tr><td>\n";
-            echo "<form action=\"".$sess->self_url()."\" method=\"POST\">\n";
-            echo "<input type=\"hidden\" name=\"faqid\" value=\"".$db->f('faqid')
-                 ."\">\n";
-            echo "<input type=\"hidden\" name=\"delete\" value=\"2\">\n";
-            echo "<input type=\"hidden\" name=\"modify\" value=\"0\">\n";
-            echo "<input type=\"submit\" value=\"".$t->translate('Yes, Delete')
-                 ."\">\n";
-
-            echo "</form></td><td>\n";
-            echo "<form action=\"".$sess->self_url()."\" method=\"POST\">\n";
-            echo "<input type=\"hidden\" name=\"faqid\" value=\""
-                 .$db->f('faqid')."\">\n";
-            echo "<input type=\"hidden\" name=\"modify\" value=\"1\">\n";
-            echo "<input type=\"hidden\" name=\"delete\" value=\"0\">\n";
-            echo "<input type=\"submit\" value=\""
-                 .$t->translate('No, Just Modify')."\">\n";
-            echo "</form></td></tr></table>\n";
-
+            $bx->box_columns_begin(2);
+            $bx->box_column('left', '76%', '', '<b>'.$db->f('question').'</b><p>'.$db->f('answer'));
+            $bx->box_column('right', '12%', '', html_form_action('PHP_SELF')
+    	 	                               .html_form_hidden('modify', 0)
+    	 	                               .html_form_hidden('delete', 2)
+    	 	                               .html_form_hidden('faqid', $db->f('faqid'))
+                                               .html_form_submit($t->translate('Yes, Delete'), 'Delete')
+                                               .html_form_end()
+                                               .html_form_action('PHP_SELF')
+    	 	                               .html_form_hidden('modify', 1)
+    	 	                               .html_form_hidden('delete', 0)
+    	 	                               .html_form_hidden('faqid', $db->f('faqid'))
+                                               .html_form_submit($t->translate('No, just modify'), 'modify')
+                                               .html_form_end());
+            $bx->box_columns_end();
             $bx->box_body_end();
             $bx->box_end();
         }
