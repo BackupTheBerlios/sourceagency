@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: monitorlib.inc,v 1.5 2002/04/12 14:19:18 riessen Exp $
+# $Id: monitorlib.inc,v 1.6 2002/05/28 08:56:06 riessen Exp $
 #
 ######################################################################
 
@@ -137,19 +137,21 @@ function monitor_show($proid)
   	$bx->box_body_begin();
   	$bx->box_columns_begin(5);
 
-  	$bx->box_column('center','10%','','<b>Number</b>');
-  	$bx->box_column('center','20%','','<b>Username</b>');
-  	$bx->box_column('center','20%','','<b>Type</b>');
-  	$bx->box_column('center','20%','','<b>Importance filter</b>');
-  	$bx->box_column('center','30%','','<b>Creation</b>');
+  	$bx->box_column('center','10%','','<b>'
+                        .$t->translate('Number').'</b>');
+  	$bx->box_column('center','20%','','<b>'
+                        .$t->translate('Username').'</b>');
+  	$bx->box_column('center','20%','','<b>'
+                        .$t->translate('Type').'</b>');
+  	$bx->box_column('center','20%','','<b>'
+                        .$t->translate('Importance filter').'</b>');
+  	$bx->box_column('center','30%','','<b>'
+                        .$t->translate('Creation').'</b>');
 	$i=1;
 
+        $colors = array( 1 => 'gold', 0 => '#FFFFFF' );
   	while($db->next_record()) {
-	    if ($i%2 != 0) {
-                $bgcolor = 'gold';
-	    } else {
-                $bgcolor = '#FFFFFF';
-	    }
+            $bgcolor = $colors[ $i % 2 ];
 
 	    $bx->box_next_row_of_columns();
 
@@ -165,7 +167,8 @@ function monitor_show($proid)
   	$bx->box_end();
 
     } else {
-        print "<p>Nobody is monitoring this project.<p>\n";
+        print "<p>".$t->translate("Nobody is monitoring this project").
+            ".<p>\n";
     }
 }
 
