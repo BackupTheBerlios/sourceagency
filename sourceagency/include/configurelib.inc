@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: configurelib.inc,v 1.3 2001/11/15 18:07:44 riessen Exp $
+# $Id: configurelib.inc,v 1.4 2001/11/20 16:41:56 riessen Exp $
 #
 ######################################################################
 
@@ -72,8 +72,8 @@ function configure_form($proid) {
 
   $bx->box_column ("right","30%","","&nbsp;");
   $bx->box_column ("left","70%","",
-                   html_form_submit("Preview","preview")
-                   .html_form_submit("Submit","submit"));
+                   html_form_submit($t->translate("Preview"),"preview")
+                   .html_form_submit($t->translate("Submit"),"submit"));
   htmlp_form_end();
   $bx->box_columns_end();
 
@@ -99,17 +99,19 @@ function configure_preview($proid) {
     lib_pnick($auth->auth["uname"]);
     echo " - ".timestr($timestamp)."</b><br>&nbsp;\n";
     if (is_sponsor()) {
-        echo "<br><b>Quorum</b>: $quorum %\n";
+        echo "<br><b>".$t->translate("Quorum")."</b>: "."$quorum"." %\n";
     }
     if (is_project_initiator($proid))  {
-        echo "<br><b>Other tech_contents</b>: $other_tech_contents\n";
+        echo "<br><b>".$t->translate("Other tech_contents")
+          ."</b>: ".$t->translate("$other_tech_contents")."\n";
     }
     if (is_developer())  {
-        echo "<br><b>Other developing proposals</b>: "
-            ."$other_developing_proposals\n";
+        echo "<br><b>".$t->translate("Other developing proposals")."</b>: "
+            .$t->translate("$other_developing_proposals")."\n";
     }
     if (is_sponsor() && is_project_initiator($proid))  {
-        echo "<br><b>Consultants</b>: $consultants\n";
+        echo "<br><b>".$t->translate("Consultants")."</b>: "
+            .$t->translate("$consultants")."\n";
     }
     $bx->box_body_end();
     $bx->box_end();
@@ -123,8 +125,9 @@ function configure_show($proid) {
   $db->query($query);
 
   if ($db->num_rows() == 0) {
-      print "<p>The project parameters have not been configured by "
-          ."the project owner(s).<p>\n";
+      print "<p>"
+          .$t->translate("The project parameters have not been configured by "
+                         ."the project owner(s)").".<p>\n";
   } else {
 
       while($db->next_record()) {
@@ -134,22 +137,25 @@ function configure_show($proid) {
           echo "<br>";
           
           $tmp_q = $db->f("quorum");
-          echo "<p><b>Quorum</b>: " . ( $tmp_q != "" ? $tmp_q . "%"
-                     : $t->translate("Decision to be taken by Sponsors"))."\n";
+          echo "<p><b>".$t->translate("Quorum")."</b>: " 
+              . ( $tmp_q != "" ? $tmp_q . "%"
+              : $t->translate("Decision to be taken by Sponsors"))."\n";
           
-          echo "<br><b>Consultants</b>: ".$db->f("consultants")."\n";
+          echo "<br><b>".$t->translate("Consultants")."</b>: "
+              .$t->translate($db->f("consultants"))."\n";
           
-          echo "<br><b>Other Technical Contents</b>: "
-              .$db->f("other_tech_contents")."\n";
-          echo "<br><b>Other Developing Proposals</b>: "
-              .$db->f("other_developing_proposals")."\n";
+          echo "<br><b>".$t->translate("Other Technical Contents")."</b>: "
+              .$t->translate($db->f("other_tech_contents"))."\n";
+          echo "<br><b>".$t->translate("Other Developing Proposals")."</b>: "
+              .$t->translate($db->f("other_developing_proposals"))."\n";
           
           $tmp_s = $db->f("sponsor");
-          echo "<br><b>First Sponsor</b>: " . ( $tmp_s != "" ? $tmp_s 
-                                  : $t->translate("No sponsors")) . "\n";
+          echo "<br><b>".$t->translate("First Sponsor")."</b>: " 
+              . ( $tmp_s != "" ? $tmp_s : $t->translate("No sponsors")) . "\n";
           $tmp_d = $db->f("developer");
-          echo "<br><b>Developer</b>: " . ( $tmp_d != "" ? $tmp_d
-                                  : $t->translate("No main developer")) . "\n";
+          echo "<br><b>".$t->translate("Developer")."</b>: " 
+              . ( $tmp_d != "" ? $tmp_d: $t->translate("No main developer")) 
+              . "\n";
           $bx->box_body_end();
           $bx->box_end();
       }
@@ -171,7 +177,7 @@ function configure_modify_form($proid) {
 
 function configure_insert($proid,$user) {
   global $db,$auth,$quorum,$consultants,$other_tech_contents,
-      $other_developing_proposals;
+      $other_developing_proposals, $t, $sys_name;
 
   if(!configure_first_time($proid)) {
       configure_modify($proid,$user);
@@ -193,13 +199,17 @@ function configure_insert($proid,$user) {
   	$db->query("INSERT history SET proid='$proid', history_user='$user',"
                    ." type='Configure', action='Project configuration'");
 
-        echo "<b>Congratulations</b>. You have just configured your "
-            ."project.<p>\n";
+        echo "<b>".$t->translate("Congratulations")."</b>. "
+            .$t->translate("You have just configured your project")
+            .".<p>\n";
+
         if (is_sponsor()) {
-            echo "<br>The last step before waiting to be reviewed by a "
-                ."SourceAgency editor is to "
+            echo "<br>".
+                $t->translate("The last step before waiting to be "
+                              ."reviewed by an editor is to")
+                . " "
                 .html_link("sponsoring_edit.php3",array("proid" => $proid),
-                           "Sponsor this project");
+                           $t->translate("Sponsor this project"));
         } elseif (is_developer()) {
             lib_insertion_finished();
         }
