@@ -1,24 +1,24 @@
 <?php
-
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ===============================================================
 #
 # Copyright (c) 2001 by
-#                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
-#                Gregorio Robles (grex@scouts-es.org)
+#                Lutz Henckel (lutz.henckel@fokus.gmd.de),
+#                Gregorio Robles (grex@scouts-es.org) and
 #                Gerrit Riessen (riessen@open-source-consultants.de)
 #
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
-# TODO: description missing
+# Right menubar (navigation bar)
 #
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: menubar.inc,v 1.7 2002/04/17 11:04:03 riessen Exp $
+# $Id: menubar.inc,v 1.8 2002/04/18 10:40:24 grex Exp $
 #
 ######################################################################
 
@@ -33,54 +33,54 @@ global $PHP_SELF;
 </tr>
 
 <tr ALIGN=RIGHT BGCOLOR="<?php echo $th_nav_bgcolor;?>">
-<td><a href="<?php $sess->purl("index.php3") ?>" class="menus"><?php echo $t->translate("Index"); ?></a>
-<br><a href="<?php $sess->purl("faq.php3") ?>" class="menus"><?php echo $t->translate("Q&amp;A"); ?></a>
-<br><a href="<?php print $sess->url("doco.php3") . $sess->add_query(array("page" => $PHP_SELF)) ?>" class="menus"><?php echo $t->translate("What is this?"); ?></a>
+<td><a href="<?php $sess->purl('index.php3') ?>" class="menus"><?php echo $t->translate("Index"); ?></a>
+<br><a href="<?php $sess->purl('faq.php3') ?>" class="menus"><?php echo $t->translate("Q&amp;A"); ?></a>
+<br><a href="<?php print $sess->url('doco.php3') . $sess->add_query(array('page' => $PHP_SELF)) ?>" class="menus"><?php echo $t->translate('What is this?'); ?></a>
 
 <br><br>
 
 <?php
-if (isset($auth) && !empty($auth->auth["perm"]) && !($logout) ) {
-  if ($perm->have_perm("devel_pending") 
-     || $perm->have_perm("sponsor_pending") 
-     || $perm->have_perm("devel") || $perm->have_perm("sponsor") 
-     || $perm->have_perm("editor") || $perm->have_perm("admin")) {
+if (isset($auth) && !empty($auth->auth['perm']) && !($logout) ) {
+  if ($perm->have_perm('devel_pending') 
+     || $perm->have_perm('sponsor_pending') 
+     || $perm->have_perm('devel') || $perm->have_perm('sponsor') 
+     || $perm->have_perm('editor') || $perm->have_perm('admin')) {
 ?>
-<a href="<?php $sess->purl("logout.php3") ?>" class="menus"
-><?php echo $t->translate("Logout"); ?></a>
+<a href="<?php $sess->purl('logout.php3') ?>" class="menus"
+><?php echo $t->translate('Logout'); ?></a>
 <?php
-    echo "<br><a href=\"".$sess->url("personal.php3")
-         .$sess->add_query(array("username" => $auth->auth["uname"]))
-         ."\" class=\"menus\">".$t->translate("Personal Page")."</a>\n";
+    echo "<br><a href=\"".$sess->url('personal.php3')
+         .$sess->add_query(array('username' => $auth->auth['uname']))
+         ."\" class=\"menus\">".$t->translate('Personal Page')."</a>\n";
   }
 } else {
 ?>
-<a href="<?php $sess->purl("login.php3") ?>" class="menus">
-   <?php echo $t->translate("Login"); ?></a>
+<a href="<?php $sess->purl('login.php3') ?>" class="menus">
+   <?php echo $t->translate('Login'); ?></a>
 <?php
 }
 ?>
-<br><a href="<?php $sess->purl("register.php3") ?>" class="menus"><?php echo $t->translate("New User"); ?></a>
-<br><a href="<?php $sess->purl("remind.php3") ?>" class="menus"><?php echo $t->translate("Forgot Password"); ?></a>
+<br><a href="<?php $sess->purl('register.php3') ?>" class="menus"><?php echo $t->translate('New User'); ?></a>
+<br><a href="<?php $sess->purl('remind.php3') ?>" class="menus"><?php echo $t->translate('Forgot Password'); ?></a>
 <?php
-if ( isset($auth) && !empty($auth->auth["perm"]) && !($logout)) {
-  if ($perm->have_perm("devel") || $perm->have_perm("sponsor") 
-      || $perm->have_perm("devel_pending") 
-      || $perm->have_perm("sponsor_pending") || $perm->have_perm("editor") 
-      || $perm->have_perm("admin")) {
+if ( isset($auth) && !empty($auth->auth['perm']) && !($logout)) {
+  if ($perm->have_perm('devel') || $perm->have_perm('sponsor') 
+      || $perm->have_perm('devel_pending') 
+      || $perm->have_perm('sponsor_pending') || $perm->have_perm('editor') 
+      || $perm->have_perm('admin')) {
 ?>
-<br><a href="<?php $sess->purl("chguser.php3") ?>" class="menus"
-><?php echo $t->translate("Change User"); ?></a>
+<br><a href="<?php $sess->purl('chguser.php3') ?>" class="menus"
+><?php echo $t->translate('Change User'); ?></a>
 
 <?php
 	}
 }
 
-if (($config_perm_users == "all") || (isset($perm) && $perm->have_perm($config_perm_users))  && !($logout)) {
+if (($config_perm_users == 'all') || (isset($perm) && $perm->have_perm($config_perm_users))  && !($logout)) {
 ?>
-<br><a href="<?php $sess->purl("users.php3") ?>" class="menus"><?php echo $t->translate("Users"); ?></a>
-<br><a href="<?php $sess->purl("users.php3?type=devel") ?>" class="menus"><?php echo $t->translate("Developers"); ?></a>
-<br><a href="<?php $sess->purl("users.php3?type=sponsor") ?>" class="menus"><?php echo $t->translate("Sponsors"); ?></a>
+<br><a href="<?php $sess->purl('users.php3') ?>" class="menus"><?php echo $t->translate("Users"); ?></a>
+<br><a href="<?php $sess->purl('users.php3?type=devel') ?>" class="menus"><?php echo $t->translate('Developers'); ?></a>
+<br><a href="<?php $sess->purl('users.php3?type=sponsor') ?>" class="menus"><?php echo $t->translate('Sponsors'); ?></a>
 <?php
 }
 ?>
@@ -88,18 +88,18 @@ if (($config_perm_users == "all") || (isset($perm) && $perm->have_perm($config_p
 
 <br>
 
-<a href="<?php $sess->purl("browse.php3") ?>" class="menus"><?php echo $t->translate("Browse"); ?></a>
+<a href="<?php $sess->purl('browse.php3') ?>" class="menus"><?php echo $t->translate('Browse'); ?></a>
 
 <?php
 
-echo "<br><a href=\"".$sess->url("insform.php3")."\" class=\"menus\">".$t->translate("New Project")."</a>\n";
+echo "<br><a href=\"".$sess->url('insform.php3')."\" class=\"menus\">".$t->translate('New Project')."</a>\n";
 
 ?>
-<br><a href="<?php $sess->purl("licenses.php3"); ?>" class="menus"><?php echo $t->translate("Licenses"); ?></a>
+<br><a href="<?php $sess->purl('licenses.php3'); ?>" class="menus"><?php echo $t->translate('Licenses'); ?></a>
 <br>
 <!--
-<br><a href="<?php $sess->purl("newsletter.php3"); ?>" class="menus"><?php echo $t->translate("Newsletter"); ?></a>
-<br><a href="<?php $sess->purl("backend.php3"); ?>" class="menus"><?php echo $t->translate("Backend"); ?></a>
+<br><a href="<?php $sess->purl('newsletter.php3'); ?>" class="menus"><?php echo $t->translate('Newsletter'); ?></a>
+<br><a href="<?php $sess->purl('backend.php3'); ?>" class="menus"><?php echo $t->translate('Backend'); ?></a>
 -->
 </td>
 </tr>
@@ -109,14 +109,15 @@ echo "<br><a href=\"".$sess->url("insform.php3")."\" class=\"menus\">".$t->trans
 <?php
 
 if (
-    (($config_perm_admuser == "all") ||
-       ($config_perm_admlicens == "all") ||
-       ($config_perm_admcomment == "all") ||
-       ($config_perm_admsec == "all") ||
-       ($config_perm_admcat == "all") ||
-       ($config_perm_nladm == "all") ||
-       ($config_perm_admfaq == "all") ||
-       ($config_perm_admprojects == "all"))
+    (($config_perm_admuser == 'all') ||
+       ($config_perm_admlicens == 'all') ||
+       ($config_perm_admcomment == 'all') ||
+       ($config_perm_admsec == 'all') ||
+       ($config_perm_admcat == 'all') ||
+       ($config_perm_nladm == 'all') ||
+       ($config_perm_admfaq == 'all') ||
+       ($config_perm_admdoco == 'all') ||
+       ($config_perm_admprojects == 'all'))
   || (isset($perm) &&
        (($perm->have_perm($config_perm_admuser)) ||
         ($perm->have_perm($config_perm_admlicens)) ||
@@ -125,6 +126,7 @@ if (
         ($perm->have_perm($config_perm_admcat)) ||
         ($perm->have_perm($config_perm_nladm)) ||
         ($perm->have_perm($config_perm_admfaq)) ||
+        ($perm->have_perm($config_perm_admdoco)) ||
         ($perm->have_perm($config_perm_admprojects)) ))
   && !($logout)) {
 
@@ -132,50 +134,59 @@ if (
 <table BORDER=0 CELLSPACING=0 CELLPADDING=3 WIDTH="100%">
 <tr BGCOLOR="<?php echo $th_navstrip_bgcolor;?>">
 <td ALIGN=CENTER><img SRC="images/blank.gif" height="1" width="135" border=0><br>
-<span class="titlebar"><font color="<?php echo $th_navstrip_font_color;?>"><?php echo $t->translate("Administration"); ?></font></span></td>
+<span class="titlebar"><font color="<?php echo $th_navstrip_font_color;?>"><?php echo $t->translate('Administration'); ?></font></span></td>
 </tr>
 
 <tr ALIGN="RIGHT" BGCOLOR="<?php echo $th_nav_bgcolor;?>">
 <td>
 <?php
 
-  if (($config_perm_admuser == "all") 
+  if (($config_perm_admuser == 'all') 
       || (isset($perm) && $perm->have_perm($config_perm_admuser))  
       && !($logout)) {
-    $db->query("SELECT COUNT(*) FROM auth_user");
+    $db->query('SELECT COUNT(*) FROM auth_user');
     $db->next_record();
-    echo "<a href=\"".$sess->url("admuser.php3")."\" class=\"menus\">"
-    .$t->translate("Users")." [".$db->f("COUNT(*)")."]</a>\n";
+    echo "<a href=\"".$sess->url('admuser.php3')."\" class=\"menus\">"
+    .$t->translate('Users')." [".$db->f("COUNT(*)")."]</a>\n";
   }
 
 
-  if (($config_perm_admlicens == "all") 
+  if (($config_perm_admlicens == 'all') 
       || (isset($perm) && $perm->have_perm($config_perm_admlicens))  
       && !($logout)) {
     $db->query("SELECT COUNT(*) FROM licenses");
     $db->next_record();
-    echo "<br><a href=\"".$sess->url("admlicens.php3")."\" class=\"menus\">"
-      .$t->translate("Licenses")." [".$db->f("COUNT(*)")."]</a>\n";
+    echo "<br><a href=\"".$sess->url('admlicens.php3')."\" class=\"menus\">"
+      .$t->translate('Licenses')." [".$db->f("COUNT(*)")."]</a>\n";
   }
 
-  if (($config_perm_admprojects == "all") 
+  if (($config_perm_admprojects == 'all') 
       || (isset($perm) && $perm->have_perm($config_perm_admprojects))  
       && !($logout)) {
     $db->query("SELECT COUNT(*) FROM description WHERE status='0'");
     $db->next_record();
-    echo "<br><a href=\"".$sess->url("admprojects.php3")
-      ."\" class=\"menus\">".$t->translate("Pending Proj.")
+    echo "<br><a href=\"".$sess->url('admprojects.php3')
+      ."\" class=\"menus\">".$t->translate('Pending Proj.')
       ." [".$db->f("COUNT(*)")."]</a>\n";
   }
 
 
-  if (($config_perm_admfaq == "all") 
+  if (($config_perm_admfaq == 'all') 
       || (isset($perm) && $perm->have_perm($config_perm_admfaq))  
       && !($logout)) {
     $db->query("SELECT COUNT(*) FROM faq");
     $db->next_record();
-    echo "<br><a href=\"".$sess->url("admfaq.php3")."\" class=\"menus\">"
-      .$t->translate("Q&A")." [".$db->f("COUNT(*)")."]</a>\n";
+    echo "<br><a href=\"".$sess->url('admfaq.php3')."\" class=\"menus\">"
+      .$t->translate('Q&A')." [".$db->f("COUNT(*)")."]</a>\n";
+  }
+
+  if (($config_perm_admdoco == 'all') 
+      || (isset($perm) && $perm->have_perm($config_perm_admdoco))  
+      && !($logout)) {
+    $db->query("SELECT COUNT(*) FROM doco");
+    $db->next_record();
+    echo "<br><a href=\"".$sess->url('admdoco.php3')."\" class=\"menus\">"
+      .$t->translate('AdmDoco')." [".$db->f("COUNT(*)")."]</a>\n";
   }
 
 ?>
