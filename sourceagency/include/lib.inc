@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.39 2002/05/28 08:55:18 riessen Exp $
+# $Id: lib.inc,v 1.40 2002/05/29 14:57:28 riessen Exp $
 #
 ######################################################################
 
@@ -1451,18 +1451,12 @@ function lib_previous_comment($proid, $type, $number, $ref, $text)
 
 function lib_show_comments_on_it($proid, $type_cmt, $number, $cmt_id)
 {
-
-    if (isset($number) && !empty($number)) {
-        $number_selection = "AND number='$number'";
-    }
-    else {
-        $number_selection = "AND number='0'";
-    }
+    $number_selection = ( isset($number) && !empty($number) ? $number:'0' );
 
     $db2 = new DB_SourceAgency;
     $db2->query("SELECT * FROM comments,auth_user WHERE proid='$proid' AND "
-               ."type='" . $type_cmt . "' " . $number_selection
-               . " AND ref='$cmt_id' AND user_cmt=username "
+               ."type='" . $type_cmt . "' AND number='" . $number_selection
+               . "' AND ref='$cmt_id' AND user_cmt=username "
                . "ORDER BY creation_cmt ASC");
 
     if ($db2->num_rows() > 0) {

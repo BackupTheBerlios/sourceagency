@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: viewslib.inc,v 1.5 2002/05/22 11:49:59 riessen Exp $
+# $Id: viewslib.inc,v 1.6 2002/05/29 14:57:28 riessen Exp $
 #
 ######################################################################
 
@@ -31,59 +31,96 @@ function views_form($proid) {
   }
 
   $bx->box_begin();
-  $bx->box_title($t->translate("Configure Information Access in this Project"));
+  $bx->box_title($t->translate("Configure Information Access in "
+                               ."this Project"));
   $bx->box_body_begin();
   htmlp_form_action("PHP_SELF",array("proid" => $proid),"POST");
 
   $bx->box_columns_begin(2);
 
+  $nbsp = ' &nbsp; &nbsp; &nbsp; ';
+  $reco = $t->translate( 'Recommended' );
+  $ebody = $t->translate( 'Everybody' );
+  $ppart = $t->translate( 'Project Participants' );
+  $reged = $t->translate( 'Registered' );
+  $pinit = $t->translate( 'Project Initiator' );
+
   // 1
-  $bx->box_column ("right","30%","","<b>".$t->translate("View Project Configuration")."</b>: ");
-  $bx->box_column ("left","70%","",views_select_view($proid,"configure",$configure)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Project Participants</i>)");
+  $bx->box_column ("right","30%","","<b>"
+                   .$t->translate("View Project Configuration")."</b>: ");
+  $bx->box_column ("left","70%","",
+                   views_select_view($proid,"configure",
+                   $configure).$nbsp."(".$reco . ": <i>".$ppart."</i>)");
   $bx->box_next_row_of_columns();
 
   // 2
-  $bx->box_column ("right","30%","","<b>".$t->translate("Write and Modify news")."</b>: ");
-  $bx->box_column ("left","70%","",views_select_view($proid,"news",$news)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Project Initiator</i>)");
+  $bx->box_column ("right","30%","","<b>"
+                   .$t->translate("Write and Modify news")."</b>: ");
+  $bx->box_column ("left","70%","",
+                   views_select_view($proid,"news",$news).$nbsp."("
+                   .$reco . ": <i>".$pinit."</i>)");
   $bx->box_next_row_of_columns();
 
   // 3
-  $bx->box_column ("right","30%","","<b>".$t->translate("Write comments")."</b>: ");
-  $bx->box_column ("left","70%","",views_select_view($proid,"comments",$comments)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Registered</i>)");
+  $bx->box_column ("right","30%","","<b>"
+                   .$t->translate("Write comments")."</b>: ");
+  $bx->box_column ("left","70%","",
+                   views_select_view($proid,"comments",$comments).$nbsp
+                   ."(".$reco . ": <i>".$reged."</i>)");
   $bx->box_next_row_of_columns();
 
   // 4
-  $bx->box_column ("right","30%","","<b>".$t->translate("See Project History")."</b>: ");
-  $bx->box_column ("left","70%","",views_select_view($proid,"history",$history)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Everybody</i>)");
+  $bx->box_column ("right","30%","","<b>"
+                   .$t->translate("See Project History")."</b>: ");
+  $bx->box_column ("left","70%","",
+                   views_select_view($proid,"history",$history).$nbsp."("
+                   .$reco . ": <i>".$ebody."</i>)");
   $bx->box_next_row_of_columns();
 
   // 5
-  $bx->box_column ("right","30%","","<b>".$t->translate("See Step 3 (Milestones)")."</b>: ");
-  $bx->box_column ("left","70%","",views_select_view($proid,"step3",$step3)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Everybody</i>)");
+  $bx->box_column ("right","30%","","<b>"
+                   .$t->translate("See Step 3 (Milestones)")."</b>: ");
+  $bx->box_column ("left","70%","",
+                   views_select_view($proid,"step3",$step3).$nbsp."(".$reco 
+                   . ": <i>".$ebody."</i>)");
   $bx->box_next_row_of_columns();
 
   // 6
-  $bx->box_column ("right","30%","","<b>".$t->translate("See Step 4 (Referees)")."</b>: ");
-  $bx->box_column ("left","70%","",views_select_view($proid,"step4",$step4)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Everybody</i>)");
+  $bx->box_column ("right","30%","","<b>"
+                   .$t->translate("See Step 4 (Referees)")."</b>: ");
+  $bx->box_column ("left","70%","",
+                   views_select_view($proid,"step4",$step4).$nbsp."(".$reco 
+                   . ": <i>".$ebody."</i>)");
   $bx->box_next_row_of_columns();
 
   // 7
-  $bx->box_column ("right","30%","","<b>".$t->translate("See Step 5 (Project Follow-up)")."</b>: ");
-  $bx->box_column ("left","70%","",views_select_view($proid,"step5",$step5)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Everybody</i>)");
+  $bx->box_column ("right","30%","","<b>"
+                   .$t->translate("See Step 5 (Project Follow-up)")."</b>: ");
+  $bx->box_column ("left","70%","",
+                   views_select_view($proid,"step5",$step5).$nbsp."(".$reco 
+                   . ": <i>".$ebody."</i>)");
   $bx->box_next_row_of_columns();
 
   // 8
-  $bx->box_column ("right","30%","","<b>".$t->translate("See Developing Cooperation Proposals")."</b>: ");
-  $bx->box_column ("left","70%","",views_select_view($proid,"cooperation",$cooperation)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Everybody</i>)");
+  $bx->box_column ("right","30%","","<b>"
+                   .$t->translate("See Developing Cooperation Proposals")
+                   ."</b>: ");
+  $bx->box_column ("left","70%","",
+                   views_select_view($proid,"cooperation",$cooperation).$nbsp
+                   ."(".$reco . ": <i>".$ebody."</i>)");
   $bx->box_next_row_of_columns();
 
   // 9
-  $bx->box_column ("right","30%","","<b>".$t->translate("Project Permission Access")."</b>: ");
-  $bx->box_column ("left","70%","",views_select_view($proid,"views",$views)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Project Participants</i>)");
+  $bx->box_column ("right","30%","","<b>"
+                   .$t->translate("Project Permission Access")."</b>: ");
+  $bx->box_column ("left","70%","",views_select_view($proid,"views",$views)
+                   .$nbsp."(".$reco . ": <i>".$ppart."</i>)");
   $bx->box_next_row_of_columns();
 
   $bx->box_column("right","30%","","&nbsp;");
-  $bx->box_column("left","70%","",html_form_submit("Preview","preview").html_form_submit("Submit","submit"));
+  $bx->box_column("left","70%","",
+                  html_form_submit("Preview","preview")
+                  .html_form_submit("Submit","submit"));
   htmlp_form_end();
   $bx->box_columns_end();
   $bx->box_body_end();
@@ -91,7 +128,7 @@ function views_form($proid) {
 }
 
 function views_preview($proid) {
-  global $t, $auth, $bx, $db, $sess, $configure, $news, $comments, $history, $step3, $step4, $step5, $cooperation, $views;
+  global $t, $auth, $bx, $configure, $news, $comments, $history, $step3, $step4, $step5, $cooperation, $views;
 
   $bx->box_begin();
   $bx->box_title("<center><b>".$t->translate("PREVIEW")."</b></center>");
@@ -215,47 +252,61 @@ function views_show($proid) {
   }
 }
 
-function views_insert($proid,$configure,$views,$news,$comments,$history,$step3,$step4,$step5,$cooperation) {
+function views_insert($proid,$configure,$views,$news,$comments,
+                        $history,$step3,$step4,$step5,$cooperation) {
   global $db;
 
-  views_modify($proid,$configure,$views,$news,$comments,$history,$step3,$step4,$step5,$cooperation);
+  views_modify($proid,$configure,$views,$news,$comments,$history,
+               $step3,$step4,$step5,$cooperation);
 }
 
-function views_modify($proid,$configure,$views,$news,$comments,$history,$step3,$step4,$step5,$cooperation) {
+function views_modify($proid,$configure,$views,$news,$comments,$history,
+                     $step3,$step4,$step5,$cooperation) {
   global $db;
 
-  $db->query("UPDATE views SET  configure='$configure', views='$views', news='$news', comments='$comments', history='$history', step3='$step3', step4='$step4', step5='$step5',cooperation='$cooperation' WHERE proid='$proid'");
+  $db->query("UPDATE views SET  configure='$configure', views='$views', "
+             ."news='$news', comments='$comments', history='$history', "
+             ."step3='$step3', step4='$step4', step5='$step5',"
+             ."cooperation='$cooperation' WHERE proid='$proid'");
   views_show($proid);
 }
 
 function views_select_view($proid,$on_what,$selected) {
-
-  $return = html_select($on_what);
-
-  if (!isset($selected) || empty($selected)) {
-	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT $on_what FROM views WHERE proid='$proid'");
-	$db_local->next_record();
-	$selected = $db_local->f($on_what);
-  }
-
-  // WISH: config.inc should be not required another time as it has already been done at the beginning of the page
-  include("config.inc");
-
-  while (list(, $value) = each($views_array)) {
-	if ($on_what=="news") {
-		if ($value!="Project Participants" && $value!="Project Sponsors" && $value!="Project Developers" && $value !="Project Initiator") continue; 
-	} else if ($on_what=="comments") {
-		if ($value=="Everybody") continue;
-	}
-
-	if ($value == $selected) $select="selected";
-	else $select="";
-	$return .= html_select_option($value,$select,$value);
-  }
-  $return .= html_select_end();
-
-  return($return);
+    global $t;
+    
+    $return = html_select($on_what);
+    
+    if (!isset($selected) || empty($selected)) {
+        $db_local = new DB_SourceAgency;
+        $db_local->query("SELECT $on_what FROM views WHERE proid='$proid'");
+        $db_local->next_record();
+        $selected = $db_local->f($on_what);
+    }
+    
+    // WISH: config.inc should be not required another time as it has 
+    // WISH: already been done at the beginning of the page
+    include("config.inc");
+    
+    while (list(, $value) = each($views_array)) {
+        if ($on_what=="news") {
+            if ($value!="Project Participants" 
+            && $value!="Project Sponsors" 
+            && $value!="Project Developers" 
+            && $value !="Project Initiator") {
+                continue; 
+            }
+        } else if ($on_what=="comments") {
+            if ($value=="Everybody") { 
+                continue; 
+            }
+        }
+        
+        $return .= html_select_option( $value,( $value == $selected ), 
+                                                       $t->translate($value));
+    }
+    $return .= html_select_end();
+    
+    return($return);
 }
 
 ?>
