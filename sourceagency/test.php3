@@ -181,16 +181,18 @@ include("config.inc");
 	<LI>Have you introduced the correct database parameters (<I>Host</I>, <I>Database</I> name, <I>User</I> name and <I>Password</I>) in the include/local.inc file?
         <LI>Have you created the database structures in the database? (you have got them in the <I>sql</I> subdirectory)
         <LI>Is your database running? ;-)
+        <?php
+        $db = new DB_SourceAgency;
+        ?>
         <li>Database configuration:
           <ul>
-           <li> Host <b><?php $DB_SourceAgency->Host ?></b>
-           <li> Database <b><?php $DB_SourceAgency->SourceAgency ?></b>
-           <li> User <b><?php $DB_SourceAgency->User ?></b>
+           <li> Host <b><?php $db->Host ?></b>
+           <li> Database <b><?php $db->SourceAgency ?></b>
+           <li> User <b><?php $db->User ?></b>
            <li> Password <b>??????</b>
           </ul>
 	</UL>
         <?php
-        $db = new DB_SourceAgency;
         if ($db->query("SELECT * FROM software")): ?>
             <li><font color="green">Created a DB_SourceAgency database connection successfully.</font></li>
         <?php endif; ?>
