@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: followuplib.inc,v 1.11 2002/05/13 10:23:48 riessen Exp $
+# $Id: followuplib.inc,v 1.12 2002/07/02 10:40:35 riessen Exp $
 #
 ######################################################################
 
@@ -556,7 +556,7 @@ function followup_referee_decision($selected)
 
 function followup_milestone_schedule($proid, $milestone_number, $count)
 {
-    global $db, $bx;
+    global $db, $bx, $t;
 
     $db->query("SELECT release FROM milestones WHERE number='$milestone_number' AND proid='$proid'");
     $db->next_record();
@@ -567,7 +567,7 @@ function followup_milestone_schedule($proid, $milestone_number, $count)
     $days_left = ($release_date - $current_time)/(3600 * 24);
 
     $bx->box_begin();
-    $bx->box_title("Current Milestone Schedule Status");
+    $bx->box_title($t->translate("Current Milestone Schedule Status"));
     $bx->box_body_begin();
 
     switch($count) {
@@ -603,7 +603,7 @@ function followup_milestone_schedule($proid, $milestone_number, $count)
         print "<p>Sponsors have rejected the current milestone (milestone number <b>$milestone_number</b>).\n";
         print "<p>The referee is studying it and will give a final decision soon.\n";
 	if(is_referee($proid)) {
-            print "<p>You are this project´s referee. You can decide whether the milestone fullfil its goals or not ".html_link("step5_referee.php3",array("proid"=>$proid),"in this page");
+            print "<p>You are this project's referee. You can decide whether the milestone fullfil its goals or not ".html_link("step5_referee.php3",array("proid"=>$proid),"in this page");
         }
         break;
     case '3':
