@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.23 2002/03/21 12:42:22 riessen Exp $
+# $Id: lib.inc,v 1.24 2002/03/27 12:54:29 riessen Exp $
 #
 ######################################################################
 
@@ -606,7 +606,33 @@ function calendar_box($proid) {
     $bx->box_column ("left","","","&nbsp;".$db_general->f("type"));
     
     $bx->box_next_row_of_columns();
+
+    $bx->box_column ("left","","","<b>"
+                     .$t->translate("Project Nature")
+                     .":</b>");
+    // the nature is whether the project is a developing or a sponsored
+    // project. we work it out from the permissions on the project initiator
+    // if they are a devel, then it must be a developing.
+    $perms = $db_general->f("perms");
+    $nature = ( ereg( "devel", $perms ) ? 1 : 0 );
+    $nature += ( ereg( "sponsor", $perms ) ? 2 : 0 );
+    switch ( $nature ) {
+        case 1:
+            $nature = "Developing"; 
+            break;
+        case 2:
+            $nature = "Sponsoring";
+            break;
+        case 3:
+            $nature = "Developing and Sponsoring"; 
+            break;
+        default:
+            $nature = "Unknown";
+    }
+    $bx->box_column ("left","","", "&nbsp;" . $nature);
     
+    $bx->box_next_row_of_columns();
+
     $bx->box_column ("left","","","<b>"
                      .$t->translate("Project Volume")
                      .":</b>");
@@ -620,12 +646,7 @@ function calendar_box($proid) {
     $db_local->query("SELECT SUM(budget) FROM sponsoring WHERE "
                      . "proid='$proid' AND status='A'");
     $db_local->next_record();
-    if ($db_local->num_rows() == 0) {
-        $budget = 0;
-    } 
-    // FIXME: this needs an else???? i.e. if no rows, then don't 
-    // FIXME: request the sum of the budget!!!
-    $budget = $db_local->f("SUM(budget)");
+    $budget = ( $db_local->num_rows() == 0 ? 0 : $db_local->f("SUM(budget)") );
     
     $bx->box_column ("left","","","<b>"
                      .$t->translate("Current project budget")
