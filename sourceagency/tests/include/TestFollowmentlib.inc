@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowmentlib.inc,v 1.2 2002/02/07 12:24:17 riessen Exp $
+# $Id: TestFollowmentlib.inc,v 1.3 2002/04/23 10:02:31 riessen Exp $
 #
 ######################################################################
 
@@ -77,18 +77,18 @@ extends UnitTest
         $db = new DB_SourceAgency;
         show_followment($proid[0]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 73 );
+        $this->_testFor_captured_length( 73, "test 1" );
 
         $this->_testFor_pattern( $text, ("There have not been posted any "
                                          ."milestones by the project main "
-                                         ."developer[.]"));
+                                         ."developer[.]"), "test 1");
 
         // second call, num_row == 1, next_record == false
         capture_reset_and_start();
         $db = new DB_SourceAgency;
         show_followment($proid[1]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 792 );
+        $this->_testFor_captured_length( 859, "test 2" );
 
         $patterns=array(0=>("<font color=\"#000000\"><b>Milestones<\/b>"
                             ."<\/font>"),
@@ -98,17 +98,17 @@ extends UnitTest
                             ."Product<\/b><\/td><td align=center><b>Payment"
                             ."<\/b><\/td><td align=center><b>Status<\/b>"
                             ."<\/td><td align=center><b>Creation<\/b><\/td>"
-                            ."<\/tr>\n<\/table>\n<\/font><\/td><\/tr>\n<!--"
-                            ." box body end -->\n<\/table>\n<\/td><\/tr>"
-                            ."<\/table><br>\n<!-- box end -->"));
-        $this->_testFor_patterns( $text, $patterns, 2 );
+                            ."<\/tr>[ \n]+<\/table>[ \n]+<\/font>[ \n]+<\/td>[ \n]+<\/tr>[ \n]+<!--"
+                            ." box body end -->[ \n]+<\/table>[ \n]+<\/td><\/tr>"
+                            ."<\/table><br>[ \n]+<!-- box end -->"));
+        $this->_testFor_patterns( $text, $patterns, 2, "test 2" );
 
         // third call, num_row == 3, next_record == rows:0,1,2
         capture_reset_and_start();
         $db = new DB_SourceAgency;
         show_followment($proid[2]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1332 );
+        $this->_testFor_captured_length( 1399, "test 3" );
 
         $this->_testFor_pattern( $text, ("<td align=center><b>Number<\/b>"
                                          ."<\/td><td align=center><b>Goals"
@@ -137,7 +137,8 @@ extends UnitTest
                                          ."<\/td><td><b>product_2<\/b><\/td>"
                                          ."<td><b>payment_2<\/b><\/td><td>"
                                          ."<b>Proposed<\/b><\/td><td><b><\/b>"
-                                         ."<\/td><\/tr>\n<\/table>\n"));
+                                         ."<\/td><\/tr>\n<\/table>\n"), 
+                                 "test 3");
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );

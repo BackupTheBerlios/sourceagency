@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestInsertlib.inc,v 1.2 2002/02/07 12:24:17 riessen Exp $
+# $Id: TestInsertlib.inc,v 1.3 2002/04/23 10:03:31 riessen Exp $
 #
 ######################################################################
 
@@ -58,40 +58,46 @@ extends UnitTest
         capture_reset_and_start();
         insert_form();
         $text = capture_stop_and_get();
-        $this->_testFor_length( 2877 );
+        $this->_testFor_captured_length( 3605, "test 1" );
 
         $patterns = array( 0=>("<font color=\"#000000\"><b>New "
                                ."Project<\/b><\/font>"),
                            1=>"<form action=\"insert.php3\" method=\"POST\">",
                            2=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                               ."#FFFFFF\"><b>Project Title<\/b> [(]128[)]: "
-                               ."<\/td>"),
+                               ."#FFFFFF\">[ \n]+<b>Project Title<\/b> "
+                               ."[(]128[)]:[ \n]+<\/td>"),
                            3=>("<td align=\"left\" width=\"70%\" bgcolor=\""
-                               ."#FFFFFF\"><input type=\"text\" name=\""
+                               ."#FFFFFF\">[ \n]+<input type=\"text\" name=\""
                                ."project_title\" size=\"40\" maxlength=\"128\""
                                ." value=\"this is the project_title\">"),
                            4=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                               ."#FFFFFF\"><b>Type<\/b>: <\/td>"),
+                               ."#FFFFFF\">[ \n]+<b>Type<\/b>:[ \n]+<\/td>"),
                            5=>("<td align=\"left\" width=\"70%\" bgcolor=\""
-                               ."#FFFFFF\"><select name=\"type\">"),
+                               ."#FFFFFF\">[ \n]+<select name=\"type\" "
+                               ."size=\"0\">"),
         
                            6=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                               ."#FFFFFF\"><b>Brief description<\/b> [(][*]"
-                               ."[)]: <\/td>\n<!-- Column finishes -->\n<!-- "
-                               ."New Column starts -->\n<td align=\"left\" "
-                               ."width=\"70%\" bgcolor=\"#FFFFFF\"><textarea "
-                               ."cols=\"40\" rows=\"7\" name=\"description\" "
+                               ."#FFFFFF\">[ \n]+<b>Brief description<\/b> "
+                               ."[(][*][)]:[ \n]+<\/td>[ \n]+<!-- Column "
+                               ."finishes -->[ \n]+<!-- "
+                               ."New Column starts -->[ \n]+<td align="
+                               ."\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
+                               ."[ \n]+<textarea "
+                               ."name=\"description\" cols=\"40\" rows=\"7\" "
                                ."wrap=\"virtual\" maxlength=\"255\">this is "
-                               ."the description<\/textarea>\n<\/td>"),
+                               ."the description<\/textarea>[ \n]+<\/td>"),
                            7=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                               ."#FFFFFF\"><b>Project Volume<\/b>: <\/td>\n"
-                               ."<!-- Column finishes -->\n<!-- New Column "
-                               ."starts -->\n<td align=\"left\" width=\"70%\""
-                               ." bgcolor=\"#FFFFFF\"><select name="
-                               ."\"volume\">"),
+                               ."#FFFFFF\">[ \n]+<b>Project Volume<\/b>:"
+                               ."[ \n]+<\/td>[ \n]+"
+                               ."<!-- Column finishes -->[ \n]+<!-- "
+                               ."New Column "
+                               ."starts -->[ \n]+<td align=\"left\" "
+                               ."width=\"70%\""
+                               ." bgcolor=\"#FFFFFF\">[ \n]+<select name="
+                               ."\"volume\" size=\"0\">"),
                            8=>("<td align=\"left\" width=\"70%\" bgcolor=\""
-                               ."#FFFFFF\"><input type=\"submit\" value=\""
-                               ."Submit\" name=\"Submit\">"));
+                               ."#FFFFFF\">[ \n]+<input type=\"submit\" "
+                               ."value=\"Submit\" name=\"Submit\">"));
         $this->_testFor_patterns( $text, $patterns, 9 );
     }
 
@@ -105,16 +111,16 @@ extends UnitTest
         capture_reset_and_start();
         project_title_not_set();
         $text = capture_stop_and_get();
-        $this->_testFor_length( 703 );
+        $this->_testFor_captured_length( 807, "test 1" );
 
         $patterns = array( 0=>"<font color=\"#000000\"><b>Error<\/b><\/font>",
 
-                           1=>("<font color=\"#FF2020\">No Project Title "
-                               ."specified.<br>Please select <a href=\""
+                           1=>("<font color=\"#FF2020\">[ \n]+No Project Title"
+                               ." specified.<br>Please select <a href=\""
                                ."insform.php3[?]description=this[+]is[+]the"
                                ."[+]description[&]type=this[+]is[+]the[+]type"
                                ."[&]volume=this[+]is[+]the[+]volume\">New "
-                               ."Projects<\/a><\/font>"));
+                               ."Projects<\/a>[ \n]+<\/font>"));
         $this->_testFor_patterns( $text, $patterns, 2 );
     }
 
@@ -128,15 +134,15 @@ extends UnitTest
         capture_reset_and_start();
         description_not_set();
         $text = capture_stop_and_get();
-        $this->_testFor_length( 713 );
+        $this->_testFor_captured_length( 817, "test 1" );
         
         $patterns = array( 0=>"<font color=\"#000000\"><b>Error<\/b><\/font>",
-                           1=>("<font color=\"#FF2020\">No Project "
+                           1=>("<font color=\"#FF2020\">[ \n]+No Project "
                                ."Description specified.<br>Please select <a "
                                ."href=\"insform.php3[?]project_title=this[+]is"
                                ."[+]the[+]project[+]title[&]type=this[+]is[+]"
                                ."the[+]type[&]volume=this[+]is[+]the[+]"
-                               ."volume\">New Projects<\/a><\/font>"));
+                               ."volume\">New Projects<\/a>[ \n]+<\/font>"));
         $this->_testFor_patterns( $text, $patterns, 2 );
     }
 
@@ -168,7 +174,7 @@ extends UnitTest
         $this->assertEquals( 1, no_other_project_with_same_title( 
             $pt[0]["project_title"] ));
         $text = capture_stop_and_get();
-        $this->_testFor_length( 0 );
+        $this->_testFor_captured_length( 0, "test 1" );
 
 
         //
@@ -179,12 +185,12 @@ extends UnitTest
         $this->assertEquals( 0, no_other_project_with_same_title( 
             $pt[1]["project_title"] ));
         $text = capture_stop_and_get();
-        $this->_testFor_length( 640 );
-        $this->_testFor_pattern( $text, ("<font color=\"#FF2020\">Another "
+        $this->_testFor_captured_length( 743, "test 2" );
+        $this->_testFor_pattern( $text, ("<font color=\"#FF2020\">[ \n]+Another "
                                          ."project with that title already "
                                          ."exists.<br>Please select <a href"
                                          ."=\"insform.php3\">New Projects"
-                                         ."<\/a>"));
+                                         ."<\/a>"), "test 2");
 
         //
         // third call, num_row == 2
@@ -194,7 +200,7 @@ extends UnitTest
         $this->assertEquals( 1, no_other_project_with_same_title( 
             $pt[2]["project_title"] ));
         $text = capture_stop_and_get();
-        $this->_testFor_length( 0 );
+        $this->_testFor_captured_length( 0, "test 3" );
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );

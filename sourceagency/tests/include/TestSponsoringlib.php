@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSponsoringlib.php,v 1.7 2002/04/12 14:38:16 riessen Exp $
+# $Id: TestSponsoringlib.php,v 1.8 2002/04/23 10:04:21 riessen Exp $
 #
 ######################################################################
 
@@ -65,58 +65,82 @@ extends UnitTest
         capture_reset_and_start();
         sponsoring_form( "proid" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 6408 + strlen( $sess->self_url() ));
+        $this->_testFor_captured_length( 8304 + strlen( $sess->self_url() ),
+                                         "test 1" );
 
         $ps=array( 0=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                       ."\"><select name=\"valid_day\">\n<option value=\"1"
-                       ."\">1\n<option value=\"2\">2\n<option selected "
-                       ."value=\"3\">3\n"),
-                   1=>("<select name=\"valid_month\">\n<option value=\"1\">"
-                       ."January\n<option value=\"2\">February\n<option "
-                       ."value=\"3\">March\n<option selected value=\"4\""
-                       .">April\n"),
-                   2=>("<select name=\"valid_year\">\n<option selected "
-                       ."value=\"2001\">2001\n"),
+                       ."\">[ \n]+<select name=\"valid_day\" size=\"0\">"
+                       ."[ \n]+<option value=\"1"
+                       ."\">1[ \n]+<option value=\"2\">2[ \n]+<option selected"
+                       ." value=\"3\">3[ \n]+"),
+                   1=>("<select name=\"valid_month\" size=\"0\">[ \n]+"
+                       ."<option value=\"1\">"
+                       ."January[ \n]+<option value=\"2\">February[ \n]+"
+                       ."<option "
+                       ."value=\"3\">March[ \n]+<option selected value=\"4\""
+                       .">April[ \n]+"),
+                   2=>("<select name=\"valid_year\" size=\"0\">[ \n]+"
+                       ."<option selected "
+                       ."value=\"2001\">2001[ \n]+"),
                    3=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\""
-                       ."><select name=\"begin_day\">\n<option value=\"1\">"
-                       ."1\n<option value=\"2\">2\n<option value=\"3\">3\n"
-                       ."<option selected value=\"4\">4\n"),
-                   4=>("<select name=\"begin_month\">\n<option value=\"1\""
-                       .">January\n<option value=\"2\">February\n<option "
-                       ."value=\"3\">March\n<option value=\"4\">April\n"
-                       ."<option selected value=\"5\">May\n"),
-                   5=>("<select name=\"begin_year\">\n<option value=\"2001"
-                       ."\">2001\n<option selected value=\"2002\">2002\n"),
+                       .">[ \n]+<select name=\"begin_day\" size=\"0\">"
+                       ."[ \n]+<option value=\"1\">"
+                       ."1[ \n]+<option value=\"2\">2[ \n]+<option "
+                       ."value=\"3\">3[ \n]+"
+                       ."<option selected value=\"4\">4[ \n]+"),
+                   4=>("<select name=\"begin_month\" size=\"0\">[ \n]+"
+                       ."<option value=\"1\""
+                       .">January[ \n]+<option value=\"2\">February[ \n]+"
+                       ."<option "
+                       ."value=\"3\">March[ \n]+<option value=\"4\">"
+                       ."April[ \n]+"
+                       ."<option selected value=\"5\">May[ \n]+"),
+                   5=>("<select name=\"begin_year\" size=\"0\">[ \n]+"
+                       ."<option value=\"2001"
+                       ."\">2001[ \n]+<option selected value=\"2002\">"
+                       ."2002[ \n]+"),
                    6=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                       ."\"><select name=\"finish_day\">\n<option value=\""
-                       ."1\">1\n<option value=\"2\">2\n<option value=\"3\""
-                       .">3\n<option value=\"4\">4\n<option selected "
-                       ."value=\"5\">5\n"),
-                   7=>("<select name=\"finish_month\">\n<option value=\"1"
-                       ."\">January\n<option value=\"2\">February\n<option "
-                       ."value=\"3\">March\n<option value=\"4\">April\n"
-                       ."<option value=\"5\">May\n<option selected value"
-                       ."=\"6\">June\n"),
-                   8=>("<select name=\"finish_year\">\n<option value=\"2001"
-                       ."\">2001\n<option value=\"2002\">2002\n<option "
-                       ."selected value=\"2003\">2003\n"),
+                       ."\">[ \n]+<select name=\"finish_day\" size=\"0\">"
+                       ."[ \n]+<option value=\""
+                       ."1\">1[ \n]+<option value=\"2\">2[ \n]+<option "
+                       ."value=\"3\""
+                       .">3[ \n]+<option value=\"4\">4[ \n]+<option selected "
+                       ."value=\"5\">5[ \n]+"),
+                   7=>("<select name=\"finish_month\" size=\"0\">[ \n]+"
+                       ."<option value=\"1"
+                       ."\">January[ \n]+<option value=\"2\">February[ \n]+"
+                       ."<option "
+                       ."value=\"3\">March[ \n]+<option value=\"4\">April"
+                       ."[ \n]+"
+                       ."<option value=\"5\">May[ \n]+<option selected value"
+                       ."=\"6\">June[ \n]+"),
+                   8=>("<select name=\"finish_year\" size=\"0\">[ \n]+"
+                       ."<option value=\"2001"
+                       ."\">2001[ \n]+<option value=\"2002\">2002[ \n]+"
+                       ."<option "
+                       ."selected value=\"2003\">2003[ \n]+"),
                    9=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\"><b>Budget [(]in euro[)]<\/b> [(]12[)]: <\/td>"),
+                       ."\">[ \n]+<b>Budget [(]in euro[)]<\/b> [(]12[)]:"
+                       ."[ \n]+<\/td>"),
                    10=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                        ."\"><input type=\"text\" name=\"budget\" size=\"12"
+                        ."\">[ \n]+<input type=\"text\" name=\"budget\" "
+                        ."size=\"12"
                         ."\" maxlength=\"12\" value=\"this is the budget\""
-                        .">\n<\/td>\n"),
+                        .">[ \n]+<\/td>[ \n]+"),
                    11=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                        ."\"><b>Sponsoring Comment<\/b> [(][*][)]: <\/td>\n"),
+                        ."\">[ \n]+<b>Sponsoring Comment<\/b> [(][*][)]:"
+                        ."[ \n]+<\/td>\n"),
                    12=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                        ."\"><textarea cols=\"40\" rows=\"7\" name=\""
-                        ."sponsoring_text\" wrap=\"virtual\" maxlength=\""
-                        ."255\">this is the sponsoring text<\/textarea>\n"
-                        ."<\/td>\n"),
+                        ."\">[ \n]+<textarea name=\"sponsoring_text\" "
+                        ."cols=\"40\" rows=\"7\" "
+                        ."wrap=\"virtual\" maxlength=\""
+                        ."255\">this is the sponsoring text<\/textarea>[ \n]+"
+                        ."<\/td>[ \n]+"),
                    13=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                        ."\"><input type=\"submit\" value=\"Preview\" name"
-                        ."=\"preview\">\n<input type=\"submit\" value="
-                        ."\"Submit\" name=\"submit\">\n"));
+                        ."\">[ \n]+<input type=\"submit\" value=\"Preview\" "
+                        ."name"
+                        ."=\"preview\">[ \n]+<input type=\"submit\" value="
+                        ."\"Submit\" name=\"submit\">[ \n]+"));
         $this->_testFor_patterns( $text, $ps, 14 );
     }
 
@@ -185,17 +209,17 @@ extends UnitTest
         $db = new DB_SourceAgency;
         show_sponsorings( $db_d[0]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 84 );
+        $this->_testFor_captured_length( 84, "test 1" );
         $this->_testFor_pattern( $text, ("<p>There have not been posted any"
                                          ." sponsoring involvement wishes "
-                                         ."to this project.<p>"));
+                                         ."to this project.<p>"), "test 1");
 
         // second call, one record but don't do is_accepted_sponsor call
         capture_reset_and_start();
         $db = new DB_SourceAgency;
         show_sponsorings( $db_d[1]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 917 );
+        $this->_testFor_captured_length( 983, "test 2" );
         $ps=array( 0=>"<b>by username_0<\/b> - <\/b>\n",
                    1=>"<p><b>Max. sum of money:<\/b> budget_0 euros\n",
                    2=>"<br><b>Status:<\/b> Deleted\n",
@@ -212,15 +236,15 @@ extends UnitTest
                    8=>("<a href=\"comments_edit.php3[?]proid=proid_1&type="
                        ."Sponsoring&number=spoid_0&ref=0&subject=Comment"
                        ."[+]on[+]Sponsor[+]Involvement[+]%23spoid_0\">"
-                       ."Comment it!<\/a>\n"));
-        $this->_testFor_patterns( $text, $ps, 9 );
+                       ."Comment it!<\/a>"));
+        $this->_testFor_patterns( $text, $ps, 9, "test 2" );
 
         // third call, is_accepted_sponsor returns true after being called
         capture_reset_and_start();
         $db = new DB_SourceAgency;
         show_sponsorings( $db_d[2]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1188 );
+        $this->_testFor_captured_length( 1284, "test 3" );
         $ps=array(0=>("<font color=\"#000000\"><b>Sponsor Involvement<\/b>"
                       ."<\/font>\n"),
                   1=>"<b>by username_1<\/b> - <\/b>\n",
@@ -236,19 +260,19 @@ extends UnitTest
                       ."sponsoring_text_1\n"),
                   8=>("<b><a href=\"sponsoring_accepted.php3[?]proid="
                       ."proid_2&sponsor=username_1\">Accept this sponsor "
-                      ."involvement<\/a>\n"),
+                      ."involvement<\/a>"),
                   9=>("<a href=\"comments_edit.php3[?]proid=proid_2&type="
                       ."Sponsoring&number=spoid_1&ref=0&subject=Comment[+]"
                       ."on[+]Sponsor[+]Involvement[+]%23spoid_1\">Comment "
-                      ."it!<\/a>\n"));
-        $this->_testFor_patterns( $text, $ps, 10 );
+                      ."it!<\/a>"));
+        $this->_testFor_patterns( $text, $ps, 10, "test 3" );
 
         // fourth call, is_accepted_sponsor is called and returns false
         capture_reset_and_start();
         $db = new DB_SourceAgency;
         show_sponsorings( $db_d[3]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 952 );
+        $this->_testFor_captured_length( 1018, "test 4" );
         $ps=array( 0=>("<font color=\"#000000\"><b>Sponsor Involvement<\/b>"
                        ."<\/font>\n"),
                    1=>"<b>by username_2<\/b> - <\/b>\n",
@@ -265,8 +289,8 @@ extends UnitTest
                    8=>("<a href=\"comments_edit.php3[?]proid=proid_3&type"
                        ."=Sponsoring&number=spoid_2&ref=0&subject=Comment"
                        ."[+]on[+]Sponsor[+]Involvement[+]%23spoid_2\">"
-                       ."Comment it!<\/a>\n"));
-        $this->_testFor_patterns( $text, $ps, 9 );
+                       ."Comment it!<\/a>"));
+        $this->_testFor_patterns( $text, $ps, 9, "test 4" );
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -289,7 +313,8 @@ extends UnitTest
         capture_reset_and_start();
         sponsoring_preview( "dasdsa" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 975 + strlen( timestr( time() ) ) );
+        $this->_testFor_captured_length( 1073 + strlen( timestr( time() ) ),
+                                         "test 1" );
         $ps=array( 0=>("<font color=\"#000000\"><b><center><b>PREVIEW<\/b>"
                        ."<\/center><\/b><\/font>"),
                    1=>("<font color=\"#000000\"><b>Sponsor Involvement<\/b>"
@@ -501,7 +526,7 @@ extends UnitTest
                            $args[0]["f_day"], $args[0]["f_month"],
                            $args[0]["f_year"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 434 );
+        $this->_testFor_captured_length( 433, "test 1" );
         $this->_testFor_pattern( $text, ("<a href=\"personal[.]php3[?]"
                                          ."username=this[+]is[+]the[+]"
                                          ."username\">Personal Page<\/a>"));
@@ -518,7 +543,7 @@ extends UnitTest
                            $args[1]["f_day"], $args[1]["f_month"],
                            $args[1]["f_year"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 133 );
+        $this->_testFor_captured_length( 132, "test 2" );
         $this->_testFor_pattern( $text, ("<p><b>Congratulations<\/b>. You "
                                          ."are the first sponsor. You can "
                                          ."<a href=\"configure_edit.php3[?]"
@@ -539,7 +564,7 @@ extends UnitTest
                            $args[2]["f_day"], $args[2]["f_month"],
                            $args[2]["f_year"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 0 );
+        $this->_testFor_captured_length( 0, "test 3" );
 
         // fourth call: user has made too many contributions
         $db = new DB_SourceAgency;
@@ -553,7 +578,7 @@ extends UnitTest
                            $args[3]["f_day"], $args[3]["f_month"],
                            $args[3]["f_year"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 137 );
+        $this->_testFor_captured_length( 137, "test 4" );
         $this->_testFor_pattern( $text, ("<p><b>Database Failure:<\/b> it "
                                          ."seems you have more than one "
                                          ."sponsorship! Please advice the "
