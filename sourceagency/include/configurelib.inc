@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: configurelib.inc,v 1.5 2002/03/28 00:53:44 grex Exp $
+# $Id: configurelib.inc,v 1.6 2002/05/08 09:49:37 riessen Exp $
 #
 ######################################################################
 
@@ -104,15 +104,15 @@ function configure_preview($proid) {
     }
     if (is_project_initiator($proid))  {
         echo "<br><b>".$t->translate("Other tech_contents")
-          ."</b>: ".$t->translate("$other_tech_contents")."\n";
+          ."</b>: ".$t->translate($other_tech_contents)."\n";
     }
     if (is_developer())  {
         echo "<br><b>".$t->translate("Other developing proposals")."</b>: "
-            .$t->translate("$other_developing_proposals")."\n";
+            .$t->translate($other_developing_proposals)."\n";
     }
     if (is_sponsor() && is_project_initiator($proid))  {
         echo "<br><b>".$t->translate("Consultants")."</b>: "
-            .$t->translate("$consultants")."\n";
+            .$t->translate($consultants)."\n";
     }
     $bx->box_body_end();
     $bx->box_end();
@@ -221,57 +221,64 @@ function configure_insert($proid,$user) {
 }
 
 function configure_modify($proid,$user) {
-  global $db,$auth,$quorum,$consultants,$other_tech_contents,$other_developing_proposals;
+    global $db,$auth,$quorum,$consultants,$other_tech_contents,
+        $other_developing_proposals, $t;
 
-  if (project_type($proid)=="sponsored") {
-  	if (is_sponsor()) $query = "quorum='$quorum',consultants='$consultants',other_tech_contents='$other_tech_contents',other_developing_proposals='Yes',sponsor='$user'";
-	else $query = "developer='$user'";
-  } else {
-   	if (is_sponsor()) $query = "quorum='$quorum'"; 
-  	else $query = "developer='$user'";
-  }
+    if (project_type($proid)=="sponsored") {
+  	if ( is_sponsor() ) {
+            $query = "quorum='$quorum',consultants="
+                 ."'$consultants',other_tech_contents="
+                 ."'$other_tech_contents',"
+                 ."other_developing_proposals='Yes',"
+                 ."sponsor='$user'";
+        }
+	else {
+            $query = "developer='$user'";
+        }
+    } else {
+      $query = ( is_sponsor() ? "quorum='$quorum'" : "developer='$user'" );
+    }
 
-  $db->query("UPDATE configure SET $query WHERE proid='$proid'");
-  configure_show($proid);
-
-  include("monitorlib.inc");
-  include("config.inc");
-  monitor_mail($proid,"configure", "Configuration modified for project $proid", "An event has happened.");
-
-	// Insert into history
-  $db->query("INSERT history SET proid='$proid', history_user='$user', type='Configure', action='Project configuration modified'");
+    $db->query("UPDATE configure SET $query WHERE proid='$proid'");
+    configure_show($proid);
+    
+    include("monitorlib.inc");
+    include("config.inc");
+    monitor_mail($proid,"configure", 
+                 $t->translate('Configuration modified for project')." $proid",
+                 $t->translate("An event has happened."));
+    
+    // Insert into history
+    $db->query("INSERT history SET proid='$proid', history_user='$user', "
+               ."type='Configure', action='Project configuration modified'");
 }
 
 function select_quorum($selected) {
   global $auth;
 
-  $return = html_select("quorum");
-  for ($i=11; $i < 20; $i++) {
- 	if ($i*5 == $selected) $select="selected";
-	else $select="";
-	$return .= html_select_option(5*$i,$select,5*$i."%");
+  $ret = html_select("quorum");
+  for ( $i = 55; $i < 100; $i+=5 ) {
+      $select = ( $i == $selected ? "selected" : "" );
+      $ret .= html_select_option($i, $select, $i."%" );
   }
-  $return .=htmlp_select_end();
+  $ret .= html_select_end();
 
-  return($return);
+  return($ret);
 }
 
 function configure_first_time($proid) {
-
-	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT * FROM configure WHERE proid='$proid'");
-	if($db_local->num_rows() == 0) return 1;
-	else return 0;
+    $db_local = new DB_SourceAgency;
+    $db_local->query("SELECT * FROM configure WHERE proid='$proid'");
+    return ( $db_local->num_rows() == 0 ? 1 : 0 );
 }
 
 function project_type($proid) {
-
-	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT perms FROM description,auth_user WHERE proid='$proid' AND description_user=username");
-	$db_local->next_record();
-
-	if ($db_local->f("perms") == "sponsor") return "sponsored";
-	else return "developed";
+    $db_local = new DB_SourceAgency;
+    $db_local->query("SELECT perms FROM description,auth_user "
+                     ."WHERE proid='$proid' AND description_user=username");
+    $db_local->next_record();
+    
+    return ( $db_local->f("perms") == "sponsor" ? "sponsored" : "developed" );
 }
 
 ?>
