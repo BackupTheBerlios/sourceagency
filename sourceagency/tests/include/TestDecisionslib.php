@@ -5,7 +5,7 @@ c<?php
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDecisionslib.php,v 1.7 2002/06/26 09:57:26 riessen Exp $
+// $Id: TestDecisionslib.php,v 1.8 2002/06/26 10:29:52 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -736,8 +736,21 @@ extends UnitTest
         $db_config->add_query( sprintf( $qs[1], $args[1]['proid']), 2 );
         $db_config->add_record( array('SUM(budget)'=> 0 ), 2);
         $db = new DB_SourceAgency;
-        $this->assertEquals( 0, $this->capture_call( $fname,139,$args[1],
-                                                               false,false));
+        capture_reset_and_start();
+        $this->assertEquals( 0, call_user_func_array( $fname, $args[1] ) );
+        $this->set_text( capture_stop_and_get() );
+
+        // the line break symbols in the warning messages went from <br>
+        // in versions less than 4.1.X(??) to being <br /> and since there
+        // are two in a warning message, there are four extra characters
+        // hence this if statement
+        $search=array( "/.* in <b>/s", "/<\/b> on .*/s" );
+        $replace=array( "", "" );
+        $file = preg_replace( $search, $replace, $this->get_text() );
+        $sleng = ( $this->v_gt( "4.1.0", phpversion()) ? 73 + strlen( $file )
+                                                      : 77 + strlen( $file ));
+        $this->_testFor_string_length( $sleng );
+
         $this->_testFor_pattern( 'Division by zero in' );
 
         // test three: sum_step5 == 0

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestPersonallib.php,v 1.30 2002/06/14 09:14:12 riessen Exp $
+# $Id: TestPersonallib.php,v 1.31 2002/06/26 10:29:52 riessen Exp $
 #
 ######################################################################
 
@@ -65,7 +65,7 @@ extends UnitTest
     function setup() {
     }
     function tearDown() {
-        unset( $GLOBALS[ 'bx' ] );
+        unset_global( 'bx' );
     }
 
     function _testFor_project_link( $proid, $ptitle, $status ) {

@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisionslib.inc,v 1.14 2002/06/26 09:57:26 riessen Exp $
+# $Id: decisionslib.inc,v 1.15 2002/06/26 10:29:52 riessen Exp $
 #
 ######################################################################
 
@@ -657,6 +657,7 @@ function your_quota($proid)
     $db->query($query);
     $db->next_record();
 
+    // FIXME: division by zero error when project_budget equals zero
     print ( "<p>Your quota: <b>".$db->f("budget")."</b> euros (<b>"
             .(round(($db->f("budget")/project_budget($proid))*10000)/100)
             ."%</b> of the total project budget)\n" );

@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConsultantslib.php,v 1.11 2002/06/20 12:07:16 riessen Exp $
+// $Id: TestConsultantslib.php,v 1.12 2002/06/26 10:29:52 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -37,8 +37,7 @@ extends UnitTest
     function tearDown() {
         // remove the globally defined database object, it can affect 
         // other tests
-        unset( $GLOBALS['db'] );
-        unset( $GLOBALS['bx'] );
+        unset_global( 'db', 'bx' );
     }
 
     function testShow_consultants() {

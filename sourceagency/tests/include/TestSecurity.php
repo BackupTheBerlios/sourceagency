@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.23 2002/06/14 09:14:12 riessen Exp $
+# $Id: TestSecurity.php,v 1.24 2002/06/26 10:29:52 riessen Exp $
 #
 ######################################################################
 
@@ -1260,13 +1260,14 @@ extends UnitTest
             $auth->set_perm( $d["p".$idx] );
             $this->assertEquals( $d["e".$idx], 
                                  is_main_developer( $d["r".$idx] ), 
-                                 "Index was " . $idx );
+                                 "Index was " . $idx, "Test $idx" );
         }
 
         // unset auth and check again.
-        unset( $auth );
-        $this->assertEquals( false, isset( $auth ) );
-        $this->assertEquals( 0, is_main_developer( $proid4 ), __LINE__ );
+        unset( $GLOBALS['auth'] );
+        $this->assertEquals(true, isset($auth),'Line: '.__LINE__ );
+        $this->assertEquals(false, isset($GLOBALS['auth']),'Line: '.__LINE__ );
+        $this->assertEquals( 0,is_main_developer($proid4),'Line: '.__LINE__);
 
         // if using a database, then ensure that it didn't fail
         $this->_check_db( $db_config );

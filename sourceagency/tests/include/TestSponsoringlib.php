@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSponsoringlib.php,v 1.17 2002/06/14 09:14:12 riessen Exp $
+# $Id: TestSponsoringlib.php,v 1.18 2002/06/26 10:29:52 riessen Exp $
 #
 ######################################################################
 
@@ -48,8 +48,7 @@ extends UnitTest
     function tearDown() {
         // ensure that the next test doesn't have a predefined global
         // database object
-        unset( $GLOBALS[ 'db' ] );
-        unset( $GLOBALS[ 'bx' ] );
+        unset_global( 'db', 'bx' );
     }
 
     function testSponsoring_form() {

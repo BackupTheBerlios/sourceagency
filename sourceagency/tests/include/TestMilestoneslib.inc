@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMilestoneslib.inc,v 1.24 2002/06/14 09:14:12 riessen Exp $
+# $Id: TestMilestoneslib.inc,v 1.25 2002/06/26 10:29:52 riessen Exp $
 #
 ######################################################################
 
@@ -49,8 +49,7 @@ extends UnitTest
     function tearDown() {
         // ensure that the next test does not have a predefined global
         // database object
-        unset( $GLOBALS[ 'db' ] );
-        unset( $GLOBALS[ 'bx' ] );
+        unset_global( 'db', 'bx' );
     }
 
     function testMilestones_propose_milestone() {

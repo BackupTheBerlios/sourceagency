@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestRefereeslib.php,v 1.3 2002/06/14 09:14:12 riessen Exp $
+// $Id: TestRefereeslib.php,v 1.4 2002/06/26 10:29:52 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -36,8 +36,7 @@ extends UnitTest
     function setup() {
     }
     function tearDown() {
-        unset( $GLOBALS['bx'] );
-        unset( $GLOBALS['db'] );
+        unset_global( 'bx', 'db' );
     }
 
     function testReferees_form() {

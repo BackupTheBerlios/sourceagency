@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.27 2002/06/14 09:14:12 riessen Exp $
+# $Id: TestLib.php,v 1.28 2002/06/26 10:29:52 riessen Exp $
 #
 ######################################################################
 
@@ -46,8 +46,7 @@ extends UnitTest
     function setup() {
     }
     function tearDown() {
-        unset( $GLOBALS[ 'bx' ] );
-        unset( $GLOBALS[ 'db' ] );
+        unset_global( 'bx', 'db' );
     }
 
     function testMonth() {

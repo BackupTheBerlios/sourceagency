@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestAdmprojectslib.php,v 1.5 2002/06/14 09:14:12 riessen Exp $
+// $Id: TestAdmprojectslib.php,v 1.6 2002/06/26 10:29:52 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -30,8 +30,7 @@ extends UnitTest
     }
     
     function tearDown() {
-        unset( $GLOBALS[ 'bx' ] );
-        unset( $GLOBALS[ 'db' ] );
+        unset_global( 'bx', 'db' );
     }
     
     function _testFor_show_admprojects_basics( &$d, $bgc ) {

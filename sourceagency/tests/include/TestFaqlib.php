@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestFaqlib.php,v 1.4 2002/06/14 09:14:12 riessen Exp $
+// $Id: TestFaqlib.php,v 1.5 2002/06/26 10:29:52 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -27,8 +27,7 @@ extends UnitTest
     function setup() {
     }
     function tearDown() {
-        unset( $GLOBALS[ 'db' ] );
-        unset( $GLOBALS[ 'bx' ] );
+        unset_global( 'db', 'bx' );
     }
 
     function testFaqform() {

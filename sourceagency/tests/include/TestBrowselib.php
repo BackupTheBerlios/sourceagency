@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestBrowselib.php,v 1.7 2002/06/20 12:07:16 riessen Exp $
+// $Id: TestBrowselib.php,v 1.8 2002/06/26 10:29:52 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -27,8 +27,7 @@ extends UnitTest
     }
     
     function setup() {
-        unset( $GLOBALS['bx'] );
-        unset( $GLOBALS['db'] );
+        unset_global( 'bx', 'db' );
     }
     function tearDown() {
     }
