@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: header.inc,v 1.11 2002/05/07 19:54:27 grex Exp $
+# $Id: header.inc,v 1.12 2002/05/08 09:55:13 riessen Exp $
 #
 ######################################################################
 
@@ -56,7 +56,9 @@ $db = new DB_SourceAgency;
    <link rel="stylesheet" type="text/css" href="berlios.css">
    <link rel="shortcut icon" href="berlios.ico">
 </head>
-<body bgcolor="<?php echo $th_body_bgcolor;?>">
+
+<body bgcolor="<?php echo $th_body_bgcolor;?>" topmargin="0" bottommargin="0" 
+leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
 
 <?php
 require('top_strip.inc');
