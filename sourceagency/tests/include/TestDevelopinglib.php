@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDevelopinglib.php,v 1.6 2002/07/09 11:15:33 riessen Exp $
+// $Id: TestDevelopinglib.php,v 1.7 2002/07/17 12:39:59 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -370,22 +370,23 @@ extends UnitTest
         $this->_checkFor_submit_preview_buttons();
         $start = ''; 
         $valid = ''; 
-        $tv=array( array( 'Cost', '<b>%s</b> (12): ') 
-                   => html_input_text('cost',12,12,$cost),
-                   array( 'License', '<b>%s</b> (12): ')
-                   => license($license),
-                   array( 'Developer cooperation', '<b>%s</b> (SELECT BOX): ')
-                   => html_input_text('cooperation',12,12,$cooperation),
-                   array( 'Valid until (select box)', '<b>%s</b>: ' )
-                   => html_input_text('valid',14,14,$valid),
-                   array( 'Start (Selecct box)', '<b>%s</b>: ' )
-                   => html_input_text('start',14,14,$start),
-                   array( 'Duration (Select box)', '<b>%s</b>: ' )
-                   => html_input_text('duration',3,3,$duration));
+        $tv=array( html_input_text('cost',12,12,$cost)
+                   => array( 'Cost', '<b>%s</b> (12): '),
+                   license($license)
+                   => array( 'License', '<b>%s</b> (12): '),
+                   html_input_text('cooperation',12,12,$cooperation)
+                   =>array('Developer cooperation wanted?',
+                           '<b>%s</b> (SELECT BOX) '),
+                   html_input_text('valid',14,14,$valid)
+                   => array( 'Valid until (select box)', '<b>%s</b>: ' ),
+                   html_input_text('start',14,14,$start)
+                   => array( 'Start (Select box)', '<b>%s</b>: ' ),
+                   html_input_text('duration',3,3,$duration)
+                   => array( 'Duration (Select box)', '<b>%s</b>: ' ));
 
-        while ( list ( $key, $val ) = each( $tv ) ) {
+        while ( list ( $val, $key ) = each( $tv ) ) {
             $this->_checkFor_column_titles( array( $key[0] ), 'right', '30%',
-                                            '', $key[1] );
+                                          '', $key[1] );
             $this->_checkFor_column_values( array( $val ) );
         }
 
