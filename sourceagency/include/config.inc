@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.27 2002/09/05 08:12:46 helix Exp $
+# $Id: config.inc,v 1.28 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -141,7 +141,7 @@ $g_step_count = 6;
 # It should contain a single %s which is replaced with the username
 # of the user of interest.
 ######################################################################
-$g_dev_counter_url = ( 'http://devcounter.berlios.de/devcounter'
+$g_dev_counter_url = ( 'http://devcounter.berlios.de'
                        . '/showprofile.php?devname=%s' );
 
 ######################################################################
@@ -166,7 +166,7 @@ $project_types[] = 'Other';
 #
 ######################################################################
 
-$project_volume[] = '< 0.25 Man Month (5 Man Days)';
+$project_volume[] = '< 0.25 Man Month';
 $project_volume[] = '< 1 Man Month';
 $project_volume[] = '< 2 Man Months';
 $project_volume[] = '< 6 Man Months';

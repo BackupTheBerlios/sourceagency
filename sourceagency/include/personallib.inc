@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: personallib.inc,v 1.19 2002/07/02 10:40:59 riessen Exp $
+# $Id: personallib.inc,v 1.20 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -131,7 +131,7 @@ function personal_related_projects($username, $status)
     global $bx,$t;
 
     $bx->box_begin();
-    $bx->box_title($t->translate('Involved Projects')
+    $bx->box_title($t->translate('Project Participantions')
                     .' ('.show_status($status).')');
     $bx->box_body_begin();
 
@@ -154,12 +154,10 @@ function personal_related_projects($username, $status)
                      . " AND $table.proid=description.proid  ORDER BY "
                      . "creation DESC");
     if ($db_local->num_rows() == 0) {
-        print ( $t->translate('Not related to any project with').' '
-               . show_status($status).' '.$t->translate('status')."\n" );
+        print ( $t->translate('No participantions in projects with this status') );
     }
     while ($db_local->next_record()) {
-	print ( $t->translate('Project').': ' 
-               . html_link('summary.php3',
+	print ( html_link('summary.php3',
                            array('proid' => $db_local->f('proid')), 
                            $db_local->f('project_title'))
                . ' (' . $t->translate('step') . ' <b>' 
@@ -457,8 +455,7 @@ function personal_consultants($username, $status)
         print ( $t->translate('No consultant proposal with this status')."\n");
     } else {
 	while($db_local->next_record()) {
-            print ($t->translate('Project').': '
-                   .html_link('step1.php3',
+            print ( html_link('step1.php3',
                               array('proid' => $db_local->f('proid')), 
                               $db_local->f('project_title'))
                    .' ('.$t->translate('step')
@@ -494,8 +491,7 @@ function personal_referees($username, $status)
         print $t->translate('No referee proposal with this status')."\n";
     } else {
 	while($db_local->next_record()) {
-            print( $t->translate('Project').': '
-                  .html_link('step4.php3',
+            print( html_link('step4.php3',
                              array('proid' => $db_local->f('proid')), 
                              $db_local->f('project_title'))
                   .' ('.$t->translate('step')
@@ -536,8 +532,7 @@ function personal_cooperation($username, $status)
                             .'this status')."\n";
     } else {
         while($db_local->next_record()) {
-            print ( $t->translate('Project').': '
-                   .html_link('step2.php3',
+            print ( html_link('step2.php3',
                               array('proid' => $db_local->f('proid')), 
                               $db_local->f('project_title'))
                    .' ('.$t->translate('to this').' '
@@ -574,8 +569,7 @@ function personal_my_projects($username)
         print $t->translate('No personal projects')."\n";
     } else {
 	while($db_local->next_record()) {
-            print( $t->translate('Project').': '
-                  .html_link('summary.php3',
+            print( html_link('summary.php3',
                              array('proid' => $db_local->f('proid')), 
                              $db_local->f('project_title'))
                   .' ('.$t->translate('step').' <b>'
@@ -609,8 +603,7 @@ function personal_monitored_projects($username)
         print $t->translate('No monitored projects')."\n";
     } else {
 	while($db_local->next_record()) {
-	    print( 'Project: '
-                  .html_link('summary.php3',
+	    print( html_link('summary.php3',
                              array('proid' => $db_local->f('proid')), 
                              $db_local->f('project_title'))
                   .' (step <b>'.$db_local->f('status')."</b>)<br>\n");

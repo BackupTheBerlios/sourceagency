@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: insertlib.inc,v 1.7 2002/07/19 10:19:17 riessen Exp $
+# $Id: insertlib.inc,v 1.8 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -302,7 +302,7 @@ function insert_into_database($project_title, $description, $type, $volume)
     $query  = "SELECT $columns FROM $tables WHERE $where GROUP BY $group";
     lib_show_description($query);
 
-    echo $t->translate('Congratulations. You have just inserted the project')
+    echo $t->translate('Congratulations. You have just defined a new project')
       .".\n<br>".$t->translate('The next step is to').' '
       .html_link('configure_edit.php3', 
                  array('proid' => $db->f('proid')), 

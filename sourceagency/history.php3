@@ -42,7 +42,7 @@ if (check_proid($proid)) {
   htmlp_image("ic/e.png",0,48,48,"Summary");
 
   print $t->translate('This is the chronological list of all the actions '
-                      .'that have affected the current project').".\n";
+                      .'that have affected the current project').".<p>\n";
 
   $i=0;
 

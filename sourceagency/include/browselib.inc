@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.24 2002/09/05 08:14:06 helix Exp $
+# $Id: browselib.inc,v 1.25 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -187,7 +187,7 @@ function _browse_type()
                             html_link('browse.php3',
                                       array('through' => 'type', 
                                             'type' => 
-                                            $t->translate($project_types[$i])),$num));
+                                            $project_types[$i]),$num));
         } else {
             $bx->box_column('center','',$bgcolor,$num);
         }
@@ -301,7 +301,7 @@ function _browse_volume()
         } else {
             $bx->box_column('center','',$bgcolor,$num);
         }
-  	$bx->box_column('left','',$bgcolor,$project_volume[$i]);
+  	$bx->box_column('left','',$bgcolor,$t->translate($project_volume[$i]));
   	$bx->box_next_row_of_columns();
     }
     $bx->box_columns_end();
@@ -355,7 +355,7 @@ function _browse_platform()
         } else {
             $bx->box_column('center','',$bgcolor,$num);
         }
-        $bx->box_column('left','',$bgcolor,$platform_array[$i]);
+        $bx->box_column('left','',$bgcolor,$t->translate($platform_array[$i]));
         $bx->box_next_row_of_columns();
     }
     $bx->box_columns_end();
@@ -410,7 +410,7 @@ function _browse_architecture()
         } else {
             $bx->box_column('center','',$bgcolor,$num);
         }
-        $bx->box_column('left','',$bgcolor,$architecture_array[$i]);
+        $bx->box_column('left','',$bgcolor,$t->translate($architecture_array[$i]));
         $bx->box_next_row_of_columns();
   }
   $bx->box_columns_end();
@@ -464,7 +464,7 @@ function _browse_environment()
         } else {
             $bx->box_column('center','',$bgcolor,$num);
         }
-  	$bx->box_column('left','',$bgcolor,$environment_array[$i]);
+  	$bx->box_column('left','',$bgcolor,$t->translate($environment_array[$i]));
   	$bx->box_next_row_of_columns();
     }
     $bx->box_columns_end();

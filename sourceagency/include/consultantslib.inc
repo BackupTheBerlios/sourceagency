@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: consultantslib.inc,v 1.9 2002/07/22 11:26:54 riessen Exp $
+# $Id: consultantslib.inc,v 1.10 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -86,7 +86,7 @@ function show_consultants($proid)
         $bx->box_body_begin();
         $bx->box_columns_begin(4);
 
-        $bx->box_column('','','','<b>'.$t->translate('Number').'</b>');
+        $bx->box_column('','','','<b>'.$t->translate('No.').'</b>');
         $bx->box_column('','','','<b>'.$t->translate('Username').'</b>');
         $bx->box_column('','','','<b>'.$t->translate('Status').'</b>');
         $bx->box_column('','','','<b>'.$t->translate('Creation').'</b>');
@@ -98,14 +98,13 @@ function show_consultants($proid)
 
             $bx->box_next_row_of_columns();
 
-            $bx->box_column('','',$bgcolor,'<b>'.$i.'</b>');
-            $bx->box_column('','',$bgcolor,'<b>'
-                            .lib_nick($db->f("username")).'</b>');
-            $bx->box_column('','',$bgcolor,'<b>'
-                            .show_status($db->f("status")).'</b>');
-            $bx->box_column('','',$bgcolor,'<b>'
-                            .timestr(mktimestamp($db->f("creation")))
-                            .'</b>');
+            $bx->box_column('','',$bgcolor,$i);
+            $bx->box_column('','',$bgcolor,
+                            lib_nick($db->f("username")));
+            $bx->box_column('','',$bgcolor,
+                            show_status($db->f("status")));
+            $bx->box_column('','',$bgcolor,
+                            timestr(mktimestamp($db->f("creation"))));
         }
 
         $bx->box_columns_end();

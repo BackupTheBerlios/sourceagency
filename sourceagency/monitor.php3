@@ -39,7 +39,7 @@ $page = "monitor";
 if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
-  print $t->translate('Users that are monitoring this project').".\n";
+  print $t->translate('Users that are monitoring this project').".<p>\n";
 
   monitor_show($proid);
 

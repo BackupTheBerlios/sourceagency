@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: header.inc,v 1.12 2002/05/08 09:55:13 riessen Exp $
+# $Id: header.inc,v 1.13 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -54,7 +54,7 @@ $db = new DB_SourceAgency;
    <meta name="KeyWords" content="<?php echo $config_meta_keywords;?>">
    <title><?php echo $sys_name;?> - <?php echo $t->translate($sys_title);?></title>
    <link rel="stylesheet" type="text/css" href="berlios.css">
-   <link rel="shortcut icon" href="berlios.ico">
+   <link rel="shortcut icon" href="favicon.ico">
 </head>
 
 <body bgcolor="<?php echo $th_body_bgcolor;?>" topmargin="0" bottommargin="0" 

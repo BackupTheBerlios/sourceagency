@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: sponsoringlib.inc,v 1.10 2002/05/28 08:57:18 riessen Exp $
+# $Id: sponsoringlib.inc,v 1.11 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -84,7 +84,7 @@ function sponsoring_form($proid)
     global $sponsoring_text, $budget, $valid_day, $valid_month, $valid_year, $begin_day, $begin_month, $begin_year, $finish_day, $finish_month, $finish_year;
 
     $bx->box_begin();
-    $bx->box_title($t->translate('Sponsoring involvement'));
+    $bx->box_title($t->translate('Sponsoring Involvement'));
     $bx->box_body_begin();
     print html_form_action('PHP_SELF',array('proid' => $proid),'POST');
 
@@ -109,7 +109,7 @@ function sponsoring_form($proid)
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ('right','30%','','<b>'.$t->translate('Budget (in euro)')
+    $bx->box_column ('right','30%','','<b>'.$t->translate('Budget (in Euro)')
                      .'</b> (12): ');
     $bx->box_column ('left','70%','',html_input_text('budget',12,12,$budget));
 
@@ -158,12 +158,13 @@ function show_sponsorings($proid)
         $bx->box_begin();
         $bx->box_title($t->translate('Sponsor Involvement'));
         $bx->box_body_begin();
+		echo '<b>';
         $timestamp = mktimestamp($db->f('creation'));
         lib_pnick($db->f('username'));
 
         echo ' - '.timestr($timestamp)."</b>\n";
         echo '<p><b>'.$t->translate('Max. sum of money').':</b> '
-          .$db->f('budget')." euros\n";
+          .$db->f('budget')." Euros\n";
         echo '<br><b>'.$t->translate('Status').':</b> '
           .show_status($db->f('status'))."\n";
         echo '<br><b>'.$t->translate('Validity').':</b> '
@@ -173,7 +174,7 @@ function show_sponsorings($proid)
         echo '<br><b>'.$t->translate('Finish before').':</b> '
           .timestr_middle(mktimestamp($db->f('finish')))."\n";
         if (($db->f('sponsoring_text'))) {
-            echo '<p><b>'.$t->translate('Comments to the involvement')
+            echo '<p><b>'.$t->translate('Comment to the involvement')
               .':</b> '.$db->f('sponsoring_text')."\n";
         }
         if($db->f('status') == 'P' && is_accepted_sponsor($proid)) {
@@ -238,8 +239,8 @@ function sponsoring_preview($proid='')
     $timestamp = time();
     lib_pnick($auth->auth['uname']);
     echo ' - '.timestr($timestamp)."</b>\n";
-    echo '<p><b>'.$t->translate('Max. sum of money').":</b> $budget euros\n";
-    echo '<br><b>'.$t->translate('Status').":</b> Proposed\n";
+    echo '<p><b>'.$t->translate('Max. sum of money').":</b> $budget Euros\n";
+    echo '<br><b>'.$t->translate('Status').":</b> ".$t->translate('Proposed')."\n";
     echo '<br><b>'.$t->translate('Validity').':</b> '
       .timestr_middle(mktimestamp(date_to_timestamp($valid_day,$valid_month,
       $valid_year)))."\n";
@@ -251,7 +252,7 @@ function sponsoring_preview($proid='')
       $finish_year)))."\n";
 
     if ($sponsoring_text) {
-        echo "<p><b>".$t->translate("Comments to the involvement")
+        echo "<p><b>".$t->translate("Comment to the involvement")
           .":</b> $sponsoring_text\n";
     }
     $bx->box_body_end();

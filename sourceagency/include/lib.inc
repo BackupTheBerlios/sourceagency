@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.45 2002/07/02 10:40:59 riessen Exp $
+# $Id: lib.inc,v 1.46 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -488,9 +488,9 @@ function _draw_top_bar( $project_title, $page, $proid = '',
     $btop->box_columns_begin(2);
 
     // 1st column (left one)
-    $btop->box_column('left','','',"<FONT size=\"+2\"><B> "
+    $btop->box_column('left','','',"<font size=\"+2\"><b> "
                       . $project_title . ' - ' . $t->translate($page) 
-                      . '</B></FONT>');
+                      . '</b></font>');
 
     // 2nd column (right one)
     $btop->box_column_start('right','','');
@@ -599,7 +599,7 @@ function summary($proid)
                html_image('ic/b.png',0,48,48,
                           $t->translate('News')) . '&nbsp;'
                . $t->translate('News'));
-    print ( '( <B>' . $db_summary->f('COUNT(*)')
+    print ( ' ( <B>' . $db_summary->f('COUNT(*)')
             . '</B> '
             . $t->translate('news for this project')
             . " )<hr>\n" );
@@ -613,7 +613,7 @@ function summary($proid)
     $db_summary->query("SELECT COUNT(*) FROM comments WHERE proid='$proid' "
                        . "AND type='general'");
     $db_summary->next_record();
-    print '( <B>'.$db_summary->f('COUNT(*)').'</B> '
+    print ' ( <B>'.$db_summary->f('COUNT(*)').'</B> '
         . $t->translate('general comments');
 
     $db_summary->query("SELECT COUNT(*) FROM comments WHERE proid='$proid' "
@@ -628,11 +628,11 @@ function summary($proid)
 
     htmlp_link('sponsoring.php3',array('proid' => $proid),
                html_image('ic/d.png',0,48,48,$t->translate('News'))
-               . '&nbsp;'.$t->translate('Sponsoring collaboration'));
+               . '&nbsp;'.$t->translate('Sponsoring Collaboration'));
     $db_summary->query("SELECT COUNT(*) FROM sponsoring WHERE proid='$proid' "
                        . "AND status='A'");
     $db_summary->next_record();
-    print ( '( <B>' . $db_summary->f('COUNT(*)')
+    print ( ' ( <B>' . $db_summary->f('COUNT(*)')
             . '</B> '
             . $t->translate('accepted sponsoring collaborations')
             .', ' );
@@ -682,14 +682,14 @@ function summary($proid)
 
     $bx->box_body_end();
 
-    $bx->box_title($t->translate('Be informed'));
+    $bx->box_title($t->translate('Stay informed'));
     $bx->box_body_begin();
 
     print ( '<br>' . html_link('monitor_edit.php3',array('proid' => $proid),
                                html_image('ic/check.png',0,16,15,
                                           'ic/check.png')
-                               . ' '.$t->translate('Monitor This Project'))
-            . ' '. $t->translate('Receive an email update when something '
+                               . ' '.$t->translate('Monitor this Project'))
+            . '<br>'. $t->translate('Receive an email update when something '
                                  .'happens in this project')
             . "<p>\n" );
 
@@ -706,27 +706,26 @@ function summary($proid)
     print ('<br>' . html_link('configure.php3',array('proid' => $proid),
                               html_image('ic/check.png',0,16,15,'ic/check.png')
                               . ' '
-                              .$t->translate('Project configurations'))
-           . ' '
+                              .$t->translate('Project configuration'))
+           . '<br>'
            .$t->translate('Configure the project parameters')
            .".\n&nbsp;<p>" );
 
     print ( html_link('views.php3',array('proid' => $proid),
                       html_image('ic/check.png',0,16,15,'ic/check.png')
                       . ' '
-                      .$t->translate('Information access configuration'))
-            . ' '
-            . $t->translate('Configure the information access to the '
-                            ."project's data")
+                      .$t->translate('Information access rights'))
+            . '<br>'
+            . $t->translate('Configure access rights to '
+                            ."project's information")
             .".\n&nbsp;<p>" );
 
     print ( html_link('decisions.php3',array('proid' => $proid),
                       html_image('ic/check.png',0,16,15,'ic/check.png')
                       . ' '
-                      .$t->translate('Decisions on this step'))
-            . ' '
-            .$t->translate('Sponsors can make the current decision '
-                           .'following this link')
+                      .$t->translate('Decision making'))
+            . '<br>'
+            .$t->translate('Sponsors can make their decisions')
             .".\n&nbsp;<p><br>" );
 
     $bx->box_body_end();
@@ -765,9 +764,7 @@ function step_information($proid, $step)
     $bx->box_columns_begin(2);
   
     $bx->box_column('','','','<b>'
-                    .$t->translate('Step information')
-                    .'</b>: '
-                    .$t->translate('Step')." $step<br>\n"
+                    .$t->translate('Step')." $step:</b><br>\n"
                     . $t->translate( $g_step_explanation[$step] ));
 
     $bx->box_column('','','',html_link('step'.$step.'.php3',
@@ -808,7 +805,7 @@ function calendar_box($proid)
                      .$t->translate('Project Owner(s)')
                      .':</b>');
     $bx->box_column ('left','45%','',
-                     '&nbsp;' . $db_general->f('description_user'));
+                     $db_general->f('description_user'));
     
     $bx->box_next_row_of_columns();
     $bx->box_colspan (2,'','','');
@@ -817,7 +814,7 @@ function calendar_box($proid)
     $bx->box_column ('left','','','<b>'
                      .$t->translate('Project Type')
                      .':</b>');
-    $bx->box_column ('left','','','&nbsp;'.$db_general->f('type'));
+    $bx->box_column ('left','','',$t->translate($db_general->f('type')));
     
     $bx->box_next_row_of_columns();
 
@@ -845,14 +842,14 @@ function calendar_box($proid)
     default:
         $nature = 'Unknown';
     }
-    $bx->box_column ('left','','', '&nbsp;' . $t->translate($nature));
+    $bx->box_column ('left','','', $t->translate($nature));
     
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('left','','','<b>'
                      .$t->translate('Project Volume')
                      .':</b>');
-    $bx->box_column ('left','','','&nbsp;'.$db_general->f('volume'));
+    $bx->box_column ('left','','',$t->translate($db_general->f('volume')));
     
     $bx->box_next_row_of_columns();
     $bx->box_colspan (2,'','','');
@@ -867,7 +864,7 @@ function calendar_box($proid)
     $bx->box_column ('left','','','<b>'
                      .$t->translate('Current project budget')
                      .':</b>');
-    $bx->box_column ('left','','',"$budget euro");
+    $bx->box_column ('left','','',"$budget Euro");
     
     $bx->box_next_row_of_columns();
     $bx->box_colspan (2,'','','');
@@ -878,7 +875,7 @@ function calendar_box($proid)
                      .':</b>');
     
     $tStamp = mktimestamp($db_general->f('description_creation'));
-    $bx->box_column ('left','','', '&nbsp;' . timestr_middle($tStamp));
+    $bx->box_column ('left','','',timestr_middle($tStamp));
     
 /* 
 // TODO: Not finished yet
@@ -914,10 +911,9 @@ function summary_news($proid)
     print "<br>\n";
     
     if ($db_summ_news->num_rows() == 0) {
-	print ("&nbsp;"
-               .$t->translate("There have not been posted any news by the "
-                              . "project owner(s)")
-               .".\n" );
+	print ($t->translate("There have not been posted any news by the "
+           . "project owner(s)")
+           .".\n" );
     } else {
         while ($db_summ_news->next_record()) {
             $db_comments_on_news = new DB_SourceAgency;
@@ -946,7 +942,7 @@ function summary_news($proid)
                                  'number' => $db_summ_news->f('creation_news'),
                                  'ref'    => '0'), 
                            $t->translate('comments'));
-                print( $t->translate(' on it')." ]</font>\n" );
+                print( " ".$t->translate('on it')." ]</font>\n" );
             }
             print "<p>\n";
         }
@@ -984,7 +980,7 @@ function lib_show_description($query) {
   	$bx->box_title(html_link("summary.php3",
                                  array("proid" => $db_local->f("proid")),
                                  $db_local->f("project_title")) 
-                       . " (".$db_local->f("type").")");
+                       . " (".$t->translate($db_local->f("type")).")");
   	$bx->box_body_begin();
  	echo "<b>";
 	lib_pnick($db_local->f("description_user"));
@@ -992,7 +988,7 @@ function lib_show_description($query) {
   	echo ( "<p><b>".$t->translate("Description")."</b>: "
                . $db_local->f("description")."\n" );
   	echo ( "<p><b>".$t->translate("Volume")."</b>: "
-               . $db_local->f("volume")."\n" );
+               . $t->translate($db_local->f("volume"))."\n" );
   	$bx->box_body_end();
   	$bx->box_end();
     }
@@ -1011,6 +1007,8 @@ function lib_show_description($query) {
  */
 function select_from_config($name, $array_name, $selected)
 {
+	global $t;
+
     $array_value='';
     
     // WISH: config.inc is included once again! This needs not to be 
@@ -1049,7 +1047,7 @@ function select_from_config($name, $array_name, $selected)
     while (list(, $array_value) = each($array)) {
         $output .= html_select_option( $array_value,
                                        !strcmp($array_value,$selected), 
-        $array_value ) . "\n";
+        $t->translate($array_value) ) . "\n";
     }
     $output .= html_select_end() . "\n";
     
@@ -1241,8 +1239,9 @@ function lib_select_yes_or_no($name, $selected)
 function lib_nick($nick)
 {
     global $t;     
-    return '<b>'.$t->translate('by').' '.$nick.'</b>';
+    return $t->translate('by').' '.$nick;
 }
+
 function lib_pnick($nick) {
     print lib_nick($nick);
 }
@@ -1269,7 +1268,7 @@ function show_project_milestones($proid)
 }
 
 /**
- * Displays information on the insertion process for a project
+ * Displays information on the definition process for a project
  * the information to be shown depends on if the user is a developer or
  * a sponsor
  *
@@ -1284,26 +1283,36 @@ function lib_insertion_information()
     global $bx, $t;
 
     if (is_sponsor()) {
-        $bx->box_full( $t->translate('Project Insertion process'), 
-        $t->translate('You are logged in in SourceAgency as '
-                      .'sponsor <p>In order to insert a project,'
-                      .' you will have to follow this steps: '
-                      .'<ul><li>Fill out the insertion formular'
-                      .' <li>Configure the project parameters'
-                      .' <li>Fill out a sponsoring involvement'
-                      .' form for your project</ul> <p>After that'
-                      .' you should wait for a BerliOS editor to'
-                      .' review your project'));
+        $bx->box_full( $t->translate('Project Definition'), 
+            $t->translate('You are registrated as sponsor')
+            .'<p>'
+            .$t->translate('In order to define a new project,'
+                .' you will have to follow these steps')
+            .': <ul><li>'
+            .$t->translate('Fill out the definition form')
+            .'<li>'
+            .$t->translate('Configure the project parameters')
+            .'<li>'
+            .$t->translate('Fill out a sponsoring involvement'
+                .' form for your project')
+            .'</ul><p>'
+            .$t->translate('After that you should wait for a BerliOS editor to'
+                .' review your project')
+            .'.');
     }
 
     if (is_developer()) {
-        $bx->box_full($t->translate('Project Insertion process'), 
-        $t->translate('In order to insert a project, you will have'
-                      .' to follow this steps: <ul><li>Fill out '
-                      .'the insertion formular <li>Configure the '
-                      .'project parameters </ul> <p>After that you'
-                      .' should wait for a BerliOS editor to '
-                      .'review your project'));
+        $bx->box_full($t->translate('Project Definition'), 
+            $t->translate('In order to define a new project, you will have'
+                .' to follow these steps')
+            .': <ul><li>'
+            .$t->translate('Fill out the definition form')
+            .'<li>'
+            .$t->translate('Configure the project parameters')
+            .'</ul><p>'
+            .$t->translate('After that you should wait for a BerliOS editor'
+                .' to review your project')
+            .'.');
     }
 }
 
@@ -1318,19 +1327,28 @@ function lib_insertion_information()
  */
 function lib_insertion_finished()
 {
-    global $auth;
-    // NOI18N: need to use translation here
-    echo '<b>Congratulations. You are finished with the insertion '
-        . "process.</b>\n<br>You will now have to wait for a "
-        . "SourceAgency editor to review your pending project.\n"
-        . "<br>Once this is done, you will receive an e-mail.\n"
-        . '<p>At your ' 
-        . html_link('personal.php3', 
+    global $auth,$t;
+    echo '<b>'
+        .$t->translate('Congratulations')
+        .'. '
+        .$t->translate('You are finished with the project definition '
+        . 'process')
+        .'</b>.<br>'
+        .$t->translate('You will now have to wait for a '
+            .'SourceAgency editor to review your pending project')
+        .'.<br>'
+        .$t->translate('Once this is done, you will receive an e-mail')
+        .'.<p>'
+        .$t->translate('At your').' ' 
+        .html_link('personal.php3',
                     array( 'username' => $auth->auth['uname'] ),
                     'Personal Page')
-        . ' you will be <b>now</b> be able to see your project in '
-        . "<b>step 0</b> (<b>pending</b>).\n"
-        . "<br>When the project is reviewed this will also change.\n";
+        .' '
+        .$t->translate('you will be now able to see your project in '
+        . 'Step 0 (pending)')
+        .'.<br>'
+        .$t->translate('When the project is reviewed this will also change')
+        .'.';
 }
 
 /**
@@ -1342,7 +1360,7 @@ function lib_insertion_finished()
  * @see end_content()
  */
 function start_content() {
-    print "\n\n<!-- content -->\n\n";
+    print "\n\n<!-- content -->\n";
 }
 
 /**
@@ -1353,7 +1371,7 @@ function start_content() {
  */
 function end_content()
 {
-    print "\n\n<!-- end content -->\n\n";
+    print "\n<!-- end content -->\n\n";
 }
 
 /**
@@ -1452,6 +1470,8 @@ function lib_previous_comment($proid, $type, $number, $ref, $text)
 
 function lib_show_comments_on_it($proid, $type_cmt, $number, $cmt_id)
 {
+	global $t;
+
     $number_selection = ( is_set_and_not_empty( $number ) ? $number : '0' );
 
     $db2 = new DB_SourceAgency;
@@ -1469,7 +1489,13 @@ function lib_show_comments_on_it($proid, $type_cmt, $number, $cmt_id)
                                          'number' => $number, 
                                          'ref'    => $cmt_id),
                                    $db2->f('subject_cmt'))
-                . ' by <b>' . $db2->f('user_cmt').'</b> on <b>'
+                . ' '
+				.$t->translate('by')
+				.' <b>'
+				. $db2->f('user_cmt')
+				.'</b> '
+				.$t->translate('on')
+				.' <b>'
                 . timestr_comment( mktimestamp($db2->f('creation_cmt') ))
                 . "</b>\n";
             lib_show_comments_on_it($proid,$type_cmt,$number,$db2->f('id'));

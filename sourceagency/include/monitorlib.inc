@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: monitorlib.inc,v 1.7 2002/07/09 11:15:33 riessen Exp $
+# $Id: monitorlib.inc,v 1.8 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -62,7 +62,7 @@ function monitor_form($proid)
     global $bx, $t, $sess, $importance;
 
     $bx->box_begin();
-    $bx->box_title($t->translate('Monitor this project'));
+    $bx->box_title($t->translate('Monitor this Project'));
     $bx->box_body_begin();
     htmlp_form_action('PHP_SELF',array('proid' => $proid),'POST');
 
@@ -74,7 +74,7 @@ function monitor_form($proid)
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('right','30%','','&nbsp;');
-    $bx->box_column ('left','70%','',html_form_submit('Preview','preview').html_form_submit('Submit','submit'));
+    $bx->box_column ('left','70%','',html_form_submit($t->translate('Preview'),'preview').html_form_submit($t->translate('Submit'),'submit'));
     htmlp_form_end();
     $bx->box_columns_end();
 
@@ -103,12 +103,15 @@ function monitor_preview($proid = '')
 
     $bx->box_begin();
     $bx->box_title('<center><b>'.$t->translate('PREVIEW').'</b></center>');
-    $bx->box_title($t->translate('Monitoring this project'));
+    $bx->box_title($t->translate('Monitoring this Project'));
     $bx->box_body_begin();
     lib_pnick($auth->auth['uname']);
     $timestamp = time();
     echo ' - '.timestr($timestamp)."</b>\n";
-    echo "<p>You will recieve an email for every action in this project that has <b>$importance</b> importance.\n";
+    echo "<p>"
+         .$t->translate("You will recieve an email for every action in this project that has")." <b>"
+         .$t->translate($importance)."</b> "
+         .$t->translate("importance").".\n";
     $bx->box_body_end();
     $bx->box_end();
 }
@@ -133,12 +136,12 @@ function monitor_show($proid)
     $db->query($query);
     if ($db->num_rows() != 0) {
   	$bx->box_begin();
-  	$bx->box_title($t->translate('All these users are monitor this project'));
+  	$bx->box_title($t->translate('These users are monitoring the project'));
   	$bx->box_body_begin();
   	$bx->box_columns_begin(5);
 
   	$bx->box_column('center','10%','','<b>'
-                        .$t->translate('Number').'</b>');
+                        .$t->translate('No.').'</b>');
   	$bx->box_column('center','20%','','<b>'
                         .$t->translate('Username').'</b>');
   	$bx->box_column('center','20%','','<b>'
@@ -157,8 +160,8 @@ function monitor_show($proid)
 
 	    $bx->box_column('center','',$bgcolor,'<b>'.$i.'</b>');
 	    $bx->box_column('center','',$bgcolor,'<b>'.lib_nick($db->f('username')).'</b>');
-	    $bx->box_column('center','',$bgcolor,'<b>'.$db->f('perms').'</b>');
-	    $bx->box_column('center','',$bgcolor,'<b>'.$db->f('importance').'</b>');
+	    $bx->box_column('center','',$bgcolor,'<b>'.$t->translate($db->f('perms')).'</b>');
+	    $bx->box_column('center','',$bgcolor,'<b>'.$t->translate($db->f('importance')).'</b>');
 	    $bx->box_column('center','',$bgcolor,'<b>'.timestr_middle(mktimestamp($db->f('creation'))).'</b>');
 	    $i++;
   	}
@@ -308,12 +311,12 @@ function monitor_mail($proid, $type, $subj, $message)
  */
 function select_importance($selected)
 {
-    global $auth;
+    global $auth, $t;
 
     $return = html_select('importance');
-    $return .= html_select_option('low', $selected=='low', 'low');
-    $return .= html_select_option('medium', $selected=='medium', 'medium');
-    $return .= html_select_option('high', $selected=='high', 'high');
+    $return .= html_select_option('low', $selected=='low', $t->translate('low'));
+    $return .= html_select_option('medium', $selected=='medium', $t->translate('medium'));
+    $return .= html_select_option('high', $selected=='high', $t->translate('high'));
     $return .= html_select_end();
 
     return($return);

@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: contentlib.inc,v 1.8 2002/07/22 11:26:54 riessen Exp $
+# $Id: contentlib.inc,v 1.9 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -80,8 +80,8 @@ function show_content($proid, $show_proposals, $which_proposals)
     $db->query($query);
 
     if ($db->num_rows() == 0) {
-        print 'No technical content suggestions have been posted to '
-             ."this project.\n";
+        print $t->translate('No technical content suggestions have been posted to '
+             .'this project.');
     } else {
         while($db->next_record()) {
             $bx->box_begin();
@@ -91,7 +91,7 @@ function show_content($proid, $show_proposals, $which_proposals)
             echo '<b>';
             lib_pnick($db->f('content_user'));
             echo ' - '.timestr($timestamp)."</b><p>\n";
-            echo '<br><b>'.$t->translate('Needed Skills').':</b> '
+            echo '<b>'.$t->translate('Needed Skills').':</b> '
               .$db->f('skills')."\n";
             echo '<br><b>'.$t->translate('Plattform').':</b> '
               .$db->f('platform')."\n";
@@ -205,12 +205,13 @@ function content_box_footer($proid, $content_id, $which_proposals)
     $bx->box_column_start('left','50%',$th_box_title_bgcolor); 
 
     if ( $db->f('content_id') == $which_proposals ) {
-        htmlp_link('step2.php3',array('proid' => $proid),'Proposals');
+        htmlp_link('step2.php3',array('proid' => $proid),
+									  $t->translate('Proposals'));
     } else {
         htmlp_link('step2.php3',array('proid' => $proid, 
                                       'show_proposals' => 'yes', 
                                       'which_proposals'=>$db->f('content_id')),
-                   'Proposals');
+                   					  $t->translate('Proposals'));
     }
     echo ' ['.$db_number->f("COUNT(*)").'] &nbsp;|&nbsp; ';
 
@@ -221,7 +222,8 @@ function content_box_footer($proid, $content_id, $which_proposals)
     if ($db_number->f("COUNT(*)") > 0) {
  	htmlp_link('comments.php3',array('proid' => $proid, 
                                          'type' => 'Specifications', 
-                                         'number' => $content_id),'Comments');
+                                         'number' => $content_id),
+										 $t->translate('Comments'));
  	echo ' ['.$db_number->f("COUNT(*)")."]\n";
     } else {
 	print $t->translate('No Comments')."\n";

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: summary.php3,v 1.3 2002/05/06 12:46:35 riessen Exp $
+# $Id: summary.php3,v 1.4 2002/09/11 11:28:11 helix Exp $
 #
 ######################################################################  
 
@@ -47,6 +47,7 @@ if (check_proid($proid)) {
   htmlp_image("ic/a.png",0,48,48,"Summary");
   print '<b>'.$t->translate('Project description').':</b> ';
   $db->p("description");
+  print '<p>';
 
 //  step_information ($db->f("status"));
   summary($proid);

@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: box.inc,v 1.17 2002/07/22 11:26:54 riessen Exp $
+# $Id: box.inc,v 1.18 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -343,7 +343,7 @@ class box {
      */
     function box_column_finish()
     {
-	echo "         </td>\n         <!-- Column finishes -->\n";
+	echo "</td>\n         <!-- Column finishes -->\n";
     }
 
     /**
@@ -376,7 +376,7 @@ class box {
     function box_column($align, $width, $bgcolor, $text)
     {
        	$this->box_column_start($align, $width, $bgcolor);
-       	echo '         '.$text;
+       	echo $text;
        	$this->box_column_finish();
     }
 
@@ -418,8 +418,8 @@ class box {
        	echo ( "         <!-- New Column spanned over $number_of_columns "
                . "columns starts -->\n"
                . "         <td colspan=\"".$number_of_columns."\" align=\""
-               . $align."\" bgcolor=\"".$bgcolor."\">" . '         '.$text
-               . "         </td>\n"
+               . $align."\" bgcolor=\"".$bgcolor."\">" . $text
+               . "</td>\n"
                . "         <!-- Column spanned over $number_of_columns "
                ."columns finished -->\n" );
     }

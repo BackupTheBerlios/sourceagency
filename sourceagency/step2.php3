@@ -42,9 +42,9 @@ $page = 'content suggestions';
 if (check_proid($proid)) {
     top_bar($proid,$page);
 
-    print ( $t->translate('Project technical content suggestions. They can '
+    print ( $t->translate('Technical content suggestions. They can '
                           .'be made either by developers or by a sponsor '
-                          .'(if the sponsor is owner of the project)').".\n");
+                          .'(if the sponsor is owner of the project).')."\n");
 
     print ( '<p align=right>[<b> '
             . html_link('step2_edit.php3',

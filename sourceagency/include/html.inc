@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: html.inc,v 1.21 2002/05/22 11:49:32 riessen Exp $
+# $Id: html.inc,v 1.22 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -189,7 +189,7 @@ function html_select_option($value, $selected, $text)
     if ($selected) {
         $output .= 'selected ';
     }
-    $output .= 'value="'.$value.'">'.$text."\n";
+    $output .= 'value="'.$value.'">'.$text."</option>\n";
     return($output);
 }
 function htmlp_select_option($value,$selected,$text)

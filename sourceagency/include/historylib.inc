@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: historylib.inc,v 1.6 2002/06/06 12:40:16 riessen Exp $
+# $Id: historylib.inc,v 1.7 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -71,24 +71,24 @@ function history_extract_table($table_name, $table_creation,
 
     $db->query("SELECT * FROM $table_name WHERE proid='$proid'");
     while($db->next_record()) {
-	$history[++$i] = $db->f($table_creation);
-	$string = substr($history[$i], -9);
-	$what[$string] = $table_name;
-	if ($table_user == 'milestone_user') {
-	    $db_milestone = new DB_SourceAgency;
-	    $db_milestone->query("SELECT developer FROM developing WHERE "
+		$history[++$i] = $db->f($table_creation);
+		$string = substr($history[$i], -9);
+		$what[$string] = $table_name;
+		if ($table_user == 'milestone_user') {
+	    	$db_milestone = new DB_SourceAgency;
+	    	$db_milestone->query("SELECT developer FROM developing WHERE "
                                  ."developing.devid='".$db->f('devid')."'");
-	    $db_milestone->next_record();
-	    $who[$string] = $db_milestone->f('developer');
-        } else {
-            $who[$string] = $db->f($table_user);
-	}
+	    	$db_milestone->next_record();
+	    	$who[$string] = $db_milestone->f('developer');
+        	} else {
+            	$who[$string] = $db->f($table_user);
+		}
 
-	$action_subject = $db->f($table_subject);
-	if (!strcmp($action_subject,'')) {
+		$action_subject = $db->f($table_subject);
+		if (!strcmp($action_subject,'')) {
             $action_subject = $table_subject;
-	}
-	$subject[$string] = $action_subject;
+		}
+		$subject[$string] = $action_subject;
     }
 }
 
@@ -138,7 +138,7 @@ function show_history($history)
 
     $bx->box_column('','','','<b>'.$t->translate('Date').'</b>');
     $bx->box_column('','','','<b>'.$t->translate('Type').'</b>');
-    $bx->box_column('','','','<b>&nbsp;</b>');
+    $bx->box_column('','','','<b>'.$t->translate('Action').'</b>');
     $bx->box_column('','','','<b>'.$t->translate('User').'</b>');
 
     for ($i = sizeof($history)-1; $i > -1; $i--) {
@@ -146,12 +146,12 @@ function show_history($history)
 
 	$bx->box_next_row_of_columns();
 
-	$bx->box_column('','',$bgcolor,'<b>'
-                        .timestr(mktimestamp($history[$i])).'</b>');
+	$bx->box_column('','',$bgcolor,
+                        timestr(mktimestamp($history[$i])));
 	$key = substr ($history[$i], -9);
-	$bx->box_column('','',$bgcolor,'<b>'.$what[$key].'</b>');
-	$bx->box_column('','',$bgcolor,'<b>'.$subject[$key].'</b>');
-	$bx->box_column('','',$bgcolor,'<b>'.$who[$key].'</b>');
+	$bx->box_column('','',$bgcolor,$t->translate($what[$key]));
+	$bx->box_column('','',$bgcolor,$t->translate($subject[$key]));
+	$bx->box_column('','',$bgcolor,$t->translate($who[$key]));
     }
     $bx->box_columns_end();
     $bx->box_body_end();

@@ -6,7 +6,7 @@
 #
 # Copyright (c) 2001 by
 #                Gregorio Robles (grex@scouts-es.org) and
-#                Gerrit Riessen (Gerrit.Riessen@open-source-consultants.de)
+#                Gerrit Riessen (Gerrit.Riessen@open-source-consuwsltants.de)
 #
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: newslib.inc,v 1.7 2002/05/28 08:56:47 riessen Exp $
+# $Id: newslib.inc,v 1.8 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -89,8 +89,8 @@ function newsform($proid)
     $bx->box_column ('right','30%','','&nbsp;');
     // NOI18N in html_form_submit calls
     $bx->box_column ('left','70%','',
-                     html_form_submit('Preview','preview')
-                     .html_form_submit('Submit','submit'));
+                     html_form_submit($t->translate("Preview"),'preview')
+                     .html_form_submit($t->translate("Submit"),'submit'));
     htmlp_form_end();
     $bx->box_columns_end();
 
@@ -218,7 +218,7 @@ function newsshow($proid)
     	$bx->box_end();
 
 	lib_comment_it( $proid,'News',$db->f('creation_news'),'0',
-        'Re:' . $db->f('subject_news'), $t->translate('Comment This News!'));
+        'Re:' . $db->f('subject_news'), $t->translate('Comment this News!'));
 
 	lib_show_comments_on_it($proid,'News',$db->f('creation_news'),'0');
     }

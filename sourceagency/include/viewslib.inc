@@ -1,5 +1,4 @@
 <?php
-
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ===============================================================
@@ -16,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: viewslib.inc,v 1.7 2002/07/02 10:40:59 riessen Exp $
+# $Id: viewslib.inc,v 1.8 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -31,7 +30,7 @@ function views_form($proid) {
   }
 
   $bx->box_begin();
-  $bx->box_title($t->translate("Configure Information Access in "
+  $bx->box_title($t->translate("Configure Information Access Rights for "
                                ."this Project"));
   $bx->box_body_begin();
   htmlp_form_action("PHP_SELF",array("proid" => $proid),"POST");
@@ -55,7 +54,7 @@ function views_form($proid) {
 
   // 2
   $bx->box_column ("right","30%","","<b>"
-                   .$t->translate("Write and Modify news")."</b>: ");
+                   .$t->translate("Write and Modify News")."</b>: ");
   $bx->box_column ("left","70%","",
                    views_select_view($proid,"news",$news).$nbsp."("
                    .$reco . ": <i>".$pinit."</i>)");
@@ -63,7 +62,7 @@ function views_form($proid) {
 
   // 3
   $bx->box_column ("right","30%","","<b>"
-                   .$t->translate("Write comments")."</b>: ");
+                   .$t->translate("Write Comments")."</b>: ");
   $bx->box_column ("left","70%","",
                    views_select_view($proid,"comments",$comments).$nbsp
                    ."(".$reco . ": <i>".$reged."</i>)");
@@ -71,7 +70,7 @@ function views_form($proid) {
 
   // 4
   $bx->box_column ("right","30%","","<b>"
-                   .$t->translate("See Project History")."</b>: ");
+                   .$t->translate("View Project History")."</b>: ");
   $bx->box_column ("left","70%","",
                    views_select_view($proid,"history",$history).$nbsp."("
                    .$reco . ": <i>".$ebody."</i>)");
@@ -79,7 +78,7 @@ function views_form($proid) {
 
   // 5
   $bx->box_column ("right","30%","","<b>"
-                   .$t->translate("See Step 3 (Milestones)")."</b>: ");
+                   .$t->translate("View Step 3 (Milestones)")."</b>: ");
   $bx->box_column ("left","70%","",
                    views_select_view($proid,"step3",$step3).$nbsp."(".$reco 
                    . ": <i>".$ebody."</i>)");
@@ -87,7 +86,7 @@ function views_form($proid) {
 
   // 6
   $bx->box_column ("right","30%","","<b>"
-                   .$t->translate("See Step 4 (Referees)")."</b>: ");
+                   .$t->translate("View Step 4 (Referees)")."</b>: ");
   $bx->box_column ("left","70%","",
                    views_select_view($proid,"step4",$step4).$nbsp."(".$reco 
                    . ": <i>".$ebody."</i>)");
@@ -95,7 +94,7 @@ function views_form($proid) {
 
   // 7
   $bx->box_column ("right","30%","","<b>"
-                   .$t->translate("See Step 5 (Project Follow-up)")."</b>: ");
+                   .$t->translate("View Step 5 (Project Follow-up)")."</b>: ");
   $bx->box_column ("left","70%","",
                    views_select_view($proid,"step5",$step5).$nbsp."(".$reco 
                    . ": <i>".$ebody."</i>)");
@@ -103,7 +102,7 @@ function views_form($proid) {
 
   // 8
   $bx->box_column ("right","30%","","<b>"
-                   .$t->translate("See Developing Cooperation Proposals")
+                   .$t->translate("View Developing Cooperation Proposals")
                    ."</b>: ");
   $bx->box_column ("left","70%","",
                    views_select_view($proid,"cooperation",$cooperation).$nbsp
@@ -119,8 +118,8 @@ function views_form($proid) {
 
   $bx->box_column("right","30%","","&nbsp;");
   $bx->box_column("left","70%","",
-                  html_form_submit("Preview","preview")
-                  .html_form_submit("Submit","submit"));
+                  html_form_submit($t->translate("Preview"),"preview")
+                  .html_form_submit($t->translate("Submit"),"submit"));
   htmlp_form_end();
   $bx->box_columns_end();
   $bx->box_body_end();
@@ -132,7 +131,7 @@ function views_preview($proid) {
 
   $bx->box_begin();
   $bx->box_title("<center><b>".$t->translate("PREVIEW")."</b></center>");
-  $bx->box_title($t->translate("Project Information Access"));
+  $bx->box_title($t->translate("Project Information Access Rights"));
   $bx->box_body_begin();
   $timestamp = time();
   echo "<b>";
@@ -142,46 +141,46 @@ function views_preview($proid) {
   $bx->box_columns_begin(2);
 
   $bx->box_column ("right","30%","","<b>".$t->translate("View Project Configuration")."</b>: ");
-  $bx->box_column ("left","70%","",$configure);
+  $bx->box_column ("left","70%","",$t->translate($configure));
   $bx->box_next_row_of_columns();
 
-  $bx->box_column ("right","30%","","<b>".$t->translate("Write and Modify news")."</b>: ");
-  $bx->box_column ("left","70%","",$news);
+  $bx->box_column ("right","30%","","<b>".$t->translate("Write and Modify News")."</b>: ");
+  $bx->box_column ("left","70%","",$t->translate($news));
   $bx->box_next_row_of_columns();
 
-  $bx->box_column ("right","30%","","<b>".$t->translate("Write comments")."</b>: ");
-  $bx->box_column ("left","70%","",$comments);
+  $bx->box_column ("right","30%","","<b>".$t->translate("Write Comments")."</b>: ");
+  $bx->box_column ("left","70%","",$t->translate($comments));
   $bx->box_next_row_of_columns();
 
-  $bx->box_column ("right","30%","","<b>".$t->translate("See Project History")."</b>: ");
-  $bx->box_column ("left","70%","",$history);
+  $bx->box_column ("right","30%","","<b>".$t->translate("View Project History")."</b>: ");
+  $bx->box_column ("left","70%","",$t->translate($history));
   $bx->box_next_row_of_columns();
 
-  $bx->box_column ("right","30%","","<b>".$t->translate("See Step 3 (Milestones)")."</b>: ");
-  $bx->box_column ("left","70%","",$step3);
+  $bx->box_column ("right","30%","","<b>".$t->translate("View Step 3 (Milestones)")."</b>: ");
+  $bx->box_column ("left","70%","",$t->translate($step3));
   $bx->box_next_row_of_columns();
 
-  $bx->box_column ("right","30%","","<b>".$t->translate("See Step 4 (Referees)")."</b>: ");
-  $bx->box_column ("left","70%","",$step4);
+  $bx->box_column ("right","30%","","<b>".$t->translate("View Step 4 (Referees)")."</b>: ");
+  $bx->box_column ("left","70%","",$t->translate($step4));
   $bx->box_next_row_of_columns();
 
-  $bx->box_column ("right","30%","","<b>".$t->translate("See Step 5 (Project Follow-up)")."</b>: ");
-  $bx->box_column ("left","70%","",$step5);
+  $bx->box_column ("right","30%","","<b>".$t->translate("View Step 5 (Project Follow-up)")."</b>: ");
+  $bx->box_column ("left","70%","",$t->translate($step5));
   $bx->box_next_row_of_columns();
 
-  $bx->box_column ("right","30%","","<b>".$t->translate("See Developing Cooperation Proposals")."</b>: ");
-  $bx->box_column ("left","70%","",$cooperation);
+  $bx->box_column ("right","30%","","<b>".$t->translate("View Developing Cooperation Proposals")."</b>: ");
+  $bx->box_column ("left","70%","",$t->translate($cooperation));
   $bx->box_next_row_of_columns();
 
   $bx->box_column ("right","30%","","<b>".$t->translate("Project Permission Access")."</b>: ");
-  $bx->box_column ("left","70%","",$views);
+  $bx->box_column ("left","70%","",$t->translate($views));
 
   $bx->box_columns_end();
 
   $bx->box_body_end();
   $bx->box_end();
 
-  lib_comment_it($proid,"Views","","0","","Comments on the views?");
+  lib_comment_it($proid,"Views","","0","",$t->translate("Comments on the views?"));
 
   lib_show_comments_on_it($proid,"Views", 0, 0);
 }
@@ -196,7 +195,7 @@ function views_show($proid) {
   } else {
       while($db->next_record()) {
           $bx->box_begin();
-          $bx->box_title($t->translate("Project Information Access"));
+          $bx->box_title($t->translate("Project Information Access Rights"));
           $bx->box_body_begin();
           $timestamp = mktimestamp($db->f("creation"));
           echo "<b>";
@@ -208,46 +207,46 @@ function views_show($proid) {
           $bx->box_column ("right","30%","","<b>"
                            .$t->translate("View Project Configuration")
                            ."</b>: ");
-          $bx->box_column ("left","70%","",$db->f("configure"));
+          $bx->box_column ("left","70%","",$t->translate($db->f("configure")));
           $bx->box_next_row_of_columns();
           
-          $bx->box_column ("right","30%","","<b>".$t->translate("Write and Modify news")."</b>: ");
-          $bx->box_column ("left","70%","",$db->f("news"));
+          $bx->box_column ("right","30%","","<b>".$t->translate("Write and Modify News")."</b>: ");
+          $bx->box_column ("left","70%","",$t->translate($db->f("news")));
           $bx->box_next_row_of_columns();
           
-          $bx->box_column ("right","30%","","<b>".$t->translate("Write comments")."</b>: ");
-          $bx->box_column ("left","70%","",$db->f("comments"));
+          $bx->box_column ("right","30%","","<b>".$t->translate("Write Comments")."</b>: ");
+          $bx->box_column ("left","70%","",$t->translate($db->f("comments")));
           $bx->box_next_row_of_columns();
           
-          $bx->box_column ("right","30%","","<b>".$t->translate("See Project History")."</b>: ");
-          $bx->box_column ("left","70%","",$db->f('history'));
+          $bx->box_column ("right","30%","","<b>".$t->translate("View Project History")."</b>: ");
+          $bx->box_column ("left","70%","",$t->translate($db->f('history')));
           $bx->box_next_row_of_columns();
           
-          $bx->box_column ("right","30%","","<b>".$t->translate("See Step 3 (Milestones)")."</b>: ");
-          $bx->box_column ("left","70%","",$db->f("step3"));
+          $bx->box_column ("right","30%","","<b>".$t->translate("View Step 3 (Milestones)")."</b>: ");
+          $bx->box_column ("left","70%","",$t->translate($db->f("step3")));
           $bx->box_next_row_of_columns();
 
-          $bx->box_column ("right","30%","","<b>".$t->translate("See Step 4 (Referees)")."</b>: ");
-          $bx->box_column ("left","70%","",$db->f("step4"));
+          $bx->box_column ("right","30%","","<b>".$t->translate("View Step 4 (Referees)")."</b>: ");
+          $bx->box_column ("left","70%","",$t->translate($db->f("step4")));
           $bx->box_next_row_of_columns();
           
-          $bx->box_column ("right","30%","","<b>".$t->translate("See Step 5 (Project Follow-up)")."</b>: ");
-          $bx->box_column ("left","70%","",$db->f("step5"));
+          $bx->box_column ("right","30%","","<b>".$t->translate("View Step 5 (Project Follow-up)")."</b>: ");
+          $bx->box_column ("left","70%","",$t->translate($db->f("step5")));
           $bx->box_next_row_of_columns();
           
-          $bx->box_column ("right","30%","","<b>".$t->translate("See Developing Cooperation Proposals")."</b>: ");
-          $bx->box_column ("left","70%","",$db->f("cooperation"));
+          $bx->box_column ("right","30%","","<b>".$t->translate("View Developing Cooperation Proposals")."</b>: ");
+          $bx->box_column ("left","70%","",$t->translate($db->f("cooperation")));
           $bx->box_next_row_of_columns();
           
           $bx->box_column ("right","30%","","<b>".$t->translate("Project Permission Access")."</b>: ");
-          $bx->box_column ("left","70%","",$db->f("views"));
+          $bx->box_column ("left","70%","",$t->translate($db->f("views")));
           
           $bx->box_columns_end();
           
           $bx->box_body_end();
           $bx->box_end();
           
-          lib_comment_it($proid,"Views","","0","","Comments on the views?");
+          lib_comment_it($proid,"Views","","0","",$t->translate("Comments on the views?"));
           
           lib_show_comments_on_it($proid,"Views", 0, 0);
       }

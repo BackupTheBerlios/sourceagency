@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: personal.php3,v 1.6 2002/05/03 10:34:28 riessen Exp $
+# $Id: personal.php3,v 1.7 2002/09/11 11:28:11 helix Exp $
 #
 ######################################################################  
 
@@ -48,10 +48,11 @@ if ($perm->have_perm("devel_pending") || $perm->have_perm("sponsor_pending")) {
   $bx->box_columns_begin(2);
   $bx->box_column("left","60%","",
                   $t->translate('Hi').', <b>'
-                  .$auth->auth["uname"].'</b>. '
-                  .$t->translate( 'This is your personal page.' ) .'<br>'
-                  .$t->translate( "In this page you'll find all the "
-                                  .'information related to you') );
+                  .$auth->auth["uname"].'</b>.<br>'
+                  .$t->translate( 'This is your personal page' ) .'.<br>'
+                  .$t->translate( "Here you will find all the "
+                                  .'information related to you')
+				  .'.');
 
   $bx->box_column_start("right","40%","");
   personal_ratings_short($auth->auth["uname"]);

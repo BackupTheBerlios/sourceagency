@@ -40,8 +40,23 @@ if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
   print $t->translate('If you are interested in this project, '
-                      .'you can monitor it').".\n";
+                      .'you can monitor it').".<p>\n";
   
+  print "<p>"
+        .$t->translate("You will recieve an e-mail for every action in "
+        ."this project that has the importance you specify")."."
+        ."<ul><li><b>"
+        .$t->translate("Low importance")."</b> "
+        .$t->translate("means you will receive "
+        ."all the events that happen to this project (high "
+        ."traffic)")
+        ."<li><b>"
+        .$t->translate("High importance")."</b> "
+        .$t->translate("means you will "
+        ."receive only an e-mail whenever a very important "
+        ."event happens to this project (low traffic)")
+        ."</ul><p>";
+
   if (!isset($submit) || empty($submit)) {
       if (isset($preview) && !empty($preview)) {
           monitor_preview($proid);
@@ -51,19 +66,12 @@ if (check_permission($proid,$page)) {
       monitor_insert($proid,$auth->auth["uname"],$importance);
   }
   
-
-  print $t->translate("<p>"."You will recieve an e-mail for every action in "
-                      ."this project that has the importance you specify."
-                      ."<br><b>Low importance</b> means you will receive "
-                      ."all the events that happen to this project (high "
-                      ."traffic).<br><b>High importance</b> means you will "
-                      ."receive only an e-mail whenever a very important "
-                      ."event happens to this project (low traffic).");
-
-  echo "<p align=right>[ Have a look at the&nbsp;"
-      .html_link("monitor.php3",array("proid" => $proid),
-                 $t->translate("users that monitor this project"))
-    ."&nbsp; ]\n";
+  echo "<p align=right>[ "
+       .$t->translate("Have a look at the")
+       ."&nbsp;"
+       .html_link("monitor.php3",array("proid" => $proid),
+                 $t->translate("Users that are monitoring this project"))
+       ."&nbsp; ]\n";
   
 }
 

@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: configurelib.inc,v 1.10 2002/07/22 11:26:54 riessen Exp $
+# $Id: configurelib.inc,v 1.11 2002/09/11 11:27:37 helix Exp $
 #
 ######################################################################
 
@@ -45,7 +45,7 @@ function configure_form($proid) {
 
   if (is_project_initiator($proid)) {
       $bx->box_column ("right","30%","","<b>"
-                       .$t->translate("Other technical contents?")."</b>: ");
+                       .$t->translate("Other technical contents")."</b>: ");
       $bx->box_column ("left","70%","",
                        lib_select_yes_or_no("other_tech_contents",
                                             $other_tech_contents));
@@ -55,7 +55,7 @@ function configure_form($proid) {
 
   if (is_developer()) {
       $bx->box_column ("right","30%","","<b>"
-                       .$t->translate("Other developing proposals?")."</b>: ");
+                       .$t->translate("Other developing proposals")."</b>: ");
       $bx->box_column ("left","70%","",
                        lib_select_yes_or_no("other_developing_proposals",
                                             $other_developing_proposals));
@@ -99,7 +99,7 @@ function configure_preview($proid) {
         echo "<br><b>".$t->translate("Quorum")."</b>: "."$quorum"." %\n";
     }
     if (is_project_initiator($proid))  {
-        echo "<br><b>".$t->translate("Other tech_contents")
+        echo "<br><b>".$t->translate("Other technical contents")
           ."</b>: ".$t->translate($other_tech_contents)."\n";
     }
     if (is_developer())  {
@@ -124,17 +124,16 @@ function configure_show($proid) {
   if ($db->num_rows() == 0) {
       print "<p>"
           .$t->translate("The project parameters have not been configured by "
-                         ."the project owner(s)").".<p>\n";
+                         ."project owner(s)").".<p>\n";
   } else {
 
       while($db->next_record()) {
           $bx->box_begin();
           $bx->box_title($t->translate("Project Configuration"));
           $bx->box_body_begin();
-          echo "<br>";
           
           $tmp_q = $db->f("quorum");
-          echo "<p><b>".$t->translate("Quorum")."</b>: " 
+          echo "<b>".$t->translate("Quorum")."</b>: " 
               . ( $tmp_q != "" ? $tmp_q . "%"
               : $t->translate("Decision to be taken by Sponsors"))."\n";
           

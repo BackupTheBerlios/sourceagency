@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: configure_edit.php3,v 1.4 2002/04/10 13:02:48 grex Exp $
+# $Id: configure_edit.php3,v 1.5 2002/09/11 11:28:11 helix Exp $
 #
 ######################################################################  
 
@@ -43,7 +43,7 @@ $page = 'configure_edit';
 if ( check_permission($proid, $page) ) {
     top_bar($proid, $page);
 
-    print $t->translate('Project configuration form').".\n";
+    print $t->translate('Project configuration form').".<p>\n";
 
     if (is_not_set_or_empty($submit)) {
         if (is_set_and_not_empty($preview)) {
