@@ -1,8 +1,8 @@
 <?php
 
 ######################################################################
-# SourceAgency: 
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #                Gregorio Robles (grex@scouts-es.org)
@@ -15,6 +15,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: config.inc,v 1.4 2001/11/09 20:22:21 riessen Exp $
+#
 ######################################################################
 
 ######################################################################
@@ -31,7 +34,7 @@
 ######################################################################
 
 $sys_name = "SourceAgency Project Page";
-$sys_title = "Open Source Software Projects";
+$sys_title = "Open Source Project Mediation & Management";
 $sys_url_title = "http://www.berlios.de/";
 $sys_url = "http://sourceagency.berlios.de/beta/";
 $sys_logo_image = "../images/berlios.jpg";
