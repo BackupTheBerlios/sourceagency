@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: mock_database.php,v 1.20 2002/06/26 09:50:18 riessen Exp $
+# $Id: mock_database.php,v 1.21 2002/07/02 10:39:52 riessen Exp $
 #
 ######################################################################
 
@@ -221,10 +221,11 @@ class mock_db_configure
                        && (($g_mkdb_ignore_error[$idx] & MKDB_NUM_ROWS) 
                                             != MKDB_NUM_ROWS)) {
                 $g_mkdb_failure_text
-                     .= ("<br>\nInstance " . $idx . " mismatch "
-                         ."in num rows: not all used, expected = "
-                         . $exp_num_rows . ", actual = "
-                         . $act_num_rows . "<br>\n" );
+                     .= ("<br>\nInstance " . $idx . " mismatch in num rows: "
+                         ."too ".($exp_num_rows > $act_num_rows ? "many" 
+                                                                    : "few")
+                         ." defined, expected = " . $exp_num_rows 
+                         . ", actual = " . $act_num_rows . "<br>\n" );
                 $g_mkdb_failed = true;
             }
         }
@@ -239,9 +240,12 @@ class mock_db_configure
             if ( $query_count_expected != $query_count_actual 
                        && (($g_mkdb_ignore_error[$idx] & MKDB_QUERY_COUNT) 
                            != MKDB_QUERY_COUNT)) {
+                
                 $g_mkdb_failure_text
-                     .= ("<br>\nInstance " . $idx . " did not use"
-                         ." all of its defined queries: expected = "
+                     .= ("<br>\nInstance " . $idx . " query count mismatch: "
+                         ."too ".($query_count_expected > $query_count_actual 
+                                                            ? "many" : "few")
+                         ." defined queries: expected = "
                          . $query_count_expected . ", actual = "
                          . $query_count_actual . "<br>\n" );
                 $g_mkdb_failed = true;
@@ -249,19 +253,20 @@ class mock_db_configure
         }
         
         // check whether all rows for the next_record method were used up
-        // this check can be turned off using the MKDB_RECORD_COUNT
+        // this check can be turned off using the MKDB_RECORD_COUNT flag
         for ( $idx = 0; $idx < $g_mkdb_instance_counter; $idx++ ) {
             $next_record_data = $g_mkdb_next_record_data[$idx];
             $cur_record = $g_mkdb_cur_record[$idx];
-            
-            if ( $cur_record < count( $next_record_data )
+            $exp_record_count = count( $next_record_data );
+
+            if ( $cur_record < $exp_record_count
                           && (($g_mkdb_ignore_error[$idx] & MKDB_RECORD_COUNT) 
                               != MKDB_RECORD_COUNT)) {
                 $g_mkdb_failure_text
-                     .= ("<br>\nInstance " . $idx . " did not use"
-                         ." all of its defined records: available = "
-                         . count( $next_record_data ) . ", used = "
-                         . $cur_record . "<br>\n" );
+                     .= ("<br>\nInstance " . $idx . " records mismatch: too"
+                         .($exp_record_count > $cur_record ? "many" : "few" )
+                         . " defined records: available = " . $exp_record_count
+                         . ", used = " . $cur_record . "<br>\n" );
                 $g_mkdb_failed = true;
             }
         }
