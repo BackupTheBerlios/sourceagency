@@ -50,6 +50,10 @@ foreach $line (@complete) {
 }
 
 print "\n\nUncomplete translations (have to be added manually so far):\n\n";
+$i = 0;
 foreach $line (@uncomplete) {
+    $i++;
     print $line."\n";
 }
+
+print "\n$i uncompleted strings to be done manually\n\n";
