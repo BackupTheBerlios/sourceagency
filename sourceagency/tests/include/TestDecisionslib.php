@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDecisionslib.php,v 1.12 2002/07/17 12:41:01 riessen Exp $
+// $Id: TestDecisionslib.php,v 1.13 2002/07/22 11:38:07 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -1189,8 +1189,7 @@ extends UnitTest
                           $qs, $args[1]['proid'], 10, 10, false, $d1, $d2 );
         $db = new DB_SourceAgency;
         $bx = $this->_create_default_box();
-        $rval = $this->capture_call( $fname, 163 + strlen( $sess->self_url()), 
-                                     $args[1] );
+        $rval = $this->capture_call( $fname, 163, $args[1] );
         $this->assertEquals( 0, $voted_yet );
         $this->assertEquals( 100, $rval );
         $this->_checkFor_show_decision_consultants();
@@ -1281,8 +1280,7 @@ extends UnitTest
                           $qs, $args[1]['proid'], 10, 10, true, $d1, $d2 );
         $db = new DB_SourceAgency;
         $bx = $this->_create_default_box();
-        $rval = $this->capture_call( $fname, 110 + strlen( $sess->self_url()), 
-                                     $args[1] );
+        $rval = $this->capture_call( $fname, 110, $args[1] );
         $this->assertEquals( 0, $voted_yet );
         $this->assertEquals( 0, $rval );
         $this->_checkFor_show_decision_consultants();
