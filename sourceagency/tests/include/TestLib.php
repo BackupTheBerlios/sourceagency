@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.6 2001/11/08 16:17:42 riessen Exp $
+# $Id: TestLib.php,v 1.7 2001/12/13 16:52:29 riessen Exp $
 #
 ######################################################################
 
@@ -133,7 +133,7 @@ extends TestCase
         }
         $expect[] = "</select>";
         $expect[] = "<select name=\"fubar_year\">";
-        for ( $idx = 2001; $idx < 2005; $idx++ ) {
+        for ( $idx = 2001; $idx <= 2005; $idx++ ) {
             $expect[] = "<option value=\"" . $idx . "\">" . $idx;
         }
         $expect[] = "</select>";
@@ -149,29 +149,29 @@ extends TestCase
     }
 
     function testTimestr() {
-        $this->assertEquals( "Monday, 15. October 2001, 19:09:48 CEST",
+        $this->assertEquals( "Montag, 15. Oktober 2001, 19:09:48 CEST",
                              timestr( 1003165788 ) );
-        $this->assertEquals( "Monday, 15. October 2001, 19:09:58 CEST",
+        $this->assertEquals( "Montag, 15. Oktober 2001, 19:09:58 CEST",
                              timestr( 1003165798 ) );
         
-        $this->assertEquals( "15. October 2001",
+        $this->assertEquals( "15. Oktober 2001",
                              timestr_middle( 1003165798 ) );
-        $this->assertEquals( "16. October 2001",
+        $this->assertEquals( "16. Oktober 2001",
                              timestr_middle( 1003187798 ) );
         
-        $this->assertEquals( "Mon,15.Oct,19:09:48",
+        $this->assertEquals( "Mon,15.Okt,19:09:48",
                              timestr_short( 1003165788 ) );
-        $this->assertEquals( "Mon,15.Oct,19:09:58",
+        $this->assertEquals( "Mon,15.Okt,19:09:58",
                              timestr_short( 1003165798 ) );
         
-        $this->assertEquals( "15. Oct 2001, 19:09",
+        $this->assertEquals( "15. Okt 2001, 19:09",
                              timestr_comment( 1003165788 ) );
-        $this->assertEquals( "15. Oct 2001, 19:09",
+        $this->assertEquals( "15. Okt 2001, 19:09",
                              timestr_comment( 1003165798 ) );
         
-        $this->assertEquals( "15. Oct",
+        $this->assertEquals( "15. Okt",
                              timestr_shortest( 1003165788 ) );
-        $this->assertEquals( "15. Oct",
+        $this->assertEquals( "15. Okt",
                              timestr_shortest( 1003165798 ) );
         
     }
@@ -183,8 +183,8 @@ extends TestCase
         $this->assertEquals( $t->translate("Documentation"), typestr( "C" ) );
         $this->assertEquals( $t->translate("Development"),   typestr( "D" ) );
         $this->assertEquals( $t->translate("Other"),         typestr( "O" ) );
-        $this->assertEquals( "", typestr( "What?" ) );
-        $this->assertEquals( "", typestr( "" ) );
+        $this->assertEquals( "Other", typestr( "What?" ) );
+        $this->assertEquals( "Other", typestr( "" ) );
     }
     
     function testShow_status() {
