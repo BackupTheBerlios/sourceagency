@@ -41,6 +41,7 @@ if (check_proid($proid)) {
   top_bar($proid,$page);
 
   htmlp_image("ic/e.png",0,48,48,"Summary");
+  // I18N
   print "This is the chronological list of all the actions that have affected the current project.\n";
 
   $i=0;

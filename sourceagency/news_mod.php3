@@ -42,6 +42,7 @@ $page = "news_mod";
 if (check_proid($proid)) {
   top_bar($proid,$page);
 
+  // I18N need translate here
   print "News can be modified by the project owner(s).\n";
   print "<br><p>\n";
 

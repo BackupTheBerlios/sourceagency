@@ -41,6 +41,7 @@ $bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcol
 
   $bx->box_column_start("left","65%","");
 
+  // I18N
   echo "<br>\n";
   echo "You have entered SourceAgency, the Open Source projects exchange at <a href=\"http://www.berlios.de\">BerliOS</a>.\n";
   echo "<p>In SourceAgency you can sponsor projects if you commit as a sponsor or let your projects be sponsored if you are an Open Source developer.\n";

@@ -43,6 +43,7 @@ if (check_permission($proid,$page)) {
   if (!isset($type) || empty($type)) $type = "General";
   if (!isset($number) || empty($number)) $number = 0;
 
+  // I18N
   print "Comments can be posted by everybody who is registered.\n";
   print "<br><p>\n";
 

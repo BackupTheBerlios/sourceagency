@@ -41,6 +41,7 @@ if (check_proid($proid)) {
   top_bar($proid,$page);
 
   htmlp_image("ic/b.png",0,48,48,"Summary");
+  // I18N
   print "News are posted by the project initiator. Any other contribution can be done by filling out a General Comment.\n";
   if(is_project_initiator($proid))  print "<p align=right>[ ".html_link("news_edit.php3",array("proid" => $proid),"Submit News")." ]\n"; 
 
