@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.11 2002/05/21 09:51:04 riessen Exp $
+# $Id: unit_test.php,v 1.12 2002/05/21 12:56:08 riessen Exp $
 #
 ######################################################################
 
@@ -123,8 +123,7 @@ extends TestCase
                                  : "" ));
 
         $this->_testFor_pattern( $text, $this->_query_to_regexp($str),
-                                 "_testFor_html_link" 
-                                            . ($msg != '' ? ' ('.$msg.')':''));
+                                             $msg . " (_testFor_html_link)");
         return $str;
     }
 
@@ -138,9 +137,48 @@ extends TestCase
                         .$sess->add_query( $query ), $method );
 
         $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
-                                 "_testFor_html_form_action"
-                                       .($msg == '' ? '' : ' (' . $msg . ')'));
+                                        $msg . " (_testFor_html_form_action)");
         return ($str);
+    }
+
+    function _testFor_html_anchor( $text, $name, $msg = '') {
+        $str = '<a name="'. $name . '"></a>';
+        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+                                            $msg .' (_testFor_html_anchor)');
+        return $str;
+    }
+
+    function _testFor_html_image( $text, $file, $border, $width, $height,
+                                  $alt, $msg = '' ) {
+        $str = ( '<img src="images/'.$file.'" border="'.$border.'"'
+                 .' width="'.$width.'" height="'.$height
+                 .'" alt="'.$alt.'">' );
+        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+                                               $msg." (_testFor_html_image)" );
+        return $str;
+    }
+
+    function _testFor_html_form_hidden( $text, $name, $value, $msg = '' ) {
+        $str = sprintf('%s    <input type="hidden" name="%s" value="%s">',
+                       "\n", $name, $value );
+        $this->_testFor_pattern( $text, $this->_query_to_regexp($str),
+                                 $msg .' (_testFor_html_form_hidden)');
+        return $str;
+    }
+    function _testFor_html_select( $text, $name, $multi, $size, $msg = '' ) {
+        $str = sprintf("\n".'   <select name="%s" size="%s"%s>'."\n",
+                       $name, $size, ($multi ? ' multiple' : ''));
+        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+                                             $msg . ' (_testFor_html_select)');
+        return $str;
+    }
+    function _testFor_html_select_option( $text, $value, $selected, 
+                                          $txt, $msg = '' ) {
+        $str = sprintf("\n".'      <option %svalue="%s">%s'."\n",
+                       ($selected ? 'selected ':''), $value, $txt );
+        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+                                 $msg . ' (_testFor_html_select_option)');
+        return $str;
     }
 }
 ?>
