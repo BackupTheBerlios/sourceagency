@@ -18,11 +18,19 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: English-lang.inc,v 1.10 2001/11/19 16:57:55 riessen Exp $
+# $Id: English-lang.inc,v 1.11 2002/04/02 12:28:04 grex Exp $
 #
 ######################################################################
 
-switch($phrase) {
+// Ins Englischen muessen wir nicht uebersetzen!
+// (es ist ja alles auf English bis jetzt!)
+function translate_real($phrase) {
+    switch($phrase) {
+    // Languages
+    case "English": $tmp = "English"; break;
+    case "German": $tmp = "Deutsch"; break;
+    case "Spanish": $tmp = "Espa&ntilde;ol"; break;
+    case "French": $tmp = "Fran&ccedil;ais"; break;
     
     /** these are various page titles **/
     case "comments_edit":       $tmp = "Edit Comments";       break;

@@ -18,20 +18,20 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: translation.inc,v 1.3 2001/11/08 16:17:41 riessen Exp $
+# $Id: translation.inc,v 1.4 2002/04/02 12:28:04 grex Exp $
 #
 ######################################################################
 
- class translation {
-     var $tolang;
+class translation {
+    var $tolang;
 
-     function translation($lang = "English") {
-          $this->tolang = $lang;
-     }
+    function translation($lang = 'English') {
+        $this->tolang = $lang;
+    }
    
-     function translate($phrase) {
-	  include($this->tolang."-lang.inc");
-	  return($tmp);
-     }
- }
+    function translate($phrase) {
+	$tmp = translate_real($phrase);
+	return($tmp);
+    }
+}
 ?>

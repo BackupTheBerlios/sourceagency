@@ -5,8 +5,8 @@
 # ===============================================================
 #
 # Copyright (c) 2001 by
-#                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
-#                Gregorio Robles (grex@scouts-es.org)
+#                Lutz Henckel (lutz.henckel@fokus.gmd.de),
+#                Gregorio Robles (grex@scouts-es.org) and
 #                Gerrit Riessen (riessen@open-source-consultants.de)
 #
 # BerliOS SourceWell: http://sourcewell.berlios.de
@@ -18,33 +18,46 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lang.inc,v 1.10 2001/12/13 16:40:26 riessen Exp $
+# $Id: lang.inc,v 1.11 2002/04/02 12:28:04 grex Exp $
 #
 ######################################################################
 
 global $l;
 
 $l->log( "Language: " . (isset( $lang ) ? $lang : "No Language set"));
+
 if ($sess->is_registered("la")) {
-   if (isset($lang)) {
-       $la = $lang;
-   } else {
-       $la = "English";
-   }
+    if (isset($lang)) {
+        $la = $lang;
+    } else {
+        $la = "English";
+    }
 } else {
-   if (isset($lang)) {
-       $la = $lang;
-   } else {
-       $la = "English";
-   }
-   $sess->register("la");
+    if (isset($lang)) {
+        $la = $lang;
+    } else {
+        $la = "English";
+    }
+    $sess->register("la");
 }
 
 switch($la) {
-   case "English": $locale = "en_EN"; break;
-   case "German":  $locale = "de_DE"; break;
-   case "Spanish": $locale = "es_ES"; break;
-   default: $locale = "en_EN"; break;
+case "English":
+    $locale = "en_EN";
+    include("English-lang.inc");
+    break;
+case "German":  
+    $locale = "de_DE";
+    include("German-lang.inc");
+    break;
+case "Spanish":
+    $locale = "es_ES";
+    include("Spanish-lang.inc");
+    break;
+default:
+    $locale = "en_EN";
+    include("English-lang.inc");
+    break;
 }
 
 setlocale (LC_TIME, $locale);
