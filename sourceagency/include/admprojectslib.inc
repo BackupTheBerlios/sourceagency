@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: admprojectslib.inc,v 1.9 2002/05/07 11:16:05 riessen Exp $
+# $Id: admprojectslib.inc,v 1.10 2002/06/10 15:35:52 riessen Exp $
 #
 ######################################################################
 
@@ -93,7 +93,7 @@ function show_admprojects()
             $bx->box_column('center','',$bgcolor,'<b>'
                             .lib_nick($db->f('description_user')).'</b>');
             $bx->box_column('center','',$bgcolor,'<b>'.$db->f('volume')
-                            .' </b>');
+                            .'</b>');
 
             $db_local = new DB_SourceAgency;
             $db_local->query("SELECT * FROM configure WHERE proid = '"
@@ -190,7 +190,7 @@ function show_admprojects()
                             .'</b>');
             if ($configured == 3 && $db->f('perms') == 'sponsor') {
                 $bx->box_column('center','',$bgcolor,
-                                html_form_action($PHP_SELF,array(), 'POST')
+                                html_form_action('PHP_SELF',array(), 'POST')
                                 .html_form_hidden('proid', $db->f('proid'))
                                 .html_form_submit($t->translate('Review'),
                                                   'review').'<br>'
@@ -199,7 +199,7 @@ function show_admprojects()
                                 .html_form_end());
             } elseif  ($configured == 1 && $db->f('perms') == 'devel') {
                 $bx->box_column('center','',$bgcolor,
-                                html_form_action($PHP_SELF,array(), 'POST')
+                                html_form_action('PHP_SELF',array(), 'POST')
                                 .html_form_hidden('proid', $db->f('proid'))
                                 .html_form_submit($t->translate('Accept'),
                                                   'accept').'<br>'
@@ -208,7 +208,7 @@ function show_admprojects()
                                 .html_form_end());
             } else {
                 $bx->box_column('center','',$bgcolor,
-                                html_form_action($PHP_SELF,array(), 'POST')
+                                html_form_action('PHP_SELF',array(), 'POST')
                                 .html_form_hidden('proid', $db->f('proid'))
                                 .'<br>'
                                 .html_form_submit($t->translate('Delete'),
@@ -251,7 +251,7 @@ function show_admprojects()
  */
 function admprojects_insert($proid, $status)
 {
-    global $db, $sys_name;
+    global $db, $t;
 
     $db->query("UPDATE description SET status = '$status' "
                ."WHERE proid='$proid'");

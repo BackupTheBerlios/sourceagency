@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisionslib.inc,v 1.11 2002/06/06 08:14:07 riessen Exp $
+# $Id: decisionslib.inc,v 1.12 2002/06/10 15:35:52 riessen Exp $
 #
 ######################################################################
 
@@ -80,13 +80,10 @@ function show_decision_consultants($proid)
 
 	htmlp_form_action("PHP_SELF",array("proid" => $proid),"POST");
 
+        $colors = array( 0 => "#FFFFFF", 1 => "gold" );
 	while($db->next_record()) {
 	    $i++;
-	    if ($i%2 != 0) {
-                $bgcolor = "gold";
-	    } else {
-                $bgcolor = "#FFFFFF";
-	    }
+            $bgcolor = $colors[ $i % 2 ];
 
 	    $db_consultant = new DB_SourceAgency;
 	    $db_consultant->query("SELECT SUM(budget) AS sum_consultant FROM sponsoring,decisions WHERE decisions.proid='$proid' AND sponsoring.proid='$proid' AND sponsoring.sponsor=decisions.decision_user AND step='1' AND decision='".$db->f("consultant")."' GROUP BY decision");

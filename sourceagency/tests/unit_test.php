@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.23 2002/06/06 12:52:34 riessen Exp $
+# $Id: unit_test.php,v 1.24 2002/06/10 15:35:52 riessen Exp $
 #
 ######################################################################
 
@@ -58,6 +58,9 @@ extends TestCase
     }
     function &get_text() {
         return $this->test_text;
+    }
+    function print_text_as_html() {
+        print '<pre>' . htmlspecialchars( $this->get_text() ) . '</pre>';
     }
     function set_msg( $msg ) {
         $this->test_msg = &$msg;
