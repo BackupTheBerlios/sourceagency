@@ -2,7 +2,7 @@
 #
 # personallib.inc
 #
-# $Id: personallib.inc,v 1.2 2001/10/17 14:18:23 ger Exp $
+# $Id: personallib.inc,v 1.3 2001/10/18 12:49:13 ger Exp $
 #
 
 ######################################################################
@@ -120,7 +120,11 @@ function personal_related_projects($username,$status) {
 	$bx->box_end();
 }
 
-
+/**
+ * FIXME: personal_comments_short only differ in their use of the variable
+ * FIXME: $i, there really should be refactored with a single function whether
+ * FIXME: specifying whether long or short is required.
+ */
 function personal_comments_short($username) {
  	global $bx, $sess;
 
@@ -139,22 +143,44 @@ function personal_comments_short($username) {
 	while ($db_local->next_record() AND $i<11) {
 		print "<br><li>";
 		$db_count = new DB_SourceAgency;
-		$db_count->query("SELECT COUNT(*) FROM comments WHERE proid='".$db_local->f("proid")."' AND type='".$db_local->f("type")."' AND ref='".$db_local->f("id")."'");
+		$db_count->query("SELECT COUNT(*) FROM comments WHERE proid='"
+                                 .$db_local->f("proid")."' AND type='"
+                                 .$db_local->f("type")."' AND ref='"
+                                 .$db_local->f("id")."'");
 		$db_count->next_record();
-		print "Comment (".$db_local->f("type")."): <b>".html_link("comments.php3",array("proid" => $db_local->f("proid"), "type" => $db_local->f("type"), "number" => $db_local->f("number"), "ref" => $db_local->f("ref")),$db_local->f("subject_cmt"))."</b> ".timestr_comment(mktimestamp($db_local->f("creation_cmt")))." (<b>".$db_count->f("COUNT(*)")."</b> comments on it)\n";
-		$db_count->query("SELECT * FROM description WHERE proid='".$db_local->f("proid")."'");
+		print ( "Comment (".$db_local->f("type")."): <b>"
+                        .html_link("comments.php3",
+                                   array("proid" => $db_local->f("proid"), 
+                                         "type" => $db_local->f("type"), 
+                                         "number" => $db_local->f("number"), 
+                                         "ref" => $db_local->f("ref")),
+                                   $db_local->f("subject_cmt"))
+                        ."</b> "
+                        .timestr_comment(mktimestamp($db_local->f("creation_cmt")))
+                        ." (<b>".$db_count->f("COUNT(*)")
+                        ."</b> comments on it)\n" );
+		$db_count->query("SELECT * FROM description WHERE proid='"
+                                 .$db_local->f("proid")."'");
 		$db_count->next_record();
-		print "<br>&nbsp; &nbsp; &nbsp; posted to ".html_link("summary.php3",array("proid" => $db_count->f("proid")), $db_count->f("project_title"))."<br>\n";
-	$i++;
+		print( "<br>&nbsp; &nbsp; &nbsp; posted to "
+                       .html_link("summary.php3",
+                                  array("proid" => $db_count->f("proid")), 
+                                  $db_count->f("project_title"))."<br>\n");
+                $i++;
 	}
 	print"</ul>\n<p align=right>\n";
-	if ($i>10) htmlp_link("personal_comments.php3",array("username" => $username),"See all the comments...");
+	if ($i>10) {
+          htmlp_link("personal_comments.php3",
+                     array("username" => $username),
+                     "See all the comments...");
+        }
 	$bx->box_body_end();
 	$bx->box_end();
-
 }
 
-
+/**
+ * FIXME: refactor and replace with a single common function, see fixme above
+ */
 function personal_comments_long($username) {
  	global $bx, $sess;
 
@@ -163,25 +189,49 @@ function personal_comments_long($username) {
 	$bx->box_body_begin();
 
 	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT * FROM comments WHERE user_cmt='$username' AND comments.proid");
-	if ($db_local->num_rows() == 0) print "no comments posted\n";
+	$db_local->query("SELECT * FROM comments WHERE user_cmt='$username' "
+                         . "AND comments.proid");
+	if ($db_local->num_rows() == 0) {
+            print "no comments posted\n";
+        }
 	$i=0;
 	print "<ul>\n";
 	while ($db_local->next_record()) {
 		print "<br><li>";
 		$db_count = new DB_SourceAgency;
-		$db_count->query("SELECT COUNT(*) FROM comments WHERE proid='".$db_local->f("proid")."' AND type='".$db_local->f("type")."' AND ref='".$db_local->f("id")."'");
+		$db_count->query("SELECT COUNT(*) FROM comments WHERE "
+                                 ."proid='".$db_local->f("proid")
+                                 ."' AND type='".$db_local->f("type")
+                                 ."' AND ref='".$db_local->f("id")."'");
 		$db_count->next_record();
-		print "Comment (".$db_local->f("type")."): <b>".html_link("comments.php3",array("proid" => $db_local->f("proid"), "type" => $db_local->f("type"), "number" => $db_local->f("number"), "ref" => $db_local->f("ref")),$db_local->f("subject_cmt"))."</b> ".timestr_comment(mktimestamp($db_local->f("creation_cmt")))." (<b>".$db_count->f("COUNT(*)")."</b> comments on it)\n";
-		$db_count->query("SELECT * FROM description WHERE proid='".$db_local->f("proid")."'");
+		print ("Comment (".$db_local->f("type")."): <b>"
+                       .html_link("comments.php3",
+                                  array("proid" => $db_local->f("proid"), 
+                                        "type" => $db_local->f("type"), 
+                                        "number" => $db_local->f("number"), 
+                                        "ref" => $db_local->f("ref")),
+                                  $db_local->f("subject_cmt"))
+                       ."</b> "
+                       .timestr_comment(mktimestamp($db_local->f("creation_cmt")))
+                       ." (<b>".$db_count->f("COUNT(*)")
+                       ."</b> comments on it)\n");
+		$db_count->query("SELECT * FROM description WHERE proid='"
+                                 .$db_local->f("proid")."'");
 		$db_count->next_record();
-		print "<br>&nbsp; &nbsp; &nbsp; posted to ".html_link("summary.php3",array("proid" => $db_count->f("proid")), $db_count->f("project_title"))."<br>\n";
+		print ("<br>&nbsp; &nbsp; &nbsp; posted to "
+                       .html_link("summary.php3",
+                                  array("proid" => $db_count->f("proid")), 
+                                  $db_count->f("project_title"))
+                       ."<br>\n");
 	}
-	print"</ul>\n<p align=right>\n";
-	if ($i>10) htmlp_link("personal_comments.php3",array("username" => $username),"See all the comments...");
+	print "</ul>\n<p align=right>\n";
+	if ($i>10) {
+          htmlp_link("personal_comments.php3",
+                     array("username" => $username),
+                     "See all the comments...");
+        }
 	$bx->box_body_end();
 	$bx->box_end();
-
 }
 
 function personal_news_short($username) {
@@ -199,16 +249,34 @@ function personal_news_short($username) {
 	while ($db_local->next_record() AND $i<6) {
 		print "<br><li>";
 		$db_count = new DB_SourceAgency;
-		$db_count->query("SELECT COUNT(*) FROM comments WHERE proid='".$db_local->f("proid")."' AND type='News' AND ref='".$db_local->f("id")."'");
+		$db_count->query("SELECT COUNT(*) FROM comments WHERE proid='"
+                                 . $db_local->f("proid")
+                                 . "' AND type='News' AND ref='"
+                                 . $db_local->f("id") . "'");
 		$db_count->next_record();
-		print "News: <b>".html_link("news.php3",array("proid" => $db_local->f("proid")),$db_local->f("subject_news"))."</b> ".timestr_comment(mktimestamp($db_local->f("creation_news")))." (<b>".$db_count->f("COUNT(*)")."</b> comments on it)\n";
-		$db_count->query("SELECT * FROM description WHERE proid='".$db_local->f("proid")."'");
+		print ( "News: <b>"
+                        . html_link("news.php3",
+                                    array("proid" => $db_local->f("proid"))
+                                    ,$db_local->f("subject_news"))
+                        . "</b> " 
+                        . timestr_comment(mktimestamp($db_local->f("creation_news")))
+                        ." (<b>".$db_count->f("COUNT(*)")
+                        ."</b> comments on it)\n" );
+		$db_count->query("SELECT * FROM description WHERE proid='"
+                                 .$db_local->f("proid")."'");
 		$db_count->next_record();
-		print "<br>&nbsp; &nbsp; &nbsp; posted to ".html_link("summary.php3",array("proid" => $db_count->f("proid")), $db_count->f("project_title"))."<br>\n";
-	$i++;
+		print ( "<br>&nbsp; &nbsp; &nbsp; posted to "
+                        . html_link("summary.php3",
+                                    array("proid" => $db_count->f("proid")), 
+                                    $db_count->f("project_title"))."<br>\n");
+                $i++;
 	}
-	print"</ul>\n<p align=right>\n";
-	if ($i>5) htmlp_link("personal_news.php3",array("username" => $username),"See all the comments...");
+	print "</ul>\n<p align=right>\n";
+	if ($i>5) {
+            htmlp_link("personal_news.php3",
+                       array("username" => $username),
+                       "See all the comments...");
+        }
 	$bx->box_body_end();
 	$bx->box_end();
 
