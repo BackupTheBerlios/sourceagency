@@ -1,5 +1,5 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4: */
+
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ===============================================================
@@ -17,18 +17,16 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: top_title.inc,v 1.13 2002/05/07 20:03:01 grex Exp $
+# $Id: top_title.inc,v 1.14 2002/09/05 08:04:05 helix Exp $
 #
 ######################################################################
 
 ?>
 
 <!-- top title -->
-
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
-
 <tr valign="top" bgcolor="<?php echo $th_nav_bgcolor;?>">
-<td bgcolor="#FFFFFF">
+<td bgcolor="<?php echo $th_body_bgcolor;?>">
 <a href="<?php echo $sys_url_title;?>">
 <img src="<?php echo $sys_logo_image;?>" border="0" 
 height="<?php echo $sys_logo_height;?>" width="<?php echo $sys_logo_width;?>"
@@ -68,9 +66,7 @@ width="<?php echo $org_logo_width;?>" align="RIGHT"></a>
 <!-- end logo at right -->
 
 <tr>
-<td colspan="5" bgcolor="<?php echo $th_navstrip_bgcolor;?>">
-<img src="images/blank.gif" height="1" width="1" alt="">
-</td>
+<td colspan="5" bgcolor="<?php echo $th_navstrip_bgcolor;?>"><img src="images/blank.gif" height="2" width="2" alt=""></td>
 </tr>
 
 </table>
