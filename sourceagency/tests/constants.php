@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: constants.php,v 1.25 2002/06/14 09:14:11 riessen Exp $
+# $Id: constants.php,v 1.26 2002/06/20 12:06:29 riessen Exp $
 #
 ######################################################################
 
@@ -116,4 +116,7 @@ function define_test_suite( $filename ) {
     }
 }
 
+function unset_global( $variable_name ) {
+    unset( $GLOBALS[ $variable_name ] );
+}
 ?>
