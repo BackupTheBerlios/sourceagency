@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.14 2001/11/19 17:11:37 riessen Exp $
+# $Id: lib.inc,v 1.15 2001/11/20 16:40:38 riessen Exp $
 #
 ######################################################################
 
@@ -1098,22 +1098,8 @@ function lib_select_yes_or_no($name,$selected) {
     global $t;
 
     $return = html_select($name);
-//    if($selected=="Yes") {
-//        $select="selected";
-//    }
-//    else {
-//        $select="";
-//    }
-
     $return .= html_select_option("Yes",($selected == "Yes"),
                                   $t->translate("Yes"));
-
-//    if($selected=="No") {
-//        $select="selected";
-//    }
-//    else {
-//        $select="";
-//    }
 
     $return .= html_select_option("No",($selected == "No"),
                                   $t->translate("No"));
