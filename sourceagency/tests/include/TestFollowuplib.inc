@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowuplib.inc,v 1.4 2002/04/22 14:31:37 riessen Exp $
+# $Id: TestFollowuplib.inc,v 1.5 2002/04/23 11:43:19 riessen Exp $
 #
 ######################################################################\
 
@@ -189,7 +189,8 @@ extends UnitTest
         $db = new DB_SourceAgency;
         followup_devel_preview($proid[0]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 3729 + strlen(timestr(time())), "test 1");
+        $this->_testFor_captured_length( 3729 + strlen(timestr(time())), 
+                                         "test 1");
         
         $pats = array_merge( $this->_com_pats_1, array( 
             9=>("<font color=\"#000000\">[ \n]*<b>Milestone Delivery"
@@ -205,7 +206,8 @@ extends UnitTest
         $count = "this is the count";
         followup_devel_preview($proid[1]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 3754 + strlen(timestr(time())), "test 2" );
+        $this->_testFor_captured_length( 3754 + strlen(timestr(time())), 
+                                         "test 2" );
  
         $pats = array_merge( $this->_com_pats_2, array( 
             9=>("<font color=\"#000000\">[ \n]*<b>Milestone Delivery<\/b>"
@@ -251,7 +253,8 @@ extends UnitTest
         $db = new DB_SourceAgency;
         followup_referee_preview($proid[0]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 4153 + strlen(timestr(time())));
+        $this->_testFor_captured_length( 4153 + strlen(timestr(time())),
+                                         "test 1");
 
         $pats = array_merge( $this->_com_pats_1, array( 
             9=>("<font color=\"#000000\"><b>Milestone Delivery"
@@ -275,7 +278,8 @@ extends UnitTest
         $decision = "this is the decision";
         followup_referee_preview($proid[1]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 4178 + strlen(timestr(time())) );
+        $this->_testFor_captured_length( 4178 + strlen(timestr(time())),
+                                         "test 2" );
 
         $pats = array_merge( $this->_com_pats_2, array( 
             9=>("<font color=\"#000000\"><b>Milestone Delivery"

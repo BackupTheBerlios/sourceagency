@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.13 2002/04/22 13:13:44 riessen Exp $
+# $Id: TestSecurity.php,v 1.14 2002/04/23 11:50:13 riessen Exp $
 #
 ######################################################################
 
@@ -93,7 +93,7 @@ extends UnitTest
         $funct( $dat[0]["proid"], $dat[0]["page"] );
         $text = capture_stop_and_get();
 
-        $this->_testFor_length( $len );
+        $this->_testFor_captured_length( $len );
                                           
         $pats = array( 0 => ("<font color=\"#000000\"><b>"
                              .$t->translate($head_text)

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestNewslib.php,v 1.10 2002/04/22 14:08:59 riessen Exp $
+# $Id: TestNewslib.php,v 1.11 2002/04/23 11:47:21 riessen Exp $
 #
 ######################################################################
 
@@ -61,7 +61,8 @@ extends UnitTest
         capture_start();
         newsform( "proid" ); 
         $text = capture_stop_and_get();
-        $this->_testFor_length( 2222 + strlen( $sess->self_url() ), "test 1");
+        $this->_testFor_captured_length( 2222 + strlen( $sess->self_url() ), 
+                                         "test 1");
 
         $ps=array( 0=> "<font color=\"#000000\"><b>Editing News<\/b><\/font>",
                    1=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF\">"
@@ -103,7 +104,8 @@ extends UnitTest
         capture_start();
         news_modify_form( "proid" ); 
         $text = capture_stop_and_get();
-        $this->_testFor_length( 2281 + strlen( $sess->self_url() ), "test 1");
+        $this->_testFor_captured_length( 2281 + strlen( $sess->self_url() ), 
+                                         "test 1");
 
         $ps=array( 0=>("<font color=\"#000000\"><b>Modifying News<\/b>"
                        ."<\/font>"),
@@ -146,8 +148,9 @@ extends UnitTest
         capture_start();
         news_preview( "fubar" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 3089 + strlen(timestr(time()))
-                                + strlen( $sess->self_url() ), "test 1");
+        $this->_testFor_captured_length( 3089 + strlen(timestr(time()))
+                                         + strlen( $sess->self_url() ), 
+                                         "test 1");
         $ps=array( 0=>("<font color=\"#000000\"><b><center><b>PREVIEW<\/b>"
                        ."<\/center><\/b><\/font>"),
                    1=>("<tr bgcolor=\"#CCCCCC\">[ \n]*<td align=\"\">"
@@ -265,7 +268,7 @@ extends UnitTest
         capture_start();
         newsshow( $proid[0] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 67, "test 1" );
+        $this->_testFor_captured_length( 67, "test 1" );
         $this->_testFor_pattern( $text, ("<p>There have not been posted any "
                                          ."news by the project owner[(]s[)]."
                                          ."<p>"));
@@ -277,7 +280,7 @@ extends UnitTest
         capture_reset_and_start();
         newsshow( $proid[1] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 788, "test 2" );
+        $this->_testFor_captured_length( 788, "test 2" );
 
         $ps=array( 0=>("<font color=\"#000000\"><b>News: "
                        ."subject_news_0<\/b><\/font>"),
@@ -302,7 +305,7 @@ extends UnitTest
         capture_reset_and_start();
         newsshow( $proid[2] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1722, "test 3" );
+        $this->_testFor_captured_length( 1722, "test 3" );
 
         $ps=array( 0=>("<font color=\"#000000\"><b>News: "
                        ."subject_news_1<\/b><\/font>"),
@@ -377,7 +380,7 @@ extends UnitTest
         news_insert( $row[0]["proid"],$row[0]["user"],$row[0]["subject"],
                      $row[0]["text"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 67, "test 1" );
+        $this->_testFor_captured_length( 67, "test 1" );
         $this->_testFor_pattern($text,("<p>There have not been posted any "
                                        ."news by the project owner[(]s[)]"
                                        ."[.]<p>\n"));
@@ -423,7 +426,7 @@ extends UnitTest
         news_modify( $row[0]["proid"],$row[0]["user"],$row[0]["subject"],
         $row[0]["text"], $row[0]["creation"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 67, "test 1");
+        $this->_testFor_captured_length( 67, "test 1");
         $this->_testFor_pattern($text,("<p>There have not been posted any "
                                        ."news by the project owner[(]s[)]"
                                        ."[.]<p>\n"));
