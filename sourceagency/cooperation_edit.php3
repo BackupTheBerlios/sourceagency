@@ -10,13 +10,13 @@
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
-# Editing news
+# Cooperation editing
 #
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: cooperation_edit.php3,v 1.2 2001/11/12 13:00:05 riessen Exp $
+# $Id: cooperation_edit.php3,v 1.3 2001/11/15 17:25:03 riessen Exp $
 #
 ######################################################################  
 

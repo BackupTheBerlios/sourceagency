@@ -2,7 +2,7 @@
 
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
-# ================================================
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #             Gregorio Robles (grex@scouts-es.org)
@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisions.php3,v 1.2 2001/11/12 13:00:05 riessen Exp $
+# $Id: decisions.php3,v 1.3 2001/11/15 17:25:40 riessen Exp $
 #
 ######################################################################  
 
@@ -89,15 +89,17 @@ if (check_permission($proid,$page)) {
           case '4':  $quorum = show_decision_referees($proid); break;
           case '5':  
             echo "<p>"; 
+            global $g_step_text;
             // NOI18N: "Decision on step 5 (follow-up)"
             htmlp_link("step5_sponsor.php3",array("proid" => $proid),
-                       "Decision on step 5 (follow-up)"); 
+                       "Decision on step 5 (".$g_step_text[5].")"); 
             break;
           case '6':  
             echo "<p>"; 
+            global $g_step_text;
             // NOI18N: "Decision on step 6 (rating)"
             htmlp_link("step6_edit.php3",array("proid" => $proid),
-                       "Decision on step 6 (rating)"); 
+                       "Decision on step 6 (".$g_step_text[6].")"); 
             break;
 	}
   }
