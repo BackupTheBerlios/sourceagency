@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: English-lang.inc,v 1.15 2002/04/15 15:53:57 riessen Exp $
+# $Id: English-lang.inc,v 1.16 2002/04/17 14:09:40 riessen Exp $
 #
 ######################################################################
 
@@ -76,7 +76,17 @@ function translate_real($phrase) {
     case "index-doco":
         $tmp = ("SourceAgency is a Open Source project exchange. It is the "
                 ."place where developers meet sponsors, and sponsors can "
-                ."describe the software requirements.<p>" );
+                ."describe the software requirements.<p>" 
+                ."Two nature-types of projects are available: developing and "
+                ."sponsoring.<ul><li>Developing are those projects that are "
+                ."being developed by developers and are looking for "
+                ."finanical sponsorship."
+                ."<li>Sponsoring projects are ones where sponsor(s) are "
+                ."looking for a developer group to develop a needed "
+                ."solution for them.</ul><p>" 
+                ."All projects developed using the SourceAgency/Berlios "
+                ."platform are Open Source projects and use Open Source "
+                ."Licenses." );
         break;
 
     case "faq-page-name":
@@ -88,6 +98,111 @@ function translate_real($phrase) {
                  ."developers <a href=\"mailto:sourceagency-support@"
                  ."lists.berlios.de?subject=FAQ Question\">feedback</a>!");
         break;
+    case "login-page-name":
+        $tmp = ("Login Page");
+        break;
+    case "login-doco":
+        $tmp = ("Here registered users may login. If you are not a registered "
+                ."user, then you can register <a href=\"register.php3\">here"
+                ."</a>");
+        break;
+    case "doco-page-name":
+        $tmp = ("Documentation Page");
+        break;
+    case "doco-doco":
+        $tmp = ("Page specific documentation is generated using this page. "
+                ."Each pages documentation can be accessed using the \"What "
+                ."is this\" link on the left hand side menubar.");
+        break;
+    case "users-page-name":
+        $tmp = ("User Listing");
+        break;
+    case "users-doco":
+        $tmp = ("Listing of the different types of registered users. This "
+                ."allows developers to directly contact sponsors and sponsors "
+                ."to directly contact developers.<p> Three listings "
+                . "available:<ul>"
+                ."<li><a href=\"users.php3\">All Users</a>"
+                ."<li><a href=\"users.php3?type=devel\">All Developers</a>"
+                ."<li><a href=\"users.php3?type=sponsor\">All Sponsors</a>"
+                ."</ul>");
+        break;
+    case "browse-page-name":
+        $tmp = ("Project Browsing");
+        break;
+    case "browse-doco":
+        $tmp = ("All currently registered and accepted projects can be "
+                ."browsed based on several different categories based on "
+                ."the projects configuration.<p>" 
+                ."Projects matching a category are listed below the category "
+                ."listing.");
+        break;
+    case "licenses-page-name":
+        $tmp = ("Open Source License Listing");
+        break;
+    case "licenses-doco":
+        $tmp = ("Provides a listing of all accepted Open Source licenses. "
+                ."Each project must choice a license for each Technical "
+                ."Content made to a project. <p>"
+                ."As SourceAgency only provides support for the development "
+                ."of Open Source Software, therefore all licenses are Open "
+                ."Source licenses approved by the <a href=\"http://opensource."
+                ."org\">Open Source Initiative (OSI)</a>.");
+        break;
+    case "insform-page-name":
+        $tmp = ("Project Register Form");
+        break;
+    case "insform-doco":
+        $tmp = ("Here registered user may enter new project descriptions.<p>"
+                ."The nature of the project is defined by the type of user: "
+                ."developer enter descriptions of developing projects, while "
+                ."sponsors enter descriptions of sponsoring projects." );
+        break;
+    case "remind-page-name":
+        $tmp = ("Password Reminder");
+        break;
+    case "remind-doco":
+        $tmp = ("Registered user may have their forgotten password sent to "
+                ."their email address.");
+        break;
+    case "chguser-page-name":
+        $tmp = ("Change User Information");
+        break;
+    case "chguser-doco":
+        $tmp = ("Registered users may change their personal information "
+                ."using this page.");
+        break;
+//      case "-page-name":
+//          $tmp = ("");
+//          break;
+//      case "-doco":
+//          $tmp = ("");
+//          break;
+//      case "-page-name":
+//          $tmp = ("");
+//          break;
+//      case "-doco":
+//          $tmp = ("");
+//          break;
+//      case "-page-name":
+//          $tmp = ("");
+//          break;
+//      case "-doco":
+//          $tmp = ("");
+//          break;
+//      case "-page-name":
+//          $tmp = ("");
+//          break;
+//      case "-doco":
+//          $tmp = ("");
+//          break;
+//      case "-page-name":
+//          $tmp = ("");
+//          break;
+//      case "-doco":
+//          $tmp = ("");
+//          break;
+    /****************** Everything else is default ***************/
     default:   
         $tmp = "$phrase";  
         break;
