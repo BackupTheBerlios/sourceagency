@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMilestoneslib.inc,v 1.12 2002/03/20 12:09:42 riessen Exp $
+# $Id: TestMilestoneslib.inc,v 1.13 2002/04/22 13:11:01 riessen Exp $
 #
 ######################################################################
 
@@ -66,7 +66,7 @@ extends UnitTest
         milestones_propose_milestone( "" );
         $text = capture_stop_and_get();
         
-        $this->_testFor_length( 90 );
+        $this->_testFor_length( 89, "test 1" );
 
         $pats[5] = "[?]proid=[&]a=1";
         $this->_testFor_patterns( $text, $pats, 6 );
@@ -75,7 +75,7 @@ extends UnitTest
         milestones_propose_milestone( "this_is_the_proid" );
         $text = capture_stop_and_get();
         
-        $this->_testFor_length( 107 );
+        $this->_testFor_length( 106, "test 2" );
 
         $pats[5] = "[?]proid=this_is_the_proid[&]a=1";
         $this->_testFor_patterns( $text, $pats, 6 );
@@ -151,7 +151,7 @@ extends UnitTest
         show_milestones( $dat[0]["proid"], $dat[0]["devid"],
                          $dat[0]["sponsor"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 0 );
+        $this->_testFor_length( 0, "test 1" );
 
         //
         // second call, the status part of the third query is present
@@ -160,7 +160,7 @@ extends UnitTest
         show_milestones( $dat[1]["proid"], $dat[1]["devid"],
                          $dat[1]["sponsor"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 0 );
+        $this->_testFor_length( 0, "test 2" );
 
         //
         // third call, two records of data
@@ -169,41 +169,43 @@ extends UnitTest
         show_milestones( $dat[2]["proid"], $dat[2]["devid"],
                          $dat[2]["sponsor"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 3543 );
+        $this->_testFor_length( 4697, "test 3" );
         $pats = array( 0=> ("<td align=\"center\" width=\"7%\" bgcolor=\""
-                            ."#FFFFFF\"><b>Number<\/b><\/td>"),
+                            ."#FFFFFF\">[ \n]*<b>Number<\/b>[ \n]*<\/td>"),
                        1=> ("<td align=\"\" width=\"53%\" bgcolor=\""
-                            ."#FFFFFF\"><b>Goals<\/b><\/td>"),
+                            ."#FFFFFF\">[ \n]*<b>Goals<\/b>[ \n]*<\/td>"),
                        2=> ("<td align=\"center\" width=\"16%\" bgcolor=\""
-                            ."#FFFFFF\"><b>Release Date<\/b><\/td>"),
+                            ."#FFFFFF\">[ \n]*<b>Release Date<\/b>"
+                            ."[ \n]*<\/td>"),
                        3=> ("<td align=\"center\" width=\"12%\" bgcolor=\""
-                            ."#FFFFFF\"><b>Product<\/b><\/td>"),
+                            ."#FFFFFF\">[ \n]*<b>Product<\/b>[ \n]*<\/td>"),
                        4=> ("<td align=\"center\" width=\"8%\" bgcolor=\""
-                            ."#FFFFFF\"><b>Payment<\/b><\/td>"),
+                            ."#FFFFFF\">[ \n]*<b>Payment<\/b>[ \n]*<\/td>"),
                        5=> ("<td align=\"center\" width=\"14%\" bgcolor=\""
-                            ."#FFFFFF\"><b>Status<\/b><\/td>"),
+                            ."#FFFFFF\">[ \n]*<b>Status<\/b>[ \n]*<\/td>"),
                        6=> ("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\"><b>0<\/b><\/td>"),
-                       7=> ("<td align=\"\" width=\"\" bgcolor=\"#FFFFFF\"><b>"
-                            ."goals_3<\/b><\/td>"),
+                            ."#FFFFFF\">[ \n]*<b>0<\/b>[ \n]*<\/td>"),
+                       7=> ("<td align=\"\" width=\"\" bgcolor=\"#FFFFFF\">"
+                            ."[ \n]*<b>"
+                            ."goals_3<\/b>[ \n]*<\/td>"),
                        8=> ("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\"><b><\/b><\/td>"),
+                            ."#FFFFFF\">[ \n]*<b><\/b>[ \n]*<\/td>"),
                        9=> ("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\"><b>product_3<\/b><\/td>"),
+                            ."#FFFFFF\">[ \n]*<b>product_3<\/b>[ \n]*<\/td>"),
                        10=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\"><b>payment_3% <\/b><\/td>"),
+                            ."#FFFFFF\">[ \n]*<b>payment_3% <\/b>[ \n]*<\/td>"),
                        11=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\"><b>Proposed<\/b><\/td>"),
+                            ."#FFFFFF\">[ \n]*<b>Proposed<\/b>[ \n]*<\/td>"),
                        12=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."gold\"><b>1<\/b><\/td>"),
+                            ."gold\">[ \n]*<b>1<\/b>[ \n]*<\/td>"),
                        13=>("<td align=\"\" width=\"\" bgcolor=\"gold\">"
-                            ."<b>goals_4<\/b><\/td>"),
+                            ."[ \n]*<b>goals_4<\/b>[ \n]*<\/td>"),
                        14=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."gold\"><b><\/b><\/td>"),
+                            ."gold\">[ \n]*<b><\/b>[ \n]*<\/td>"),
                        15=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."gold\"><b>product_4<\/b><\/td>"),
+                            ."gold\">[ \n]*<b>product_4<\/b>[ \n]*<\/td>"),
                        16=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."gold\"><b>payment_4% <\/b><\/td>"));
+                            ."gold\">[ \n]*<b>payment_4% <\/b>[ \n]*<\/td>"));
         $this->_testFor_patterns( $text, $pats, 17 );
 
         // finally check that everything went smoothly with the DB
@@ -223,7 +225,7 @@ extends UnitTest
                              . "AND proid='%s'" ));
 
         $ln = ( "<p align=right>[[] <a href=\"step3_edit[.]php3[?]proid=%s"
-                ."[&]a=1\"><b>Propose Milestones<\/b><\/a>\n []]<\/p>" );
+                ."[&]a=1\"><b>Propose Milestones<\/b><\/a> []]<\/p>" );
 
         $dat = $this->_generate_records( array("pid","dev","num","goals",
                                                "rday", "rmon", "ryear",
@@ -247,7 +249,7 @@ extends UnitTest
                            $dat[0]["goals"], $dat[0]["rday"], $dat[0]["rmon"],
                            $dat[0]["ryear"], $dat[0]["prod"], $dat[0]["pay"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 95 );
+        $this->_testFor_length( 94, "test 1" );
         $pats = array( 0 => (sprintf( $ln, $dat[0]["pid"])));
         $this->_testFor_patterns( $text, $pats, 1 );
 
@@ -266,7 +268,7 @@ extends UnitTest
                            $dat[1]["goals"], $dat[1]["rday"], $dat[1]["rmon"],
                            $dat[1]["ryear"], $dat[1]["prod"], $dat[1]["pay"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 658 );
+        $this->_testFor_length( 761, "test 2" );
         $pats = array( 0 => (sprintf( $ln, $dat[1]["pid"])),
                        1 => $t->translate("Insert Failed" ),
                        2 => $t->translate("No Goals defined."));
@@ -285,7 +287,7 @@ extends UnitTest
                            $dat[2]["goals"], $dat[2]["rday"], $dat[2]["rmon"],
                            $dat[2]["ryear"], $dat[2]["prod"], $dat[2]["pay"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 673 );
+        $this->_testFor_length( 776, "test 3" );
 
         $pats = array( 0 => (sprintf( $ln, $dat[2]["pid"])),
                        1 => $t->translate("Insert Failed" ),
@@ -303,7 +305,7 @@ extends UnitTest
                            $dat[3]["goals"], $dat[3]["rday"], $dat[3]["rmon"],
                            $dat[3]["ryear"], $dat[3]["prod"], $dat[3]["pay"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 670 );
+        $this->_testFor_length( 773, "test 4" );
         $pats = array( 0 => (sprintf( $ln, $dat[3]["pid"])),
                        1 => $t->translate("Insert Failed" ),
                        2 => $t->translate("Number parameter was not set."));
@@ -342,30 +344,30 @@ extends UnitTest
         // first call, four values
         //
         $text = select_milestone_number( $dat[0]["proid"], $dat[0]["devid"],0);
-        $this->assertEquals( 153, strlen($text), "String length mismatch" );
+        $this->assertEquals( 212, strlen($text), "test 1" );
         for ( $idx = 4; $idx < 10; $idx++ ) {
             $this->_testFor_pattern($text,("<option value=\"".$idx
-                                           ."\">".$idx));
+                                           ."\">".$idx), "idx: $idx");
         }
 
         //
         // second call, no values
         //
         $text = select_milestone_number( $dat[1]["proid"], $dat[1]["devid"],0);
-        $this->assertEquals( 133, strlen($text), "String length mismatch" );
+        $this->assertEquals( 185, strlen($text), "test 2" );
         for ( $idx = 1; $idx < 6; $idx++ ) {
             $this->_testFor_pattern($text,("<option value=\"".$idx
-                                           ."\">".$idx));
+                                           ."\">".$idx), "idx: $idx");
         }
 
         //
         // third call, no values but a selected option
         //
         $text = select_milestone_number( $dat[2]["proid"], $dat[2]["devid"],5);
-        $this->assertEquals( 142, strlen($text), "String length mismatch" );
+        $this->assertEquals( 194, strlen($text), "test 3" );
         for ( $idx = 1; $idx < 5; $idx++ ) {
             $this->_testFor_pattern($text,("<option value=\"".$idx
-                                           ."\">".$idx));
+                                           ."\">".$idx), "idx: $idx");
         }
         $this->_testFor_pattern($text,("<option selected value=\"5\">5"));
 
@@ -423,7 +425,7 @@ extends UnitTest
         $text = select_milestone_payment( $args[0]["proid"], $args[0]["devid"],
                                      $args[0]["selected"], $args[0]["number"]);
 
-        $this->_testFor_string_length( $text, 85 );
+        $this->_testFor_string_length( $text, 116, "test 1" );
         for ( $i = 2; $i < 4; $i+=2 ) {
             $this->_testFor_pattern($text, "option value=\"" . $i . "\">" 
                                            . $i . "%");
@@ -434,7 +436,7 @@ extends UnitTest
         $args[1]["selected"] = 50;
         $text = select_milestone_payment( $args[1]["proid"], $args[1]["devid"],
                                   $args[1]["selected"], $args[1]["number"]);
-        $this->_testFor_string_length( $text, 610 );
+        $this->_testFor_string_length( $text, 802, "test 2" );
         for ( $i = 2; $i < 50; $i+=2 ) {
             $this->_testFor_pattern($text, "option value=\"" . $i . "\">" 
                                            . $i . "%");
@@ -445,7 +447,7 @@ extends UnitTest
         $args[2]["selected"] = 100;
         $text = select_milestone_payment( $args[2]["proid"], $args[2]["devid"],
                                   $args[2]["selected"], $args[2]["number"]);
-        $this->_testFor_string_length( $text, 1187 );
+        $this->_testFor_string_length( $text, 1554, "test 3" );
         for ( $i = 2; $i < 100; $i+=2 ) {
             $this->_testFor_pattern($text, "option value=\"" . $i . "\">" 
                                            . $i . "%");
