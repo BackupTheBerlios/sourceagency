@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lang.inc,v 1.14 2002/04/03 10:32:54 riessen Exp $
+# $Id: lang.inc,v 1.15 2002/04/12 12:52:33 riessen Exp $
 #
 ######################################################################
 
@@ -31,6 +31,8 @@ if ( isset( $l ) ) {
 if ($sess->is_registered("la")) {
     if (isset($lang)) {
         $la = $lang;
+    } else {
+        $la = "English";
     }
 } else {
     if (isset($lang)) {
