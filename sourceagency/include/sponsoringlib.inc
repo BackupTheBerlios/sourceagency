@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: sponsoringlib.inc,v 1.6 2002/03/28 14:47:02 riessen Exp $
+# $Id: sponsoringlib.inc,v 1.7 2002/04/10 00:36:31 grex Exp $
 #
 ######################################################################
 
@@ -179,7 +179,8 @@ function show_sponsorings($proid)
  * Preview of a sponsoring suggestion
  *
  * @param   int       $proid         Project id
- * FIXME: proid argument is not used in the function
+ *                                   this argument is not really used in the function
+ *                                   ---> We could leave it out
  *
  * @global  object    $t             Translation object
  * @global  object    $bx            Box object

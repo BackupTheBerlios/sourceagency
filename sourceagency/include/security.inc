@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.19 2002/03/28 14:47:02 riessen Exp $
+# $Id: security.inc,v 1.20 2002/04/10 00:36:31 grex Exp $
 #
 ######################################################################
 
@@ -48,7 +48,7 @@
  * @global  object    $t                       translation object
  * @global  string    $g_step_explanation      Contains strings with the explanation
  *                                             of what can be done in the step
- * @global  string    $g_step_count            FIXME
+ * @global  string    $g_step_count            TODO
  *
  * @access  public
  */
@@ -150,7 +150,7 @@ function allowed_actions ($project_status, $action_number, $proid)
         print 'grey';
     }
 
-    // FIXME: should height and width be hardcoded here?
+    // TODO: should height and width be hardcoded here?
     print ".png\" border=0 width=\"48\" height=\"48\" alt=\"1\">&nbsp;"
         . $text . ( $project_status >= $action_number ? "</a>" : "</font>" );
 
