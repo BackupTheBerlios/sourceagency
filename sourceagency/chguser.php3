@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: chguser.php3,v 1.13 2002/05/10 12:32:22 grex Exp $
+# $Id: chguser.php3,v 1.14 2002/05/10 12:34:05 grex Exp $
 #
 ######################################################################
 
@@ -150,8 +150,6 @@ $bx->box_colspan( 2, 'center', '', html_form_submit($t->translate('Change'), 'u_
 $bx->box_columns_end();
 htmlp_form_hidden('u_id', $db->f('user_id'));
 htmlp_form_end();
-$bx->box_body_end();
-$bx->box_end();
 $bx->box_body_end();
 $bx->box_end();
 
