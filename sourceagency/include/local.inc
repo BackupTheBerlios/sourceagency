@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.3 2001/11/06 11:56:47 riessen Exp $
+ * $Id: local.inc,v 1.4 2001/11/06 12:41:09 riessen Exp $
  *
  */ 
 
@@ -20,13 +20,16 @@
 #
 ######################################################################
 
-class DB_SourceAgency extends DB_Sql {
-  var $Host     = "localhost";
-  var $Database = "sourceagency";
-  var $User     = "operator";
-  var $Password = "password";
-
-
+if ( file_exists( 'localhost_database.inc' ) ) {
+  /** defines the DB_sourceagency class **/
+  include_once( 'localhost_database.inc' );
+} else {
+  class DB_SourceAgency extends DB_Sql {
+    var $Host      = "localhost";
+    var $Database  = "sourceagency";
+    var $User      = "operator";
+    var $Password  = "password";
+  }
 }
 
 /*********************************************************************/
@@ -40,7 +43,7 @@ class DB_SourceAgency extends DB_Sql {
 /*         Username: admin                                           */
 /*         Password: admin                                           */
 /*                                                                   */
-/* Vert important:                                                   */
+/* Very important:                                                   */
 /* Be sure of inmediately changing the login & password by clicking  */
 /* on User Admin. You'll notice this is quite easy to do ;-)         */
 /*								     */
