@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: box.inc,v 1.12 2002/05/07 19:54:27 grex Exp $
+# $Id: box.inc,v 1.13 2002/05/07 20:06:10 grex Exp $
 #
 ######################################################################
 
@@ -412,7 +412,7 @@ class box {
        	echo "         <!-- Column spanned over $number_of_columns columns finished -->\n";
     }
 
-    function box_set_body_valign( $valign = '' )
+    function box_set_body_valign( $valign = 'top' )
     {
         $this->box_body_valign = $valign;
     }

@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: menubar.inc,v 1.10 2002/04/19 15:24:06 riessen Exp $
+# $Id: menubar.inc,v 1.11 2002/05/07 20:03:01 grex Exp $
 #
 ######################################################################
 
@@ -26,13 +26,13 @@ global $PHP_SELF;
 ?>
 
 <!-- BerliOS menu -->
-<table BORDER=0 CELLSPACING=0 CELLPADDING=3 WIDTH="100%">
-<tr BGCOLOR="<?php echo $th_navstrip_bgcolor;?>">
+<table border="0" cellspacing="0" cellpadding="3" width="100%">
+<tr bgcolor="<?php echo $th_navstrip_bgcolor;?>">
 <td ALIGN=CENTER>
 <span class="titlebar"><font color="<?php echo $th_navstrip_font_color;?>"><?php echo $sys_name?></font></span></td>
 </tr>
 
-<tr ALIGN=RIGHT BGCOLOR="<?php echo $th_nav_bgcolor;?>">
+<tr align="right" bgcolor="<?php echo $th_nav_bgcolor;?>">
 <td><a href="<?php $sess->purl('index.php3') ?>" class="menus"><?php echo $t->translate("Index"); ?></a>
 <br><a href="<?php $sess->purl('faq.php3') ?>" class="menus"><?php echo $t->translate("Q&amp;A"); ?></a>
 <br><a target="_blank" href="<?php print $sess->url('doco.php3') . $sess->add_query(array('page' => $PHP_SELF)) ?>" class="menus"><?php echo $t->translate('What is this?'); ?></a>
@@ -131,13 +131,13 @@ if (
   && !($logout)) {
 
 ?>
-<table BORDER=0 CELLSPACING=0 CELLPADDING=3 WIDTH="100%">
-<tr BGCOLOR="<?php echo $th_navstrip_bgcolor;?>">
-<td ALIGN=CENTER><img SRC="images/blank.gif" height="1" width="135" border=0><br>
+<table border="0" cellspacing="0" cellpadding="3" width="100%">
+<tr bgcolor="<?php echo $th_navstrip_bgcolor;?>">
+<td align=CENTER><img src="images/blank.gif" height="1" width="135" border="0" alt=""><br>
 <span class="titlebar"><font color="<?php echo $th_navstrip_font_color;?>"><?php echo $t->translate('Administration'); ?></font></span></td>
 </tr>
 
-<tr ALIGN="RIGHT" BGCOLOR="<?php echo $th_nav_bgcolor;?>">
+<tr align="right" bgcolor="<?php echo $th_nav_bgcolor;?>">
 <td>
 <?php
 
@@ -198,17 +198,17 @@ if (
 ?>
 <!-- end Admin menu -->
 <!-- Search menu -->
-<table BORDER=0 CELLSPACING=0 CELLPADDING=3 WIDTH="100%">
-<tr BGCOLOR="<?php echo $th_navstrip_bgcolor;?>">
-<td ALIGN=CENTER><img SRC="images/blank.gif" height="1" width="135" border=0><br>
+<table border="0" cellspacing="0" cellpadding="3" width="100%">
+<tr bgcolor="<?php echo $th_navstrip_bgcolor;?>">
+<td align=CENTER><img src="images/blank.gif" height="1" width="135" border="0" alt=""><br>
 <span class="titlebar"><font color="<?php echo $th_navstrip_font_color;?>"><?php echo $t->translate("Search"); ?></font></span></td>
 </tr>
 
-<tr ALIGN=RIGHT BGCOLOR="<?php echo $th_nav_bgcolor;?>">
+<tr align="right" bgcolor="<?php echo $th_nav_bgcolor;?>">
 <td align=center>
 <p>
 <form action="<?php $sess->purl("search.php3"); ?>">
-<input TYPE="text" SIZE="10" NAME="search" VALUE="">
+<input type="text" size="10" name="search" value="">
 <?php
 echo "<p><input TYPE=\"submit\" NAME=\"Search\" VALUE=\""
     .$t->translate("Search")."\">";
@@ -219,13 +219,13 @@ echo "<p><input TYPE=\"submit\" NAME=\"Search\" VALUE=\""
 </table>
 <!-- end Search menu -->
 <!-- Language menu -->
-<table BORDER=0 CELLSPACING=0 CELLPADDING=3 WIDTH="100%">
-<tr BGCOLOR="<?php echo $th_navstrip_bgcolor;?>">
-<td ALIGN=CENTER><img SRC="images/blank.gif" height="1" width="135" border=0><br>
+<table border="0" cellspacing="0" cellpadding="3" width="100%">
+<tr bgcolor="<?php echo $th_navstrip_bgcolor;?>">
+<td align=CENTER><img src="images/blank.gif" height="1" width="135" border="0"><br>
 <span class="titlebar"><font color="<?php echo $th_navstrip_font_color;?>"><?php echo $t->translate("Language");?></font></span></td>
 </tr>
 
-<tr ALIGN=RIGHT BGCOLOR="<?php echo $th_nav_bgcolor;?>">
+<tr align="right" bgcolor="<?php echo $th_nav_bgcolor;?>">
 <td align=center>
 <p>
 <form action="<?php $sess->pself_url()?>">

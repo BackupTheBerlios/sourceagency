@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: top_title.inc,v 1.12 2002/05/07 19:54:27 grex Exp $
+# $Id: top_title.inc,v 1.13 2002/05/07 20:03:01 grex Exp $
 #
 ######################################################################
 
@@ -49,7 +49,7 @@ vspace="5" hspace="5" alt="<?php echo $sys_logo_alt;?>"></a>
 <!-- beta string -->
 <td align="center" valign="middle">
 <center>
-<font font="times" size="+2" color="red">BETA BETA BETA</font><br>
+<font size="+2" color="red">BETA BETA BETA</font><br>
 <?php echo $t->translate("This site is being beta tested"); ?>, 
 <?php echo $t->translate("please send any and all"); ?>
  <a href="mailto:sourceagency-support@lists.berlios.de?subject=SourceAgency Beta Feedback&cc=grex@scouts-es.org&cc=lutz.henckel@fokus.fhg.de&cc=riessen@berlios.de"
