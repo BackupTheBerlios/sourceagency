@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: box.inc,v 1.15 2002/05/07 20:17:55 grex Exp $
+# $Id: box.inc,v 1.16 2002/05/10 11:49:00 grex Exp $
 #
 ######################################################################
 
@@ -410,7 +410,7 @@ class box {
      * @param    string      $align                Text align
      * @access public
      */
-    function box_colspan ($number_of_columns, $align, $bgcolor, $text='')
+    function box_colspan($number_of_columns, $align, $bgcolor, $text='')
     {
        	echo "         <!-- New Column spanned over $number_of_columns columns starts -->\n";
        	echo "         <td colspan=\"".$number_of_columns."\" align=\"".$align."\" bgcolor=\"".$bgcolor."\">";
