@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: sponsoringlib.inc,v 1.3 2001/11/20 16:42:30 riessen Exp $
+# $Id: sponsoringlib.inc,v 1.4 2002/02/07 12:22:02 riessen Exp $
 #
 ######################################################################
 
@@ -100,6 +100,7 @@ function show_sponsorings($proid) {
   }
 }
 
+//FIXME: proid argument is not used in the function
 function sponsoring_preview($proid) {
   global $t, $bx, $auth, $sess, $sponsoring_text, $budget, $valid_day, $valid_month, $valid_year, $begin_day, $begin_month, $begin_year, $finish_day, $finish_month, $finish_year;
 
@@ -108,6 +109,7 @@ function sponsoring_preview($proid) {
 	$bx->box_title($t->translate("Sponsor Involvement"));
 	$bx->box_body_begin();
 	$timestamp = time();
+  // FIXME: what is the purpose of doing the following database query?
 	$db_local = new DB_SourceAgency;
 	$db_local->query("SELECT email_usr FROM auth_user WHERE username='".$auth->auth["uname"]."'");
 	$db_local->next_record();
@@ -146,7 +148,12 @@ function sponsoring_insert($proid,$user,$sponsoring_text,$budget,$valid_day,$val
 	  htmlp_link("configure_edit.php3",array("proid" => $proid),"configure this project");
   }
 
-  include("monitorlib.inc");
+  if ( floor( phpversion() ) >= 4 ) {
+    include_once("monitorlib.inc");
+  } else {
+    include("monitorlib.inc");
+  }
+
   include("config.inc");
   monitor_mail($proid,"sponsoring", "New Sponsor for project $proid", "Event has happened");
 
