@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.7 2002/04/23 10:04:42 riessen Exp $
+# $Id: unit_test.php,v 1.8 2002/04/23 11:50:36 riessen Exp $
 #
 ######################################################################
 
@@ -45,10 +45,6 @@ extends TestCase
     }
     function _testFor_string_length( $str, $len, $msg = '' ) {
         $this->_check_length( $len, strlen( $str ), $msg );
-    }
-    function _testFor_length( $length, $msg = '' ) {
-        // TODO: replace the use of this function with _captured_length
-        $this->_testFor_captured_length( $length, $msg );
     }
     function _testFor_captured_length( $length, $msg = '' ) {
         $this->_check_length( capture_text_length(), $length, $msg );
