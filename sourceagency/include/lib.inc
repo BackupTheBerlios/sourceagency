@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.17 2001/11/29 15:39:35 grex Exp $
+# $Id: lib.inc,v 1.18 2001/12/13 14:49:10 riessen Exp $
 #
 ######################################################################
 
@@ -105,20 +105,6 @@ function license($selected) {
 
 function licensep($selected) {
     print license( $selected );
-//      htmlp_select("license");
-//      $db_local = new DB_SourceAgency;
-//      $db_local->query("SELECT * FROM licenses ORDER BY license ASC");
-//      while ($db_local->next_record()) {
-//  	if (!strcmp($db_local->f("license"),$selected)) { 
-//              htmlp_select_option($db_local->f("license"),"selected",
-//              $db_local->f("license"));
-//          }
-//  	else {
-//              htmlp_select_option($db_local->f("license"),"",
-//              $db_local->f("license"));
-//          }
-//      }
-//      htmlp_select_end();
 }
 
 
@@ -760,7 +746,7 @@ function lib_show_description($query) {
                                  $db_local->f("project_title")) 
                        . " (".$db_local->f("type").")");
   	$bx->box_body_begin();
- 	echo "<b>".$t->translate("by")." ";
+ 	echo "<b>"; #.$t->translate("by")." ";
 	lib_pnick($db_local->f("description_user"));
   	echo " - ".timestr(mktimestamp($db_local->f("description_creation")));
   	echo ( "<p><b>".$t->translate("Description")."</b>: "
@@ -775,10 +761,12 @@ function lib_show_description($query) {
 function select_from_config($name,$array_name,$selected) {
     $array_value="";
     
-    // WISH: config.inc is included once again! This needs not to be done as it should have occured at the beginning of the page
+    // WISH: config.inc is included once again! This needs not to be 
+    // WISH: done as it should have occured at the beginning of the page
     include("config.inc");
 
-    // WISH: It would be nice if the parameter $array_name could attack directly the array
+    // WISH: It would be nice if the parameter $array_name could 
+    // WISH: attack directly the array
     // WISH: then this switch would be obsolete
     // WISH: the problem is that I have not encountered how it works!
 
@@ -816,14 +804,8 @@ function select_from_config($name,$array_name,$selected) {
     
     $output = html_select($name)."\n";
     while (list(, $array_value) = each($array)) {
-//          if (!strcmp($array_value,$selected)) {
-//              $select = "selected";
-//          }
-//          else {
-//              $select="";
-//          }
         $output .= html_select_option( $array_value,
-        !strcmp($array_value,$selected), 
+                                       !strcmp($array_value,$selected), 
         $array_value ) . "\n";
     }
     $output .= html_select_end() . "\n";
@@ -1099,7 +1081,8 @@ function lib_select_yes_or_no($name,$selected) {
 }
 
 function lib_nick($nick) {
-    return "<b>by ".$nick."</b>";
+    global $t;     
+    return "<b>".$t->translate("by")." ".$nick."</b>";
 }
 
 function lib_pnick($nick) {

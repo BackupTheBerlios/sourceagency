@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.11 2001/11/29 15:37:13 grex Exp $
+# $Id: config.inc,v 1.12 2001/12/13 14:49:29 riessen Exp $
 #
 ######################################################################
 
@@ -112,6 +112,8 @@ $la_array[] = "German";
 # The texts are sent through the translator before being used on the page.
 #
 ######################################################################
+$g_step_text[-1] = "Deleted";  
+$g_step_text[0] = "Configuration";
 $g_step_text[1] = "Consultancy";
 $g_step_text[2] = "Technical Specifications";
 $g_step_text[3] = "Milestones";
@@ -119,6 +121,8 @@ $g_step_text[4] = "Referees";
 $g_step_text[5] = "Project Follow-up";
 $g_step_text[6] = "Rating";
 
+$g_step_explanation[-1] = "step_-1_explanation";   
+$g_step_explanation[0] = "step_0_explanation";
 $g_step_explanation[1] = "step_1_explanation";
 $g_step_explanation[2] = "step_2_explanation";
 $g_step_explanation[3] = "step_3_explanation";
