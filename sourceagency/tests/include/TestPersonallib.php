@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestPersonallib.php,v 1.15 2001/11/20 10:51:02 riessen Exp $
+# $Id: TestPersonallib.php,v 1.16 2001/12/18 17:33:30 riessen Exp $
 #
 ######################################################################
 
@@ -399,9 +399,13 @@ extends TestCase
         $db_config->add_query( sprintf( $db_q[0], $user2 ), 1 );
 
         $db_config->add_num_row(0, 0); // fubar generates zero
+        // comments_long now does two calls to num_row
+        $db_config->add_num_row(0, 0); 
         $db_config->add_record(false, 0);
 
         $db_config->add_num_row(2, 1); // snafu generates two
+        // comments_long now makes two calls to num_row
+        $db_config->add_num_row(2, 1);
 
         $row1 = $this->_generate_array( array( 'id', 'proid', 'type','number',
                                                'subject_cmt', 'creation_cmt',
@@ -489,7 +493,7 @@ extends TestCase
         $user3 = "fritz";
 
         $db_config = new mock_db_configure;
-        $db_config->set_nr_instance_expected( 11 );
+        $db_config->set_nr_instance_expected( 10 );
         $db_q = array( 0 => ("SELECT * FROM news WHERE user_news='%s'"),
                        1 => ("SELECT COUNT(*) FROM comments WHERE proid="
                              . "'%s' AND type='News' AND ref='%s'"),
@@ -498,10 +502,15 @@ extends TestCase
         $db_config->add_query( sprintf( $db_q[0], $user2 ), 1 );
         $db_config->add_query( sprintf( $db_q[0], $user3 ), 4 );
 
+        // news_short calls the num_row method twice instead of once
+        $db_config->add_num_row(0, 0); // fubar generates zero
         $db_config->add_num_row(0, 0); // fubar generates zero
         $db_config->add_record(false, 0 );
 
         $db_config->add_num_row(2, 1); // snafu generates 2 results
+        $db_config->add_num_row(2, 1); // snafu generates 2 results
+        
+        $db_config->add_num_row(7, 4); // fritz generates 7 results
         $db_config->add_num_row(7, 4); // fritz generates 7 results
 
         $row1 = $this->_generate_array( array( 'id', 'proid','subject_news',
@@ -661,7 +670,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 2015 );
+        $this->_testFor_length( 1780 );
         $this->_testFor_pattern( $text, "Last 5 News by " . $user3 );
         $this->assertNotRegexp( "/no news posted/", $text, 
                                 "[User: ".$user3."] has news posted");
@@ -684,13 +693,6 @@ extends TestCase
         /* entry five */           $row11['subject_news'],
                                    $row22['COUNT(*)'],$row23['proid'],
                                    $row23['project_title']);
-
-        // FIXME: either the title is wrong or the logic, but i think the 
-        // FIXME: following entry should not appear, it's the sixth from 5! 
-        $this->_testFor_news_link( $text, $row12['proid'],
-                                   $row12['subject_news'],
-                                   $row24['COUNT(*)'],$row25['proid'],
-                                   $row25['project_title']);
 
         $this->assertNotRegexp("/" . sprintf( $this->p_news_long_template,
                                    $row12['proid'], $row12['subject_news'], 
@@ -715,8 +717,8 @@ extends TestCase
         // we need a total of 3 instances for the snafu query
         $db_config->set_nr_instance_expected( 4 );
 
-        $db_q = array( 0 => ("SELECT * FROM comments WHERE user_cmt='%s' "
-                               ."AND comments.proid"),
+        $db_q = array( 0 => ("SELECT * FROM news WHERE user_news='%s' "
+                               ."AND news.proid"),
                        1 => ("SELECT COUNT(*) FROM comments WHERE proid='%s"
                              ."' AND type='News' AND ref='%s'"),
                        2 => "SELECT * FROM description WHERE proid='%s'");
@@ -765,9 +767,9 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 559 );
-        $this->_testFor_pattern( $text, "All Comments by " . $user1 );
-        $this->_testFor_line( $text, "no comments posted" );
+        $this->_testFor_length( 551 );
+        $this->_testFor_pattern( $text, "All news by " . $user1 );
+        $this->_testFor_line( $text, "no news posted" );
 
         //
         // snafu query
@@ -779,8 +781,8 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 1016 );
-        $this->_testFor_pattern( $text, "All Comments by " . $user2 );
+        $this->_testFor_length( 1012 );
+        $this->_testFor_pattern( $text, "All news by " . $user2 );
 
         $this->_testFor_news_link( $text, $row1['proid'],$row1['subject_news'],
                                    $row3['COUNT(*)'],$row4['proid'],
