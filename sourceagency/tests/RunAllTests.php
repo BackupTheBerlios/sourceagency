@@ -15,9 +15,14 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: RunAllTests.php,v 1.2 2001/11/08 16:17:42 riessen Exp $
+# $Id: RunAllTests.php,v 1.3 2001/11/09 20:13:52 riessen Exp $
 #
 ######################################################################
+
+if ( floor( phpversion() ) < 4 ) {
+  print( "Require atleast version 4 of php to run tests\n" );
+  exit
+}
 
 // this is really insane but i have to re-edit the include path
 // assume that i'm in tests/include, two above me is include
