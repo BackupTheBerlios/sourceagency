@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMilestoneslib.inc,v 1.11 2002/03/20 11:09:28 riessen Exp $
+# $Id: TestMilestoneslib.inc,v 1.12 2002/03/20 12:09:42 riessen Exp $
 #
 ######################################################################
 
@@ -317,13 +317,13 @@ extends UnitTest
         $db_config = new mock_db_configure( 3 );
 
         $db_q = array( 0 => ("SELECT number FROM milestones WHERE proid='%s' "
-                             . "AND devid='%s' ORDER BY number"));
+                             . "ORDER BY number"));
 
         $dat = $this->_generate_records( array("proid","devid"), 3 );
         
         for ( $idx = 0; $idx < 3; $idx++ ) {
-            $db_config->add_query( sprintf( $db_q[0], $dat[$idx]["proid"],
-                                            $dat[$idx]["devid"]), $idx );
+            $db_config->add_query( sprintf( $db_q[0], $dat[$idx]["proid"]), 
+                                   $idx );
         }
         for ( $idx = 0; $idx < 11; $idx++ ) {
             $db_config->add_num_row( 4, 0 );
