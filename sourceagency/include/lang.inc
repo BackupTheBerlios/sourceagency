@@ -18,29 +18,34 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lang.inc,v 1.9 2001/12/13 15:40:02 riessen Exp $
+# $Id: lang.inc,v 1.10 2001/12/13 16:40:26 riessen Exp $
 #
 ######################################################################
 
 global $l;
+
 $l->log( "Language: " . (isset( $lang ) ? $lang : "No Language set"));
 if ($sess->is_registered("la")) {
    if (isset($lang)) {
-      $la = $lang;
+       $la = $lang;
+   } else {
+       $la = "English";
    }
 } else {
    if (isset($lang)) {
-      $la = $lang;
+       $la = $lang;
    } else {
-      $la = "English";
+       $la = "English";
    }
    $sess->register("la");
 }
+
 switch($la) {
    case "English": $locale = "en_EN"; break;
-   case "German": $locale = "de_DE"; break;
+   case "German":  $locale = "de_DE"; break;
    case "Spanish": $locale = "es_ES"; break;
    default: $locale = "en_EN"; break;
 }
+
 setlocale (LC_TIME, $locale);
 ?>
