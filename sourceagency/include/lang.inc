@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lang.inc,v 1.17 2002/04/17 11:17:08 grex Exp $
+# $Id: lang.inc,v 1.18 2002/04/17 11:29:12 riessen Exp $
 #
 ######################################################################
 
@@ -35,6 +35,7 @@ if ($sess->is_registered("la")) {
         $la = $lang;
     } else {
         /* otherwise we just set this setting to the registered one */
+        global $la;
         $lang = $la;
     }
 } else {
