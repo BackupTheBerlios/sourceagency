@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.13 2002/03/28 13:15:59 riessen Exp $
+# $Id: TestLib.php,v 1.14 2002/04/12 14:26:01 riessen Exp $
 #
 ######################################################################
 
@@ -350,52 +350,13 @@ extends UnitTest
         $this->_check_db( $db_config );
     }
 
-    function testCheckcnt() {
-        // need to instantiate a new DB_SourceAgency object for the
-        // global $db variable
-        global $db;
-
-        $db_config = new mock_db_configure( 2 );
-        $db_q = array( 0 => ("DELETE FROM counter_check WHERE "
-                             ."DATE_FORMAT(creation_cnt,'%Y-%m-%d') != '"
-                             . date("Y-m-d") . "'"),
-                       1 => ("SELECT * FROM counter_check WHERE "
-                             ."proid='%s' AND cnt_type='%s' AND ipaddr='%s'"),
-                       2 => ("INSERT counter_check SET proid='%s',"
-                             ."cnt_type='%s',ipaddr='%s'"));
-        $dat = array( "p1" => "proid1", "t1" => "type1", "ip1" => "ipaddr1",
-                      "p2" => "proid2", "t2" => "type2", "ip2" => "ipaddr2");
-
-        $db_config->add_query( $db_q[0], 0 );
-        $db_config->add_query( sprintf( $db_q[1], $dat["p1"], $dat["t1"],
-                                        $dat["ip1"] ), 0 );
-
-        $db_config->add_query( sprintf( $db_q[2], $dat["p1"], $dat["t1"],
-                                        $dat["ip1"] ), 0 );
-
-        $db_config->add_query( $db_q[0], 1 );
-        $db_config->add_query( sprintf( $db_q[1], $dat["p2"], $dat["t2"],
-                                        $dat["ip2"] ), 1 );
-
-        $db_config->add_num_row( 0, 0 );
-        $db_config->add_num_row( 1, 1 );
-
-        // redefine the global variable $db with the configured database
-        $db = new DB_SourceAgency;
-        $this->assertEquals( 1, checkcnt( $dat["p1"], $dat["ip1"],$dat["t1"]));
-
-        $db = new DB_SourceAgency;
-        $this->assertEquals( 0, checkcnt( $dat["p2"], $dat["ip2"],$dat["t2"]));
-
-        // check that the database component did not fail
-        $this->_check_db( $db_config );
-    }
 
     function testLicensep() {
         $db_config = new mock_db_configure( 1 );
         $db_q = array( 0 => ("SELECT * FROM licenses ORDER BY license ASC") );
 
         $db_config->add_query( $db_q[0], 0 );
+        $db_config->add_num_row( 1, 0 );
 
         $row = array();
         $row[0] = array( "license" => "snafu" );
