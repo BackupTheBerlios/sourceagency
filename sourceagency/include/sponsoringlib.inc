@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: sponsoringlib.inc,v 1.11 2002/09/11 11:27:37 helix Exp $
+# $Id: sponsoringlib.inc,v 1.12 2002/12/09 10:27:34 erik Exp $
 #
 ######################################################################
 
@@ -164,7 +164,7 @@ function show_sponsorings($proid)
 
         echo ' - '.timestr($timestamp)."</b>\n";
         echo '<p><b>'.$t->translate('Max. sum of money').':</b> '
-          .$db->f('budget')." Euros\n";
+          .$db->f('budget')." Euro\n";
         echo '<br><b>'.$t->translate('Status').':</b> '
           .show_status($db->f('status'))."\n";
         echo '<br><b>'.$t->translate('Validity').':</b> '
@@ -239,7 +239,7 @@ function sponsoring_preview($proid='')
     $timestamp = time();
     lib_pnick($auth->auth['uname']);
     echo ' - '.timestr($timestamp)."</b>\n";
-    echo '<p><b>'.$t->translate('Max. sum of money').":</b> $budget Euros\n";
+    echo '<p><b>'.$t->translate('Max. sum of money').":</b> $budget Euro\n";
     echo '<br><b>'.$t->translate('Status').":</b> ".$t->translate('Proposed')."\n";
     echo '<br><b>'.$t->translate('Validity').':</b> '
       .timestr_middle(mktimestamp(date_to_timestamp($valid_day,$valid_month,

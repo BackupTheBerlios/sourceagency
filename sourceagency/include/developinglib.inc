@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: developinglib.inc,v 1.10 2002/11/20 10:27:23 erik Exp $
+# $Id: developinglib.inc,v 1.11 2002/12/09 10:27:34 erik Exp $
 #
 ######################################################################
 
@@ -89,7 +89,7 @@ function show_developings($proid, $content_id)
 	    lib_pnick($db->f("username"));
             echo ' - '.timestr($timestamp)."</b>\n";
     	    echo '<p><b>'.$t->translate('Cost').':</b> '
-              .$db->f("cost")." euros\n";
+              .$db->f("cost")." Euro\n";
     	    echo '<br><b>'.$t->translate('License').':</b> '
               .$db->f("license")."\n";
     	    echo '<br><b>'.$t->translate('Cooperation').':</b> '
@@ -144,7 +144,7 @@ function developing_preview($proid)
     echo '<b>';
     lib_pnick($auth->auth["uname"]);
     echo ' - '.timestr($timestamp)."</b>\n";
-    echo "<p><b>Cost:</b> $cost euros\n";
+    echo "<p><b>Cost:</b> $cost Euro\n";
     echo "<br><b>License:</b> $license\n";
     echo "<br><b>Cooperation:</b> $cooperation\n";
     echo "<br><b>Status:</b> Proposed\n";
@@ -445,7 +445,7 @@ function show_selected_developing($proid)
         echo '<b>by ';
         lib_pnick($db->f('username'));
         echo ' - '.timestr($timestamp)."</b>\n";
-        echo '<p><b>Cost:</b> '.$db->f("cost")." euros\n";
+        echo '<p><b>Cost:</b> '.$db->f("cost")." Euro\n";
         echo '<br><b>License:</b> '.$db->f("license")."\n";
         echo '<br><b>Cooperation:</b> '.$db->f("cooperation")."\n";
         echo '<br><b>Status:</b> '.show_status($db->f("status"))."\n";

@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: German-lang.inc,v 1.29 2002/11/20 10:27:23 erik Exp $
+# $Id: German-lang.inc,v 1.30 2002/12/09 10:27:34 erik Exp $
 #
 ######################################################################
 
@@ -46,6 +46,7 @@ function translate_real($phrase) {
     case 'All': $tmp = 'Alle'; break;
     case 'All Comments by': $tmp = 'Alle Kommentare von'; break;
     case 'All the rating on ': $tmp = 'Alle Bewertungen von'; break;
+    case 'already exists':$tmp='existiert bereits';break;
     case 'An error has ocurred': $tmp = 'Ein Fehler ist aufgetretten'; break;
     case 'Answer': $tmp = 'Anwort'; break;
     case 'Architecture': $tmp = 'Architektur'; break;
@@ -88,7 +89,8 @@ function translate_real($phrase) {
     case 'Consultant': $tmp = 'Berater'; break;
     case 'Consultants': $tmp = 'Berater'; break;
     case 'Consultants Wanted': $tmp = 'Berater gesucht'; break;
-    case 'Contact': $tmp = 'Kontakt'; break;
+    case 'Contact': $tmp = 'Kontakt'; break;    
+    case 'Content proposed': $tmp = 'Spezifikation vorgeschlagen'; break;
     case 'Cooperation': $tmp = 'Kooperation'; break;
     case 'Cost': $tmp = 'Kosten'; break;
     case 'Create': $tmp = 'Anlegen'; break;
@@ -123,7 +125,7 @@ function translate_real($phrase) {
     case 'Enter a New Frequently Asked Question': $tmp = 'Neue Frage eingeben'; break;
     case 'Enter a new documentation entry for a page': $tmp = 'Neue Dokumentation für eine Seite'; break;
     case 'Environment': $tmp = 'Umgebung'; break;
-    case 'Error': $tmp = 'Fehler'; break;
+    case 'Error': $tmp = 'Fehler'; break;    
     case 'Everybody': $tmp = 'Jeder'; break;
     case 'Expansion': $tmp = 'Erweiterung'; break;
     case 'Expires': $tmp = 'Läuft ab'; break;
@@ -164,6 +166,7 @@ function translate_real($phrase) {
     case 'In order to define a new project, you will have to follow these steps': $tmp = 'Um ein neues Projekt zu definieren, müssen Sie die folgenden Schritte ausführen'; break;
     case 'Insert a License': $tmp = 'Lizenz angeben'; break;
     case 'Insert': $tmp = 'Einfügen'; break;
+    case 'is changed': $tmp = 'wurde geändert'; break;
     case 'Invalid Project Id': $tmp = 'Unzulässige Projektidentifikation'; break;
     case 'Involved developers can see their own milestones and the accepted milestones from other developers': $tmp = 'Involvierte Entwickler sehen ihre eigenen Meilensteine und die vereinbarten von anderen Entwicklern'; break;
     case 'Project Participantions': $tmp = 'Projektbeteiligungen'; break;
@@ -228,6 +231,7 @@ function translate_real($phrase) {
     case 'Other': $tmp = 'Anderes'; break;
     case 'Other Developing Proposals': $tmp = 'Weitere Entwicklungsvorschläge'; break;
     case 'Other developing proposals': $tmp = 'Weitere Entwicklungsvorschläge'; break;
+    case 'Other Technical Contents': $tmp = 'Andere technische Inhalte'; break;
     case 'Other Technical Specifications': $tmp = 'Weitere technische Spezifikationen'; break;
     case 'Other technical specifications': $tmp = 'Weitere technische Spezifikationen'; break;
     case 'Our apologies. Documentation only available in English.': $tmp = 'Die Dokumentation ist leider nicht in Deutsch verfügbar.'; break;
@@ -242,6 +246,7 @@ function translate_real($phrase) {
     case 'Permission': $tmp = 'Rechte'; break;
     case 'Personal Page': $tmp = 'Persönliche Seite'; break;
     case 'Platform': $tmp = 'Plattform'; break;
+    case 'Please select a different Username':$tmp='Bitte wählen Sie einen anderen Benutzernamen';break;
     case 'Please try again': $tmp = 'Bitte versuchen Sie es nochmal'; break;
     case 'PREVIEW': $tmp = 'VORSCHAU'; break;
     case 'Preview': $tmp = 'Vorschau'; break;
@@ -250,6 +255,7 @@ function translate_real($phrase) {
     case 'Project': $tmp = 'Projekt'; break;
     case 'Project Configuration': $tmp = 'Projektkonfiguration'; break;
     case 'Project configuration form': $tmp = 'Projektkonfigurationsformular'; break;
+    case 'Project configuration modified': $tmp = 'Projektkonfiguration verändert'; break;
     case 'Project Definition': $tmp = 'Projektdefinition'; break;
     case 'Project Developers': $tmp = 'Projektentwickler'; break;
     case 'Project description': $tmp = 'Projektbeschreibung'; break;
@@ -260,7 +266,10 @@ function translate_real($phrase) {
     case 'Project information access rights configuration': $tmp = 'Konfiguration der Zugriffsrechte auf Projektinformationen'; break;
     case 'Project Initiator': $tmp = 'Projektinitiator'; break;
     case 'Project Insertion process': $tmp = 'Projektdefinitionsprozess'; break;
-    case 'Project Name': $tmp = 'Projektname'; break;
+    case strpr($phrase,'/Project is now in phase .*/'):	 
+	 $tmp=preg_replace('/Project is now in phase (.*)/','Projekt ist nun in Phase \\1',$phrase);
+	 break;        
+    case 'Project Name': $tmp = 'Projektname'; break;    
     case 'Project Nature': $tmp = 'Projektnatur'; break;
     case 'Project Owner(s)': $tmp = 'Projekteigner'; break;
     case 'Project owners can see all milestones (proposed and accepted ones)': $tmp = 'Projekteigner sehen alle Meilensteine (vorgeschlagene und vereinbarte)'; break;
@@ -271,12 +280,14 @@ function translate_real($phrase) {
     case 'Project Volume': $tmp = 'Projektvolumen'; break;
     case 'Project configuration': $tmp = 'Projektkonfiguration'; break;
     case 'Projects ordered alphabetically': $tmp = 'Projekte alphabetisch sortiert'; break;
+    case 'Project reviewed by a SourceAgency Editor': $tmp = 'Projekt durch SourceAgency-Redaktion geprüft'; break;
     case 'Projects': $tmp = 'Projekte'; break;
     case 'Propose yourself as referee': $tmp = 'Schlagen Sie sich selbst als Sachverständiger vor'; break;    
     case 'Proposals': $tmp = 'Angebote'; break;
     case 'Propose Milestones': $tmp = 'Machen Sie Vorschläge für Meilensteine'; break;
     case 'Propose yourself as consultant': $tmp = 'Bieten Sie sich selbst als Berater an'; break;
     case 'Proposed': $tmp = 'Angeboten'; break;
+    case 'Prototype': $tmp = 'Prototyp'; break;
     case 'Q&amp;A': $tmp = 'Fragen &amp; Antworten'; break;
     case 'Q&A': $tmp = 'Fragen &amp; Antworten'; break;
     case 'Question': $tmp = 'Frage'; break;
@@ -305,6 +316,9 @@ function translate_real($phrase) {
     case 'SourceAgency': $tmp = 'SourceAgency'; break;
     case 'Specification': $tmp = 'Spezifikation'; break;
     case 'Specifications': $tmp = 'Spezifikationen'; break;
+    case strpr($phrase,'/Sponsor .* accepted as sponsor/'):	 
+	 $tmp=preg_replace('/Sponsor (.*) accepted as sponsor/','Sponsor \\1 als Sponsor akzeptiert',$phrase);
+	 break;    
     case 'Sponsor Collaboration': $tmp = 'Sponsorenzusammenarbeit'; break;
     case 'Sponsor Involvement': $tmp = 'Finanzielle Förderung'; break;
     case 'Sponsor this project': $tmp = 'Fördere dieses Projekt'; break;
@@ -313,6 +327,7 @@ function translate_real($phrase) {
     case 'Sponsoring Collaboration': $tmp = 'Sponsorenzusammenarbeit'; break;
     case 'Sponsoring Comment': $tmp = 'Kommentar zur Förderung'; break;
     case 'Sponsoring Involvement': $tmp = 'Finanzielle Förderung'; break;
+    case 'Sponsoring wish': $tmp = 'Sponsorenschaft gewünscht'; break;
     case 'Sponsors Wanted': $tmp = 'Sponsor gesucht'; break;
     case 'Sponsors can make their decisions': $tmp = 'Sponsoren treffen ihre Entscheidungen'; break;
     case 'Sponsors can modify their sponsoring wish using this form': $tmp = 'Sponsoren können ihre Förderungsangebote abgeben'; break;
@@ -353,6 +368,7 @@ function translate_real($phrase) {
     case 'User Administration': $tmp = 'Benutzer Administration'; break;
     case 'Username': $tmp = 'Benutzername'; break;
     case 'User': $tmp = 'Benutzer'; break;
+    case 'User Change': $tmp = 'Benutzeränderung'; break;
     case 'Users': $tmp = 'Benutzer'; break;
     case 'Users that are monitoring this project': $tmp = 'Benutzern, die das Projekt derzeit beobachten'; break;
     case 'Users that monitor this Project': $tmp = 'Benutzern, die das Projekt beobachten'; break;
@@ -435,6 +451,7 @@ function translate_real($phrase) {
     case 'specifications': $tmp = 'Spezifikationen'; break;
     case 'sponsor': $tmp = 'Sponsor'; break;
     case 'sponsoring': $tmp = 'Finanzielle Unterstützung'; break;
+    case 'sponsoring_edit': $tmp = 'Finanzielle Förderung'; break;
     case 'status': $tmp = 'Status'; break;
     case 'step': $tmp = 'Schritt'; break;
     case 'step1_edit': $tmp = 'Neue Berater vorschlagen'; break;
@@ -449,6 +466,19 @@ function translate_real($phrase) {
     case 'views': $tmp = 'Zugriffrechte auf Projektinformationen'; break;
     case 'with': $tmp = 'mit'; break;
     case 'you will be now able to see your project in Step 0 (pending)': $tmp = 'erscheint jetzt Ihr Projekt im Status Schritt 0 (wartend)'; break;
+
+    case 'January':$tmp='Januar';break;
+    case 'February':$tmp='Februar';break;
+    case 'March':$tmp='März';break;
+    case 'April':$tmp='April';break;
+    case 'May':$tmp='Mai';break;
+    case 'June':$tmp='Juni';break;
+    case 'July':$tmp='Juli';break;
+    case 'August':$tmp='August';break;
+    case 'September':$tmp='September';break;
+    case 'October':$tmp='Oktober';break;
+    case 'November':$tmp='November';break;
+    case 'December':$tmp='Dezember';break;
 
     /** explanations for the various steps a project has **/
     case 'step_0_explanation':
@@ -489,5 +519,19 @@ function translate_real($phrase) {
         break;
     }
     return($tmp);
+}
+
+# function for translating complex strings in case statements
+# usage:
+#
+# case strpr($phrase,'/I am looking for .*/'):
+#  $tmp=preg_replace($search,$replace,$phrase);
+#  break;
+function strpr($phrase,$regex) {
+	
+	if(preg_match($regex,$phrase)) {
+		return $phrase;
+	}
+	return 'abc123456';	#unique string that is never found
 }
 ?>
