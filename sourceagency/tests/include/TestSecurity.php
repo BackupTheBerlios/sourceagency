@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.14 2002/04/23 11:50:13 riessen Exp $
+# $Id: TestSecurity.php,v 1.15 2002/04/23 12:28:45 riessen Exp $
 #
 ######################################################################
 
@@ -98,8 +98,8 @@ extends UnitTest
         $pats = array( 0 => ("<font color=\"#000000\"><b>"
                              .$t->translate($head_text)
                              ."<\/b><\/font>"), 
-                       1 => ("<font color=\"#FF2020\">[ \n]*"
-                             .$t->translate($body_text)."[ \n]*<\/font>") );
+                       1 => ("<font color=\"#FF2020\">[ \n]+"
+                             .$t->translate($body_text)."[ \n]+<\/font>") );
 
         $this->_testFor_patterns( $text, $pats, 2 );
         $this->_check_db( $db_config );

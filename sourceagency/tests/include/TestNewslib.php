@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestNewslib.php,v 1.11 2002/04/23 11:47:21 riessen Exp $
+# $Id: TestNewslib.php,v 1.12 2002/04/23 12:27:28 riessen Exp $
 #
 ######################################################################
 
@@ -66,31 +66,31 @@ extends UnitTest
 
         $ps=array( 0=> "<font color=\"#000000\"><b>Editing News<\/b><\/font>",
                    1=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]*<b>Subject<\/b> [(]128[)]:[ \n]*<\/td>"
-                       ."[ \n]*<!-- Column "
-                       ."finishes -->[ \n]*<!-- New Column starts -->"
-                       ."[ \n]*<td "
+                       ."[ \n]+<b>Subject<\/b> [(]128[)]:[ \n]+<\/td>"
+                       ."[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+<td "
                        ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]*<input type=\"text\" name=\"subject\" "
+                       ."[ \n]+<input type=\"text\" name=\"subject\" "
                        ."size=\"40\" "
                        ."maxlength=\"128\" value=\"this is the subject"
-                       ."\">[ \n]*<\/td>\n"),
+                       ."\">[ \n]+<\/td>\n"),
                    2=>("<form action=\""
                        . ereg_replace( "/", "\/", $sess->self_url() )
                        ."[?]proid=proid\" method=\"POST\">"),
                    3=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<b>Body<\/b> [(][*][)]:[ \n]*<\/td>"
-                       ."[ \n]*<!-- Column "
-                       ."finishes -->[ \n]*<!-- New Column starts -->"
-                       ."[ \n]*<td align"
-                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]*"
+                       ."\">[ \n]+<b>Body<\/b> [(][*][)]:[ \n]+<\/td>"
+                       ."[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+<td align"
+                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+"
                        ."<textarea name=\"text\" cols=\"40\" rows=\"7\" wrap"
                        ."=\"virtual\" maxlength=\"255\">this is the text<\/"
-                       ."textarea>[ \n]*<\/td>\n"),
+                       ."textarea>[ \n]+<\/td>\n"),
                    4=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<input type=\"submit\" value=\"Preview\" "
-                       ."name=\"preview\">[ \n]*<input type=\"submit\" value="
-                       ."\"Submit\" name=\"submit\">[ \n]*<\/td>\n"));
+                       ."\">[ \n]+<input type=\"submit\" value=\"Preview\" "
+                       ."name=\"preview\">[ \n]+<input type=\"submit\" value="
+                       ."\"Submit\" name=\"submit\">[ \n]+<\/td>\n"));
         $this->_testFor_patterns( $text, $ps, 5 );
 
     }
@@ -111,32 +111,32 @@ extends UnitTest
                        ."<\/font>"),
                    1=>("<form action=\""
                        .ereg_replace( "/", "\/", $sess->self_url() )
-                       ."[?]proid=proid\" method=\"POST\">[ \n]*<input type=\""
+                       ."[?]proid=proid\" method=\"POST\">[ \n]+<input type=\""
                        ."hidden\" name=\"creation\" value=\"asdasd\">"),
                    2=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<b>Subject<\/b> [(]128[)]:[ \n]*"
-                       ."<\/td>[ \n]*<!-- Column "
-                       ."finishes -->[ \n]*<!-- New Column starts -->"
-                       ."[ \n]*<td align"
-                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]*"
+                       ."\">[ \n]+<b>Subject<\/b> [(]128[)]:[ \n]+"
+                       ."<\/td>[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+<td align"
+                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+"
                        ."<input type=\"text\" name=\"subject\" size=\"40\" "
                        ."maxlength=\"128\" value=\"this is the subject\">"
-                       ."[ \n]*<\/td>\n"),
+                       ."[ \n]+<\/td>\n"),
                    3=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<b>Body<\/b> [(][*][)]:[ \n]*<\/td>"
-                       ."[ \n]*<!-- Column "
-                       ."finishes -->[ \n]*<!-- New Column starts -->"
-                       ."[ \n]*<td align"
+                       ."\">[ \n]+<b>Body<\/b> [(][*][)]:[ \n]+<\/td>"
+                       ."[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+<td align"
                        ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]*<textarea name=\"text\" cols=\"40\" "
+                       ."[ \n]+<textarea name=\"text\" cols=\"40\" "
                        ."rows=\"7\" wrap"
                        ."=\"virtual\" maxlength=\"255\">this is the "
-                       ."text<\/textarea>[ \n]*<\/td>\n"),
+                       ."text<\/textarea>[ \n]+<\/td>\n"),
                    4=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\""
-                       .">[ \n]*<input type=\"submit\" value=\"Preview\" name="
-                       ."\"preview\">[ \n]*<input type=\"submit\" "
+                       .">[ \n]+<input type=\"submit\" value=\"Preview\" name="
+                       ."\"preview\">[ \n]+<input type=\"submit\" "
                        ."value=\"Submit"
-                       ."\" name=\"submit\">[ \n]*<\/td>\n"));
+                       ."\" name=\"submit\">[ \n]+<\/td>\n"));
         $this->_testFor_patterns( $text, $ps, 5 );
     }
 
@@ -153,55 +153,55 @@ extends UnitTest
                                          "test 1");
         $ps=array( 0=>("<font color=\"#000000\"><b><center><b>PREVIEW<\/b>"
                        ."<\/center><\/b><\/font>"),
-                   1=>("<tr bgcolor=\"#CCCCCC\">[ \n]*<td align=\"\">"
-                       ."[ \n]*<font color="
+                   1=>("<tr bgcolor=\"#CCCCCC\">[ \n]+<td align=\"\">"
+                       ."[ \n]+<font color="
                        ."\"#000000\"><b>News: this is the subject<\/b><\/"
-                       ."font>[ \n]*<\/td>[ \n]*<\/tr>\n"),
-                   2=>("<tr bgcolor=\"#FFFFFF\">[ \n]*<td align=\"\">"
+                       ."font>[ \n]+<\/td>[ \n]+<\/tr>\n"),
+                   2=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align=\"\">"
                        ."<font color="
                        ."\"#000000\">\n<b>by username<\/b> -"),
-                   3=>("<tr bgcolor=\"#CCCCCC\">[ \n]*<td align=\"\">"
-                       ."[ \n]*<font color"
+                   3=>("<tr bgcolor=\"#CCCCCC\">[ \n]+<td align=\"\">"
+                       ."[ \n]+<font color"
                        ."=\"#000000\"><b>Modifying News<\/b><\/font>"
-                       ."[ \n]*<\/td>[ \n]*<\/tr>\n"),
-                   4=>("<tr bgcolor=\"#FFFFFF\">[ \n]*<td align=\"\">"
+                       ."[ \n]+<\/td>[ \n]+<\/tr>\n"),
+                   4=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align=\"\">"
                        ."<font color="
-                       ."\"#000000\">[ \n]*<form action=\""
+                       ."\"#000000\">[ \n]+<form action=\""
                        .ereg_replace( "/", "\/", $sess->self_url() )
-                       ."[?]proid=proid\" method=\"POST\">[ \n]*<input type=\""
+                       ."[?]proid=proid\" method=\"POST\">[ \n]+<input type=\""
                        ."hidden\" name=\"creation\" value=\"asdasd\">"
-                       ."[ \n]*<!-- "
-                       ."table with 2 columns -->[ \n]*<table border=\"0\" "
+                       ."[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+<table border=\"0\" "
                        ."cellspacing=\"0\" cellpadding=\"3\" align=\"center"
-                       ."\" width=\"100%\" valign=\"top\">[ \n]*"
+                       ."\" width=\"100%\" valign=\"top\">[ \n]+"
                        ."<tr colspan=\"2\""
                        .">\n"),
                    5=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<b>Subject<\/b> [(]128[)]:[ \n]*"
-                       ."<\/td>[ \n]*<!-- Column "
-                       ."finishes -->[ \n]*<!-- New Column starts -->"
-                       ."[ \n]*<td align"
+                       ."\">[ \n]+<b>Subject<\/b> [(]128[)]:[ \n]+"
+                       ."<\/td>[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+<td align"
                        ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]*<input type=\"text\" name=\"subject\" "
+                       ."[ \n]+<input type=\"text\" name=\"subject\" "
                        ."size=\"40\" "
                        ."maxlength=\"128\" value=\"this is the subject\">"
-                       ."[ \n]*"
+                       ."[ \n]+"
                        ."<\/td>\n"),
                    6=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<b>Body<\/b> [(][*][)]:[ \n]*<\/td>"
-                       ."[ \n]*<!-- Column "
-                       ."finishes -->[ \n]*<!-- New Column starts -->"
-                       ."[ \n]*<td align"
+                       ."\">[ \n]+<b>Body<\/b> [(][*][)]:[ \n]+<\/td>"
+                       ."[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+<td align"
                        ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]*<textarea name=\"text\" cols=\"40\" "
+                       ."[ \n]+<textarea name=\"text\" cols=\"40\" "
                        ."rows=\"7\" wrap"
                        ."=\"virtual\" maxlength=\"255\">this is the text<\/"
-                       ."textarea>[ \n]*<\/td>\n"),
+                       ."textarea>[ \n]+<\/td>\n"),
                    7=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]*<input type=\"submit\" value=\"Preview\" name"
-                       ."=\"preview\">[ \n]*<input type=\"submit\" "
+                       ."[ \n]+<input type=\"submit\" value=\"Preview\" name"
+                       ."=\"preview\">[ \n]+<input type=\"submit\" "
                        ."value=\"Submit"
-                       ."\" name=\"submit\">[ \n]*<\/td>\n"));
+                       ."\" name=\"submit\">[ \n]+<\/td>\n"));
 
         $this->_testFor_patterns( $text, $ps, 8 );
     }
@@ -284,17 +284,17 @@ extends UnitTest
 
         $ps=array( 0=>("<font color=\"#000000\"><b>News: "
                        ."subject_news_0<\/b><\/font>"),
-                   1=>("<tr bgcolor=\"#FFFFFF\">[ \n]*<td align"
-                       ."=\"\"><font color=\"#000000\">[ \n]*"
+                   1=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align"
+                       ."=\"\"><font color=\"#000000\">[ \n]+"
                        ."<b><b>by user_news_0<\/b> - <\/b>"
-                       ."[ \n]*<p>text_news_0[ \n]*<\/font>[ \n]*<\/td>"
-                       ."[ \n]*<\/tr>\n"),
+                       ."[ \n]+<p>text_news_0[ \n]+<\/font>[ \n]+<\/td>"
+                       ."[ \n]+<\/tr>\n"),
                    2=>("<FONT SIZE=-1>[[] <a href=\""
                        ."comments_edit.php3[?]proid="
                        ."proid_1[&]type=News[&]number="
                        ."creation_news_0[&]ref=0[&]subject="
                        ."Re%3Asubject_news_0\">Comment "
-                       ."This News!<\/a>[ \n]* []]<\/FONT>\n"));
+                       ."This News!<\/a> []]<\/FONT>\n"));
         $this->_testFor_patterns( $text, $ps, 3 );
 
         //
@@ -309,11 +309,11 @@ extends UnitTest
 
         $ps=array( 0=>("<font color=\"#000000\"><b>News: "
                        ."subject_news_1<\/b><\/font>"),
-                   1=>("<tr bgcolor=\"#FFFFFF\">[ \n]*<td align"
-                       ."=\"\"><font color=\"#000000\">[ \n]*"
+                   1=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align"
+                       ."=\"\"><font color=\"#000000\">[ \n]+"
                        ."<b><b>by user_news_1<\/b> - <\/b>"
-                       ."[ \n]*<p>text_news_1[ \n]*<\/font>[ \n]*<\/td>"
-                       ."[ \n]*<\/tr>\n"),
+                       ."[ \n]+<p>text_news_1[ \n]+<\/font>[ \n]+<\/td>"
+                       ."[ \n]+<\/tr>\n"),
                    2=>("<FONT SIZE=-1>[[] <a href=\""
                        ."comments_edit.php3[?]proid="
                        ."proid_2[&]type=News[&]number="
@@ -322,11 +322,11 @@ extends UnitTest
                        ."This News!<\/a> []]<\/FONT>\n"),
                    3=>("<font color=\"#000000\"><b>News: "
                        ."subject_news_2<\/b><\/font>"),
-                   4=>("<tr bgcolor=\"#FFFFFF\">[ \n]*<td align"
-                       ."=\"\"><font color=\"#000000\">[ \n]*"
+                   4=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align"
+                       ."=\"\"><font color=\"#000000\">[ \n]+"
                        ."<b><b>by user_news_2<\/b> - <\/b>"
-                       ."[ \n]*<p>text_news_2[ \n]*<\/font>[ \n]*<\/td>"
-                       ."[ \n]*<\/tr>\n"),
+                       ."[ \n]+<p>text_news_2[ \n]+<\/font>[ \n]+<\/td>"
+                       ."[ \n]+<\/tr>\n"),
                    5=>("<FONT SIZE=-1>[[] <a href=\""
                        ."comments_edit.php3[?]proid="
                        ."proid_2[&]type=News[&]number="
