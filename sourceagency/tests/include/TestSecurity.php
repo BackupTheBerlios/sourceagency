@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.12 2002/03/27 12:20:57 riessen Exp $
+# $Id: TestSecurity.php,v 1.13 2002/04/22 13:13:44 riessen Exp $
 #
 ######################################################################
 
@@ -98,8 +98,8 @@ extends UnitTest
         $pats = array( 0 => ("<font color=\"#000000\"><b>"
                              .$t->translate($head_text)
                              ."<\/b><\/font>"), 
-                       1 => ("<font color=\"#FF2020\">"
-                             .$t->translate($body_text)."<\/font>") );
+                       1 => ("<font color=\"#FF2020\">[ \n]*"
+                             .$t->translate($body_text)."[ \n]*<\/font>") );
 
         $this->_testFor_patterns( $text, $pats, 2 );
         $this->_check_db( $db_config );
@@ -108,21 +108,21 @@ extends UnitTest
         $this->_test_error_message_boxes( "invalid_project_id", 
                                           "Permission denied",
                                           "Project does not exist",
-                                          2630 );
+                                          2921 );
     }
     function testPermission_denied() {
         $this->_test_error_message_boxes( "permission_denied", 
                                           "Permission denied",
                                           "You do not have rights to enter "
                                           ."this page.",
-                                          2650 );
+                                          2941 );
     }
     function testStep_not_open() {
         $this->_test_error_message_boxes( "step_not_open", 
                                           "Permission denied",
                                           "This action can not be made "
                                           ."at this time.",
-                                          2649 );
+                                          2940 );
     }
     function testProjects_only_by_project_initiator() {
         $this->_test_error_message_boxes( "projects_only_by_project_initiator",
@@ -132,7 +132,7 @@ extends UnitTest
                                           . "only the project initiator "
                                           . "can post one "
                                           . "specification.",
-                                          2702 );
+                                          2993 );
     }
     function testProposals_only_by_project_initiator() {
         $this->_test_error_message_boxes("proposals_only_by_project_initiator",
@@ -142,7 +142,7 @@ extends UnitTest
                                          ."only the project initiator "
                                          ."can post one "
                                          ."developing proposal.",
-                                         2708 );
+                                         2999 );
     }
     function testAlready_involved_message() {
         $this->_test_error_message_boxes("already_involved_message",
@@ -150,7 +150,7 @@ extends UnitTest
                                          "You are not allowed to make "
                                          ."this action "
                                          ."more than one time.",
-                                         2667 );
+                                         2958 );
     }
 //      function testIs_project_initiator() {
 //      }
