@@ -90,21 +90,17 @@ $bx->box_title($t->translate('New Projects'));
 $bx->box_body_begin();
 $db_summary->query("SELECT * FROM description WHERE status > '0' ORDER "
                    ."BY description_creation DESC LIMIT 3");
-echo "<ul>\n";
-if ($db_summary->num_rows() == 0) {
-    echo '<li>&nbsp;</li>';
-} else {
+if ($db_summary->num_rows() > 0) {
+    echo "<ul>\n";
     while ($db_summary->next_record()) {
         echo '<li><b>'.html_link('summary.php3',
                                  array('proid' => $db_summary->f('proid')),
                                  $db_summary->f('project_title')).'</b></li>';
     }
+    echo "</ul>\n";
 }
-echo "</ul>\n";
-
 $bx->box_body_end();
 $bx->box_end();
-
 
 $bx->box_begin();
 $bx->box_title($t->translate('Developers Wanted'));
@@ -114,17 +110,16 @@ $db_summary->query("SELECT * FROM description,configure WHERE status = '2'"
                    ." AND description.proid=configure.proid AND "
                    ."other_developing_proposals='Yes' ORDER BY "
                    ."description_creation DESC LIMIT 5");
-echo "<ul>\n";
-if ($db_summary->num_rows() == 0) {
-    echo '<li>&nbsp;</li>';
-} else {
+
+if ($db_summary->num_rows() > 0) {
+    echo "<ul>\n";
     while ($db_summary->next_record()) {
         echo '<li><b>'.html_link('step2.php3',
                                  array('proid' => $db_summary->f('proid')),
                                  $db_summary->f('project_title')).'</b></li>';
     }
+    echo "</ul>\n";
 }
-echo "</ul>\n";
 $bx->box_body_end();
 $bx->box_end();
 
@@ -132,19 +127,17 @@ $bx->box_begin();
 $bx->box_title($t->translate('Sponsors Wanted'));
 $bx->box_body_begin();
 
-echo "<ul>\n";
 $db_summary->query("SELECT * FROM description WHERE status >'0' ORDER BY "
                    ."description_creation DESC LIMIT 5");
-if ($db_summary->num_rows() == 0) {
-    echo '<li>&nbsp;</li>';
-} else {
+if ($db_summary->num_rows() > 0) {
+    echo "<ul>\n";
     while ($db_summary->next_record()) {
         echo '<li><b>'.html_link('summary.php3',
                                  array('proid' => $db_summary->f('proid')),
                                  $db_summary->f('project_title')).'</b></li>';
     }
+    echo "</ul>\n";
 }
-echo "</ul>\n";
 $bx->box_body_end();
 $bx->box_end();
 
@@ -155,17 +148,16 @@ $db_summary->query("SELECT * FROM description,configure WHERE status = '1' "
                    ."AND configure.proid=description.proid AND "
                    ."consultants='Yes' ORDER BY description_creation "
                    ."DESC LIMIT 5");
-echo "<ul>\n";
-if ($db_summary->num_rows() == 0) {
-    echo '<li>&nbsp;</li>';
-} else {
+
+if ($db_summary->num_rows() > 0) {
+    echo "<ul>\n";
     while ($db_summary->next_record()) {
         echo '<li><b>'.html_link('step1.php3',
                                  array('proid' => $db_summary->f('proid')),
                                  $db_summary->f('project_title')).'</b></li>';
     }
+    echo "</ul>\n";
 }
-echo "</ul>\n";
 $bx->box_body_end();
 $bx->box_end();
 
@@ -174,17 +166,16 @@ $bx->box_title($t->translate('Referees Wanted'));
 $bx->box_body_begin();
 $db_summary->query("SELECT * FROM description WHERE status = '4' ORDER "
                    ."BY description_creation DESC LIMIT 5");
-echo "<ul>\n";
-if ($db_summary->num_rows() == 0) {
-    echo '<li>&nbsp;</li>';
-} else {
+
+if ($db_summary->num_rows() > 0) {
+    echo "<ul>\n";
     while ($db_summary->next_record()) {
         echo '<li><b>'.html_link('step4.php3',
                                  array('proid' => $db_summary->f('proid')),
                                  $db_summary->f('project_title')).'</b></li>';
     }
+    echo "</ul>\n";
 }
-echo "</ul>\n";
 $bx->box_body_end();
 $bx->box_end();
 
@@ -195,17 +186,16 @@ $db_summary->query("SELECT * FROM description,developing WHERE "
                    ."cooperation != 'No' AND "
                    ."description.proid = developing.proid ORDER BY "
                    ."description_creation DESC LIMIT 5");
-echo "<ul>\n";
-if ($db_summary->num_rows() == 0) {
-    echo '<li>&nbsp;</li>';
-} else {
+
+if ($db_summary->num_rows() > 0) {
+    echo "<ul>\n";
     while ($db_summary->next_record()) {
         echo '<li><b>'.html_link('step2.php3',
                                  array('proid' => $db_summary->f('proid')),
                                  $db_summary->f('project_title')).'</b></li>';
     }
+    echo "</ul>\n";
 }
-echo "</ul>\n";
 $bx->box_body_end();
 $bx->box_end();
 
@@ -214,17 +204,16 @@ $bx->box_title($t->translate('Finished projects'));
 $bx->box_body_begin();
 $db_summary->query("SELECT * FROM description WHERE status = '6' "
                    ."ORDER BY description_creation DESC LIMIT 5");
-echo "<ul>\n";
-if ($db_summary->num_rows() == 0) {
-    echo '<li>&nbsp;</li>';
-} else {
+
+if ($db_summary->num_rows() > 0) {
+    echo "<ul>\n";
     while ($db_summary->next_record()) {
         echo '<li><b>'.html_link('summary.php3',
                                  array('proid' => $db_summary->f('proid')),
                                  $db_summary->f('project_title')).'</b></li>';
     }
+    echo "</ul>\n";
 }
-echo "</ul>\n";
 $bx->box_body_end();
 $bx->box_end();
 
