@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.24 2002/05/07 17:30:47 grex Exp $
+# $Id: config.inc,v 1.25 2002/05/07 19:20:28 grex Exp $
 #
 ######################################################################
 
@@ -99,7 +99,7 @@ $ts_array = array (
 // WISH: variable, ofcourse updating the variable once set would be a problem
 $la_array[] = 'English';
 $la_array[] = 'German';
-# $la_array[] = 'Spanish';
+$la_array[] = 'Spanish';
 
 ######################################################################
 # Step names and count
