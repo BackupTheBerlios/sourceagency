@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestViewslib.php,v 1.5 2002/05/21 12:56:26 riessen Exp $
+// $Id: TestViewslib.php,v 1.6 2002/05/22 11:50:33 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -59,8 +59,26 @@ extends UnitTest
         $text = capture_stop_and_get();
         
         $this->_testFor_captured_length( 9483 + strlen( $sess->self_url() ) );
+
+        $this->_testFor_box_begin( $text, '#000000', '', '1' );
+        $this->_testFor_box_title($text,$t->translate("Configure Information "
+                                                      ."Access in this "
+                                                      ."Project"), '#000000');
+        $this->_testFor_box_body_begin( $text, '#FFFFFF','','top','#000000' );
         $this->_testFor_html_form_action( $text, 'PHP_SELF', 
                                             array('proid'=>'proid'), 'POST' );
+        $this->_testFor_box_columns_begin( $text, 2);
+        // following needs to be done 9 times
+        //$this->_testFor_box_column
+        //$this->_testFor_box_column
+        //$this->_testFor_box_next_row_of_columns
+        
+        //$this->_testFor_box_columns_end
+        $this->_testFor_html_form_submit( $text, "Preview", "preview" );
+        $this->_testFor_html_form_submit( $text, "Submit", "submit" );
+        $this->_testFor_html_form_end( $text );
+        $this->_testFor_box_body_end( $text );
+        $this->_testFor_box_end( $text );
     }
 
     function testViews_insert() {

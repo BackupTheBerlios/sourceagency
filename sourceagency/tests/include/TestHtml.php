@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.21 2002/05/21 12:55:46 riessen Exp $
+# $Id: TestHtml.php,v 1.22 2002/05/22 11:50:33 riessen Exp $
 #
 ######################################################################
 
@@ -39,33 +39,58 @@ extends UnitTest
     }
 
     function setup() {
-        /* Called before each test method */
-        capture_reset_and_start();
     }
     function tearDown() {
-        /* Called after each test method */
-        capture_stop();
     }
 
-    // generic tester function for html_XXXX and htmlp_XXXX functions
+    // generic tester function for html_XXXX and htmlp_XXXX functions.
+    // This assumes that a method exists on this object that is 
+    // called '_testFor_$name' which takes the same arguments as the
+    // function to be tested plus two other parameters (at the beginning
+    // and end of the argument list). This is called to generated the exact
+    // desired output for the function being tested.
     function _test_html_function( $name, $args, $exp_length ) {
+        $test_for_func = '_testFor_' . $name;
+        $print_func = ereg_replace('^html_','htmlp_',$name);
+        $no_chance = 0;
+
+        if ( !function_exists( $name ) && ($no_chance=1) ) {
+            $this->assertEquals(1,0,"Function not defined '$name' "
+                                ."(_test_html_function)");
+        }
+        if ( !function_exists( $print_func ) && ($no_chance=1) ) {
+            $this->assertEquals(1,0,"Print function not defined '$print_func' "
+                                ."(_test_html_function)");
+        }
+        if ( !method_exists( $this, $test_for_func ) && ($no_chance=1) ) {
+            $this->assertEquals(1,0,"Test for function not defined "
+                                ."'$test_for_func' on this object "
+                                ."(_test_html_function)");
+        }
+
+        // no_chance flag is set if one or more of the required functions 
+        // are not defined, then there is no point in continuing
+        if ( $no_chance ) {
+            return;
+        }
+
         for ( $idx = 0; $idx < count($args); $idx++ ) {
             // first test the function that returns a value, i.e. html_XXXX
             $text = call_user_func_array( $name, $args[$idx] );
             // never use arguments for the function that are called 'text'
             // or 'msg', these are arguments to the _testFor_XXXX method
-            $args2 = array_merge( array( 'text' => $text ), $args[$idx],
+            $args2 = array_merge( array( 'text' => &$text ), 
+                                  $args[$idx],
                                   array( 'msg' => "test $idx" ) );
             // call the _testFor_html_XXXX method of the class which
             // generates an expected value for the htmlp_XXXX function call
             // This method is normally defined in the UnitTest class.
-            $expect = call_user_method_array('_testFor_'.$name, $this, $args2);
+            $expect = $this->_call_method( $test_for_func, $args2 );
             $this->assertEquals( $expect, $text, "assert 1: test $idx" );
             // call the print variation of the function assuming that it's
             // called htmlp_XXXX instead of html_XXXX
             capture_reset_and_start();
-            call_user_func_array( ereg_replace('^html_','htmlp_',$name), 
-                                  $args[$idx] );
+            call_user_func_array( $print_func, $args[$idx] );
             $text = capture_stop_and_get();
             $this->_testFor_captured_length( $exp_length[$idx], "test $idx" );
             $this->assertEquals( $expect, $text, "assert 2: test $idx" );
@@ -174,228 +199,80 @@ extends UnitTest
     }
 
     function testHtml_select_end() {
-        $text = html_select_end();
-        $expect = "[ \n]+<\/select>\n";
-        $this->_testFor_pattern( $text, $expect, "p1" );
-        htmlp_select_end();
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 14, "test 1" );
-        $this->_testFor_pattern( $text, $expect, "p2" );
+        $args = array( 0 => array() );
+        $exp_length = array( 0 => 14 );
+        $this->_test_html_function( 'html_select_end', $args, $exp_length );
     }
 
     function testHtml_input_text() {
-        $text = html_input_text( "name", "size", "maxlength", "value" );
-        $expect = ( "[ \n]+<input type=\"text\" name=\"name\" size=\"size\" "
-                    ."maxlength=\"maxlength\" value=\"value\">" );
-        $this->_testFor_pattern( $text, $expect, "p1" );
-        htmlp_input_text( "name", "size", "maxlength", "value" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 83, "test 1" );
-        $this->_testFor_pattern( $text, $expect, "p2" );
+        $args=$this->_generate_records( array( "name", "size", "maxlength",
+                                               "value" ), 1 );
+        $exp_length = array( 0 => 91 );
+        $this->_test_html_function( 'html_input_text', $args, $exp_length );
     }
 
     function testHtml_form_submit() {
-        // test 1 with name
-        $text = html_form_submit( "value", "name" );
-        $expect = ( "[ \n]+<input type=\"submit\" value=\"value\" "
-                    ."name=\"name\">" );
-        $this->_testFor_pattern( $text, $expect, "p1" );
-        htmlp_form_submit( "value", "name" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 51, "test 1" );
-        $this->_testFor_pattern( $text, $expect, "p2" );
-
-        // test 2 without name
-        $text = html_form_submit( "value" );
-        $expect = ( "[ \n]+<input type=\"submit\" value=\"value\">");
-        $this->_testFor_pattern( $text, $expect, "p3" );
-        capture_reset_and_start();
-        htmlp_form_submit( "value" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 39, "test 2" );
-        $this->_testFor_pattern( $text, $expect, "p4" );
+        $args = $this->_generate_records( array( "value", "name" ), 3 );
+        $exp_length = array( 0=>55, 1=>41, 2=>34 );
+        $args[1]['name'] = '';
+        $args[2]['value'] = '';
+        $args[2]['name'] = '';
+        $this->_test_html_function( 'html_form_submit', $args, $exp_length );
     }
 
     function testHtml_checkbox() {
-        //
-        // test 1
-        //
-        $text = html_checkbox( "name", "value", "checked" );
-        $expect = ("[ \n]+<input type=\"checkbox\" name=\"name\" "
-                   ."value=\"value\" checked >");
-        $this->_testFor_pattern( $text, $expect, "p1" );
-        htmlp_checkbox( "name", "value", "checked" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 62, "test 1" );
-        $this->_testFor_pattern( $text, $expect, "p2" );
-
-        //
-        // test 2
-        //
-        $text = html_checkbox( "name", "value", "" );
-        $expect = ("[ \n]+<input type=\"checkbox\" name=\"name\" "
-                   ."value=\"value\">");
-        $this->_testFor_pattern( $text, $expect, "p3" );
-        capture_reset_and_start();
-        htmlp_checkbox( "name", "value", "" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 53, "test 2" );
-        $this->_testFor_pattern( $text, $expect, "p4" );
-
-        //
-        // test 3
-        //
-        $text = html_checkbox( "name", "value", false );
-        $expect = ("[ \n]+<input type=\"checkbox\" name=\"name\" "
-                   ."value=\"value\">");
-        $this->_testFor_pattern( $text, $expect, "p5" );
-        capture_reset_and_start();
-        htmlp_checkbox( "name", "value", false );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 53, "test 3" );
-        $this->_testFor_pattern( $text, $expect, "p6" );
-
-        //
-        // test 4
-        //
-        $text = html_checkbox( "name", "value", true );
-        $expect = ("[ \n]+<input type=\"checkbox\" name=\"name\" "
-                   ."value=\"value\" checked >");
-        $this->_testFor_pattern( $text, $expect, "p7" );
-        capture_reset_and_start();
-        htmlp_checkbox( "name", "value", true );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 62, "test 4" );
-        $this->_testFor_pattern( $text, $expect, "p8" );
+        $args=$this->_generate_records( array("name","value","checked"), 5 );
+        $args[1]['checked'] = '';
+        $args[2]['checked'] = false;
+        $args[3]['checked'] = true;
+        $args[4]['checked'] = 'checked';
+        $exp_length=array(0=>66,1=>57,2=>57,3=>66,4=>66);
+        
+        $this->_test_html_function('html_checkbox', $args, $exp_length );
     }
 
     function testHtml_radio() {
-        //
-        // test 1
-        //
-        $text = html_radio( "name", "value", "checked" );
-        $expect = ("<input type=\"radio\" name=\"name\" value=\"value\" "
-                   ."checked >");
-        $this->_testFor_pattern( $text, $expect, "p1" );
-        htmlp_radio( "name", "value", "checked" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 59, "test 1" );
-        $this->_testFor_pattern( $text, $expect, "p2" );
-
-        //
-        // test 2
-        //
-        $text = html_radio( "name", "value", "" );
-        $expect = ("<input type=\"radio\" name=\"name\" value=\"value\">");
-        $this->_testFor_pattern( $text, $expect, "p3" );
-        capture_reset_and_start();
-        htmlp_radio( "name", "value", "" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 50, "test 2" );
-        $this->_testFor_pattern( $text, $expect, "p4" );
-
-        //
-        // test 3
-        //
-        $text = html_radio( "name", "value", false );
-        $expect = ("<input type=\"radio\" name=\"name\" value=\"value\">");
-        $this->_testFor_pattern( $text, $expect, "p5" );
-        capture_reset_and_start();
-        htmlp_radio( "name", "value", false );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 50, "test 3" );
-        $this->_testFor_pattern( $text, $expect, "p6" );
-
-        //
-        // test 4
-        //
-        $text = html_radio( "name", "value", true );
-        $expect = ("<input type=\"radio\" name=\"name\" value=\"value\""
-                   ." checked >");
-        $this->_testFor_pattern( $text, $expect, "p7" );
-        capture_reset_and_start();
-        htmlp_radio( "name", "value", true );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 59, "test 4" );
-        $this->_testFor_pattern( $text, $expect, "p8" );
+        $args=$this->_generate_records( array("name","value","checked"), 5 );
+        $args[1]['checked'] = '';
+        $args[2]['checked'] = false;
+        $args[3]['checked'] = true;
+        $args[4]['checked'] = 'checked';
+        $exp_length=array(0=>63,1=>54,2=>54,3=>63,4=>63);
+        
+        $this->_test_html_function('html_radio', $args, $exp_length );
     }
-    
+
     function testHtml_textarea() {
-        $text = html_textarea( "name", "columns", "rows", "wrap", 
-                                 "maxlength", "value" );
-        $expect = ("[ \n]+<textarea name=\"name\" cols=\"columns\" "
-                   ."rows=\"rows\" wrap=\"wrap\" maxlength=\"maxlength\">value"
-                   . "<\/textarea>");
-        $this->_testFor_pattern( $text, $expect, "p1" );
-        htmlp_textarea( "name", "columns", "rows", "wrap", "maxlength", 
-                        "value");
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 103, "test 1" );
-        $this->_testFor_pattern( $text, $expect, "p2" );
+        $args = $this->_generate_records(array("name","columns","rows", 
+                                               "wrap","maxlength","value"),1);
+        $exp_length=array( 0=>115 );
+        $this->_test_html_function( 'html_textarea', $args, $exp_length );
     }
 
     function testHtml_form_end() {
-        $text = html_form_end( );
-        $expect = "\n<\/form>";
-        $this->_testFor_pattern( $text, $expect, "p1" );
-        htmlp_form_end();
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 8, "test 1" );
-        $this->_testFor_pattern( $text, $expect, "p2" );
+        $args = array( 0 => array() );
+        $exp_length = array( 0 => 8 );
+        $this->_test_html_function( 'html_form_end', $args, $exp_length );
     }
 
     function testHtml_form_image() {
-        $expect = "\n".'   <input type="image" src="file" alt="alternative">';
-        $text = html_form_image( "file", "alternative" );
-        $this->assertEquals( $expect, $text, "test 1" );
-        htmlp_form_image( "file", "alternative" );
-        $text = capture_stop_and_get();
-        $this->assertEquals( $expect, $text, "test 2" );
+        $args = $this->_generate_records( array( "name", "alt" ), 1 );
+        $exp_length = array( 0 => 49 );
+        $this->_test_html_function( 'html_form_image', $args, $exp_length );
     }
 
     function testHtml_form_reset() {
-        $text[0] = html_form_reset();
-        $text[1] = html_form_reset( "Reset" );
-        capture_reset_and_start();
-        htmlp_form_reset();
-        $text[2] = capture_stop_and_get();
-        capture_reset_and_start();
-        htmlp_form_reset("Reset");
-        $text[3] = capture_stop_and_get();
-        $expect = "\n".'   <input type="reset" value="Reset">';
-
-        for ( $idx = 0; $idx < 4; $idx++ ) {
-            $this->assertEquals( $expect, $text[$idx], "test(E) $idx" );
-            for ( $jdx = 0; $jdx < 4; $jdx++ ) {
-                $this->assertEquals( $text[$idx], $text[$jdx], 
-                                     "test $idx, $jdx" );
-            }
-        }
+        $args=$this->_generate_records( array( 'reset' ), 2 );
+        $args[1]['reset'] = '';
+        $exp_length = array( 0=>40, 1=>33 );
+        $this->_test_html_function( 'html_form_reset', $args, $exp_length );
     }
       
     function testHtml_input_password() {
-        $exp1 = ( "\n".'   <input type="password" name="name'
-                  .'" size="size" maxlength="maxlength" value="">');
-        $exp2 = ( "\n".'   <input type="password" name="name'
-                  .'" size="size" maxlength="maxlength" value="value">');
-
-        $text[0] = html_input_password( "name", "size", "maxlength" );
-        $text[1] = html_input_password( "name", "size", "maxlength", "value" );
-
-        capture_reset_and_start();
-        htmlp_input_password( "name", "size", "maxlength" );
-        $text[2] = capture_stop_and_get();
-
-        capture_reset_and_start();
-        htmlp_input_password( "name", "size", "maxlength", "value" );
-        $text[3] = capture_stop_and_get();
-
-        $this->assertEquals( $exp1, $text[0], "test 1" );
-        $this->assertEquals( $exp1, $text[2], "test 2" );
-        $this->assertEquals( $exp2, $text[1], "test 3" );
-        $this->assertEquals( $exp2, $text[3], "test 4" );
-        $this->assertEquals( $text[0], $text[2], "test 5" );
-        $this->assertEquals( $text[1], $text[3], "test 6" );
+        $args = $this->_generate_records( array("name", "size", "password",
+                                                "value"), 1);
+        $exp_length = array( 0 => 94 );
+        $this->_test_html_function( 'html_input_password', $args, $exp_length);
     }
 
 }
