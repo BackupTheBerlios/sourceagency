@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.8 2002/04/23 11:50:36 riessen Exp $
+# $Id: unit_test.php,v 1.9 2002/05/13 10:31:42 riessen Exp $
 #
 ######################################################################
 
@@ -66,6 +66,13 @@ extends TestCase
         while ( list( $key, $val ) = each( $pattern_array ) ) {
             $this->_testFor_pattern( $text, $val, $msg.(' (Key "'.$key.'")'));
         }
+    }
+
+    // function that can be called if a test is to be completed but
+    // has yet to be completed
+    function _test_to_be_completed( $msg = false ) {
+      $this->fail( '<font color="red">Test to be completed' 
+                   .( $msg ? ' ('.$msg.')' : '') . '</font>' );
     }
 
     function _check_db( $db_config ) {
