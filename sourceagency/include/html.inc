@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: html.inc,v 1.20 2002/05/21 09:50:24 riessen Exp $
+# $Id: html.inc,v 1.21 2002/05/22 11:49:32 riessen Exp $
 #
 ######################################################################
 
@@ -223,12 +223,13 @@ function htmlp_select_end()
  *
  * @access  public
  */
-function html_input_text($name, $size, $maxlength, $value= '')
+function html_input_text($name, $size, $maxlength, $value = '')
 {
-    $output = "\n".'   <input type="text" name="'.$name.'" size="'.$size.'" maxlength="'.$maxlength.'" value="'.$value.'">';
+    $output = "\n".'   <input type="text" name="'.$name.'" size="'
+       .$size.'" maxlength="'.$maxlength.'" value="'.$value.'">';
     return($output);
 }
-function htmlp_input_text($name, $size, $maxlength, $value)
+function htmlp_input_text($name, $size, $maxlength, $value = '')
 {
     print html_input_text( $name, $size, $maxlength, $value );
 }

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: viewslib.inc,v 1.4 2002/05/16 15:00:31 riessen Exp $
+# $Id: viewslib.inc,v 1.5 2002/05/22 11:49:59 riessen Exp $
 #
 ######################################################################
 
@@ -37,38 +37,47 @@ function views_form($proid) {
 
   $bx->box_columns_begin(2);
 
+  // 1
   $bx->box_column ("right","30%","","<b>".$t->translate("View Project Configuration")."</b>: ");
   $bx->box_column ("left","70%","",views_select_view($proid,"configure",$configure)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Project Participants</i>)");
   $bx->box_next_row_of_columns();
 
+  // 2
   $bx->box_column ("right","30%","","<b>".$t->translate("Write and Modify news")."</b>: ");
   $bx->box_column ("left","70%","",views_select_view($proid,"news",$news)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Project Initiator</i>)");
   $bx->box_next_row_of_columns();
 
+  // 3
   $bx->box_column ("right","30%","","<b>".$t->translate("Write comments")."</b>: ");
   $bx->box_column ("left","70%","",views_select_view($proid,"comments",$comments)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Registered</i>)");
   $bx->box_next_row_of_columns();
 
+  // 4
   $bx->box_column ("right","30%","","<b>".$t->translate("See Project History")."</b>: ");
   $bx->box_column ("left","70%","",views_select_view($proid,"history",$history)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Everybody</i>)");
   $bx->box_next_row_of_columns();
 
+  // 5
   $bx->box_column ("right","30%","","<b>".$t->translate("See Step 3 (Milestones)")."</b>: ");
   $bx->box_column ("left","70%","",views_select_view($proid,"step3",$step3)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Everybody</i>)");
   $bx->box_next_row_of_columns();
 
+  // 6
   $bx->box_column ("right","30%","","<b>".$t->translate("See Step 4 (Referees)")."</b>: ");
   $bx->box_column ("left","70%","",views_select_view($proid,"step4",$step4)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Everybody</i>)");
   $bx->box_next_row_of_columns();
 
+  // 7
   $bx->box_column ("right","30%","","<b>".$t->translate("See Step 5 (Project Follow-up)")."</b>: ");
   $bx->box_column ("left","70%","",views_select_view($proid,"step5",$step5)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Everybody</i>)");
   $bx->box_next_row_of_columns();
 
+  // 8
   $bx->box_column ("right","30%","","<b>".$t->translate("See Developing Cooperation Proposals")."</b>: ");
   $bx->box_column ("left","70%","",views_select_view($proid,"cooperation",$cooperation)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Everybody</i>)");
   $bx->box_next_row_of_columns();
 
+  // 9
   $bx->box_column ("right","30%","","<b>".$t->translate("Project Permission Access")."</b>: ");
   $bx->box_column ("left","70%","",views_select_view($proid,"views",$views)." &nbsp; &nbsp; &nbsp; (Recommended: <i>Project Participants</i>)");
   $bx->box_next_row_of_columns();
@@ -169,7 +178,7 @@ function views_show($proid) {
 	$bx->box_next_row_of_columns();
 
 	$bx->box_column ("right","30%","","<b>".$t->translate("See Project History")."</b>: ");
-	$bx->box_column ("left","70%","",$db->f(history));
+	$bx->box_column ("left","70%","",$db->f('history'));
 	$bx->box_next_row_of_columns();
 
 	$bx->box_column ("right","30%","","<b>".$t->translate("See Step 3 (Milestones)")."</b>: ");
