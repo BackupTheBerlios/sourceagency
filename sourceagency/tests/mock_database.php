@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: mock_database.php,v 1.16 2002/03/28 13:15:59 riessen Exp $
+# $Id: mock_database.php,v 1.17 2002/05/13 10:31:05 riessen Exp $
 #
 ######################################################################
 
@@ -188,6 +188,9 @@ class mock_db_configure
     function ignore_errors( $error = MKDB_NO_ERRORS, $inst_nr = 0 ) {
         global $g_mkdb_ignore_error;
         $g_mkdb_ignore_error[ $inst_nr ] = $error;
+    }
+    function ignore_all_errors( $inst_nr = 0 ) {
+        $this->ignore_errors( MKDB_ALL_ERRORS, $inst_nr );
     }
 
     // returns true if the database failed. This also checks whether 
