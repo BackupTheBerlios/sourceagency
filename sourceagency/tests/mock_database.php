@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: mock_database.php,v 1.9 2001/11/08 16:17:42 riessen Exp $
+# $Id: mock_database.php,v 1.10 2001/11/09 20:23:06 riessen Exp $
 #
 ######################################################################
 
@@ -218,7 +218,12 @@ extends Assert
                              . "set, current row: " . $cur_record );
         return $this->cur_fetch_row[ $column_name ];
     }
-    
+
+    function affected_rows() {
+      // TODO: implement method 'affected_rows' which returns the number
+      // TODO: of rows that were changed by an insert statement
+    }
+
     function num_rows() {
         global $g_mkdb_num_rows, $g_mkdb_cur_num_row_call;
 
