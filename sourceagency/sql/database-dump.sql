@@ -21,9 +21,11 @@ CREATE TABLE active_sessions (
 # Dumping data for table 'active_sessions'
 #
 
-INSERT INTO active_sessions VALUES ('bd9d27ea0605b68195c1deba10903845','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20021119123822');
-INSERT INTO active_sessions VALUES ('cdfcdc3a7194e9c53c93bcbb3c0c4caf','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20021119152506');
-INSERT INTO active_sessions VALUES ('03c18e65284e620a9a1c3b0ea9032fc9','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20021120053354');
+INSERT INTO active_sessions VALUES ('51e34a540f17c7840eeccc18b0984cb8','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0dlcm1hbic7ICRHTE9CQUxTWydhdXRoJ10gPSBuZXcgU291cmNlQWdlbmN5X0F1dGg7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGggPSBhcnJheSgpOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1aWQnXSA9ICc4Yzk1M2QwMTY3NzY0ZDU0NjY0ZWJhYzUyNjJhZWY1MCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICdkZXZlbCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ2V4cCddID0gJzEwMzc3OTcyNzcnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydyZWZyZXNoJ10gPSAnMTAzNzc4NTg1NCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3VuYW1lJ10gPSAnZXJpayc7IA==','20021120113117');
+INSERT INTO active_sessions VALUES ('03c18e65284e620a9a1c3b0ea9032fc9','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0VuZ2xpc2gnOyAkR0xPQkFMU1snYXV0aCddID0gbmV3IFNvdXJjZUFnZW5jeV9BdXRoOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoID0gYXJyYXkoKTsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsndWlkJ10gPSAnZm9ybSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICcnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydleHAnXSA9ICcyMTQ3NDgzNjQ3JzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsncmVmcmVzaCddID0gJzIxNDc0ODM2NDcnOyA=','20021120163728');
+INSERT INTO active_sessions VALUES ('5698d8f5aef1bc9e23ccfdb0b1363db4','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20021120124117');
+INSERT INTO active_sessions VALUES ('dd2519d32a6cdad59c7448936f471a4e','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20021120163725');
+INSERT INTO active_sessions VALUES ('391b81e712825fa0aa568f54810cdaf0','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20021120163709');
 
 #
 # Table structure for table 'auth_user'
@@ -411,6 +413,7 @@ INSERT INTO developing VALUES (2,4,3,'devel',1234,'Public Domain','A','No',20010
 INSERT INTO developing VALUES (3,6,4,'devel',12,'The GNU General Public License (GPL)','A','No',20041231120000,20011010120000,1,20011010183231);
 INSERT INTO developing VALUES (4,24,7,'admin',123,'The Common Public License','P','No',20010101120000,20010101120000,1,20020327121345);
 INSERT INTO developing VALUES (5,1,8,'devel',2,'The Common Public License','P','No',20010101120000,20010101120000,1,20020327130234);
+INSERT INTO developing VALUES (6,31,10,'erik',500,'The GNU General Public License (GPL)','P','No',20030101120000,20021110120000,4,20021120113108);
 
 #
 # Table structure for table 'doco'
@@ -910,6 +913,7 @@ INSERT INTO tech_content VALUES (6,2,'','Linux','x86','Web','','sdffsdf','sponso
 INSERT INTO tech_content VALUES (7,24,'asdasd','Linux','x86','Web','adsad','sadas','sponsor','A',20020327121234);
 INSERT INTO tech_content VALUES (8,1,'adssd','Linux','x86','Web','asdasd','sadasd','devel','P',20020327130218);
 INSERT INTO tech_content VALUES (9,3,'PHP','Linux','x86','Web','','rzinei 4788 478 ktzr','helix','P',20020911154108);
+INSERT INTO tech_content VALUES (10,31,'Perl-Kenntnisse, MySQL-Kenntnisse','Linux','x86','Web','','Entfernung aller Textkomponenten und großer HTML-Blöcke aus dem Perl-Code.','erik','P',20021120110020);
 
 #
 # Table structure for table 'views'
