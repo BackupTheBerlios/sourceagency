@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.28 2002/06/26 09:47:43 riessen Exp $
+# $Id: unit_test.php,v 1.29 2002/07/04 13:02:59 riessen Exp $
 #
 ######################################################################
 
@@ -321,6 +321,20 @@ extends TestCase
                         "title_bgcolor", "title_font_color", 
                         "title_align", "body_bgcolor", "body_font_color",
                         "body_align" );
+    }
+
+    // retrieve the filename and line number from a warning message. 
+    // This is required because the length for the filename various
+    // according to where the sources where checked out.
+    // Returns an array containing three elements:
+    //   0 ==> the matched warning line
+    //   1 ==> the filename in which the warning occured
+    //   2 ==> the line number
+    function &get_file_line_from_warning() {
+        $matches = array();
+        preg_match( "/<b>Warning<\/b>: .* in <b>([^<]+)<\/b> on line <b>"
+                    ."([0-9]+)<\/b>/", $this->get_text(), $matches );
+        return $matches;
     }
 
     // _checkFor_ methods are intended to be a combination of several
