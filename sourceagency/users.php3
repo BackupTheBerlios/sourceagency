@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: users.php3,v 1.4 2002/04/08 21:32:47 grex Exp $
+# $Id: users.php3,v 1.5 2002/04/17 12:33:18 riessen Exp $
 #
 ######################################################################
 
@@ -105,7 +105,13 @@ if ( ($config_perm_users != 'all')
         $num = '['.sprintf('%03d',$db2->f("COUNT(*)")).']';
         $bx->box_column('right','',$bgcolor,$i);
         $bx->box_column('center','',$bgcolor,$num);
-        $bx->box_column('center','',$bgcolor,$db->f('username'));
+
+        $user = $db->f('username');
+        $bx->box_column('center','',$bgcolor, 
+                        sprintf( "<a target=\"_blank\" href=\""
+                                 . $g_dev_counter_url . "\">%s</a>", 
+                                 $user, $user));
+
         $bx->box_column('center','',$bgcolor,$db->f('realname'));
         $bx->box_column('center','',$bgcolor,
                         html_link('mailto:'.$db->f('email_usr'),'',
