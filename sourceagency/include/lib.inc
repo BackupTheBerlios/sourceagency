@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.18 2001/12/13 14:49:10 riessen Exp $
+# $Id: lib.inc,v 1.19 2001/12/13 15:43:15 riessen Exp $
 #
 ######################################################################
 
@@ -82,15 +82,6 @@ function license($selected) {
                                       !strcmp($db_local->f("license"),
                                               $selected),
                                       $db_local->f("license"));
-        
-//  	if (!strcmp($db_local->f("license"),$selected)) {
-//              $return .= html_select_option($db_local->f("license"),
-//                           "selected",$db_local->f("license"));
-//          }
-//  	else {
-//              $return .= html_select_option($db_local->f("license"),"",
-//                         $db_local->f("license"));
-//          }
     }
     $return .= html_select_end();
 
@@ -322,7 +313,6 @@ function draw_top_bar( $project_title, $page, $proid = "",
     // The current page has border = 1
 
     if ( empty( $proid ) ) {
-        // NOI18N the following links are all not translated
         htmlp_image("ic/agrey.png",abs(!strcmp("summary",$page)),
                     24,24,$t->translate("Summary"));
         htmlp_image("ic/bgrey.png",abs(!strcmp("news",$page)),
@@ -334,7 +324,6 @@ function draw_top_bar( $project_title, $page, $proid = "",
         htmlp_image("ic/egrey.png",abs(!strcmp("history",$page)),
                     24,24,$t->translate("Project History"));
     } else {
-        // NOI18N alternative image names are not translated
         htmlp_link("summary.php3",array("proid" => $proid),
                    html_image("ic/a.png",abs(!strcmp("summary",$page)),
                               36,36,$t->translate("Summary")));
@@ -980,17 +969,12 @@ function lib_show_comments_on_it($proid,$type_cmt,$number,$cmt_id) {
 }
 
 function select_date($selection_name, $selected_day,
-$selected_month, $selected_year) {
+                     $selected_month, $selected_year) {
 
+    global $config_first_year, $config_last_year;
     $return = html_select($selection_name."_day");
 
     for ($i=1; $i <= 31; $i++) {
-//   	if ($i == $selected_day) {
-//              $select="selected";
-//          }
-//  	else {
-//              $select="";
-//          }
 	$return .= html_select_option($i,($i == $selected_day),$i);
     }
 
@@ -998,12 +982,6 @@ $selected_month, $selected_year) {
     $return .= html_select($selection_name."_month");
 
     for ($i=1; $i <= 12; $i++) {
-//   	if ($i == $selected_month) {
-//              $select="selected";
-//          }
-//  	else {
-//              $select="";
-//          }
         $return .= html_select_option($i,($i == $selected_month),month($i));
     }
 
@@ -1011,12 +989,6 @@ $selected_month, $selected_year) {
     $return .= html_select($selection_name."_year");
 
     for ($i=$config_first_year; $i <= $config_last_year; $i++) {
-//   	if ($i == $selected_year) {
-//              $select="selected";
-//          }
-//  	else {
-//              $select="";
-//          }
 	$return .= html_select_option($i,($i == $selected_year),$i);
     }
     $return .= html_select_end();
