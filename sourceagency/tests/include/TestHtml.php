@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.12 2002/02/01 08:40:52 riessen Exp $
+# $Id: TestHtml.php,v 1.13 2002/02/11 18:11:56 riessen Exp $
 #
 ######################################################################
 
@@ -186,37 +186,37 @@ extends UnitTest
         //
         // test 2
         //
-        $actual = html_select_option( "value", "", "text" );
-        $expect = "<option value=\"value\">text\n";
+        $actual = html_select_option( "value", "", "" );
+        $expect = "<option value=\"value\">\n";
         $this->assertEquals( $expect, $actual );
         capture_reset_and_start();
-        htmlp_select_option( "value", "", "text" );
+        htmlp_select_option( "value", "", "" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 27 );
+        $this->_testFor_length( 23 );
         $this->assertEquals( $expect, $text );
 
         //
         // test 3
         //
-        $actual = html_select_option( "value", false, "text" );
-        $expect = "<option value=\"value\">text\n";
+        $actual = html_select_option( "", false, "text" );
+        $expect = "<option value=\"\">text\n";
         $this->assertEquals( $expect, $actual );
         capture_reset_and_start();
-        htmlp_select_option( "value", false, "text" );
+        htmlp_select_option( "", false, "text" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 27 );
+        $this->_testFor_length( 22 );
         $this->assertEquals( $expect, $text );
 
         //
         // test 4
         //
-        $actual = html_select_option( "value", true, "text" );
-        $expect = "<option selected value=\"value\">text\n";
+        $actual = html_select_option( "", true, "" );
+        $expect = "<option selected value=\"\">\n";
         $this->assertEquals( $expect, $actual );
         capture_reset_and_start();
-        htmlp_select_option( "value", true, "text" );
+        htmlp_select_option( "", true, "" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 36 );
+        $this->_testFor_length( 27 );
         $this->assertEquals( $expect, $text );
     }
 
