@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestInsertlib.inc,v 1.7 2002/05/15 13:23:58 riessen Exp $
+# $Id: TestInsertlib.inc,v 1.8 2002/05/16 15:04:16 riessen Exp $
 #
 ######################################################################
 
@@ -42,6 +42,12 @@ extends UnitTest
 {
     function UnitTestInsertlib( $name ) {
         $this->UnitTest( $name );
+    }
+
+    function tearDown() {
+        // ensure that the next test does not have a predefined global
+        // database object
+        unset( $GLOBALS[ 'db' ] );
     }
 
     function testInsert_form() {

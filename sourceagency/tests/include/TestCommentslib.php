@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestCommentslib.php,v 1.2 2002/05/15 13:23:58 riessen Exp $
+// $Id: TestCommentslib.php,v 1.3 2002/05/16 15:04:16 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -34,6 +34,9 @@ extends UnitTest
     }
 
     function tearDown() {
+        // remove the globally defined database object because it may
+        // intefer with other tests
+        unset( $GLOBALS[ 'db' ] );
     }
 
     function testComments_form() {

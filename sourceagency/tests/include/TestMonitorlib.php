@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMonitorlib.php,v 1.9 2002/05/15 13:23:58 riessen Exp $
+# $Id: TestMonitorlib.php,v 1.10 2002/05/16 15:04:16 riessen Exp $
 #
 ######################################################################
 
@@ -52,6 +52,12 @@ extends UnitTest
         // if using the capturing routines then ensure that it's reset,
         // it uses global variables
         capture_reset_text();
+    }
+
+    function tearDown() {
+        // ensure that the next test does not have a predefined global
+        // database object
+        unset( $GLOBALS[ 'db' ] );
     }
 
     function testSelect_importence() {

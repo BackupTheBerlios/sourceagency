@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowmentlib.inc,v 1.5 2002/05/08 11:42:49 riessen Exp $
+# $Id: TestFollowmentlib.inc,v 1.6 2002/05/16 15:04:16 riessen Exp $
 #
 ######################################################################
 
@@ -42,6 +42,10 @@ extends UnitTest
         $this->UnitTest( $name );
     }
 
+    function tearDown() {
+        // unset the global database object, it can interfer with other tests
+        unset( $GLOBALS[ 'db' ] );
+    }
     function testShow_followment() {
         global $db;
 

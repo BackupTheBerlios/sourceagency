@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestNewslib.php,v 1.15 2002/05/08 11:42:49 riessen Exp $
+# $Id: TestNewslib.php,v 1.16 2002/05/16 15:04:16 riessen Exp $
 #
 ######################################################################
 
@@ -53,6 +53,10 @@ extends UnitTest
         capture_reset_text();
     }
 
+    function tearDown() {
+        // Ensure that the global db is predefined for the next test
+        unset( $GLOBALS[ 'db' ] );
+    }
     function testNewsform() {
         global $text, $subject, $sess;
         $text = "this is the text";
