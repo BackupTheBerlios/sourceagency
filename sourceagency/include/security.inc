@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.22 2002/05/13 10:26:36 riessen Exp $
+# $Id: security.inc,v 1.23 2002/05/15 09:32:04 riessen Exp $
 #
 ######################################################################
 
@@ -77,10 +77,13 @@ function allowed_actions ($project_status, $action_number, $proid)
                                    ."WHERE proid='$proid'");
                 $db_allowed->next_record();
                 $statistics = ( '( <B>'.$db_allowed->f("COUNT(*)")
-                                .'</B> consultant offerings)' );
+                                .'</B> '
+                                .$t->translate('consultant offerings').')' );
             } else {
-                $statistics = ( '( this project is configured to have '
-                                .'<b>no</b> consultants)' );
+              $statistics = ( '( '.$t->translate('this project is configured '
+                                                 .'to have <b>no</b> '
+                                                 .'consultants')
+                              .')' );
             }
             $explanation = $g_step_explanation[1];
             break;
@@ -97,7 +100,8 @@ function allowed_actions ($project_status, $action_number, $proid)
                                ."WHERE proid='$proid'");
             $db_allowed->next_record();
             $statistics .= (', <B>'.$db_allowed->f("COUNT(*)")
-                            .'</B> developing proposals )');
+                            .'</B> '.$t->translate('developing proposals')
+                            .' )');
             $explanation = $g_step_explanation[2];
             break;
         }
@@ -107,9 +111,8 @@ function allowed_actions ($project_status, $action_number, $proid)
                                ."WHERE proid='$proid'");
             $db_allowed->next_record();
             $statistics = ( '( <B>'.$db_allowed->f("COUNT(*)")
-                            .'</B> suggested milestones )');
-            $db_allowed->query("SELECT COUNT(*) FROM milestones "
-                               ."WHERE proid='$proid'");
+                            .'</B> '.$t->translate('suggested milestones')
+                            .' )');
             $explanation = $g_step_explanation[3];
             break;
         }
@@ -119,14 +122,16 @@ function allowed_actions ($project_status, $action_number, $proid)
                                ."WHERE proid='$proid'");
             $db_allowed->next_record();
             $statistics = ( '( <B>'.$db_allowed->f("COUNT(*)")
-                            .'</B> referees offered )' );
+                            .'</B> '.$t->translate('referees offered').' )' );
             $explanation = $g_step_explanation[4];
             break;
         }
         case 5: {
             $link = 'step5.php3?proid='.$proid;
-            $statistics = ( '( <B>x</B> milestones of <b>x</b> total '
-                            .'milestones fulfilled )' );
+            $statistics = ( '( <B>x</B> '.$t->translate('milestones of')
+                            .' <b>x</b> '
+                            .$t->translate('total milestones fulfilled')
+                            .' )' );
             $explanation = $g_step_explanation[5];
             break;
         }
@@ -136,8 +141,13 @@ function allowed_actions ($project_status, $action_number, $proid)
             $explanation = $g_step_explanation[6];
             break;
         }
-        // no need for default, action_number is checked to be within
-        // the range 1 .. g_step_count
+
+        default:
+            if ( $g_step_count != 6 ) {
+                lib_die("security.inc::allowed_actions: It appears that "
+                        ."g_step_count(= $g_step_count) doesn't equal 6 and "
+                        ."action_number(= $action_number) is greater than 6");
+            }
     }
 
     if ($action_number > 1) {
@@ -1101,31 +1111,45 @@ function step5_iteration($proid)
  */
 function step5_not_your_iteration($proid, $page)
 {
+    global $t;
+
     top_bar($proid,$page);
-    // WISH: config.inc should not be required another time, as it is done at the beginning of every page.
+    // WISH: config.inc should not be required another time, as it 
+    // WISH: is done at the beginning of every page.
     require('config.inc');
 
-    $be = new box('',$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
+    $be = new box('',$th_box_frame_color,$th_box_frame_width,
+                  $th_box_title_bgcolor,$th_box_title_font_color,
+                  $th_box_title_align,$th_box_body_bgcolor,
+                  $th_box_error_font_color,$th_box_body_align);
 
     switch (step5_iteration($proid)) {
-    case '0':
-        $message = 'The milestone has not been posted by the developer';
-        break;
-    case '1':
-        $message = 'The milestone has been posted. Sponsors are studying whether to accept it or not.';
-        break;
-    case '2':
-        $message = 'Sponsors have rejected the current milestone. The referee is studying it.';
-        break;
-    case '3':
-       $message = 'The referee has decided that the milestone posted by the developer does not fulfill the promised goals. Sponsors are deciding what is going to happen to the project';
-       break;
-    case '5':
-       $message = 'The follow_up process is finished';
-       break;
+        case '0':
+            $message = 'The milestone has not been posted by the developer';
+            break;
+        case '1':
+            $message = 'The milestone has been posted. Sponsors are '
+                 .'studying whether to accept it or not.';
+            break;
+        case '2':
+            $message = 'Sponsors have rejected the current milestone. '
+                 .'The referee is studying it.';
+            break;
+        case '3':
+            $message = 'The referee has decided that the milestone '
+                 .'posted by the developer does not fulfill the promised '
+                 .'goals. Sponsors are deciding what is going to happen '
+                 .'to the project';
+            break;
+        // FIXME: case 4 is missing ....?????
+        case '5':
+            $message = 'The follow_up process is finished';
+            break;
+        default:
+            $message = 'Unknown iteration';
     }
                 
-    $be->box_full('Not your turn', $message);
+    $be->box_full($t->translate('Not your turn'), $t->translate($message));
     return 0;
 }
 
