@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestInsertlib.inc,v 1.8 2002/05/16 15:04:16 riessen Exp $
+# $Id: TestInsertlib.inc,v 1.9 2002/05/28 08:58:28 riessen Exp $
 #
 ######################################################################
 
@@ -48,10 +48,11 @@ extends UnitTest
         // ensure that the next test does not have a predefined global
         // database object
         unset( $GLOBALS[ 'db' ] );
+        unset( $GLOBALS[ 'bx' ] );
     }
 
     function testInsert_form() {
-        global $volume, $type, $description, $project_title;
+        global $volume, $type, $description, $project_title, $bx, $t;
 
         $volume = "this is the volume";
         $type = "this is the type";
@@ -61,54 +62,35 @@ extends UnitTest
         //
         // first and only call....
         //
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         insert_form();
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 3618, "test 1" );
 
-        $patterns = array( 0=>("<font color=\"#000000\"><b>New "
-                               ."Project<\/b><\/font>"),
-                           1=>"<form action=\"insert.php3\" method=\"POST\">",
-                           2=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                               ."#FFFFFF\">[ \n]+<b>Project Title<\/b> "
-                               ."[(]128[)]:[ \n]+<\/td>"),
-                           3=>("<td align=\"left\" width=\"70%\" bgcolor=\""
-                               ."#FFFFFF\">[ \n]+<input type=\"text\" name=\""
-                               ."project_title\" size=\"40\" maxlength=\"128\""
-                               ." value=\"this is the project_title\">"),
-                           4=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                               ."#FFFFFF\">[ \n]+<b>Type<\/b>:[ \n]+<\/td>"),
-                           5=>("<td align=\"left\" width=\"70%\" bgcolor=\""
-                               ."#FFFFFF\">[ \n]+<select name=\"type\" "
-                               ."size=\"0\">"),
-        
-                           6=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                               ."#FFFFFF\">[ \n]+<b>Brief description<\/b> "
-                               ."[(][*][)]:[ \n]+<\/td>[ \n]+<!-- Column "
-                               ."finishes -->[ \n]+<!-- "
-                               ."New Column starts -->[ \n]+<td align="
-                               ."\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                               ."[ \n]+<textarea "
-                               ."name=\"description\" cols=\"40\" rows=\"7\" "
-                               ."wrap=\"virtual\" maxlength=\"255\">this is "
-                               ."the description<\/textarea>[ \n]+<\/td>"),
-                           7=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                               ."#FFFFFF\">[ \n]+<b>Project Volume<\/b>:"
-                               ."[ \n]+<\/td>[ \n]+"
-                               ."<!-- Column finishes -->[ \n]+<!-- "
-                               ."New Column "
-                               ."starts -->[ \n]+<td align=\"left\" "
-                               ."width=\"70%\""
-                               ." bgcolor=\"#FFFFFF\">[ \n]+<select name="
-                               ."\"volume\" size=\"0\">"),
-                           8=>("<td align=\"left\" width=\"70%\" bgcolor=\""
-                               ."#FFFFFF\">[ \n]+<input type=\"submit\" "
-                               ."value=\"Submit\" name=\"Submit\">"));
-        $this->_testFor_patterns( $text, $patterns, 9 );
+        $this->_checkFor_a_box( $text, 'New Project' );
+        $this->_checkFor_a_form( $text,'insert.php3',array(),'POST');
+
+        $this->_testFor_box_columns_begin( $text, 2 );
+        $this->_testFor_box_columns_end( $text );
+
+        $this->_checkFor_column_titles( $text, array( 'Project Title', 'Type', 
+                                                      'Brief description',
+                                                      'Project Volume' ));
+        $this->_checkFor_column_values( $text,
+                  array( html_input_text('project_title', 40, 128, 
+                                         $project_title),
+                         select_from_config('type',  'project_types', $type),
+                         html_textarea('description', 40, 7, 'virtual',
+                                       255, $description),
+                         select_from_config('volume', 'project_volume', 
+                                            $volume) ));
+        $this->_testFor_html_form_submit( $text, $t->translate('Submit'),
+                                                                  'Submit');
+        $this->_testFor_captured_length( 3690 );
     }
 
     function testProject_title_not_set() {
-        global $description, $type, $volume;
+        global $description, $type, $volume, $t;
         
         $type = "this is the type";
         $volume = "this is the volume";
@@ -119,20 +101,30 @@ extends UnitTest
         $text = capture_stop_and_get();
         $this->_testFor_captured_length( 841, "test 1" );
 
-        $patterns = array( 0=>"<font color=\"#000000\"><b>Error<\/b><\/font>",
+        require( 'config.inc' );
 
-                           1=>("<font color=\"#FF2020\">[ \n]+No Project Title"
-                               ." specified.<br>Please select <a href=\""
-                               ."insform.php3[?]description=this[+]is[+]the"
-                               ."[+]description[&]type=this[+]is[+]the[+]type"
-                               ."[&]volume=this[+]is[+]the[+]volume\" "
-                               ."class=\"\">New "
-                               ."Projects<\/a>[ \n]+<\/font>"));
-        $this->_testFor_patterns( $text, $patterns, 2 );
+        $body_text = $t->translate('No Project Title specified').'.'
+             .'<br>'.$t->translate('Please select').' '
+             .html_link('insform.php3', 
+                        array('description' => $description, 
+                              'type' => $type, 
+                              'volume' => $volume), 
+                        $t->translate('New Projects'));
+
+        $this->_testFor_box_begin( $text, $th_box_frame_color,
+                                    '', $th_box_frame_width );
+        $this->_testFor_box_title( $text, $t->translate('Error'),
+                            $th_box_title_font_color, $th_box_title_bgcolor,
+                            $th_box_title_align);
+        $this->_testFor_box_body_begin( $text, $th_box_body_bgcolor,
+                            $th_box_body_align,'top',$th_box_error_font_color);
+        $this->_testFor_box_body( $text, $body_text,$th_box_error_font_color );
+        $this->_testFor_box_body_end( $text );
+        $this->_testFor_box_end( $text );
     }
 
     function testDescription_not_set() {
-        global $project_title, $type, $volume;
+        global $project_title, $type, $volume, $t;
 
         $type = "this is the type";
         $volume = "this is the volume";
@@ -143,19 +135,29 @@ extends UnitTest
         $text = capture_stop_and_get();
         $this->_testFor_captured_length( 851, "test 1" );
         
-        $patterns = array( 0=>"<font color=\"#000000\"><b>Error<\/b><\/font>",
-                           1=>("<font color=\"#FF2020\">[ \n]+No Project "
-                               ."Description specified.<br>Please select <a "
-                               ."href=\"insform.php3[?]project_title=this[+]is"
-                               ."[+]the[+]project[+]title[&]type=this[+]is[+]"
-                               ."the[+]type[&]volume=this[+]is[+]the[+]"
-                               ."volume\" class=\"\">New Projects"
-                               ."<\/a>[ \n]+<\/font>"));
-        $this->_testFor_patterns( $text, $patterns, 2 );
+        require( 'config.inc' );
+
+        $body_text = $t->translate('No Project Description specified').'.'
+                  .'<br>'.$t->translate('Please select').' '
+		  .html_link('insform.php3', 
+                             array('project_title' => $project_title, 
+                                   'type' => $type, 'volume' => $volume), 
+                             $t->translate('New Projects'));
+
+        $this->_testFor_box_begin( $text, $th_box_frame_color,
+                                    '', $th_box_frame_width );
+        $this->_testFor_box_title( $text, $t->translate('Error'),
+                            $th_box_title_font_color, $th_box_title_bgcolor,
+                            $th_box_title_align);
+        $this->_testFor_box_body_begin( $text, $th_box_body_bgcolor,
+                            $th_box_body_align,'top',$th_box_error_font_color);
+        $this->_testFor_box_body( $text, $body_text,$th_box_error_font_color );
+        $this->_testFor_box_body_end( $text );
+        $this->_testFor_box_end( $text );
     }
 
     function testNo_other_project_with_same_title() {
-        global $db;
+        global $db, $t;
 
         $db_config = new mock_db_configure( 3 );
 
@@ -177,8 +179,8 @@ extends UnitTest
         //
         // first call, num rows == 0
         //
-        capture_reset_and_start();
         $db = new DB_SourceAgency;
+        capture_reset_and_start();
         $this->assertEquals( 1, no_other_project_with_same_title( 
             $pt[0]["project_title"] ));
         $text = capture_stop_and_get();
@@ -188,24 +190,36 @@ extends UnitTest
         //
         // second call, num_row == 1
         //
-        capture_reset_and_start();
         $db = new DB_SourceAgency;
+        capture_reset_and_start();
         $this->assertEquals( 0, no_other_project_with_same_title( 
             $pt[1]["project_title"] ));
         $text = capture_stop_and_get();
         $this->_testFor_captured_length( 777, "test 2" );
-        $this->_testFor_pattern( $text, ("<font color=\"#FF2020\">[ \n]+"
-                                         ."Another "
-                                         ."project with that title already "
-                                         ."exists.<br>Please select <a href"
-                                         ."=\"insform.php3\" class=\"\">"
-                                         ."New Projects<\/a>"), "test 2");
+        require( 'config.inc' );
+
+        $body_text = $t->translate('Another project with that title '
+                                     .'already exists').'.'
+                      .'<br>'.$t->translate('Please select').' '
+                      .html_link('insform.php3', array(), 
+                                 $t->translate('New Projects'));
+
+        $this->_testFor_box_begin( $text, $th_box_frame_color,
+                                    '', $th_box_frame_width );
+        $this->_testFor_box_title( $text, $t->translate('Error'),
+                            $th_box_title_font_color, $th_box_title_bgcolor,
+                            $th_box_title_align);
+        $this->_testFor_box_body_begin( $text, $th_box_body_bgcolor,
+                            $th_box_body_align,'top',$th_box_error_font_color);
+        $this->_testFor_box_body( $text, $body_text,$th_box_error_font_color );
+        $this->_testFor_box_body_end( $text );
+        $this->_testFor_box_end( $text );
 
         //
         // third call, num_row == 2
         //
-        capture_reset_and_start();
         $db = new DB_SourceAgency;
+        capture_reset_and_start();
         $this->assertEquals( 1, no_other_project_with_same_title( 
             $pt[2]["project_title"] ));
         $text = capture_stop_and_get();

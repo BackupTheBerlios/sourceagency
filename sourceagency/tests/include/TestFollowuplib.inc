@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowuplib.inc,v 1.11 2002/05/16 15:04:16 riessen Exp $
+# $Id: TestFollowuplib.inc,v 1.12 2002/05/28 08:58:28 riessen Exp $
 #
 ######################################################################\
 
@@ -40,130 +40,19 @@ include_once( 'followuplib.inc' );
 class UnitTestFollowuplib
 extends UnitTest
 {
-    var $_com_pats_1, $_com_pats_2;
-
     function UnitTestFollowuplib( $name ) {
         $this->UnitTest( $name );
-    
-        // common patterns for the first two tests ...
-        $this->_com_pats_1 = 
-             array(0=>("<font color=\"#000000\"><b><center><b>PREVIEW<\/b>"
-                       ."<\/center><\/b><\/font>"),
-                   1=>("<b><b>by username_one<\/b>"),
-                   2=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]+<b>Milestone number:<\/b>[ \n]+"
-                       ."<\/td>[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+<td align=\"left\" width=\"70%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]+milestone_0[ \n]+<\/td>"),
-                   3=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]+<b>Goals:<\/b>[ \n]+<\/td>[ \n]+"
-                       .$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+<td "
-                       ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<\/td>"),
-                   4=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]+<b>Release Date:<\/b>[ \n]+"
-                       ."<\/td>[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+<td align=\"left\" width=\"70%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]+<\/td>"),
-                   5=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]+<b>Product:<\/b>[ \n]+<\/td>"
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+<td "
-                       ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<\/td>"),
-                   6=>("<td align=\"right\" width=\"30%\" bgcolor="
-                       ."\"#FFFFFF\">[ \n]+<b>Payment:<\/b>[ \n]+<\/td>"
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+<td "
-                       ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<\/td>"),
-                   7=>("<td align=\"right\" width=\"30%\" bgcolor="
-                       ."\"#FFFFFF\">[ \n]+<b>Location:<\/b>[ \n]+<\/td>"
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+<td "
-                       ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\""
-                       .">[ \n]+<a href=\"this is the location\" "
-                       ."class=\"\">this is the location<\/a>"),
-                   8=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]+<b>Count:<\/b>[ \n]+<\/td>[ \n]+"
-                       .$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+<td "
-                       ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+this is the count[ \n]+<\/td>"));
-
-        $this->_com_pats_2 =
-             array(0=>("<font color=\"#000000\"><b><center><b>PREVIEW<\/b>"
-                       ."<\/center><\/b><\/font>"),
-                   1=>("<b><b>by username_two<\/b>"),
-                   2=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<b>Count:<\/b>[ \n]+<\/td>[ \n]+"
-                       .$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment."[ \n]+"
-                       ."<td align=\"left\" "
-                       ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+this is the "
-                       ."count[ \n]+<\/td>"),
-                   3=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<b>Location:<\/b>[ \n]+<\/td>[ \n]+"
-                       .$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment."[ \n]+"
-                       ."<td align=\"left\""
-                       ." width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+"
-                       ."<a href=\"this "
-                       ."is the location\" class=\"\">this is the "
-                       ."location<\/a>"),
-                   4=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<b>Payment:<\/b>[ \n]+<\/td>[ \n]+"
-                       .$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment."[ \n]+"
-                       ."<td align=\"left\" "
-                       ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+"
-                       ."payment_0[ \n]+<\/td>"),
-                   5=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<b>Product:<\/b>[ \n]+<\/td>[ \n]+"
-                       .$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment."[ \n]+"
-                       ."<td align=\"left\" "
-                       ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+product_0"
-                       ."[ \n]+<\/td>\n"),
-                   6=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<b>Release Date:<\/b>[ \n]+<\/td>[ \n]+"
-                       .$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment."[ \n]+"
-                       ."<td align=\"left\""
-                       ." width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+<\/td>"),
-                   7=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<b>Goals:<\/b>[ \n]+<\/td>[ \n]+"
-                       .$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment."[ \n]+"
-                       ."<td align=\"left\" "
-                       ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+"
-                       ."goals_0[ \n]+<\/td>"),
-                   8=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<b>Milestone number:<\/b>[ \n]+<\/td>"
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+<td "
-                       ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+"
-                       ."milestone_1[ \n]+<\/td>"));
     }
     
     function tearDown() {
         // ensure that the next test does not have a predefined global
         // database object
         unset( $GLOBALS[ 'db' ] );
+        unset( $GLOBALS[ 'bx' ] );
     }
 
     function testFollowup_devel_preview() {
-        global $db, $milestone_number, $location, $count, $auth;
+        global $db, $milestone_number, $location, $count, $auth, $bx;
         
         $db_config = new mock_db_configure( 2 );
 
@@ -189,44 +78,43 @@ extends UnitTest
 
         // first call, no records
         $auth->set_uname("username_one");
-        capture_reset_and_start();
         $milestone_number = $mt[0]["milestone"];
         $location = "this is the location";
         $count = "this is the count";
         $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         followup_devel_preview($proid[0]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 3751 + strlen(timestr(time())), 
+        $this->_testFor_captured_length( 3849 + strlen(timestr(time())), 
                                          "test 1");
         
-        $pats = array_merge( $this->_com_pats_1, array( 
-            9=>("<font color=\"#000000\"><b>Milestone Delivery"
-                ."<\/b><\/font>")) );
-        $this->_testFor_patterns( $text, $pats, 10, "test 1" );
+        $this->_testFor_common_patterns( $text, 'Milestone Delivery' ); 
 
         // second call, one record
         $auth->set_uname("username_two");
-        capture_reset_and_start();
         $db = new DB_SourceAgency;
         $milestone_number = $mt[1]["milestone"];
         $location = "this is the location";
         $count = "this is the count";
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         followup_devel_preview($proid[1]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 3776 + strlen(timestr(time())), 
-                                         "test 2" );
+        $this->_testFor_captured_length(3874+strlen(timestr(time())),"test 2");
  
-        $pats = array_merge( $this->_com_pats_2, array( 
-            9=>("<font color=\"#000000\"><b>Milestone Delivery<\/b>"
-                ."<\/font>")));
-        $this->_testFor_patterns( $text, $pats, 10, "test 2" );
+        $rows = array( ' ', $row['goals'],
+                       timestr_middle(mktimestamp($row["release"])),
+                       $row['product'], $row['payment'] );
+        $this->_testFor_common_patterns($text,"Milestone Delivery",
+                                         $rows);
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
     }
 
     function testFollowup_referee_preview() {
-        global $db, $milestone_number, $location, $count, $auth, $decision;
+        global $db, $milestone_number, $location, $count, $auth, $decision,$bx;
         
         $db_config = new mock_db_configure( 2 );
 
@@ -252,54 +140,41 @@ extends UnitTest
         
         // first call, no records
         $auth->set_uname("username_one");
-        capture_reset_and_start();
         $milestone_number = $mt[0]["milestone"];
         $location = "this is the location";
         $count = "this is the count";
         $decision = "this is the decision";
         $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         followup_referee_preview($proid[0]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 4175 + strlen(timestr(time())),
-                                         "test 1");
-
-        $pats = array_merge( $this->_com_pats_1, array( 
-            9=>("<font color=\"#000000\"><b>Milestone Delivery"
-                ." - Referee Decision<\/b><\/font>"),
-            10=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF\">"
-                 ."[ \n]+<b>"
-                 ."Decision:<\/b>[ \n]+<\/td>[ \n]+<!-- Column "
-                 ."finishes -->[ \n]+<!-- New "
-                 ."Column starts -->[ \n]+<td align=\"left\" width=\"70%\" "
-                 ."bgcolor=\"#FFFFFF\">[ \n]+this is the decision[ \n]+"
-                 ."<\/td>\n")));
-        $this->_testFor_patterns( $text, $pats, 11, "test 1" );
-
+        $this->_testFor_captured_length(4273+strlen(timestr(time())),"test 1");
+        
+        $rows = array( ' ', $decision );
+        $cols = array( 'Decision' );
+        $this->_testFor_common_patterns( $text, "Milestone Delivery"
+                                        ." - Referee Decision", $rows, $cols );
+        
         // second call, one record
         $auth->set_uname("username_two");
-        capture_reset_and_start();
         $db = new DB_SourceAgency;
         $milestone_number = $mt[1]["milestone"];
         $location = "this is the location";
         $count = "this is the count";
         $decision = "this is the decision";
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         followup_referee_preview($proid[1]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 4200 + strlen(timestr(time())),
-                                         "test 2" );
+        $this->_testFor_captured_length(4298+strlen(timestr(time())),"test 2");
 
-        $pats = array_merge( $this->_com_pats_2, array( 
-            9=>("<font color=\"#000000\"><b>Milestone Delivery"
-                ." - Referee Decision<\/b><\/font>"),
-            10=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF\">"
-                 ."[ \n]+<b>"
-                 ."Decision:<\/b>[ \n]+<\/td>[ \n]+"
-                 .$this->p_regexp_html_comment
-                 ."[ \n]+<!-- New "
-                 ."Column starts -->[ \n]+<td align=\"left\" width=\"70%\" "
-                 ."bgcolor=\"#FFFFFF\">[ \n]+this is the decision"
-                 ."[ \n]+<\/td>\n")));
-        $this->_testFor_patterns( $text, $pats, 11, "test 2" );
+        $rows = array( ' ', $decision, $row['goals'],
+                       timestr_middle(mktimestamp($row["release"])),
+                       $row['product'], $row['payment'] );
+        $cols = array( 'Decision' );
+        $this->_testFor_common_patterns( $text, "Milestone Delivery"
+                                        ." - Referee Decision", $rows, $cols );
         
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -329,8 +204,7 @@ extends UnitTest
 
         // first call, no records, return value 1
         $db_config->add_num_row( 0, 0 );
-        $this->assertEquals( 1, 
-                             followup_current_milestone($proid[0]["proid"]));
+        $this->assertEquals( 1,followup_current_milestone($proid[0]["proid"]));
 
         // second call, iteration == 0
         $db_config->add_num_row( 1, 1 );
@@ -356,8 +230,7 @@ extends UnitTest
         $row_q2[1]["MAX(number)"] = 3;
         $db_config->add_record( $row[2], 3 );
         $db_config->add_record( $row_q2[1], 3 );
-        $this->assertEquals( -1,
-                             followup_current_milestone($proid[3]["proid"]));
+        $this->assertEquals(-1,followup_current_milestone($proid[3]["proid"]));
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -527,6 +400,31 @@ extends UnitTest
     }
     function testFollowup_referee_form() {
         $this->_test_to_be_completed();
+    }
+
+    function _testFor_common_patterns( $text, $title, 
+                                             $row = array(), $col = array() ) {
+        global $t, $auth;
+        global $milestone_number, $location, $count;
+
+        $this->_checkFor_a_box( $text, $title );
+        $this->_checkFor_a_box($text,'PREVIEW','',
+                                        "<center><b>%s</b></center>");
+        $this->_testFor_pattern( $text, 
+                     $this->_to_regexp(lib_nick($auth->auth["uname"])));
+        $this->_checkFor_columns( $text, 2 );
+
+        foreach ( array_merge( $col, array( 'Milestone number', 'Goals', 
+                                            'Release Date','Product',
+                                            'Payment', 'Location', 'Count'))
+                  as $val ) {
+            $this->_testFor_box_column($text, "right","30%","","<b>"
+                                                 .$t->translate($val).":</b>");
+        }
+
+        $this->_checkFor_column_values( $text, 
+                      array_merge( $row, array( $milestone_number, $count,
+                                html_link( $location, array(), $location ))));
     }
 }
 

@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.15 2002/05/22 13:10:23 riessen Exp $
+# $Id: unit_test.php,v 1.16 2002/05/28 08:58:28 riessen Exp $
 #
 ######################################################################
 
@@ -138,21 +138,90 @@ extends TestCase
 
         if ( $this->v_gt( "4.1.0", phpversion() ) ) {
             /* between 4.0.5(inclusive) and 4.1.0 */
-            return call_user_method_array( $method, &$obj, $args );
+            return call_user_method_array( $method, &$obj, &$args );
         } else {
             /* greater or equal than 4.1.0 */
-            return call_user_func_array( array( &$obj, $method ), $args );
+            return call_user_func_array( array( &$obj, $method ), &$args );
         }
     }
 
     //
     // The following are methods to test for common html code
     //
-    function _query_to_regexp( $str ) {
-        return ( ereg_replace( "[+]", "[+]",
-                               ereg_replace( "[?]", "[?]", 
-                                             ereg_replace( "/", "\/", $str))));
+    function _to_regexp( $str ) {
+        foreach( array( '[',']','/' ) as $char ) {
+            $str = ereg_replace( "[$char]", "\\$char", $str );
+        }
+        foreach( array( '&','(',')','+','?','.','*') as $char ) {
+            $str = ereg_replace( "[$char]", "[$char]", $str );
+        }
+        return $str;
     }
+    // the defaults values for the parameters to these box testers can 
+    // be used if the box object is initialised as:
+    //     new box( "box_width", "frame_color", "frame_width",
+    //              "title_bgcolor", "title_font_color", 
+    //              "title_align", "body_bgcolor", "body_font_color",
+    //              "body_align" );
+    function _create_default_box() {
+        return new box( "box_width", "frame_color", "frame_width",
+                        "title_bgcolor", "title_font_color", 
+                        "title_align", "body_bgcolor", "body_font_color",
+                        "body_align" );
+    }
+    // replaces an often called combination of _testFor_'s ...
+    function _checkFor_a_box( $text, $title, $msg = '', 
+                                                    $title_template='%s' ) {
+        // FIXME: msg parameter not used, pass it to the sub-calls
+        $this->_testFor_box_begin( $text );
+        $this->_testFor_box_title( $text, 
+                 sprintf( $title_template, $GLOBALS['t']->translate($title)));
+        $this->_testFor_box_body_begin( $text );
+        $this->_testFor_box_body_end( $text );
+        $this->_testFor_box_end( $text );
+    }
+    function _checkFor_a_form( $text, $file = 'PHP_SELF', $query='', 
+                                                $method='POST', $msg='') {
+        $this->_testFor_html_form_action( $text, $file, $query, $method,$msg );
+        $this->_testFor_html_form_end( $text, $msg );
+    }
+
+    function _checkFor_column_titles( $text, $col_names, $msg = '',
+                                      $align='right',$width='30%',$bgcolor='',
+                                      $title_template='<b>%s</b>') {
+        foreach ( $col_names as $val ) {
+            $str = sprintf( $title_template, $GLOBALS['t']->translate($val));
+            $this->_checkFor_column_values( $text, array($str),
+                            "$msg (Test $val)", $align, $width, $bgcolor );
+        }
+    }
+    function _checkFor_column_values( $text, $values, $msg = '',
+                                    $align='left',$width='70%',$bgcolor='' ) {
+        foreach ( $values as $val ) {
+            $this->_testFor_box_column($text, $align, $width, $bgcolor, 
+                                       $val, $msg );
+        }
+    }
+    function _checkFor_submit_preview_buttons( $text, $msg = '' ) {
+        global $t;
+        $this->_testFor_html_form_submit( $text, $t->translate( 'Preview'),
+                     'preview', "$msg (_checkFor_submit_preview_buttons)" );
+        $this->_testFor_html_form_submit( $text, $t->translate( 'Submit'),
+                      'submit', "$msg (_checkFor_submit_preview_buttons)" );
+    }
+    function _checkFor_box_full( $text, $title, $body_text, $msg = '' ) {
+        $this->_testFor_box_begin( $text );
+        $this->_testFor_box_title( $text, $title );
+        $this->_testFor_box_body_begin( $text );
+        $this->_testFor_box_body( $text, $body_text );
+        $this->_testFor_box_body_end( $text );
+        $this->_testFor_box_end( $text );
+    }
+    function _checkFor_columns( $text, $nr_cols, $valign='top', $msg = '' ) {
+        $this->_testFor_box_columns_begin( $text, $nr_cols, $valign, $msg );
+        $this->_testFor_box_columns_end( $text, $msg );
+    }
+
     function _testFor_html_link( $text, $addr='PHP_SELF', $paras=array(), 
                                  $link_text='', $css='', $msg='') {
         global $sess;
@@ -164,7 +233,7 @@ extends TestCase
                                  && !empty($paras)) ? $sess->add_query($paras) 
                                  : "" ));
 
-        $this->_testFor_pattern( $text, $this->_query_to_regexp($str),
+        $this->_testFor_pattern( $text, $this->_to_regexp($str),
                                              $msg . " (_testFor_html_link)");
         return $str;
     }
@@ -178,13 +247,13 @@ extends TestCase
                                              : $sess->url( $file ))
                         .$sess->add_query( $query ), $method );
 
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                         $msg . " (_testFor_html_form_action)");
         return ($str);
     }
     function _testFor_html_anchor( $text, $name, $msg = '') {
         $str = '<a name="'. $name . '"></a>';
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                             $msg .' (_testFor_html_anchor)');
         return $str;
     }
@@ -194,7 +263,7 @@ extends TestCase
         $str = ( '<img src="images/'.$file.'" border="'.$border.'"'
                  .' width="'.$width.'" height="'.$height
                  .'" alt="'.$alt.'">' );
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                                $msg." (_testFor_html_image)" );
         return $str;
     }
@@ -202,14 +271,14 @@ extends TestCase
     function _testFor_html_form_hidden( $text, $name, $value, $msg = '' ) {
         $str = sprintf('%s    <input type="hidden" name="%s" value="%s">',
                        "\n", $name, $value );
-        $this->_testFor_pattern( $text, $this->_query_to_regexp($str),
+        $this->_testFor_pattern( $text, $this->_to_regexp($str),
                                  $msg .' (_testFor_html_form_hidden)');
         return $str;
     }
-    function _testFor_html_select( $text, $name, $multi, $size, $msg = '' ) {
+    function _testFor_html_select( $text, $name, $multi=0, $size=0, $msg ='') {
         $str = sprintf("\n".'   <select name="%s" size="%s"%s>'."\n",
                        $name, $size, ($multi ? ' multiple' : ''));
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                              $msg . ' (_testFor_html_select)');
         return $str;
     }
@@ -217,13 +286,13 @@ extends TestCase
                                           $txt, $msg = '' ) {
         $str = sprintf("\n".'      <option %svalue="%s">%s'."\n",
                        ($selected ? 'selected ':''), $value, $txt );
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                  $msg . ' (_testFor_html_select_option)');
         return $str;
     }
     function _testFor_html_select_end( $text, $msg = '') {
         $str = "\n   </select>\n";
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                          $msg . ' (_testFor_html_select_end)');
         return $str;
     }
@@ -232,28 +301,28 @@ extends TestCase
         $str = sprintf( "\n".'   <input type="text" name="%s" size="%s" '
                         .'maxlength="%s" value="%s">', $name, $size,
                         $maxlength, $value );
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                         $msg . ' (_testFor_html_input_text)');
         return $str;
     }
     function _testFor_html_form_submit( $text, $value, $name='', $msg = '' ) {
         $str = sprintf( "\n".'   <input type="submit" value="%s"%s>',
                         $value, ($name ? ' name="'.$name.'"' : ''));
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                        $msg . ' (_testFor_html_form_submit)');
         return $str;
     }
     function _testFor_html_checkbox( $text, $name, $value, $checked, $msg=''){
         $str = sprintf( "\n".'   <input type="checkbox" name="%s" value="%s"'
                         .'%s', $name, $value, ($checked ? ' checked >':'>'));
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                           $msg . ' (_testFor_html_checkbox)');
         return $str;
     }
     function _testFor_html_radio( $text, $name, $value, $checked, $msg = '' ) {
         $str = sprintf( "\n".'   <input type="radio" name="%s" value="%s"'
                         .'%s', $name, $value, ($checked ? ' checked >':'>'));
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                           $msg . ' (_testFor_html_checkbox)');
         return $str;
     }
@@ -262,25 +331,25 @@ extends TestCase
         $str = ( "\n".'   <textarea name="'.$name.'" cols="'.$columns
                  .'" rows="'.$rows.'" wrap="'.$wrap.'" maxlength="'
                  .$maxlength.'">'.$value.'</textarea>' );
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                          $msg . ' (_testFor_html_textarea)');
         return $str;
     }
     function _testFor_html_form_end( $text, $msg = '' ) {
         $str = "\n</form>";
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                          $msg . ' (_testFor_html_form_end)');
         return $str;
     }
     function _testFor_html_form_image( $text, $file, $alt, $msg = '' ) {
         $str = "\n".'   <input type="image" src="'.$file.'" alt="'.$alt.'">';
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                        $msg . ' (_testFor_html_form_image)');
         return $str;
     }
     function _testFor_html_form_reset( $text, $value = 'Reset', $msg = '' ){
         $str = "\n".'   <input type="reset" value="'.$value.'">';
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                        $msg . ' (_testFor_html_form_reset)');
         return $str;
     }
@@ -289,10 +358,11 @@ extends TestCase
         $str = ( "\n".'   <input type="password" name="'.$name
                  .'" size="'.$size.'" maxlength="'.$maxlength
                  .'" value="'.$value.'">' );
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                    $msg . ' (_testFor_html_input_password)');
         return $str;
     }
+
     function _testFor_box_begin( $text, $frame_color='frame_color',
                                  $width = 'box_width', 
                                  $frame_width = 'frame_width', $msg = '' ) {
@@ -312,19 +382,25 @@ extends TestCase
                                           $align = 'title_align', $msg = '') {
 	$str = ("   <!-- box title begin -->\n   <tr bgcolor=\"$bgcolor\">"
                 ."      <td align=\"$align\">\n" );
-        $this->_testFor_pattern( $text, $this->_query_to_regexp($str),
+        $this->_testFor_pattern( $text, $this->_to_regexp($str),
                                            "$msg (_testFor_box_title_begin)");
     }
     function _testFor_box_title_end( $text, $msg = '' ) {
         $str = 	"      </td>\n   </tr>\n   <!-- box title end -->\n";
-        $this->_testFor_pattern( $text, $this->_query_to_regexp($str),
+        $this->_testFor_pattern( $text, $this->_to_regexp($str),
                                              "$msg (_testFor_box_title_end)" );
     }
-    function _testFor_box_title( $text, $title, $color = 'title_font_color', 
+    function _testFor_box_title( $text, $title, 
+                                 $title_font_color = 'title_font_color', 
+                                 $title_bgcolor = 'title_bgcolor',
+                                 $title_align = 'title_align',
                                  $msg = '' ) {
-        $str = "      <font color=\"$color\"><b>$title</b></font>\n";
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_box_title_begin( $text,$title_bgcolor,
+                                                      $title_align,$msg);
+        $str="      <font color=\"$title_font_color\"><b>$title</b></font>\n";
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                                   "$msg (_testFor_box_title)");
+        $this->_testFor_box_title_end( $text, $msg );
     }
     function _testFor_box_body_begin( $text, $bgcolor ='body_bgcolor', 
                                       $body_align ='body_align',
@@ -334,13 +410,13 @@ extends TestCase
         $str = ("   <!-- box body begin -->\n   <tr bgcolor=\"$bgcolor\">\n"
                 ."         <td align=\"$body_align\" valign=\"$body_valign\">"
                 ."<font color=\"$body_font_color\">\n");
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                              "$msg (_testFor_box_body_begin)");
     }
     function _testFor_box_body_end( $text, $msg = '' ) {
         $str = ( "      </font>\n      </td>\n   </tr>\n"
                  ."   <!-- box body end -->\n");
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                               "$msg (_testFor_box_body_end)");
 
     }
@@ -348,7 +424,7 @@ extends TestCase
                                                                   $msg = '' ) {
         $str = 	("            <font color=\"".$color."\">\n"
                  .'            '.$body."            </font>\n");
-        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+        $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                                   "$msg (_testFor_box_body)");
     }
     function _testFor_box_columns_begin( $text, $nr_cols, $valign='top',
@@ -362,6 +438,7 @@ extends TestCase
     }
     function _testFor_box_column_start($text,$align,$width,$bgcolor="#FFFFFF",
                                        $msg = ''){
+        $bgcolor=(!isset($bgcolor) || empty($bgcolor) ? "#FFFFFF" : $bgcolor);
         $ps=array( 0=>"[ ]+<!-- New Column starts -->\n",
                    1=>("[ ]+<td align=\"".$align."\" width=\"".$width
                        ."\" bgcolor=\"".$bgcolor."\">"));
@@ -383,9 +460,14 @@ extends TestCase
                                        "$msg (_testFor_box_columns_end)");
     }
     function _testFor_box_column( $text, $align,$width,$bgcolor,$txt,$msg=''){
+        // FIXME: this is bad: this checks whether there has been a column
+        // FIXME: start _somewhere_ in the text but *not* whether the column
+        // FIXME: start and the text actually match up! To fix this,
+        // FIXME: need to take the code of _testFor_box_column_start and
+        // FIXME: add it this method but that breaks the write once principle!
         $this->_testFor_box_column_start($text,$align,$width,$bgcolor,$msg);
         $this->_testFor_box_column_finish( $text, $msg );
-        $this->_testFor_pattern( $text, "[ ]+".$this->_query_to_regexp($txt),
+        $this->_testFor_pattern( $text, "[ ]+".$this->_to_regexp($txt),
                                                  "$msg (_testFor_box_column)");
     }
     function _testFor_box_next_row_of_columns( $text, $msg = '' ) {
@@ -401,11 +483,26 @@ extends TestCase
                        ."starts -->\n"),
                   1=>('[ ]+<td colspan="'.$nr_cols.'" align="'.$align
                       .'" bgcolor="'.$bgcolor.'">'),
-                  2=>'[ ]+'.$this->_query_to_regexp($insert_text),
+                  2=>'[ ]+'.$this->_to_regexp($insert_text),
                   3=>"[ ]+<\/td>\n",
                   4=>("[ ]+<!-- Column spanned over $nr_cols columns "
                       ."finished -->\n"));
         $this->_testFor_patterns($text,$ps,5,"$msg (_testFor_box_colspan)");
+    }
+
+    function _testFor_lib_nick( $text, $uname = '', $msg = '' ) {
+        $str = '<b>by '.$uname.'</b>';
+        $this->_testFor_pattern( $text, $this->_to_regexp($str),
+                                 "$msg (_testFor_lib_nick)");
+        return $str;
+    }
+    function _testFor_lib_comment_it( $text, $proid, $type, $number, $ref,
+                                      $subject, $link_text, $msg = '' ) {
+        $this->_testFor_pattern( $text, "<FONT SIZE=-1>[[].*[]]<\/FONT>\n");
+
+        $this->_testFor_html_link( $text, 'comments_edit.php3',
+                  array( 'proid'=>$proid,'type'=>$type,'number'=>$number,
+                         'ref'=>$ref,'subject'=>$subject),$link_text);
     }
 }
 ?>

@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConfigurelib.php,v 1.2 2002/05/15 13:23:58 riessen Exp $
+// $Id: TestConfigurelib.php,v 1.3 2002/05/28 08:58:28 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -42,36 +42,19 @@ extends UnitTest
         $auth->set_uname("this is the username");
         $auth->set_perm("this is the permission");
 
-        $ps = array();
-        for ( $idx = 55; $idx < 100; $idx += 5 ) {
-            $ps[ $idx/5 - 11 ] = '<option value="'.$idx.'">'.$idx.'%';
-        }
-        $ps[] = '<select name="quorum" size="0">';
-        $ps[] = '<\/select>';
-
-        for ( $idx = 55; $idx < 100; $idx += 5 ) {
+        for ( $idx = -10; $idx < 120; $idx += 5 ) {
             $text = select_quorum( $idx );
-            $jdx = $idx/5 - 11;
-            $old_p = $ps[ $jdx ];
-            $ps[ $jdx ] = '<option selected value="'.$idx.'">'.$idx.'%';
-            $this->_testFor_patterns( $text, $ps, 11, $idx );
-            $ps[ $jdx ] = $old_p;
-            $this->_testFor_string_length( $text, 329, $idx );
+            $this->_testFor_html_select( $text, "quorum",0,0,"test $idx" );
+            for ( $jdx = 55; $jdx < 100; $jdx += 5 ) {
+              $this->_testFor_html_select_option( $text, $jdx, $jdx==$idx,
+                                                       $jdx.'%', "test $idx" );
+            }
+            $this->_testFor_html_select_end( $text, "test $idx" );
+            // length various by 9 according to whether something was selected
+            // or not. For values under 55 or over 95 nothing will be selected.
+            $this->_testFor_string_length( $text, ( $idx < 55 || $idx > 95 
+                                                    ? 320 : 329),"Test $idx");
         }
-
-        // check some values that should not case something to be selected
-        $text = select_quorum( 0 );
-        $this->_testFor_patterns( $text, $ps, 11, "0" );
-        $this->_testFor_string_length( $text, 320, "0" );
-        $text = select_quorum( -10 );
-        $this->_testFor_patterns( $text, $ps, 11, "-10" );
-        $this->_testFor_string_length( $text, 320, "-10" );
-        $text = select_quorum( 50 );
-        $this->_testFor_patterns( $text, $ps, 11, "50" );
-        $this->_testFor_string_length( $text, 320, "50" );
-        $text = select_quorum( 100 );
-        $this->_testFor_patterns( $text, $ps, 11, "100" );
-        $this->_testFor_string_length( $text, 320, "100" );
     }
 
     function testConfigure_first_time() {
@@ -88,9 +71,9 @@ extends UnitTest
         $db_config->add_num_row( -1, 1 );
         $db_config->add_num_row( 1, 2 );
 
-        $this->assertEquals( configure_first_time( $dat[0]["proid"]), 1, "1" );
-        $this->assertEquals( configure_first_time( $dat[1]["proid"]), 0, "2" );
-        $this->assertEquals( configure_first_time( $dat[2]["proid"]), 0, "3" );
+        $this->assertEquals( 1, configure_first_time( $dat[0]["proid"]), "1" );
+        $this->assertEquals( 0, configure_first_time( $dat[1]["proid"]), "2" );
+        $this->assertEquals( 0, configure_first_time( $dat[2]["proid"]), "3" );
 
         $this->_check_db( $db_config );
     }
@@ -114,9 +97,9 @@ extends UnitTest
             $db_config->add_record( $rows[$idx], $idx );
         }
         
-        $this->assertEquals( project_type( $dat[0]["proid"]),"sponsored","1");
-        $this->assertEquals( project_type( $dat[1]["proid"]),"developed","2");
-        $this->assertEquals( project_type( $dat[2]["proid"]),"developed","3");
+        $this->assertEquals( "sponsored",project_type( $dat[0]["proid"]),"1");
+        $this->assertEquals( "developed",project_type( $dat[1]["proid"]),"2");
+        $this->assertEquals( "developed",project_type( $dat[2]["proid"]),"3");
 
         $this->_check_db( $db_config );
     }

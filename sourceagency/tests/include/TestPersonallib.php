@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestPersonallib.php,v 1.26 2002/05/15 13:23:58 riessen Exp $
+# $Id: TestPersonallib.php,v 1.27 2002/05/28 08:58:28 riessen Exp $
 #
 ######################################################################
 
@@ -64,10 +64,9 @@ extends UnitTest
     }
     
     function setup() {
-        // Called before each test method.
-        // if using the capturing routines then ensure that it's reset,
-        // it uses global variables
-        capture_reset_text();
+    }
+    function tearDown() {
+        unset( $GLOBALS[ 'bx' ] );
     }
 
     function _testFor_project_link( $text, $proid, $ptitle, $status ) {
@@ -105,7 +104,7 @@ extends UnitTest
     // Start of the actual test methods
     //
     function testPersonal_related_projects() {
-        global $auth;
+        global $auth, $bx;
         // status can be one of: P(Proposed),N(Negotiating),A(Accepted),
         //                       R(Rejected),D(Delete),M(Modified)
         $user1 = "fubar";
@@ -165,12 +164,13 @@ extends UnitTest
         //
         // fubar 
         //
-        capture_start();
         $auth->set_uname( $user1 );
         $auth->set_perm( "hell yes!" );
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         personal_related_projects( $auth->auth['uname'], $status1 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 660, "test 1" );
+        $this->_testFor_captured_length( 732, "test 1" );
         $this->_testFor_pattern( $text, ("<b>Involved Projects [(]"
                                          .show_status($status1)
                                          ."[)]<\/b>" ));
@@ -183,12 +183,13 @@ extends UnitTest
         // 
         // snafu
         //
-        capture_reset_and_start();
         $auth->set_uname( $user2 );
         $auth->set_perm( "hell yes!" );
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         personal_related_projects( $auth->auth['uname'], $status2 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 658, "test 2" );
+        $this->_testFor_captured_length( 730, "test 2" );
         $this->_testFor_pattern( $text, ("<b>Involved Projects [(]"
                                          .show_status($status2)
                                          ."[)]<\/b>" ));
@@ -205,6 +206,8 @@ extends UnitTest
     }
 
     function testPersonal_comments_short() {
+        global $bx;
+
         $user1 = "fubar";
         $user2 = "snafu";
         $user3 = "fritz";
@@ -309,11 +312,12 @@ extends UnitTest
         //
         // fubar query
         //
-        capture_start();
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_comments_short( $user1 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 655, "test 1" );
+        $this->_testFor_captured_length( 727, "test 1" );
         $this->_testFor_pattern( $text, "Last 10 Comments by " . $user1 );
         $this->_testFor_line( $text, "no comments posted" );
         $this->assertNotRegexp( "/See all the comments.../", $text, 
@@ -322,11 +326,12 @@ extends UnitTest
         //
         // snafu query
         //
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         // here next_record will not be called
         personal_comments_short( $user2 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1230, "test 2" );
+        $this->_testFor_captured_length( 1302, "test 2" );
 
         $this->_testFor_pattern( $text, "Last 10 Comments by " . $user2 );
         $this->assertNotRegexp( "/no comments posted/", $text );
@@ -350,6 +355,8 @@ extends UnitTest
     }
 
     function testPersonal_comments_long() {
+        global $bx;
+
         $user1 = "fubar";
         $user2 = "snafu";
         
@@ -405,11 +412,12 @@ extends UnitTest
         //
         // fubar query
         //
-        capture_start();
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_comments_long( $user1 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 651, "test 1" );
+        $this->_testFor_captured_length( 723, "test 1" );
         $this->_testFor_pattern( $text, "All Comments by " . $user1 );
         $this->_testFor_line( $text, "no comments posted" );
         $this->assertNotRegexp( "/See all the comments.../", $text, 
@@ -418,11 +426,12 @@ extends UnitTest
         //
         // snafu query
         //
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         // here next_record will not be called
         personal_comments_long( $user2 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1226, "test 2" );
+        $this->_testFor_captured_length( 1298, "test 2" );
 
         $this->_testFor_pattern( $text, "All Comments by " . $user2 );
         $this->assertNotRegexp( "/no comments posted/", $text );
@@ -446,6 +455,8 @@ extends UnitTest
     }
 
     function testPersonal_news_short() {
+        global $bx;
+
         $user1 = "fubar";
         $user2 = "snafu";
         $user3 = "fritz";
@@ -586,11 +597,12 @@ extends UnitTest
         //
         // fubar query
         //
-        capture_start();
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_news_short( $user1 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 646, "test 1" );
+        $this->_testFor_captured_length( 718, "test 1" );
         $this->_testFor_pattern( $text, "Last 5 News by " . $user1 );
         $this->_testFor_line( $text, "no news posted" );
         $this->assertNotRegexp( "/See all the comments.../", $text, 
@@ -599,11 +611,12 @@ extends UnitTest
         //
         // snafu query
         //
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         // here next_record will not be called
         personal_news_short( $user2 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1123, "test 2" );
+        $this->_testFor_captured_length( 1195, "test 2" );
         $this->_testFor_pattern( $text, "Last 5 News by " . $user2 );
         $this->assertNotRegexp( "/no news posted/", $text, 
                                 "[User: ".$user2."] has news posted");
@@ -619,11 +632,12 @@ extends UnitTest
         //
         // fritz query
         //
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         // here next_record will not be called
         personal_news_short( $user3 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1960, "test 3" );
+        $this->_testFor_captured_length( 2032, "test 3" );
         $this->_testFor_pattern( $text, "Last 5 News by " . $user3 );
         $this->assertNotRegexp( "/no news posted/", $text, 
                                 "[User: ".$user3."] has news posted");
@@ -659,6 +673,8 @@ extends UnitTest
     }
 
     function testPersonal_news_long() {
+        global $bx;
+
         $user1 = "fubar";
         $user2 = "snafu";
 
@@ -712,22 +728,24 @@ extends UnitTest
         //
         // fubar query
         //
-        capture_start();
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_news_long( $user1 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 643, "test 1" );
+        $this->_testFor_captured_length( 715, "test 1" );
         $this->_testFor_pattern( $text, "All news by " . $user1 );
         $this->_testFor_line( $text, "no news posted" );
 
         //
         // snafu query
         //
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         // here next_record will not be called
         personal_news_long( $user2 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1136, "test 2" );
+        $this->_testFor_captured_length( 1208, "test 2" );
         $this->_testFor_pattern( $text, "All news by " . $user2 );
 
         $this->_testFor_news_link( $text, $row1['proid'],$row1['subject_news'],
@@ -742,6 +760,8 @@ extends UnitTest
     }
 
     function testPersonal_consultants() {
+        global $bx;
+
         $user1 = "fubar"; $status1 = "D";
         $user2 = "snafu"; $status2 = "A";
         $user3 = "fritz"; $status3 = "R";
@@ -776,11 +796,12 @@ extends UnitTest
         //
         // fubar query
         //
-        capture_start();
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_consultants( $user1, $status1 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 644, "test 1" );
+        $this->_testFor_captured_length( 716, "test 1" );
         // check title string
         $this->_testFor_pattern( $text, ("Consultant [(]"
                                          .show_status( $status1 )."[)]")); 
@@ -789,11 +810,12 @@ extends UnitTest
         //
         // snafu query
         //
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         // here next_record will not be called
         personal_consultants( $user2, $status2 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 705, "test 2" );
+        $this->_testFor_captured_length( 777, "test 2" );
         // check title string
         $this->_testFor_pattern( $text, ("Consultant [(]"
                                          .show_status( $status2 )."[)]")); 
@@ -803,11 +825,12 @@ extends UnitTest
         //
         // fubar query
         //
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         // here next_record will not be called
         personal_consultants( $user3, $status3 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 805, "test 3" );
+        $this->_testFor_captured_length( 877, "test 3" );
         // check title string
         $this->_testFor_pattern( $text, ("Consultant [(]"
                                          .show_status( $status3 )."[)]")); 
@@ -822,6 +845,8 @@ extends UnitTest
     }
 
     function testPersonal_referees() {
+        global $bx;
+
         $user1 = "fubar"; $status1 = "D";
         $user2 = "snafu"; $status2 = "A";
         $user3 = "fritz"; $status3 = "R";
@@ -856,11 +881,12 @@ extends UnitTest
         //
         // fubar query
         //
-        capture_start();
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_referees( $user1, $status1 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 638, "test 1" );
+        $this->_testFor_captured_length( 710, "test 1" );
         // check title string
         $this->_testFor_pattern( $text, ("Referee [(]"
                                          .show_status( $status1 )."[)]")); 
@@ -869,11 +895,12 @@ extends UnitTest
         //
         // snafu query
         //
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         // here next_record will not be called
         personal_referees( $user2, $status2 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 702, "test 2" );
+        $this->_testFor_captured_length( 774, "test 2" );
         // check title string
         $this->_testFor_pattern( $text, ("Referee [(]"
                                          .show_status( $status2 )."[)]")); 
@@ -883,11 +910,12 @@ extends UnitTest
         //
         // fritz query
         //
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         // here next_record will not be called
         personal_referees( $user3, $status3 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 802, "test 3" );
+        $this->_testFor_captured_length( 874, "test 3" );
         // check title string
         $this->_testFor_pattern( $text, ("Referee [(]"
                                          .show_status( $status3 )."[)]")); 
@@ -902,6 +930,7 @@ extends UnitTest
     }
 
     function testPersonal_cooperation() {
+        global $bx;
 
         $user1 = "fubar"; $status1 = "D";
         $user2 = "snafu"; $status2 = "A";
@@ -937,21 +966,25 @@ extends UnitTest
         $db_config->add_record( $row3, 2 );
         $db_config->add_record( false, 2 );
         
-        capture_start();
+        // test one
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_cooperation( $user1, $status1 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 668, "test 1" );
+        $this->_testFor_captured_length( 740, "test 1" );
         // check title string
         $this->_testFor_pattern( $text, ("Developing Cooperation [(]"
                                          .show_status( $status1 )."[)]")); 
         $this->_testFor_line( $text, ("No developing cooperation proposal "
                                       ."with this status") );
 
+        // test two
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         personal_cooperation( $user2, $status2 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 807, "test 2" );
+        $this->_testFor_captured_length( 879, "test 2" );
         // check the title string
         $this->_testFor_pattern( $text, ("Developing Cooperation [(]"
                                          .show_status( $status2 )."[)]")); 
@@ -959,12 +992,12 @@ extends UnitTest
         $this->_testFor_cooperation_project_link($text,$row1['proid'],
                                                        $row1['project_title'],
                                                        $row1['devid'] );
-
         // fritz query
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         personal_cooperation( $user3, $status3 );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 997, "test 3" );
+        $this->_testFor_captured_length( 1069, "test 3" );
         // check the title string
         $this->_testFor_pattern( $text, ("Developing Cooperation [(]"
                                          .show_status( $status3 )."[)]")); 
@@ -980,6 +1013,7 @@ extends UnitTest
     }
 
     function testPersonal_my_projects() {
+        global $bx;
 
         $db_config = new mock_db_configure( 3 );
 
@@ -1011,28 +1045,34 @@ extends UnitTest
         $db_config->add_record( $row3, 2 );
         $db_config->add_record( false, 2 );
 
-        capture_start();
+        // test one
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_my_projects( "fubar" );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 616, "test 1" );
+        $this->_testFor_captured_length( 688, "test 1" );
         $this->_testFor_pattern( $text, "My Projects" ); // title
         $this->_testFor_line( $text, "No personal projects" );
         
+        // test two
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         // here next_record should be called once --> num_row == 1
         personal_my_projects( "snafu" );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 697, "test 2" );
+        $this->_testFor_captured_length( 769, "test 2" );
         $this->_testFor_pattern( $text, "My Projects" ); // title
         $this->_testFor_project_link($text,$row1['proid'],
                                      $row1['project_title'], $row1['status']);
 
+        // test three
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         // here next_record should be called once --> num_row == 1
         personal_my_projects( "fritz" );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 799, "test 3" );
+        $this->_testFor_captured_length( 871, "test 3" );
         $this->_testFor_pattern( $text, "My Projects" ); // title
         $this->_testFor_project_link($text,$row2['proid'],
                                      $row2['project_title'],$row2['status']);
@@ -1043,7 +1083,8 @@ extends UnitTest
         $this->_check_db( $db_config );
     }
 
-    function testPersonal_Monitored_Projects() {
+    function testPersonal_monitored_projects() {
+        global $bx;
 
         $db_q = ("SELECT * FROM monitor,description WHERE "
                  ."monitor.proid=description.proid AND monitor"
@@ -1074,30 +1115,35 @@ extends UnitTest
         $db_config->add_record( $row3, 2 );
         $db_config->add_record( false, 2 );
 
-
-        capture_start();
+        // test one
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_monitored_projects( "fubar" );
         $text = capture_stop_and_get();
 
-        $this->_testFor_captured_length( 624, "test 1" );
+        $this->_testFor_captured_length( 696, "test 1" );
         $this->_testFor_pattern( $text, "Monitored Projects" ); // title
         $this->_testFor_line( $text, "No monitored projects" );
 
+        // test two
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         // here next_record should be called once --> num_row == 1
         personal_monitored_projects( "snafu" );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 704, "test 2" );
+        $this->_testFor_captured_length( 776, "test 2" );
         $this->_testFor_pattern( $text, "Monitored Projects" ); // title
         $this->_testFor_project_link($text,$row1['proid'],
                                      $row1['project_title'], $row1['status']);
 
+        // test three
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         // here next_record should be called once --> num_row == 1
         personal_monitored_projects( "fritz" );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 806, "test 3" );
+        $this->_testFor_captured_length( 878, "test 3" );
         $this->_testFor_pattern( $text, "Monitored Projects" ); // title
         $this->_testFor_project_link($text,$row2['proid'],
                                      $row2['project_title'], $row2['status']);

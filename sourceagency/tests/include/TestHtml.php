@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.23 2002/05/22 13:10:23 riessen Exp $
+# $Id: TestHtml.php,v 1.24 2002/05/28 08:58:28 riessen Exp $
 #
 ######################################################################
 
@@ -49,23 +49,23 @@ extends UnitTest
     // function to be tested plus two other parameters (at the beginning
     // and end of the argument list). This is called to generated the exact
     // desired output for the function being tested.
-    function _test_html_function( $name, $args, $exp_length ) {
+    function _test_html_function( $name, &$args, $exp_length ) {
         $test_for_func = '_testFor_' . $name;
         $print_func = ereg_replace('^html_','htmlp_',$name);
         $no_chance = 0;
 
         if ( !function_exists( $name ) && ($no_chance=1) ) {
-            $this->assertEquals(1,0,"Function not defined '$name' "
-                                ."(_test_html_function)");
+            $this->assert(false,"Function not defined '$name' "
+                          ."(_test_html_function)");
         }
         if ( !function_exists( $print_func ) && ($no_chance=1) ) {
-            $this->assertEquals(1,0,"Print function not defined '$print_func' "
-                                ."(_test_html_function)");
+            $this->assert(false,"Print function not defined '$print_func' "
+                          ."(_test_html_function)");
         }
         if ( !method_exists( $this, $test_for_func ) && ($no_chance=1) ) {
-            $this->assertEquals(1,0,"Test for function not defined "
-                                ."'$test_for_func' on this object "
-                                ."(_test_html_function)");
+            $this->assert(false,"Test for function not defined "
+                          ."'$test_for_func' on this object "
+                          ."(_test_html_function)");
         }
 
         // no_chance flag is set if one or more of the required functions 
@@ -133,18 +133,18 @@ extends UnitTest
                              3=>43, 
                              4=>98);
 
-        $this->_test_html_function( 'html_link', $args, $exp_length );
+        $this->_test_html_function( 'html_link', &$args, $exp_length );
     }
 
     function testHtml_anchor() {
         $args = array( 0 => array( 'name' => 'hello world' ));
-        $this->_test_html_function( 'html_anchor', $args, array( 0=> 26 ) );
+        $this->_test_html_function( 'html_anchor', &$args, array( 0=> 26 ) );
     }
 
     function testHtml_image() {
         $args=$this->_generate_records(array('file','border','width','height',
                                              'alt'),1);
-        $this->_test_html_function( 'html_image', $args, array(0=>89));
+        $this->_test_html_function( 'html_image', &$args, array(0=>89));
     }
 
     function testHtml_form_action() {
@@ -166,13 +166,13 @@ extends UnitTest
         $exp_length = array( 0 => 31 +  strlen( $sess->self_url()), 
                              1 => 35, 2 => 54 );
         
-        $this->_test_html_function( 'html_form_action', $args, $exp_length );
+        $this->_test_html_function( 'html_form_action', &$args, $exp_length );
     }
     
     function testHtml_form_hidden() {
         $args=$this->_generate_records(array("name","value"), 1);
 
-        $this->_test_html_function( 'html_form_hidden', $args, array(0=>56));
+        $this->_test_html_function( 'html_form_hidden', &$args, array(0=>56));
     }
 
     function testHtml_select() {
@@ -186,7 +186,7 @@ extends UnitTest
         $args[2]['multi'] = 1;
         $exp_length = array( 0=> 36, 1=> 37, 2=> 46);
 
-        $this->_test_html_function( 'html_select', $args, $exp_length );
+        $this->_test_html_function( 'html_select', &$args, $exp_length );
     }
 
     function testHtml_select_option() {
@@ -200,20 +200,20 @@ extends UnitTest
         $args[3]['txt'] = '';
         $exp_length = array( 0=>46,1=>32,2=>30,3=>34);
         
-        $this->_test_html_function( 'html_select_option', $args, $exp_length );
+        $this->_test_html_function('html_select_option', &$args, $exp_length);
     }
 
     function testHtml_select_end() {
         $args = array( 0 => array() );
         $exp_length = array( 0 => 14 );
-        $this->_test_html_function( 'html_select_end', $args, $exp_length );
+        $this->_test_html_function( 'html_select_end', &$args, $exp_length );
     }
 
     function testHtml_input_text() {
         $args=$this->_generate_records( array( "name", "size", "maxlength",
                                                "value" ), 1 );
         $exp_length = array( 0 => 91 );
-        $this->_test_html_function( 'html_input_text', $args, $exp_length );
+        $this->_test_html_function( 'html_input_text', &$args, $exp_length );
     }
 
     function testHtml_form_submit() {
@@ -222,7 +222,7 @@ extends UnitTest
         $args[1]['name'] = '';
         $args[2]['value'] = '';
         $args[2]['name'] = '';
-        $this->_test_html_function( 'html_form_submit', $args, $exp_length );
+        $this->_test_html_function( 'html_form_submit', &$args, $exp_length );
     }
 
     function testHtml_checkbox() {
@@ -233,7 +233,7 @@ extends UnitTest
         $args[4]['checked'] = 'checked';
         $exp_length=array(0=>66,1=>57,2=>57,3=>66,4=>66);
         
-        $this->_test_html_function('html_checkbox', $args, $exp_length );
+        $this->_test_html_function('html_checkbox', &$args, $exp_length );
     }
 
     function testHtml_radio() {
@@ -244,40 +244,40 @@ extends UnitTest
         $args[4]['checked'] = 'checked';
         $exp_length=array(0=>63,1=>54,2=>54,3=>63,4=>63);
         
-        $this->_test_html_function('html_radio', $args, $exp_length );
+        $this->_test_html_function('html_radio', &$args, $exp_length );
     }
 
     function testHtml_textarea() {
         $args = $this->_generate_records(array("name","columns","rows", 
                                                "wrap","maxlength","value"),1);
         $exp_length=array( 0=>115 );
-        $this->_test_html_function( 'html_textarea', $args, $exp_length );
+        $this->_test_html_function( 'html_textarea', &$args, $exp_length );
     }
 
     function testHtml_form_end() {
         $args = array( 0 => array() );
         $exp_length = array( 0 => 8 );
-        $this->_test_html_function( 'html_form_end', $args, $exp_length );
+        $this->_test_html_function( 'html_form_end', &$args, $exp_length );
     }
 
     function testHtml_form_image() {
         $args = $this->_generate_records( array( "name", "alt" ), 1 );
         $exp_length = array( 0 => 49 );
-        $this->_test_html_function( 'html_form_image', $args, $exp_length );
+        $this->_test_html_function( 'html_form_image', &$args, $exp_length );
     }
 
     function testHtml_form_reset() {
         $args=$this->_generate_records( array( 'reset' ), 2 );
         $args[1]['reset'] = '';
         $exp_length = array( 0=>40, 1=>33 );
-        $this->_test_html_function( 'html_form_reset', $args, $exp_length );
+        $this->_test_html_function( 'html_form_reset', &$args, $exp_length );
     }
       
     function testHtml_input_password() {
         $args = $this->_generate_records( array("name", "size", "password",
                                                 "value"), 1);
         $exp_length = array( 0 => 94 );
-        $this->_test_html_function( 'html_input_password', $args, $exp_length);
+        $this->_test_html_function( 'html_input_password',&$args,$exp_length);
     }
 
 }

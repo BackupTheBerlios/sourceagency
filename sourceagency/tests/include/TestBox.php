@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestBox.php,v 1.18 2002/05/22 11:50:33 riessen Exp $
+# $Id: TestBox.php,v 1.19 2002/05/28 08:58:28 riessen Exp $
 #
 ######################################################################
 
@@ -38,10 +38,7 @@ extends UnitTest
 
     // this is called before each test method
     function setup() {
-        $this->box = new box( "box_width", "frame_color", "frame_width",
-                              "title_bgcolor", "title_font_color", 
-                              "title_align", "body_bgcolor", "body_font_color",
-                              "body_align" );
+        $this->box = $this->_create_default_box();
     }
 
     function tearDown() {

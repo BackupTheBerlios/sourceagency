@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestNewslib.php,v 1.16 2002/05/16 15:04:16 riessen Exp $
+# $Id: TestNewslib.php,v 1.17 2002/05/28 08:58:28 riessen Exp $
 #
 ######################################################################
 
@@ -47,170 +47,89 @@ extends UnitTest
     }
 
     function setup() {
-        // Called before each test method.
-        // if using the capturing routines then ensure that it's reset,
-        // it uses global variables
-        capture_reset_text();
     }
 
     function tearDown() {
         // Ensure that the global db is predefined for the next test
         unset( $GLOBALS[ 'db' ] );
+        unset( $GLOBALS[ 'bx' ] );
     }
+
     function testNewsform() {
-        global $text, $subject, $sess;
+        global $text, $subject, $sess, $bx, $t;
+
         $text = "this is the text";
         $subject = "this is the subject";
-        
-        capture_start();
-        newsform( "proid" ); 
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 2235 + strlen( $sess->self_url() ), 
-                                         "test 1");
+        $proid = "proid";
 
-        $ps=array( 0=> "<font color=\"#000000\"><b>Editing News<\/b><\/font>",
-                   1=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+<b>Subject<\/b> [(]128[)]:[ \n]+<\/td>"
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+<td "
-                       ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+<input type=\"text\" name=\"subject\" "
-                       ."size=\"40\" "
-                       ."maxlength=\"128\" value=\"this is the subject"
-                       ."\">[ \n]+<\/td>\n"),
-                   2=>("<form action=\""
-                       . ereg_replace( "/", "\/", $sess->self_url() )
-                       ."[?]proid=proid\" method=\"POST\">"),
-                   3=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<b>Body<\/b> [(][*][)]:[ \n]+<\/td>"
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+<td align"
-                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+"
-                       ."<textarea name=\"text\" cols=\"40\" rows=\"7\" wrap"
-                       ."=\"virtual\" maxlength=\"255\">this is the text<\/"
-                       ."textarea>[ \n]+<\/td>\n"),
-                   4=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<input type=\"submit\" value=\"Preview\" "
-                       ."name=\"preview\">[ \n]+<input type=\"submit\" value="
-                       ."\"Submit\" name=\"submit\">[ \n]+<\/td>\n"));
-        $this->_testFor_patterns( $text, $ps, 5 );
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
+        newsform( $proid ); 
+        $txt = capture_stop_and_get();
 
+        $this->_checkFor_a_box( $txt, 'Editing News' );
+        $this->_checkFor_a_form($txt,'PHP_SELF',array('proid'=>$proid),'POST');
+        $this->_checkFor_columns( $txt, 2 );
+
+        $this->_checkFor_column_titles( $txt, array( 'Body', 'Subject' ));
+        $this->_checkFor_column_values( $txt,
+            array( html_input_text('subject',40,128,$subject),
+                   html_textarea('text',40,7,'virtual',255,$text )));
+
+        $this->_checkFor_submit_preview_buttons( $txt );
+        $this->_testFor_captured_length( 2307 + strlen( $sess->self_url() ) );
     }
 
     function testNews_modify_form() {
-        global $text, $subject, $creation, $sess;
+        global $text, $subject, $creation, $sess, $bx, $t;
+
         $text = "this is the text";
         $subject = "this is the subject";
         $creation = "asdasd";
+        $proid = 'proid';
         
-        capture_start();
-        news_modify_form( "proid" ); 
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 2294 + strlen( $sess->self_url() ), 
-                                         "test 1");
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
+        news_modify_form( $proid ); 
+        $txt = capture_stop_and_get();
 
-        $ps=array( 0=>("<font color=\"#000000\"><b>Modifying News<\/b>"
-                       ."<\/font>"),
-                   1=>("<form action=\""
-                       .ereg_replace( "/", "\/", $sess->self_url() )
-                       ."[?]proid=proid\" method=\"POST\">[ \n]+<input type=\""
-                       ."hidden\" name=\"creation\" value=\"asdasd\">"),
-                   2=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<b>Subject<\/b> [(]128[)]:[ \n]+"
-                       ."<\/td>[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+<td align"
-                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+"
-                       ."<input type=\"text\" name=\"subject\" size=\"40\" "
-                       ."maxlength=\"128\" value=\"this is the subject\">"
-                       ."[ \n]+<\/td>\n"),
-                   3=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<b>Body<\/b> [(][*][)]:[ \n]+<\/td>"
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+<td align"
-                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+<textarea name=\"text\" cols=\"40\" "
-                       ."rows=\"7\" wrap"
-                       ."=\"virtual\" maxlength=\"255\">this is the "
-                       ."text<\/textarea>[ \n]+<\/td>\n"),
-                   4=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\""
-                       .">[ \n]+<input type=\"submit\" value=\"Preview\" name="
-                       ."\"preview\">[ \n]+<input type=\"submit\" "
-                       ."value=\"Submit"
-                       ."\" name=\"submit\">[ \n]+<\/td>\n"));
-        $this->_testFor_patterns( $text, $ps, 5 );
+        $this->_checkFor_a_box( $txt, 'Modifying News' );
+        $this->_checkFor_a_form($txt,'PHP_SELF',array('proid'=>$proid),'POST');
+        $this->_testFor_html_form_hidden( $txt, 'creation', $creation );
+        $this->_checkFor_columns( $txt, 2 );
+        $this->_checkFor_column_titles( $txt, array( 'Subject', 'Body' ) );
+        $this->_checkFor_column_values( $txt, 
+                 array(html_textarea('text',40,7,'virtual',255,$text),
+                       html_input_text('subject',40,128,$subject)));
+        
+        $this->_checkFor_submit_preview_buttons( $txt );
+        $this->_testFor_captured_length( 2366 + strlen( $sess->self_url() ));
     }
 
     function testNews_preview() {
-        global $subject, $text, $auth, $sess;
+        global $subject, $text, $auth, $sess, $bx, $t;
                 
+        $text = "this is the text";
+        $subject = "this is the subject";
         $auth->set_uname( "username" );
+        $proid = 'fubar';
 
-        capture_start();
-        news_preview( "fubar" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 3127 + strlen(timestr(time()))
-                                         + strlen( $sess->self_url() ), 
-                                         "test 1");
-        $ps=array( 0=>("<font color=\"#000000\"><b><center><b>PREVIEW<\/b>"
-                       ."<\/center><\/b><\/font>"),
-                   1=>("<tr bgcolor=\"#CCCCCC\">[ \n]+<td align=\"\">"
-                       ."[ \n]+<font color="
-                       ."\"#000000\"><b>News: this is the subject<\/b><\/"
-                       ."font>[ \n]+<\/td>[ \n]+<\/tr>\n"),
-                   2=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align=\"\" "
-                       ."valign=\"top\"><font color="
-                       ."\"#000000\">\n<b>by username<\/b> -"),
-                   3=>("<tr bgcolor=\"#CCCCCC\">[ \n]+<td align=\"\">"
-                       ."[ \n]+<font color"
-                       ."=\"#000000\"><b>Modifying News<\/b><\/font>"
-                       ."[ \n]+<\/td>[ \n]+<\/tr>\n"),
-                   4=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align=\"\" "
-                       ."valign=\"top\"><font color=\"#000000\">[ \n]+"
-                       ."<form action=\""
-                       .ereg_replace( "/", "\/", $sess->self_url() )
-                       ."[?]proid=proid\" method=\"POST\">[ \n]+<input type=\""
-                       ."hidden\" name=\"creation\" value=\"asdasd\">"
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+<table border=\"0\" "
-                       ."cellspacing=\"0\" cellpadding=\"3\" align=\"center"
-                       ."\" width=\"100%\">[ \n]+"
-                       ."<tr valign=\"top\">\n"),
-                   5=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<b>Subject<\/b> [(]128[)]:[ \n]+"
-                       ."<\/td>[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+<td align"
-                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+<input type=\"text\" name=\"subject\" "
-                       ."size=\"40\" "
-                       ."maxlength=\"128\" value=\"this is the subject\">"
-                       ."[ \n]+"
-                       ."<\/td>\n"),
-                   6=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<b>Body<\/b> [(][*][)]:[ \n]+<\/td>"
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+".$this->p_regexp_html_comment
-                       ."[ \n]+<td align"
-                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+<textarea name=\"text\" cols=\"40\" "
-                       ."rows=\"7\" wrap"
-                       ."=\"virtual\" maxlength=\"255\">this is the text<\/"
-                       ."textarea>[ \n]+<\/td>\n"),
-                   7=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+<input type=\"submit\" value=\"Preview\" name"
-                       ."=\"preview\">[ \n]+<input type=\"submit\" "
-                       ."value=\"Submit"
-                       ."\" name=\"submit\">[ \n]+<\/td>\n"));
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
+        news_preview( $proid );
+        $txt = capture_stop_and_get();
 
-        $this->_testFor_patterns( $text, $ps, 8 );
+        $this->_checkFor_a_box($txt,'PREVIEW','','<center><b>%s</b></center>');
+        $this->_checkFor_a_box($txt,'News','','%s: '.$subject);
+        
+        $this->_testFor_lib_nick( $txt, $auth->auth['uname'] );
+
+        $this->_testFor_captured_length( 947 + strlen(timestr(time()))
+                                         + strlen( $sess->self_url() ));
     }
 
     function testNewsshow() {
-        global $db;
+        global $db, $bx, $t;
 
         $db_config = new mock_db_configure( 7 );
         $proid = array( 0 => "proid_0", 
@@ -267,8 +186,9 @@ extends UnitTest
         //
         // first call, no records
         //
+        $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        capture_start();
+        capture_reset_and_start();
         newsshow( $proid[0] );
         $text = capture_stop_and_get();
         $this->_testFor_captured_length( 67, "test 1" );
@@ -279,70 +199,42 @@ extends UnitTest
         //
         // second call, one record but no comment on it.
         //
+        $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         capture_reset_and_start();
         newsshow( $proid[1] );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 822, "test 2" );
+        $txt = capture_stop_and_get();
+        $this->_testFor_captured_length( 894, "test 2" );
 
-        $ps=array( 0=>("<font color=\"#000000\"><b>News: "
-                       ."subject_news_0<\/b><\/font>"),
-                   1=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align"
-                       ."=\"\" valign=\"top\"><font color=\"#000000\">[ \n]+"
-                       ."<b><b>by user_news_0<\/b> - <\/b>"
-                       ."[ \n]+<p>text_news_0[ \n]+<\/font>[ \n]+<\/td>"
-                       ."[ \n]+<\/tr>\n"),
-                   2=>("<FONT SIZE=-1>[[] <a href=\""
-                       ."comments_edit.php3[?]proid="
-                       ."proid_1[&]type=News[&]number="
-                       ."creation_news_0[&]ref=0[&]subject="
-                       ."Re%3Asubject_news_0\" class=\"\">Comment "
-                       ."This News!<\/a> []]<\/FONT>\n"));
-        $this->_testFor_patterns( $text, $ps, 3, "test 2" );
+        $this->_checkFor_a_box($txt,'News','','%s: '.$row[0]['subject_news']);
 
+        $this->_testFor_lib_nick( $txt, $row[0]['user_news']);
+        
+        $this->_testFor_lib_comment_it( $txt,$proid[1],'News',
+                                        $row[0]['creation_news'],'0',
+                                        'Re:'.$row[0]['subject_news'], 
+                                        $t->translate('Comment This News!'));
         //
         // third call, two records, the second has a comment which makes
         // a recursive call to show_comments_on_it which in turn has no rows
         //
+        $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
         capture_reset_and_start();
         newsshow( $proid[2] );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1799, "test 3" );
+        $txt = capture_stop_and_get();
+        $this->_testFor_captured_length( 1943, "test 3" );
 
-        $ps=array( 0=>("<font color=\"#000000\"><b>News: "
-                       ."subject_news_1<\/b><\/font>"),
-                   1=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align"
-                       ."=\"\" valign=\"top\"><font color=\"#000000\">[ \n]+"
-                       ."<b><b>by user_news_1<\/b> - <\/b>"
-                       ."[ \n]+<p>text_news_1[ \n]+<\/font>[ \n]+<\/td>"
-                       ."[ \n]+<\/tr>\n"),
-                   2=>("<FONT SIZE=-1>[[] <a href=\""
-                       ."comments_edit.php3[?]proid="
-                       ."proid_2[&]type=News[&]number="
-                       ."creation_news_1[&]ref=0[&]subject="
-                       ."Re%3Asubject_news_1\" class=\"\">Comment "
-                       ."This News!<\/a> []]<\/FONT>\n"),
-                   3=>("<font color=\"#000000\"><b>News: "
-                       ."subject_news_2<\/b><\/font>"),
-                   4=>("<tr bgcolor=\"#FFFFFF\">[ \n]+<td align"
-                       ."=\"\" valign=\"top\"><font color=\"#000000\">[ \n]+"
-                       ."<b><b>by user_news_2<\/b> - <\/b>"
-                       ."[ \n]+<p>text_news_2[ \n]+<\/font>[ \n]+<\/td>"
-                       ."[ \n]+<\/tr>\n"),
-                   5=>("<FONT SIZE=-1>[[] <a href=\""
-                       ."comments_edit.php3[?]proid="
-                       ."proid_2[&]type=News[&]number="
-                       ."creation_news_2[&]ref=0[&]subject="
-                       ."Re%3Asubject_news_2\" class=\"\">Comment "
-                       ."This News!<\/a> []]<\/FONT>\n"),
-                   6=>("<li><a href=\"comments.php3[?]"
-                       ."proid=proid_2[&]type=News[&]"
-                       ."number=creation_news_2[&]ref=0\" class=\"\">"
-                       ."subject_cmt_3<\/a> by <b>"
-                       ."user_cmt_3<\/b> on <b><\/b>\n"));
-        $this->_testFor_patterns( $text, $ps, 7, "test 3" );
-        
+        $this->_checkFor_a_box($txt,'News','','%s: '.$row[1]['subject_news']);
+        $this->_checkFor_a_box($txt,'News','','%s: '.$row[2]['subject_news']);
+
+        $this->_testFor_lib_nick( $txt, $row[1]['user_news']);
+        $this->_testFor_lib_nick( $txt, $row[2]['user_news']);
+
+        $this->_testFor_lib_comment_it( $txt,$proid[2],'News',
+                                        $row[2]['creation_news'],'0',
+                                        'Re:'.$row[2]['subject_news'], 
+                                        $t->translate( 'Comment This News!'));
         // check that the database component did not fail
         $this->_check_db( $db_config );
     }
@@ -379,7 +271,7 @@ extends UnitTest
         // first call, no records
         //
         $db = new DB_SourceAgency;
-        capture_start();
+        capture_reset_and_start();
         news_insert( $row[0]["proid"],$row[0]["user"],$row[0]["subject"],
                      $row[0]["text"] );
         $text = capture_stop_and_get();
@@ -425,7 +317,7 @@ extends UnitTest
         // first call, no records
         //
         $db = new DB_SourceAgency;
-        capture_start();
+        capture_reset_and_start();
         news_modify( $row[0]["proid"],$row[0]["user"],$row[0]["subject"],
         $row[0]["text"], $row[0]["creation"]);
         $text = capture_stop_and_get();

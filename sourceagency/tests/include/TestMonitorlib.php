@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMonitorlib.php,v 1.10 2002/05/16 15:04:16 riessen Exp $
+# $Id: TestMonitorlib.php,v 1.11 2002/05/28 08:58:28 riessen Exp $
 #
 ######################################################################
 
@@ -58,33 +58,7 @@ extends UnitTest
         // ensure that the next test does not have a predefined global
         // database object
         unset( $GLOBALS[ 'db' ] );
-    }
-
-    function testSelect_importence() {
-
-        $ret = select_importance( "low" );
-        $this->_testFor_string_length( $ret, 164, "test 1" );
-        $pats=array(0=>"option selected value=\"low\"",
-                    1=>"option value=\"medium\"",
-                    2=>"option value=\"high\"" );
-        $this->_testFor_patterns( $ret, $pats, 3 );
-
-        $ret = select_importance( "medium" );
-        $this->_testFor_string_length( $ret, 164, "test 2" );
-        $pats[0] = "option value=\"low\"";
-        $pats[1] = "option selected value=\"medium\"";
-        $this->_testFor_patterns( $ret, $pats, 3 );
-
-        $ret = select_importance( "high" );
-        $this->_testFor_string_length( $ret, 164, "test 3" );
-        $pats[1] = "option value=\"medium\"";
-        $pats[2] = "option selected value=\"high\"";
-        $this->_testFor_patterns( $ret, $pats, 3 );
-
-        $ret = select_importance( "fubar" );
-        $this->_testFor_string_length( $ret, 155, "test 4" );
-        $pats[2] = "option value=\"high\"";
-        $this->_testFor_patterns( $ret, $pats, 3 );
+        unset( $GLOBALS[ 'bx' ] );
     }
 
     function testMonitor_mail() {
@@ -152,7 +126,7 @@ extends UnitTest
     }
 
     function testMonitor_show() {
-        global $db, $t;
+        global $db, $t, $bx;
         
         $db_config = new mock_db_configure( 2 );
         $proid = array( 0 => "proid_0",
@@ -167,18 +141,8 @@ extends UnitTest
         $db_config->add_num_row( 0, 0 );
         $db_config->add_num_row( 4, 1 );
 
-        $row = array( 0 => $this->_generate_array( array( "username", "perms",
-                                                          "importance", 
-                                                          "creation" ), 0 ),
-                      1 => $this->_generate_array( array( "username", "perms",
-                                                          "importance", 
-                                                          "creation" ), 1 ),
-                      2 => $this->_generate_array( array( "username", "perms",
-                                                          "importance", 
-                                                          "creation" ), 2 ),
-                      3 => $this->_generate_array( array( "username", "perms",
-                                                          "importance", 
-                                                          "creation" ), 3 ));
+        $row=$this->_generate_records( array( "username", "perms","importance",
+                                              "creation" ), 4 );
         $db_config->add_record( $row[0], 1 );
         $db_config->add_record( $row[1], 1 );
         $db_config->add_record( $row[2], 1 );
@@ -188,44 +152,53 @@ extends UnitTest
         // first call, no records
         //
         $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         monitor_show( $proid[0] );
         $text = capture_stop_and_get();
         $this->_testFor_captured_length( 41, "test 1" );
-        $this->_testFor_pattern( $text, ("<p>Nobody is monitoring this "
-                                         ."project[.]<p>\n"));
+        $this->_testFor_pattern( $text, 
+                   ("<p>".$t->translate("Nobody is monitoring this "
+                                        ."project")."[.]<p>\n"));
         // 
         // second call, 4 records
         //
         $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         monitor_show( $proid[1] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 5183, "test 2" );
+        $this->_testFor_captured_length( 5255, "test 2" );
         
         $color = array( 0 => "gold", 1 => "#FFFFFF" );
 
+        $this->_checkFor_a_box( $text, 'All these users are monitor '
+                                      .'this project');
+        $this->_testFor_box_columns_begin( $text, 5 );
+        $this->_testFor_box_columns_end( $text );
+    
+        $w=array( 'Number'=>'10%','Username'=>'20%','Type'=>'20%',
+                  'Importance filter'=>'20%','Creation'=>'30%');
+        while ( list( $key, $val ) = each( $w ) ) {
+            $this->_checkFor_column_titles( $text, array( $key ), '',
+                                                         'center', $val, '');
+        }
         for ( $idx = 0; $idx < 4; $idx++ ) {
-            $ps=array( 0=> ("<td align=\"center\" width="
-                            ."\"\" bgcolor=\""
-                            .$color[$idx%2]."\">[ \n]+<b>"
-                            .($idx+1)."<\/b>[ \n]+<\/td>"),
-                       1=> ("<td align=\"center\" width="
-                            ."\"\" bgcolor=\"".$color[$idx%2]
-                            ."\">[ \n]+<b><b>by "
-                            . $row[$idx]["username"]
-                            ."<\/b><\/b>[ \n]+<\/td>"),
-                       2=> ("<td align=\"center\" width="
-                            ."\"\" bgcolor=\"".$color[$idx%2]
-                            ."\">[ \n]+<b>"
-                            .$row[$idx]["perms"]
-                            ."<\/b>[ \n]+<\/td>"),
-                       3=> ("<td align=\"center\" width="
-                            ."\"\" bgcolor=\"".$color[$idx%2]
-                            ."\">[ \n]+<b>"
-                            .$row[$idx]["importance"]
-                            ."<\/b>[ \n]+<\/td>"));
-            $this->_testFor_patterns( $text, $ps, 4, 'index: ' . $idx );
+            $this->_testFor_box_column( $text, 'center','',$color[$idx%2],
+                                          '<b>'.($idx+1).'</b>', "Test $idx" );
+            $this->_testFor_box_column( $text, 'center','',$color[$idx%2],
+                                        '<b>'.lib_nick($row[$idx]['username'])
+                                        .'</b>', "Test $idx" );
+            $this->_testFor_box_column( $text, 'center','',$color[$idx%2],
+                                        '<b>'.$row[$idx]['perms']
+                                        .'</b>', "Test $idx" );
+            $this->_testFor_box_column( $text, 'center','',$color[$idx%2],
+                                        '<b>'.$row[$idx]['importance']
+                                        .'</b>', "Test $idx" );
+            $str = timestr_middle(mktimestamp($row[$idx]['creation']));
+            $this->_testFor_box_column( $text, 'center','',$color[$idx%2],
+                                        '<b>'.$str.'</b>', "Test $idx" );
+            
         }
 
         // finally check that everything went smoothly with the DB
@@ -233,7 +206,7 @@ extends UnitTest
     }
 
     function testMonitor_preview() {
-        global $importance, $auth;
+        global $importance, $auth, $bx;
         $row = array( 0 => $this->_generate_array(array("proid","uname"),0));
                 
         //
@@ -241,80 +214,35 @@ extends UnitTest
         //
         $importance = "middle";
         $auth->set_uname( $row[0]["uname"] );
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         monitor_preview( $row[0]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 923 + strlen( timestr( time() )), 
+        $this->_testFor_captured_length( 1021 + strlen( timestr( time() )), 
                                          "test 1");
 
         $this->_testFor_pattern( $text, "<b>by uname_0<\/b>", "test 1" );
     }
     
     function testMonitor_form() {
-      global $importance, $sess;
+        global $importance, $sess, $bx, $t;
         
-        //
-        // first call
-        //
-        capture_reset_and_start();
         $importance = "low";
-        monitor_form( "proid_0" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1825 + strlen( $sess->self_url() ), 
-                                         "test 1");
-
-        $ps=array( 0=>("<select name=\"importance\" size=\"0\">"
-                       ."[ \n]+<option selected value=\"low\">low"
-                       ."[ \n]+<option value=\"medium\">medium"
-                       ."[ \n]+<option value=\"high\">high"
-                       ."[ \n]+<\/select>"),
-                   1=>("<form action=\""
-                       .ereg_replace( "/", "\/", $sess->self_url() )
-                       ."[?]proid=proid_0\" "
-                       ."method=\"POST\">"));
-        $this->_testFor_patterns( $text, $ps, 2, "test 1" );
-
-        //
-        // second call
-        //
+        $proid = "proid_0";
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
-        $importance = "medium";
-        monitor_form( "proid_1" );
+        monitor_form( $proid );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1825 + strlen( $sess->self_url()),
-                                         "test 2" );
+        $this->_testFor_captured_length( 1897 + strlen( $sess->self_url()));
 
-        $ps=array( 0=>("<select name=\"importance\" size=\"0\">"
-                       ."[ \n]+<option value=\"low\">low"
-                       ."[ \n]+<option selected value=\"medium\">medium"
-                       ."[ \n]+<option value=\"high\">high"
-                       ."[ \n]+<\/select>"),
-                   1=>("<form action=\""
-                       .ereg_replace( "/", "\/", $sess->self_url() )
-                       ."[?]proid=proid_1\" "
-                       ."method=\"POST\">"));
-        $this->_testFor_patterns( $text, $ps, 2, "test 2" );
-
-        //
-        // third call
-        //
-        capture_reset_and_start();
-        $importance = "fubar";
-        monitor_form( "proid_2" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1816 + strlen($sess->self_url()), 
-                                         "test 3" );
-
-        $ps=array( 0=> ("<select name=\"importance\" size=\"0\">"
-                        ."[ \n]+<option value=\"low\">low"
-                        ."[ \n]+<option value=\"medium\">medium"
-                        ."[ \n]+<option value=\"high\">high"
-                        ."[ \n]+<\/select>"),
-                   1=> ("<form action=\""
-                        .ereg_replace( "/", "\/", $sess->self_url() )
-                        ."[?]proid=proid_2\" "
-                        ."method=\"POST\">"));
-        $this->_testFor_patterns( $text, $ps, 2, "test 3" );
+        $this->_checkFor_a_box( $text, 'Monitor this project' );
+        $this->_checkFor_a_form( $text, 'PHP_SELF', array('proid' => $proid),
+                                                                     'POST' );
+        $this->_testFor_box_columns_begin( $text, 2 );
+        $this->_testFor_box_columns_end( $text );
+        
+        $this->_checkFor_column_titles( $text, array( 'Importance' ));
+        $this->_checkFor_submit_preview_buttons( $text );
     }
 
     function testMailuser() {
@@ -330,13 +258,19 @@ extends UnitTest
     }
 
     function testSelect_importance() {
-        $this->_test_to_be_completed();
+        foreach( array( 'fubar','low','medium','high', 'snafu' ) as $val ) {
+            $text = select_importance( $val );
+            $this->_testFor_html_select( $text, 'importance' );
+            $sed = false; // set if something was selected
+            foreach( array( 'low','medium','high') as $imp ) {
+                $this->_testFor_html_select_option($text,$imp,$imp==$val,$imp);
+                $sed = $sed || ( $imp == $val );
+            }
+            $this->_testFor_html_select_end( $text );
+            $this->_testFor_string_length( $text, ($sed ? 164 : 155), 
+                                             "Test $val" );
+        }
     }
-
-    function testSelect_importence() {
-        $this->_test_to_be_completed();
-    }
-
 
 }
 

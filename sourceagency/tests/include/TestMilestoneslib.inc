@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMilestoneslib.inc,v 1.20 2002/05/16 15:04:16 riessen Exp $
+# $Id: TestMilestoneslib.inc,v 1.21 2002/05/28 08:58:28 riessen Exp $
 #
 ######################################################################
 
@@ -47,47 +47,53 @@ extends UnitTest
     }
 
     function setup() {
-        // Called before each test method.
-        // if using the capturing routines then ensure that it's reset,
-        // it uses global variables
-        capture_reset_text();
     }
     
     function tearDown() {
         // ensure that the next test does not have a predefined global
         // database object
         unset( $GLOBALS[ 'db' ] );
+        unset( $GLOBALS[ 'bx' ] );
     }
 
     function testMilestones_propose_milestone() {
         global $t;
 
         $pats = array( 0=> ("<p align=right>[[] "),
-                       1=> ("step3_edit.php3[?]proid="),
-                       2=> ("[&]a=1"),
-                       3=> ($t->translate("Propose Milestones")),
-                       4=> (" []]<\/p>") );
-
+                       1=> (" []]<\/p>") );
+        //
+        // test 1, proid is empty
+        //
+        $proid = '';
         capture_reset_and_start();
-        milestones_propose_milestone( "" );
+        milestones_propose_milestone( $proid );
         $text = capture_stop_and_get();
-        
+
+        $this->_testFor_html_link( $text, 'step3_edit.php3',
+                                   array( 'proid'=>$proid, 'a'=>'1' ),'<b>'
+                                   .$t->translate("Propose Milestones")
+                                   .'</b>', '', 'test 1');
         $this->_testFor_captured_length( 98, "test 1" );
-
-        $pats[5] = "[?]proid=[&]a=1";
-        $this->_testFor_patterns( $text, $pats, 6 );
+        $this->_testFor_patterns( $text, $pats, 2 );
         
+        //
+        // test 2 proid is defined
+        //
+        $proid = 'this is the proid';
         capture_reset_and_start();
-        milestones_propose_milestone( "this_is_the_proid" );
+        milestones_propose_milestone( $proid );
         $text = capture_stop_and_get();
         
+        $this->_testFor_html_link( $text, 'step3_edit.php3',
+                                   array( 'proid'=>$proid, 'a'=>'1' ),'<b>'
+                                   .$t->translate("Propose Milestones")
+                                   .'</b>', '', 'test 2');
         $this->_testFor_captured_length( 115, "test 2" );
-
-        $pats[5] = "[?]proid=this_is_the_proid[&]a=1";
-        $this->_testFor_patterns( $text, $pats, 6 );
+        $this->_testFor_patterns( $text, $pats, 2 );
     }
 
     function testShow_milestones() {
+        global $bx, $t;
 
         $db_config = new mock_db_configure( 6 );
         $db_q = array( 0 => ("SELECT * FROM sponsoring WHERE proid='%s' "
@@ -153,7 +159,8 @@ extends UnitTest
         //
         // first call, the status part of the third query should be reset
         //
-        capture_start();
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         show_milestones( $dat[0]["proid"], $dat[0]["devid"],
                          $dat[0]["sponsor"] );
         $text = capture_stop_and_get();
@@ -162,6 +169,7 @@ extends UnitTest
         //
         // second call, the status part of the third query is present
         //
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         show_milestones( $dat[1]["proid"], $dat[1]["devid"],
                          $dat[1]["sponsor"] );
@@ -171,48 +179,28 @@ extends UnitTest
         //
         // third call, two records of data
         //
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         show_milestones( $dat[2]["proid"], $dat[2]["devid"],
                          $dat[2]["sponsor"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 4710, "test 3" );
-        $pats = array( 0=> ("<td align=\"center\" width=\"7%\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]+<b>Number<\/b>[ \n]+<\/td>"),
-                       1=> ("<td align=\"\" width=\"53%\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]+<b>Goals<\/b>[ \n]+<\/td>"),
-                       2=> ("<td align=\"center\" width=\"16%\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]+<b>Release Date<\/b>"
-                            ."[ \n]+<\/td>"),
-                       3=> ("<td align=\"center\" width=\"12%\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]+<b>Product<\/b>[ \n]+<\/td>"),
-                       4=> ("<td align=\"center\" width=\"8%\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]+<b>Payment<\/b>[ \n]+<\/td>"),
-                       5=> ("<td align=\"center\" width=\"14%\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]+<b>Status<\/b>[ \n]+<\/td>"),
-                       6=> ("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]+<b>0<\/b>[ \n]+<\/td>"),
-                       7=> ("<td align=\"\" width=\"\" bgcolor=\"#FFFFFF\">"
-                            ."[ \n]+<b>"
-                            ."goals_3<\/b>[ \n]+<\/td>"),
-                       8=> ("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]+<b><\/b>[ \n]+<\/td>"),
-                       9=> ("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]+<b>product_3<\/b>[ \n]+<\/td>"),
-                       10=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]+<b>payment_3% <\/b>[ \n]+<\/td>"),
-                       11=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]+<b>Proposed<\/b>[ \n]+<\/td>"),
-                       12=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."gold\">[ \n]+<b>1<\/b>[ \n]+<\/td>"),
-                       13=>("<td align=\"\" width=\"\" bgcolor=\"gold\">"
-                            ."[ \n]+<b>goals_4<\/b>[ \n]+<\/td>"),
-                       14=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."gold\">[ \n]+<b><\/b>[ \n]+<\/td>"),
-                       15=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."gold\">[ \n]+<b>product_4<\/b>[ \n]+<\/td>"),
-                       16=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."gold\">[ \n]+<b>payment_4% <\/b>[ \n]+<\/td>"));
-        $this->_testFor_patterns( $text, $pats, 17 );
+        $this->_testFor_captured_length( 4782, "test 3" );
+        
+        $this->_testFor_box_column($text,'center','7%','','<b>'
+                                        .$t->translate('Number').'</b>');
+        $this->_testFor_box_column($text,'','53%','','<b>'
+                                        .$t->translate('Goals').'</b>');
+        $this->_testFor_box_column($text,'center','16%','','<b>'
+                                        .$t->translate('Release Date').'</b>');
+        $this->_testFor_box_column($text,'center','12%','','<b>'
+                                        .$t->translate('Product').'</b>');
+        $this->_testFor_box_column($text,'center','8%','','<b>'
+                                        .$t->translate('Payment').'</b>');
+        $this->_testFor_box_column($text,'center','14%','','<b>'
+                                        .$t->translate('Status').'</b>');
+        
+        // FIXME: need to check the rest of the table
+        $this->_test_to_be_completed();
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );

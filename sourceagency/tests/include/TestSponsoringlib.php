@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSponsoringlib.php,v 1.13 2002/05/16 15:04:16 riessen Exp $
+# $Id: TestSponsoringlib.php,v 1.14 2002/05/28 08:58:28 riessen Exp $
 #
 ######################################################################
 
@@ -54,12 +54,13 @@ extends UnitTest
         // ensure that the next test doesn't have a predefined global
         // database object
         unset( $GLOBALS[ 'db' ] );
+        unset( $GLOBALS[ 'bx' ] );
     }
 
     function testSponsoring_form() {
         global $sponsoring_text, $budget, $valid_day, $valid_month, 
             $valid_year, $begin_day, $begin_month, $begin_year, 
-            $finish_day, $finish_month, $finish_year, $sess;
+            $finish_day, $finish_month, $finish_year, $sess, $bx, $t;
         
         $sponsoring_text = "this is the sponsoring text";
         $budget = "this is the budget";
@@ -68,90 +69,42 @@ extends UnitTest
         $valid_month = 4;   $begin_month = 5;   $finish_month = 6;
         $valid_year = 2001; $begin_year = 2002; $finish_year = 2003;
 
+        $proid = 'proid';
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
-        sponsoring_form( "proid" );
+        sponsoring_form( $proid );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 8317 + strlen( $sess->self_url() ),
+        $this->_testFor_captured_length( 8389 + strlen( $sess->self_url() ),
                                          "test 1" );
 
-        $ps=array( 0=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<select name=\"valid_day\" size=\"0\">"
-                       ."[ \n]+<option value=\"1"
-                       ."\">1[ \n]+<option value=\"2\">2[ \n]+<option selected"
-                       ." value=\"3\">3[ \n]+"),
-                   1=>("<select name=\"valid_month\" size=\"0\">[ \n]+"
-                       ."<option value=\"1\">"
-                       ."January[ \n]+<option value=\"2\">February[ \n]+"
-                       ."<option "
-                       ."value=\"3\">March[ \n]+<option selected value=\"4\""
-                       .">April[ \n]+"),
-                   2=>("<select name=\"valid_year\" size=\"0\">[ \n]+"
-                       ."<option selected "
-                       ."value=\"2001\">2001[ \n]+"),
-                   3=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\""
-                       .">[ \n]+<select name=\"begin_day\" size=\"0\">"
-                       ."[ \n]+<option value=\"1\">"
-                       ."1[ \n]+<option value=\"2\">2[ \n]+<option "
-                       ."value=\"3\">3[ \n]+"
-                       ."<option selected value=\"4\">4[ \n]+"),
-                   4=>("<select name=\"begin_month\" size=\"0\">[ \n]+"
-                       ."<option value=\"1\""
-                       .">January[ \n]+<option value=\"2\">February[ \n]+"
-                       ."<option "
-                       ."value=\"3\">March[ \n]+<option value=\"4\">"
-                       ."April[ \n]+"
-                       ."<option selected value=\"5\">May[ \n]+"),
-                   5=>("<select name=\"begin_year\" size=\"0\">[ \n]+"
-                       ."<option value=\"2001"
-                       ."\">2001[ \n]+<option selected value=\"2002\">"
-                       ."2002[ \n]+"),
-                   6=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<select name=\"finish_day\" size=\"0\">"
-                       ."[ \n]+<option value=\""
-                       ."1\">1[ \n]+<option value=\"2\">2[ \n]+<option "
-                       ."value=\"3\""
-                       .">3[ \n]+<option value=\"4\">4[ \n]+<option selected "
-                       ."value=\"5\">5[ \n]+"),
-                   7=>("<select name=\"finish_month\" size=\"0\">[ \n]+"
-                       ."<option value=\"1"
-                       ."\">January[ \n]+<option value=\"2\">February[ \n]+"
-                       ."<option "
-                       ."value=\"3\">March[ \n]+<option value=\"4\">April"
-                       ."[ \n]+"
-                       ."<option value=\"5\">May[ \n]+<option selected value"
-                       ."=\"6\">June[ \n]+"),
-                   8=>("<select name=\"finish_year\" size=\"0\">[ \n]+"
-                       ."<option value=\"2001"
-                       ."\">2001[ \n]+<option value=\"2002\">2002[ \n]+"
-                       ."<option "
-                       ."selected value=\"2003\">2003[ \n]+"),
-                   9=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+<b>Budget [(]in euro[)]<\/b> [(]12[)]:"
-                       ."[ \n]+<\/td>"),
-                   10=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                        ."\">[ \n]+<input type=\"text\" name=\"budget\" "
-                        ."size=\"12"
-                        ."\" maxlength=\"12\" value=\"this is the budget\""
-                        .">[ \n]+<\/td>[ \n]+"),
-                   11=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                        ."\">[ \n]+<b>Sponsoring Comment<\/b> [(][*][)]:"
-                        ."[ \n]+<\/td>\n"),
-                   12=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                        ."\">[ \n]+<textarea name=\"sponsoring_text\" "
-                        ."cols=\"40\" rows=\"7\" "
-                        ."wrap=\"virtual\" maxlength=\""
-                        ."255\">this is the sponsoring text<\/textarea>[ \n]+"
-                        ."<\/td>[ \n]+"),
-                   13=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                        ."\">[ \n]+<input type=\"submit\" value=\"Preview\" "
-                        ."name"
-                        ."=\"preview\">[ \n]+<input type=\"submit\" value="
-                        ."\"Submit\" name=\"submit\">[ \n]+"));
-        $this->_testFor_patterns( $text, $ps, 14 );
+        $this->_checkFor_a_box( $text, 'Sponsoring involvement' );
+
+        $this->_checkFor_a_form($text,'PHP_SELF',
+                                              array('proid'=>$proid),'POST');
+        $this->_testFor_box_columns_begin( $text, 2 );
+        $this->_testFor_box_columns_end( $text );
+
+        $this->_checkFor_column_titles( $text, 
+                    array("Valid until","Begin","Finish","Budget (in euro)",
+                          "Sponsoring Comment"));
+        foreach ( array(select_date('valid',$valid_day,$valid_month,
+                                    $valid_year),
+                        select_date('begin',$begin_day,
+                                    $begin_month,$begin_year),
+                        select_date('finish',$finish_day,
+                                    $finish_month,$finish_year),
+                        html_input_text('budget',12,12,$budget),
+                        html_textarea('sponsoring_text',40,7,'virtual',255,
+                                      $sponsoring_text),
+                        html_form_submit($t->translate('Preview'),'preview')
+                        .html_form_submit($t->translate('Submit'),'submit')) 
+                  as $val ) {
+          $this->_testFor_box_column($text, 'left','70%','', $val);
+        }
     }
 
     function testShow_sponsorings() {
-        global $db, $auth;
+        global $db, $auth, $bx, $t;
 
         $auth->set_uname("this is the username");
         $auth->set_perm("this is the permission");
@@ -182,7 +135,7 @@ extends UnitTest
         // instance two of the database is the one used for doing
         // the lib_show_comments_on_it on the second call which is already 
         // tested so there is no need to test it here, therefore configure 
-        // it's database to ignore all errors.
+        // its database to ignore all errors.
         $db_config->ignore_all_errors( 2 );
 
         // third call configuration, here is_accepted_sponsor is called and
@@ -211,8 +164,9 @@ extends UnitTest
         $db_config->ignore_all_errors( 8 );
         
         // first call, no records
-        capture_reset_and_start();
+        $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
+        capture_reset_and_start();
         show_sponsorings( $db_d[0]["proid"] );
         $text = capture_stop_and_get();
         $this->_testFor_captured_length( 84, "test 1" );
@@ -221,82 +175,100 @@ extends UnitTest
                                          ."to this project.<p>"), "test 1");
 
         // second call, one record but don't do is_accepted_sponsor call
-        capture_reset_and_start();
+        // i.e. status is not 'P'
+        $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
+        capture_reset_and_start();
         show_sponsorings( $db_d[1]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1017, "test 2" );
-        $ps=array( 0=>"<b>by username_0<\/b> - <\/b>\n",
-                   1=>"<p><b>Max. sum of money:<\/b> budget_0 euros\n",
-                   2=>"<br><b>Status:<\/b> Deleted\n",
-                   3=>("<br><b>Validity<\/b> " 
-                       . timestr_middle(mktimestamp($rows[0]["valid"]))),
-                   4=>("<br><b>Begin wished:<\/b> "
-                       . timestr_middle(mktimestamp($rows[0]["begin"]))),
-                   5=>("<br><b>Finish before:<\/b> "
-                       . timestr_middle(mktimestamp($rows[0]["finish"]))),
-                   6=>("<font color=\"#000000\"><b>Sponsor Involvement"
-                       ."<\/b><\/font>\n"),
-                   7=>("<p><b>Comments to the involvement:<\/b> "
-                       ."sponsoring_text_0\n"),
-                   8=>("<a href=\"comments_edit.php3[?]proid=proid_1&type="
-                       ."Sponsoring&number=spoid_0&ref=0&subject=Comment"
-                       ."[+]on[+]Sponsor[+]Involvement[+]%23spoid_0\" "
-                       ."class=\"\">Comment it!<\/a>"));
-        $this->_testFor_patterns( $text, $ps, 9, "test 2" );
+        $this->_testFor_captured_length( 1090, "test 2" );
+        
+        $this->_checkFor_a_box( $text, 'Sponsor Involvement' );
+        $this->_testFor_lib_nick( $text, $rows[0]['username']);
+
+        $v=array( 'Status'=>show_status($rows[0]['status']),
+                  'Validity'=>timestr_middle(mktimestamp($rows[0]['valid'])),
+                  'Finish before'=>
+                  timestr_middle(mktimestamp($rows[0]['finish'])),
+                  'Begin wished'=>
+                  timestr_middle(mktimestamp($rows[0]['begin'])),
+                  'Max. sum of money'=>$rows[0]['budget']." euros",
+                  'Comments to the involvement'=>$rows[0]['sponsoring_text']);
+
+        while ( list( $key, $val ) = each( $v ) ) {
+            $this->_testFor_pattern( $text, 
+                               $this->_to_regexp('<b>'.$t->translate($key)
+                                                 .':</b> '.$val));
+        }
+
+        $this->_testFor_lib_comment_it( $text, $db_d[1]["proid"], 'Sponsoring',
+                    $rows[0]['spoid'],'0','Comment on Sponsor Involvement #'
+                    .$rows[0]['spoid'],$t->translate('Comment it!'));
 
         // third call, is_accepted_sponsor returns true after being called
-        capture_reset_and_start();
+        $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
+        capture_reset_and_start();
         show_sponsorings( $db_d[2]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1327, "test 3" );
-        $ps=array(0=>("<font color=\"#000000\"><b>Sponsor Involvement<\/b>"
-                      ."<\/font>\n"),
-                  1=>"<b>by username_1<\/b> - <\/b>\n",
-                  2=>"<p><b>Max. sum of money:<\/b> budget_1 euros\n",
-                  3=>"<br><b>Status:<\/b> Proposed\n",
-                  4=>("<br><b>Validity<\/b> " 
-                      . timestr_middle(mktimestamp($rows[1]["valid"]))),
-                  5=>("<br><b>Begin wished:<\/b> "
-                      . timestr_middle(mktimestamp($rows[1]["begin"]))),
-                  6=>("<br><b>Finish before:<\/b> "
-                      . timestr_middle(mktimestamp($rows[1]["finish"]))),
-                  7=>("<p><b>Comments to the involvement:<\/b> "
-                      ."sponsoring_text_1\n"),
-                  8=>("<b><a href=\"sponsoring_accepted.php3[?]proid="
-                      ."proid_2&sponsor=username_1\" class=\"\">Accept "
-                      ."this sponsor involvement<\/a>"),
-                  9=>("<a href=\"comments_edit.php3[?]proid=proid_2&type="
-                      ."Sponsoring&number=spoid_1&ref=0&subject=Comment[+]"
-                      ."on[+]Sponsor[+]Involvement[+]%23spoid_1\" "
-                      ."class=\"\">Comment it!<\/a>"));
-        $this->_testFor_patterns( $text, $ps, 10, "test 3" );
+        $this->_testFor_captured_length( 1426, "test 3" );
+
+        $this->_checkFor_a_box( $text, 'Sponsor Involvement' );
+        $this->_testFor_lib_nick( $text, $rows[1]['username']);
+
+        $v=array( 'Status'=>show_status($rows[1]['status']),
+                  'Validity'=>timestr_middle(mktimestamp($rows[1]['valid'])),
+                  'Finish before'=>
+                  timestr_middle(mktimestamp($rows[1]['finish'])),
+                  'Begin wished'=>
+                  timestr_middle(mktimestamp($rows[1]['begin'])),
+                  'Max. sum of money'=>$rows[1]['budget']." euros",
+                  'Comments to the involvement'=>$rows[1]['sponsoring_text']);
+        while( list($key, $val) = each( $v ) ) {
+            $this->_testFor_pattern( $text, 
+                            $this->_to_regexp('<b>'.$t->translate($key)
+                                              .':</b> '.$val));
+        }
+        
+        $ps=array(0=>("<b><a href=\"sponsoring_accepted.php3[?]proid="
+                      ."proid_2&sponsor=username_1\" class=\"\">"
+                      .$t->translate("Accept this sponsor involvement")
+                      ."<\/a>"));
+        $this->_testFor_patterns( $text, $ps, 1, "test 3" );
+
+        $this->_testFor_lib_comment_it( $text, $db_d[2]["proid"], 'Sponsoring',
+                    $rows[1]['spoid'],'0','Comment on Sponsor Involvement #'
+                    .$rows[1]['spoid'],$t->translate('Comment it!'));
 
         // fourth call, is_accepted_sponsor is called and returns false
-        capture_reset_and_start();
+        $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
+        capture_reset_and_start();
         show_sponsorings( $db_d[3]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1052, "test 4" );
-        $ps=array( 0=>("<font color=\"#000000\"><b>Sponsor Involvement<\/b>"
-                       ."<\/font>\n"),
-                   1=>"<b>by username_2<\/b> - <\/b>\n",
-                   2=>"<p><b>Max. sum of money:<\/b> budget_2 euros\n",
-                   3=>"<br><b>Status:<\/b> Proposed\n",
-                   4=>("<br><b>Validity<\/b> " 
-                       . timestr_middle(mktimestamp($rows[2]["valid"]))),
-                   5=>("<br><b>Begin wished:<\/b> "
-                       . timestr_middle(mktimestamp($rows[2]["begin"]))),
-                   6=>("<br><b>Finish before:<\/b> "
-                       . timestr_middle(mktimestamp($rows[2]["finish"]))),
-                   7=>("<p><b>Comments to the involvement:<\/b> "
-                       ."sponsoring_text_2\n"),
-                   8=>("<a href=\"comments_edit.php3[?]proid=proid_3&type"
-                       ."=Sponsoring&number=spoid_2&ref=0&subject=Comment"
-                       ."[+]on[+]Sponsor[+]Involvement[+]%23spoid_2\" "
-                       ."class=\"\">Comment it!<\/a>"));
-        $this->_testFor_patterns( $text, $ps, 9, "test 4" );
+        $this->_testFor_captured_length( 1125, "test 4" );
+
+        $this->_checkFor_a_box( $text, 'Sponsor Involvement' );
+        $this->_testFor_lib_nick( $text, $rows[2]['username']);
+
+        $v=array( 'Status'=>show_status($rows[2]['status']),
+                  'Validity'=>timestr_middle(mktimestamp($rows[2]['valid'])),
+                  'Finish before'=>
+                  timestr_middle(mktimestamp($rows[2]['finish'])),
+                  'Begin wished'=>
+                  timestr_middle(mktimestamp($rows[2]['begin'])),
+                  'Max. sum of money'=>$rows[2]['budget']." euros",
+                  'Comments to the involvement'=>$rows[2]['sponsoring_text']);
+
+        while ( list( $key, $val ) = each( $v ) ) {
+            $this->_testFor_pattern( $text, 
+                            $this->_to_regexp('<b>'.$t->translate($key)
+                                              .':</b> '.$val));
+        }
+        
+        $this->_testFor_lib_comment_it( $text, $db_d[3]["proid"], 'Sponsoring',
+                    $rows[2]['spoid'],'0','Comment on Sponsor Involvement #'
+                    .$rows[2]['spoid'],$t->translate('Comment it!'));
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -305,8 +277,7 @@ extends UnitTest
     function testSponsoring_preview() {
         global $auth, $sponsoring_text, $budget, $valid_day, $valid_month, 
             $valid_year, $begin_day, $begin_month, $begin_year, 
-            $finish_day, $finish_month, $finish_year;
-
+            $finish_day, $finish_month, $finish_year, $bx, $t;
 
         $auth->set_uname("this is the username");
         $sponsoring_text = "this is the sponsoring text";
@@ -316,34 +287,36 @@ extends UnitTest
         $valid_month = 4;   $begin_month = 5;   $finish_month = 6;
         $valid_year = 2001; $begin_year = 2002; $finish_year = 2003;
 
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         sponsoring_preview( "dasdsa" );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1097 + strlen( timestr( time() ) ),
+        $this->_testFor_captured_length( 1196 + strlen( timestr( time() ) ),
                                          "test 1" );
-        $ps=array( 0=>("<font color=\"#000000\"><b><center><b>PREVIEW<\/b>"
-                       ."<\/center><\/b><\/font>"),
-                   1=>("<font color=\"#000000\"><b>Sponsor Involvement<\/b>"
-                       ."<\/font>"),
-                   2=>("<b>by this is the username<\/b>"),
-                   3=>("<p><b>Max. sum of money:<\/b> this is the "
-                       ."budget euros"),
-                   4=>"<br><b>Status:<\/b> Proposed",
-                   5=>("<br><b>Validity<\/b> "
-                       .timestr_middle(mktimestamp(
-                           date_to_timestamp($valid_day,$valid_month,
-                           $valid_year)))),
-                   6=>("<br><b>Begin wished:<\/b> "
-                       .timestr_middle(mktimestamp(
-                           date_to_timestamp($begin_day,$begin_month,
-                           $begin_year)))),
-                   7=>("<br><b>Finish before:<\/b> "
-                       .timestr_middle(mktimestamp(
-                           date_to_timestamp($finish_day,$finish_month,
-                           $finish_year)))),
-                   8=>("<p><b>Comments to the involvement:<\/b> this is "
-                       ."the sponsoring text"));
-        $this->_testFor_patterns( $text, $ps, 9 );
+
+        $this->_testFor_box_title( $text, '<center><b>'
+                                    .$t->translate('PREVIEW').'</b></center>');
+        $this->_checkFor_a_box( $text, 'Sponsor Involvement' );
+        $this->_testFor_lib_nick( $text, $auth->auth['uname']);
+
+        $v=array( 'Status'=>'Proposed',
+                  'Validity'=>timestr_middle(
+                      mktimestamp(date_to_timestamp($valid_day,$valid_month,
+                      $valid_year))),
+                  'Finish before'=>timestr_middle(
+                      mktimestamp(date_to_timestamp($finish_day,$finish_month,
+                      $finish_year))),
+                  'Begin wished'=>timestr_middle(
+                      mktimestamp(date_to_timestamp($begin_day,$begin_month,
+                      $begin_year))),
+                  'Max. sum of money'=>"$budget euros",
+                  'Comments to the involvement'=>"$sponsoring_text");
+
+        while ( list( $key, $val ) = each( $v ) ) {
+            $this->_testFor_pattern( $text, 
+                          $this->_to_regexp('<b>'.$t->translate($key)
+                                            .':</b> '.$val));
+        }
     }
 
     function testSponsoring_insert() {

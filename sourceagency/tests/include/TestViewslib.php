@@ -5,11 +5,21 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestViewslib.php,v 1.6 2002/05/22 11:50:33 riessen Exp $
+// $Id: TestViewslib.php,v 1.7 2002/05/28 08:58:28 riessen Exp $
 
 include_once( '../constants.php' );
 
 if ( !defined("BEING_INCLUDED" ) ) {
+    // required for the html functions
+    include_once( 'html.inc');
+
+    // global translation object
+    include_once( "translation.inc" );
+    $t = new translation("English");
+
+    // required for the $bx global variable
+    include_once( "box.inc" );
+    $bx = new box;
 }
 
 include_once( 'viewslib.inc' );
@@ -27,16 +37,12 @@ extends UnitTest
         // ensure that the next test does not have a globally defined
         // database object
         unset( $GLOBALS[ 'db' ] );
+        unset( $GLOBALS[ 'bx' ] );
     }
 
     function testViews_form() {
 
         $this->_test_to_be_completed();
-//  strlen( $sess->self_url() )
-//                     1=>("<form action=\""
-//                         .ereg_replace( "/", "\/", $sess->self_url() )
-//                         ."[?]proid=proid_0\" "
-//                         ."method=\"POST\">"));
 
         global $bx, $t, $sess, $db, $preview, $configure, $news, 
             $comments, $history, $step3, $step4, $step5, 
@@ -53,18 +59,15 @@ extends UnitTest
         $views = "Sponsors";
         
         $preview = "fubar";
-
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         views_form( "proid" );
         $text = capture_stop_and_get();
         
-        $this->_testFor_captured_length( 9483 + strlen( $sess->self_url() ) );
+        $this->_testFor_captured_length( 9555 + strlen( $sess->self_url() ) );
 
-        $this->_testFor_box_begin( $text, '#000000', '', '1' );
-        $this->_testFor_box_title($text,$t->translate("Configure Information "
-                                                      ."Access in this "
-                                                      ."Project"), '#000000');
-        $this->_testFor_box_body_begin( $text, '#FFFFFF','','top','#000000' );
+        $this->_checkFor_a_box( $text, "Configure Information Access in this "
+                               ."Project");
         $this->_testFor_html_form_action( $text, 'PHP_SELF', 
                                             array('proid'=>'proid'), 'POST' );
         $this->_testFor_box_columns_begin( $text, 2);
@@ -77,8 +80,6 @@ extends UnitTest
         $this->_testFor_html_form_submit( $text, "Preview", "preview" );
         $this->_testFor_html_form_submit( $text, "Submit", "submit" );
         $this->_testFor_html_form_end( $text );
-        $this->_testFor_box_body_end( $text );
-        $this->_testFor_box_end( $text );
     }
 
     function testViews_insert() {

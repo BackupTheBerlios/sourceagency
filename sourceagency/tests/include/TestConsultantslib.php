@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConsultantslib.php,v 1.5 2002/05/21 09:51:04 riessen Exp $
+// $Id: TestConsultantslib.php,v 1.6 2002/05/28 08:58:28 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -45,6 +45,7 @@ extends UnitTest
         // remove the globally defined database object, it can affect 
         // other tests
         unset( $GLOBALS['db'] );
+        unset( $GLOBALS['bx'] );
     }
 
     function testShow_consultants() {
@@ -84,64 +85,63 @@ extends UnitTest
 
         // second test: three pieces of data
         $db = new DB_SourceAgency;
-        $bx = new box;
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         show_consultants( $dat[1]["proid"] );
         $text = capture_stop_and_get();
 
-        $p = '<td align="" width="" bgcolor="%s">[ ]+<b>%s<\/b>[ ]+<\/td>';
-        $p_white = sprintf( $p, "#FFFFFF", "%s" );
-        $p_gold = sprintf( $p, "gold", "%s" );
-        $p_u = "<b>by %s<\/b>"; // pattern for user name
+        $this->_checkFor_a_box( $text, 'Consultants' );
+        $this->_checkFor_columns( $text, 4 );
 
-        $ps=array( 0=>"<font color=\"#000000\"><b>Consultants<\/b><\/font>",
-                   1=>sprintf( $p_white, $t->translate("Number") ),
-                   2=>sprintf( $p_white, $t->translate("Username") ),
-                   3=>sprintf( $p_white, $t->translate("Status") ),
-                   4=>sprintf( $p_white, $t->translate("Creation") ),
-                   5=>sprintf( $p_white, "1" ),
-                   6=>sprintf( $p_gold,  "2" ),
-                   7=>sprintf( $p_white, "3" ),
-                   8=>sprintf( $p_white, sprintf( $p_u, $rows[0]["username"])),
-                   9=>sprintf( $p_gold, sprintf( $p_u,$rows[1]["username"] )),
-                   10=>sprintf( $p_white, sprintf( $p_u,$rows[2]["username"])),
-                   11=>sprintf( $p_white, "Proposed" ),
-                   12=>sprintf( $p_gold, "Proposed" ));
+        $this->_checkFor_column_titles( $text,array("Number","Username",
+                                                    "Status","Creation"), 
+                                       '','','','' );
 
-        $this->_testFor_patterns( $text, $ps, 13, "test 2" );
-        $this->_testFor_captured_length( 3501, "test 2");
+        $colors = array( 1 => 'gold', 0 => '#FFFFFF' );
+        for ( $idx = 1; $idx < 4; $idx++ ) {
+            $bgc = $colors[ $idx % 2];
+            $row = $rows[ $idx - 1 ];
+            $this->_testFor_box_next_row_of_columns( $text, "Test $idx" );
+            $this->_checkFor_column_values( $text, 
+                      array( '<b>'.$idx.'</b>',
+                             '<b>'.lib_nick($row['username']),
+                             '<b>'.show_status($row["status"]).'</b>',
+                             '<b>'.timestr(mktimestamp($row["creation"]))
+                             .'</b>'), '', '', '', $bgc);
+        }
 
+        $this->_testFor_captured_length( 3573, "test 2");
         $this->_check_db( $db_config );
     }
 
     function testConsultants_form() {
         global $bx, $auth, $sess, $t;
 
+        $proid = "proid_0";
         $uname = "this is the username";
         $auth->set_uname($uname);
         $auth->set_perm("this is the permission");
 
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
-        consultants_form( "proid_0" );
+        consultants_form( $proid );
         $text = capture_stop_and_get();
-        $p = '<td align="%s" width="%s" bgcolor="%s">[ ]+%s[ ]+<\/td>';
 
-        $ps=array(0=>"<b>Offer yourself as project consultant<\/b>",
-                  1=>('<form action="'
-                      . ereg_replace( "/", "\/", $sess->self_url() )
-                      .'[?]proid=proid_0" method="POST">'),
-                  2=>sprintf( $p,"right","45%","#FFFFFF",'<b>'
-                              .$t->translate("Your username")."<\/b>:"),
-                  3=>sprintf( $p,"left","55%","#FFFFFF",$uname),
-                  4=>sprintf( $p,"right","45%","#FFFFFF","<b>"
-                              .$t->translate("Check if you want to be a "
-                                             ."consultant")."<\/b>:"),
-                  5=>'<input type="checkbox" name="check" value="check">',
-                  6=>('<input type="submit" value="'.$t->translate("Submit")
-                      .'" name="submit">'),
-                  7=>"<\/form>" );
-             
-        $this->_testFor_patterns( $text, $ps, 8 );
+        $this->_checkFor_a_box( $text, 'Offer yourself as project consultant');
+
+        $this->_checkFor_a_form( $text, 'PHP_SELF', array('proid'=>$proid));
+        $this->_checkFor_columns( $text, 2 );
+
+        $this->_checkFor_column_titles( $text, array("Your username",
+                                                     "Check if you want to "
+                                                     ."be a consultant"),
+                                        '', 'right', '45%', '' );
+        $this->_checkFor_column_values( $text, array( $uname, 
+                         html_checkbox('check','check',''),
+                         html_form_submit($t->translate('Submit'),'submit')),
+                         '', 'left', '55%', '' );
+        $this->_testFor_box_next_row_of_columns( $text );
+        $this->_testFor_captured_length( 2184 );
     }
 
     function testConsultants_wanted() {
@@ -174,19 +174,23 @@ extends UnitTest
         capture_reset_and_start();
         $this->assertEquals(0, consultants_wanted($dat[1]["proid"]),"test 2");
         $text = capture_stop_and_get();
+
+        include( 'config.inc' ); // for th_box_{error|title}_font_color
+        $this->_testFor_box_title($text,
+                                    $t->translate('No consultants wanted'),
+                                    $th_box_title_font_color,
+                                    $th_box_title_bgcolor,
+                                    $th_box_title_align );
+        $this->_testFor_box_body( $text,$t->translate("This project does "
+                                                      ."not require "
+                                                      ."any consultants"), 
+                                  $th_box_error_font_color );
         $this->_testFor_captured_length( 728 );
-
-        $ps=array(0=>$t->translate("This project does not require "
-                                   ."any consultants"),
-                  1=>$t->translate('No consultants wanted'));
-
-        $this->_testFor_patterns( $text, $ps, 2 );
-
         $this->_check_db( $db_config );
     }
 
     function testConsultants_insert() {
-        global $db;
+        global $db, $bx, $t;
         
         $db_config = new mock_db_configure( 2 );
         
@@ -206,13 +210,17 @@ extends UnitTest
         $db_config->ignore_all_errors( 1 );
 
         $db = new DB_SourceAgency;
-
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         consultants_insert( $dat[0]["proid"], $dat[0]["user"]);
         $text = capture_stop_and_get();
         
-        $this->_testFor_captured_length( 1422 );
+        // the basics for show_consultants(...), assume that the rest
+        // is also present
+        $this->_checkFor_a_box( $text, 'Consultants' );
+        $this->_checkFor_columns( $text, 4 );
 
+        $this->_testFor_captured_length( 1494 );
         $this->_check_db( $db_config );
     }
 }

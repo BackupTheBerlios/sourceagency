@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.21 2002/05/15 13:23:58 riessen Exp $
+# $Id: TestLib.php,v 1.22 2002/05/28 08:58:28 riessen Exp $
 #
 ######################################################################
 
@@ -45,10 +45,9 @@ extends UnitTest
     }
 
     function setup() {
-        // Called before each test method.
-        // if using the capturing routines then ensure that it's reset,
-        // it uses global variables
-        capture_reset_text();
+    }
+    function tearDown() {
+        unset( $GLOBALS[ 'bx' ] );
     }
 
     function testMonth() {
@@ -130,13 +129,18 @@ extends UnitTest
     }
 
     function testLib_nick() {
-        $this->assertEquals( "<b>by FUBAR</b>", lib_nick( "FUBAR" ) );
+        $uname = 'FUBAR';
+        $text = lib_nick( $uname );
+        $this->assertEquals( "<b>by $uname</b>",  
+                             $this->_testFor_lib_nick($text,$uname,"test 1"));
 
-        capture_start();
-        lib_pnick( "SNAFU" );
+        $uname = 'SNAFU';
+        capture_reset_and_start();
+        lib_pnick( $uname );
         $text = capture_stop_and_get();
+        $this->assertEquals( "<b>by $uname</b>",  
+                             $this->_testFor_lib_nick($text,$uname,"test 2"));
         $this->_testFor_captured_length( 15 );
-        $this->assertEquals( "<b>by SNAFU</b>", $text );
     }
 
     function testSelect_date() {
@@ -240,6 +244,7 @@ extends UnitTest
     }
 
     function testCalendar_box() {
+        global $bx, $t;
         // 4 instances required: 2 for the no budget case, and 2 for the
         // budget is set case.
         $db_config = new mock_db_configure( 4 );
@@ -273,85 +278,61 @@ extends UnitTest
         $row4 = array( "SUM(budget)" => 1000 );
         $db_config->add_record( $row4, 3 );
 
-        //
-        // no budget -- this should actually do something else, i.e.
-        // display a zero budget amount, however the code is broken and
-        // has a fixme note
-        //
-        capture_start();
+        // test one: no budget
+        $bx = $this->_create_default_box();
+        capture_reset_and_start();
         calendar_box( $dat["r0"] );
         $text = capture_stop_and_get();
+
+        $this->_checkFor_columns( $text, 2 );
+
+        $titles=array("Project Owner(s)","Project Type","Project Nature",
+                      "Project Volume","Current project budget","Creation");
+        $this->_checkFor_column_titles( $text, $titles, '', 'left', '55%',
+                                                            '', '<b>%s:</b>' );
+
+        $tStamp = mktimestamp($row1['description_creation']);
+        $nature = "Unknown";
+        $budget = "0";
+
+        $values=array( '&nbsp;'.$row1["description_user"],
+                       '&nbsp;'.$row1["type"],
+                       '&nbsp;'.$t->translate($nature),
+                       '&nbsp;'.$row1['volume'],
+                       "$budget euro",
+                       '&nbsp;'.timestr_middle($tStamp));
+        $this->_checkFor_column_values( $text, $values, '', 'left','','');
+
         $this->_testFor_captured_length( 3287, "test 1" );
-        $ps=array( 0=>("<b>Project Owner\(s\):<\/b>[ \n]+<\/td>[ \n]+"
-                       . $this->p_regexp_html_comment . "[ \n]+"
-                       . $this->p_regexp_html_comment . "[ \n]+"
-                       . "<td align=\"left\" width=\"45%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]+&nbsp;".$row1["description_user"]
-                       ."[ \n]+<\/td>"),
-                   1=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+<b>Project Type:<\/b>[ \n]+<\/td>[ \n]+"
-                       . $this->p_regexp_html_comment . "[ \n]+"
-                       . $this->p_regexp_html_comment . "[ \n]+"
-                       ."<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+&nbsp;".$row1["type"]."[ \n]+<\/td>"),
-                   2=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+<b>Project Volume:<\/b>[ \n]+<\/td>[ \n]+"
-                       .$this->p_regexp_html_comment . "[ \n]+"
-                       .$this->p_regexp_html_comment . "[ \n]+"
-                       ."<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+&nbsp;".$row1["volume"]."[ \n]+<\/td>"),
-                   3=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+<b>Project Nature:<\/b>[ \n]+<\/td>[ \n]+"
-                       .$this->p_regexp_html_comment . "[ \n]+"
-                       .$this->p_regexp_html_comment . "[ \n]+"
-                       ."<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+&nbsp;Unknown[ \n]+<\/td>"),
-                   4=>("<td align=\"left\" width=\"\" "
-                       ."bgcolor=\"#FFFFFF\">[ \n]+<b>Current "
-                       ."project budget:<\/b>[ \n]+<\/td>[ \n]+"
-                       .$this->p_regexp_html_comment . "[ \n]+"
-                       .$this->p_regexp_html_comment . "[ \n]+"
-                       ."<td align=\"left\" width=\"\" "
-                       ."bgcolor=\"#FFFFFF\">[ \n]+0 euro[ \n]+"
-                       ."<\/td>"));
-        $this->_testFor_patterns( $text, $ps, 5);
-        //
+
+        // test two:
         // This run has a budget and the budget value should be printed
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         calendar_box( $dat["r2"] );
         $text = capture_stop_and_get();
+
+        $this->_testFor_box_columns_begin( $text, 2 );
+        $this->_testFor_box_columns_end( $text );
+
         $this->_testFor_captured_length( 3293, "test 2" );
-        $ps=array( 0=>("<b>Project Owner\(s\):<\/b>[ \n]+<\/td>[ \n]+"
-                       . $this->p_regexp_html_comment . "[ \n]+"
-                       . $this->p_regexp_html_comment . "[ \n]+"
-                       . "<td align=\"left\" width=\"45%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]+&nbsp;"
-                       .$row3["description_user"]."[ \n]+<\/td>"),
-                   1=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+<b>Project Type:<\/b>[ \n]+<\/td>[ \n]+"
-                       . $this->p_regexp_html_comment . "[ \n]+"
-                       . $this->p_regexp_html_comment . "[ \n]+"
-                       ."<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+&nbsp;".$row3["type"]."[ \n]+<\/td>"),
-                   2=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+<b>Project Volume:<\/b>[ \n]+<\/td>[ \n]+"
-                       .$this->p_regexp_html_comment . "[ \n]+"
-                       .$this->p_regexp_html_comment . "[ \n]+"
-                       ."<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]+&nbsp;".$row3["volume"]."[ \n]+<\/td>"),
-                   3=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+<b>Project Nature:<\/b>[ \n]+<\/td>[ \n]+"
-                       .$this->p_regexp_html_comment . "[ \n]+"
-                       .$this->p_regexp_html_comment . "[ \n]+"
-                       ."<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+&nbsp;Developing[ \n]+<\/td>"),
-                   4=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+<b>Current project budget:<\/b>[ \n]+"
-                       ."<\/td>[ \n]+" . $this->p_regexp_html_comment 
-                       . "[ \n]+" . $this->p_regexp_html_comment . "[ \n]+"
-                       ."<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]+".$row4["SUM(budget)"]." euro[ \n]+<\/td>"));
-        $this->_testFor_patterns( $text, $ps, 5 );
+        $titles=array("Project Owner(s)","Project Type","Project Nature",
+                      "Project Volume","Current project budget","Creation");
+        $this->_checkFor_column_titles( $text, $titles, '', 'left', '55%',
+                                                            '', '<b>%s:</b>' );
+
+        $tStamp = mktimestamp($row3['description_creation']);
+        $nature = "Developing";
+        $budget = $row4["SUM(budget)"];
+
+        $values = array( '&nbsp;'.$row3["description_user"],
+                         '&nbsp;'.$row3["type"],
+                         '&nbsp;'.$t->translate($nature),
+                         '&nbsp;'.$row3['volume'],
+                         "$budget euro",
+                         '&nbsp;'.timestr_middle($tStamp));
+        $this->_checkFor_column_values( $text, $values, '', 'left','','');
+
         // check that the database component did not fail
         $this->_check_db( $db_config );
     }
@@ -374,7 +355,7 @@ extends UnitTest
         $row[3] = array( "license" => "hugo" );
         $db_config->add_record( $row[3], 0 );
 
-        capture_start();
+        capture_reset_and_start();
         licensep( $row[0]["license"] );
         $text = capture_stop_and_get();
         $this->_testFor_captured_length( 198, "test 1" );
@@ -393,6 +374,8 @@ extends UnitTest
     }
 
     function testLib_show_description() {
+        global $bx;
+
         $db_config = new mock_db_configure( 2 );
         $db_q = array( 0 => "SELECT %s FROM %s" );
 
@@ -407,6 +390,7 @@ extends UnitTest
         $db_config->add_num_row( 1, 0 );
         $db_config->add_num_row( 0, 1 );
 
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         lib_show_description( sprintf( $db_q[0], "*", "*") );
         $text = capture_stop_and_get();
@@ -416,8 +400,9 @@ extends UnitTest
                        2=>("<b>Description<\/b>: description_0"),
                        3=>("<b>Volume<\/b>: volume_0" ));
         $this->_testFor_patterns($text, $pats, 4 );
-        $this->_testFor_captured_length( 756, "test 1" );
+        $this->_testFor_captured_length( 828, "test 1" );
 
+        $bx = $this->_create_default_box();
         capture_reset_and_start();
         lib_show_description( sprintf( $db_q[0], "X", "Y") );
         $text = capture_stop_and_get();
@@ -475,7 +460,7 @@ extends UnitTest
         //
         // no data points and no recursive call
         //
-        capture_start();
+        capture_reset_and_start();
         lib_show_comments_on_it( $dat[0]["proid"],$dat[0]["cmt_type"],
                                  $dat[0]["num"], $dat[0]["cmt_id"] );
         $text = capture_stop_and_get();
@@ -491,26 +476,41 @@ extends UnitTest
         $text = capture_stop_and_get();
         $this->_testFor_captured_length( 463, "test 2" );
 
-        $ps=array(0=>("<li><a href=\"comments[.]php3\?proid=proid_1&type="
-                      ."cmt_type_1&number=num_1&ref=cmt_id_1\" class=\"\">"
-                      ."subject_cmt_0"
-                      ."<\/a> by <b>user_cmt_0<\/b> on <b><\/b>\n<ul>"),
-                  1=>("<li><a href=\"comments[.]php3\?proid=proid_1&type="
-                      ."cmt_type_1&number=num_1&ref=id_0\" class=\"\">"
-                      ."subject_cmt_2<\/a>"
-                      ." by <b>user_cmt_2<\/b> on <b><\/b>\n<p>\n<\/ul>"),
-                  2=>("<li><a href=\"comments[.]php3\?proid=proid_1&type="
-                      ."cmt_type_1&number=num_1&ref=cmt_id_1\" class=\"\">"
-                      ."subject_cmt_1"
-                      ."<\/a> by <b>user_cmt_1<\/b> on <b><\/b>\n<p>"
-                      ."\n<\/ul>"));
-        $this->_testFor_patterns( $text, $ps, 3 );
+        foreach ( array( &$row[0], &$row[1] ) as $rw ) {
+            $this->_testFor_html_link( $text, 'comments.php3', 
+                 array('proid'=>$dat[1]["proid"], 'type'=>$dat[1]["cmt_type"],
+                       'number'=>$dat[1]["num"], 'ref'=>$dat[1]["cmt_id"] ),
+                 $rw['subject_cmt'], '' );
+            $str = ' by <b>' . $rw['user_cmt'].'</b> on <b>'
+                 . timestr_comment( mktimestamp( $rw['creation_cmt']))
+                 . "</b>\n";
+            $this->_testFor_pattern( $text, $this->_to_regexp( $str ) );
+            // to ensure that the link and the user occur on the same line
+            $str = $rw['subject_cmt']."</a> by <b>".$rw['user_cmt'];
+            $this->_testFor_pattern( $text, $this->_to_regexp( $str ) );
+        }
+        foreach ( array( &$row[2] ) as $rw ) {
+            $this->_testFor_html_link( $text, 'comments.php3', 
+                 array('proid'=>$dat[1]["proid"], 'type'=>$dat[1]["cmt_type"],
+                       'number'=>$dat[1]["num"], 'ref'=>$row[0]["id"] ),
+                 $rw['subject_cmt'], '' );
+            $str = ' by <b>' . $rw['user_cmt'].'</b> on <b>'
+                 . timestr_comment( mktimestamp( $rw['creation_cmt']))
+                 . "</b>\n";
+            $this->_testFor_pattern( $text, $this->_to_regexp( $str ) );
+            // to ensure that the link and the user occur on the same line
+            $str = $rw['subject_cmt']."</a> by <b>".$rw['user_cmt'];
+            $this->_testFor_pattern( $text, $this->_to_regexp( $str ) );
+        }
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
     }
 
     function testEnd_content() {
-        $this->_test_to_be_completed();
+        capture_reset_and_start();
+        end_content();
+        $text = capture_stop_and_get();
+        $this->assertEquals( "\n\n<!-- end content -->\n\n", $text );
     }
     function testFollowup() {
         $this->_test_to_be_completed();
@@ -525,7 +525,14 @@ extends UnitTest
     }
 
     function testLib_comment_it() {
-        $this->_test_to_be_completed();
+        $dat=$this->_generate_records(array('proid','type','number','ref',
+                                           'subject','text'),1);
+        capture_reset_and_start();
+        call_user_func_array( 'lib_comment_it', $dat[0] );
+        $text = capture_stop_and_get();
+        $this->_testFor_captured_length( 144 );
+        $this->_call_method( '_testFor_lib_comment_it', 
+                             array_merge( array('txt'=>&$text), $dat[0]));
     }
 
     function testLib_count_total() {
@@ -589,7 +596,10 @@ extends UnitTest
     }
 
     function testStart_content() {
-        $this->_test_to_be_completed();
+        capture_reset_and_start();
+        start_content();
+        $text = capture_stop_and_get();
+        $this->assertEquals( "\n\n<!-- content -->\n\n", $text );
     }
 
     function testStep_information() {
