@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.15 2002/04/23 11:24:33 riessen Exp $
+# $Id: TestHtml.php,v 1.16 2002/04/23 12:07:45 riessen Exp $
 #
 ######################################################################
 
@@ -131,7 +131,7 @@ extends UnitTest
         // test 1
         //
         $text = html_form_action( "PHP_SELF", "query", "type" );
-        $expect = ( "[ \n]*<form action=\""
+        $expect = ( "[ \n]+<form action=\""
                     .ereg_replace( "/", "\/", $sess->self_url() )
                     ."\" method=\"type\">" );
         $this->_testFor_pattern( $text, $expect, "p1" );
@@ -145,7 +145,7 @@ extends UnitTest
         // test 2
         //
         $text = html_form_action( "file", "query", "type" );
-        $expect = "[ \n]*<form action=\"file\" method=\"type\">";
+        $expect = "[ \n]+<form action=\"file\" method=\"type\">";
         $this->_testFor_pattern( $text, $expect, "p3" );
         capture_reset_and_start();
         htmlp_form_action( "file", "query", "type" );
@@ -156,7 +156,7 @@ extends UnitTest
 
     function testhtml_form_hidden() {
         $text = html_form_hidden( "name", "value" );
-        $expect = ( "[ \n]*<input type=\"hidden\" name=\"name\" "
+        $expect = ( "[ \n]+<input type=\"hidden\" name=\"name\" "
                     ."value=\"value\">" );
         $this->_testFor_pattern( $text, $expect, "p1" );
         htmlp_form_hidden( "name", "value" );
@@ -168,7 +168,7 @@ extends UnitTest
     function testhtml_select() {
         // test 1: single name argument tests
         $text = html_select( "name" );
-        $expect = "[ \n]*".'<select name="name" size="0">'."\n";
+        $expect = "[ \n]+".'<select name="name" size="0">'."\n";
         $this->_testFor_pattern( $text, $expect, "p1" );
         htmlp_select( "name" );
         $text = capture_stop_and_get();
@@ -177,7 +177,7 @@ extends UnitTest
 
         // test2: test the name and size arguments
         $text = html_select( "name", 0, 23 );
-        $expect = "[ \n]*".'<select name="name" size="23">'."\n";
+        $expect = "[ \n]+".'<select name="name" size="23">'."\n";
         $this->_testFor_pattern( $text, $expect, "p3" );
         capture_reset_and_start();
         htmlp_select( "name", 0, 23 );
@@ -187,7 +187,7 @@ extends UnitTest
 
         // test3: test the size and multiple argument
         $text = html_select( "name", 1, 23 );
-        $expect = "[ \n]*".'<select name="name" size="23" multiple>'."\n";
+        $expect = "[ \n]+".'<select name="name" size="23" multiple>'."\n";
         $this->_testFor_pattern( $text, $expect, "p5" );
         capture_reset_and_start();
         htmlp_select( "name", 1, 23 );
@@ -201,7 +201,7 @@ extends UnitTest
         // test 1
         //
         $text = html_select_option( "value", "selected", "text" );
-        $expect = "[ \n]*<option selected value=\"value\">text\n";
+        $expect = "[ \n]+<option selected value=\"value\">text\n";
         $this->_testFor_pattern( $text, $expect, "p1" );
         htmlp_select_option( "value", "selected", "text" );
         $text = capture_stop_and_get();
@@ -212,7 +212,7 @@ extends UnitTest
         // test 2
         //
         $text = html_select_option( "value", "", "" );
-        $expect = "[ \n]*<option value=\"value\">\n";
+        $expect = "[ \n]+<option value=\"value\">\n";
         $this->_testFor_pattern( $text, $expect, "p3" );
         capture_reset_and_start();
         htmlp_select_option( "value", "", "" );
@@ -224,7 +224,7 @@ extends UnitTest
         // test 3
         //
         $text = html_select_option( "", false, "text" );
-        $expect = "[ \n]*<option value=\"\">text\n";
+        $expect = "[ \n]+<option value=\"\">text\n";
         $this->_testFor_pattern( $text, $expect, "p5" );
         capture_reset_and_start();
         htmlp_select_option( "", false, "text" );
@@ -236,7 +236,7 @@ extends UnitTest
         // test 4
         //
         $text = html_select_option( "", true, "" );
-        $expect = "[ \n]*<option selected value=\"\">\n";
+        $expect = "[ \n]+<option selected value=\"\">\n";
         $this->_testFor_pattern( $text, $expect, "p7" );
         capture_reset_and_start();
         htmlp_select_option( "", true, "" );
@@ -247,7 +247,7 @@ extends UnitTest
 
     function testhtml_select_end() {
         $text = html_select_end();
-        $expect = "[ \n]*<\/select>\n";
+        $expect = "[ \n]+<\/select>\n";
         $this->_testFor_pattern( $text, $expect, "p1" );
         htmlp_select_end();
         $text = capture_stop_and_get();
@@ -257,7 +257,7 @@ extends UnitTest
 
     function testhtml_input_text() {
         $text = html_input_text( "name", "size", "maxlength", "value" );
-        $expect = ( "[ \n]*<input type=\"text\" name=\"name\" size=\"size\" "
+        $expect = ( "[ \n]+<input type=\"text\" name=\"name\" size=\"size\" "
                     ."maxlength=\"maxlength\" value=\"value\">" );
         $this->_testFor_pattern( $text, $expect, "p1" );
         htmlp_input_text( "name", "size", "maxlength", "value" );
@@ -269,7 +269,7 @@ extends UnitTest
     function testhtml_form_submit() {
         // test 1 with name
         $text = html_form_submit( "value", "name" );
-        $expect = ( "[ \n]*<input type=\"submit\" value=\"value\" "
+        $expect = ( "[ \n]+<input type=\"submit\" value=\"value\" "
                     ."name=\"name\">" );
         $this->_testFor_pattern( $text, $expect, "p1" );
         htmlp_form_submit( "value", "name" );
@@ -279,7 +279,7 @@ extends UnitTest
 
         // test 2 without name
         $text = html_form_submit( "value" );
-        $expect = ( "[ \n]*<input type=\"submit\" value=\"value\">");
+        $expect = ( "[ \n]+<input type=\"submit\" value=\"value\">");
         $this->_testFor_pattern( $text, $expect, "p3" );
         capture_reset_and_start();
         htmlp_form_submit( "value" );
@@ -293,7 +293,7 @@ extends UnitTest
         // test 1
         //
         $text = html_checkbox( "name", "value", "checked" );
-        $expect = ("[ \n]*<input type=\"checkbox\" name=\"name\" "
+        $expect = ("[ \n]+<input type=\"checkbox\" name=\"name\" "
                    ."value=\"value\" checked >");
         $this->_testFor_pattern( $text, $expect, "p1" );
         htmlp_checkbox( "name", "value", "checked" );
@@ -305,7 +305,7 @@ extends UnitTest
         // test 2
         //
         $text = html_checkbox( "name", "value", "" );
-        $expect = ("[ \n]*<input type=\"checkbox\" name=\"name\" "
+        $expect = ("[ \n]+<input type=\"checkbox\" name=\"name\" "
                    ."value=\"value\">");
         $this->_testFor_pattern( $text, $expect, "p3" );
         capture_reset_and_start();
@@ -318,7 +318,7 @@ extends UnitTest
         // test 3
         //
         $text = html_checkbox( "name", "value", false );
-        $expect = ("[ \n]*<input type=\"checkbox\" name=\"name\" "
+        $expect = ("[ \n]+<input type=\"checkbox\" name=\"name\" "
                    ."value=\"value\">");
         $this->_testFor_pattern( $text, $expect, "p5" );
         capture_reset_and_start();
@@ -331,7 +331,7 @@ extends UnitTest
         // test 4
         //
         $text = html_checkbox( "name", "value", true );
-        $expect = ("[ \n]*<input type=\"checkbox\" name=\"name\" "
+        $expect = ("[ \n]+<input type=\"checkbox\" name=\"name\" "
                    ."value=\"value\" checked >");
         $this->_testFor_pattern( $text, $expect, "p7" );
         capture_reset_and_start();
@@ -395,7 +395,7 @@ extends UnitTest
     function testhtml_textarea() {
         $text = html_textarea( "name", "columns", "rows", "wrap", 
                                  "maxlength", "value" );
-        $expect = ("[ \n]*<textarea name=\"name\" cols=\"columns\" "
+        $expect = ("[ \n]+<textarea name=\"name\" cols=\"columns\" "
                    ."rows=\"rows\" wrap=\"wrap\" maxlength=\"maxlength\">value"
                    . "<\/textarea>");
         $this->_testFor_pattern( $text, $expect, "p1" );

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowuplib.inc,v 1.5 2002/04/23 11:43:19 riessen Exp $
+# $Id: TestFollowuplib.inc,v 1.6 2002/04/23 12:05:57 riessen Exp $
 #
 ######################################################################\
 
@@ -51,108 +51,108 @@ extends UnitTest
                        ."<\/center><\/b><\/font>"),
                    1=>("<b><b>by username_one<\/b>"),
                    2=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]*<b>Milestone number:<\/b>[ \n]*"
-                       ."<\/td>[ \n]*<!-- "
-                       ."Column finishes -->[ \n]*<!-- New Column starts -->"
-                       ."[ \n]*<td align=\"left\" width=\"70%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]*milestone_0[ \n]*<\/td>"),
+                       ."#FFFFFF\">[ \n]+<b>Milestone number:<\/b>[ \n]+"
+                       ."<\/td>[ \n]+<!-- "
+                       ."Column finishes -->[ \n]+<!-- New Column starts -->"
+                       ."[ \n]+<td align=\"left\" width=\"70%\" bgcolor=\""
+                       ."#FFFFFF\">[ \n]+milestone_0[ \n]+<\/td>"),
                    3=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]*<b>Goals:<\/b>[ \n]*<\/td>[ \n]*"
+                       ."#FFFFFF\">[ \n]+<b>Goals:<\/b>[ \n]+<\/td>[ \n]+"
                        ."<!-- Column "
-                       ."finishes -->[ \n]*<!-- New Column starts -->"
-                       ."[ \n]*<td "
+                       ."finishes -->[ \n]+<!-- New Column starts -->"
+                       ."[ \n]+<td "
                        ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<\/td>"),
+                       ."\">[ \n]+<\/td>"),
                    4=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]*<b>Release Date:<\/b>[ \n]*"
-                       ."<\/td>[ \n]*<!-- "
-                       ."Column finishes -->[ \n]*<!-- New Column starts -->"
-                       ."[ \n]*<td align=\"left\" width=\"70%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]*<\/td>"),
+                       ."#FFFFFF\">[ \n]+<b>Release Date:<\/b>[ \n]+"
+                       ."<\/td>[ \n]+<!-- "
+                       ."Column finishes -->[ \n]+<!-- New Column starts -->"
+                       ."[ \n]+<td align=\"left\" width=\"70%\" bgcolor=\""
+                       ."#FFFFFF\">[ \n]+<\/td>"),
                    5=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]*<b>Product:<\/b>[ \n]*<\/td>"
-                       ."[ \n]*<!-- Column "
-                       ."finishes -->[ \n]*<!-- New Column starts -->"
-                       ."[ \n]*<td "
+                       ."#FFFFFF\">[ \n]+<b>Product:<\/b>[ \n]+<\/td>"
+                       ."[ \n]+<!-- Column "
+                       ."finishes -->[ \n]+<!-- New Column starts -->"
+                       ."[ \n]+<td "
                        ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<\/td>"),
+                       ."\">[ \n]+<\/td>"),
                    6=>("<td align=\"right\" width=\"30%\" bgcolor="
-                       ."\"#FFFFFF\">[ \n]*<b>Payment:<\/b>[ \n]*<\/td>"
-                       ."[ \n]*<!-- Column "
-                       ."finishes -->[ \n]*<!-- New Column starts -->"
-                       ."[ \n]*<td "
+                       ."\"#FFFFFF\">[ \n]+<b>Payment:<\/b>[ \n]+<\/td>"
+                       ."[ \n]+<!-- Column "
+                       ."finishes -->[ \n]+<!-- New Column starts -->"
+                       ."[ \n]+<td "
                        ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<\/td>"),
+                       ."\">[ \n]+<\/td>"),
                    7=>("<td align=\"right\" width=\"30%\" bgcolor="
-                       ."\"#FFFFFF\">[ \n]*<b>Location:<\/b>[ \n]*<\/td>"
-                       ."[ \n]*<!-- Column "
-                       ."finishes -->[ \n]*<!-- New Column starts -->"
-                       ."[ \n]*<td "
+                       ."\"#FFFFFF\">[ \n]+<b>Location:<\/b>[ \n]+<\/td>"
+                       ."[ \n]+<!-- Column "
+                       ."finishes -->[ \n]+<!-- New Column starts -->"
+                       ."[ \n]+<td "
                        ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\""
-                       .">[ \n]*<a href=\"this is the location\">this is the "
+                       .">[ \n]+<a href=\"this is the location\">this is the "
                        ."location<\/a>"),
                    8=>("<td align=\"right\" width=\"30%\" bgcolor=\""
-                       ."#FFFFFF\">[ \n]*<b>Count:<\/b>[ \n]*<\/td>[ \n]*"
+                       ."#FFFFFF\">[ \n]+<b>Count:<\/b>[ \n]+<\/td>[ \n]+"
                        ."<!-- Column "
-                       ."finishes -->[ \n]*<!-- New Column starts -->"
-                       ."[ \n]*<td "
+                       ."finishes -->[ \n]+<!-- New Column starts -->"
+                       ."[ \n]+<td "
                        ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*this is the count[ \n]*<\/td>"));
+                       ."\">[ \n]+this is the count[ \n]+<\/td>"));
 
         $this->_com_pats_2 =
              array(0=>("<font color=\"#000000\"><b><center><b>PREVIEW<\/b>"
                        ."<\/center><\/b><\/font>"),
                    1=>("<b><b>by username_two<\/b>"),
                    2=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<b>Count:<\/b>[ \n]*<\/td>[ \n]*"
+                       ."\">[ \n]+<b>Count:<\/b>[ \n]+<\/td>[ \n]+"
                        ."<!-- Column finishes -->"
-                       ."[ \n]*<!-- New Column starts -->[ \n]*"
+                       ."[ \n]+<!-- New Column starts -->[ \n]+"
                        ."<td align=\"left\" "
-                       ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]*this is the "
-                       ."count[ \n]*<\/td>"),
+                       ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+this is the "
+                       ."count[ \n]+<\/td>"),
                    3=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<b>Location:<\/b>[ \n]*<\/td>[ \n]*"
+                       ."\">[ \n]+<b>Location:<\/b>[ \n]+<\/td>[ \n]+"
                        ."<!-- Column finishes "
-                       ."-->[ \n]*<!-- New Column starts -->[ \n]*"
+                       ."-->[ \n]+<!-- New Column starts -->[ \n]+"
                        ."<td align=\"left\""
-                       ." width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]*"
+                       ." width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+"
                        ."<a href=\"this "
                        ."is the location\">this is the location<\/a>"),
                    4=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<b>Payment:<\/b>[ \n]*<\/td>[ \n]*"
+                       ."\">[ \n]+<b>Payment:<\/b>[ \n]+<\/td>[ \n]+"
                        ."<!-- Column finishes -->"
-                       ."[ \n]*<!-- New Column starts -->[ \n]*"
+                       ."[ \n]+<!-- New Column starts -->[ \n]+"
                        ."<td align=\"left\" "
-                       ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]*"
-                       ."payment_0[ \n]*<\/td>"),
+                       ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+"
+                       ."payment_0[ \n]+<\/td>"),
                    5=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<b>Product:<\/b>[ \n]*<\/td>[ \n]*"
+                       ."\">[ \n]+<b>Product:<\/b>[ \n]+<\/td>[ \n]+"
                        ."<!-- Column finishes -->"
-                       ."[ \n]*<!-- New Column starts -->[ \n]*"
+                       ."[ \n]+<!-- New Column starts -->[ \n]+"
                        ."<td align=\"left\" "
-                       ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]*product_0"
-                       ."[ \n]*<\/td>\n"),
+                       ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+product_0"
+                       ."[ \n]+<\/td>\n"),
                    6=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<b>Release Date:<\/b>[ \n]*<\/td>[ \n]*"
+                       ."\">[ \n]+<b>Release Date:<\/b>[ \n]+<\/td>[ \n]+"
                        ."<!-- Column finishes"
-                       ." -->[ \n]*<!-- New Column starts -->[ \n]*"
+                       ." -->[ \n]+<!-- New Column starts -->[ \n]+"
                        ."<td align=\"left\""
-                       ." width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]*<\/td>"),
+                       ." width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+<\/td>"),
                    7=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<b>Goals:<\/b>[ \n]*<\/td>[ \n]*"
+                       ."\">[ \n]+<b>Goals:<\/b>[ \n]+<\/td>[ \n]+"
                        ."<!-- Column finishes -->"
-                       ."[ \n]*<!-- New Column starts -->[ \n]*"
+                       ."[ \n]+<!-- New Column starts -->[ \n]+"
                        ."<td align=\"left\" "
-                       ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]*"
-                       ."goals_0[ \n]*<\/td>"),
+                       ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+"
+                       ."goals_0[ \n]+<\/td>"),
                    8=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\">[ \n]*<b>Milestone number:<\/b>[ \n]*<\/td>"
-                       ."[ \n]*<!-- Column "
-                       ."finishes -->[ \n]*<!-- New Column starts -->"
-                       ."[ \n]*<td "
+                       ."\">[ \n]+<b>Milestone number:<\/b>[ \n]+<\/td>"
+                       ."[ \n]+<!-- Column "
+                       ."finishes -->[ \n]+<!-- New Column starts -->"
+                       ."[ \n]+<td "
                        ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."[ \n]*"
-                       ."milestone_1[ \n]*<\/td>"));
+                       ."[ \n]+"
+                       ."milestone_1[ \n]+<\/td>"));
     }
     
     function testFollowup_devel_preview() {
@@ -193,9 +193,9 @@ extends UnitTest
                                          "test 1");
         
         $pats = array_merge( $this->_com_pats_1, array( 
-            9=>("<font color=\"#000000\">[ \n]*<b>Milestone Delivery"
-                ."<\/b>[ \n]*<\/font>")) );
-        $this->_testFor_patterns( $text, $pats, 10 );
+            9=>("<font color=\"#000000\"><b>Milestone Delivery"
+                ."<\/b><\/font>")) );
+        $this->_testFor_patterns( $text, $pats, 10, "test 1" );
 
         // second call, one record
         $auth->set_uname("username_two");
@@ -210,9 +210,9 @@ extends UnitTest
                                          "test 2" );
  
         $pats = array_merge( $this->_com_pats_2, array( 
-            9=>("<font color=\"#000000\">[ \n]*<b>Milestone Delivery<\/b>"
-                ."[ \n]*<\/font>")) );
-        $this->_testFor_patterns( $text, $pats, 10 );
+            9=>("<font color=\"#000000\"><b>Milestone Delivery<\/b>"
+                ."<\/font>")));
+        $this->_testFor_patterns( $text, $pats, 10, "test 2" );
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -260,13 +260,13 @@ extends UnitTest
             9=>("<font color=\"#000000\"><b>Milestone Delivery"
                 ." - Referee Decision<\/b><\/font>"),
             10=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF\">"
-                 ."[ \n]*<b>"
-                 ."Decision:<\/b>[ \n]*<\/td>[ \n]*<!-- Column "
-                 ."finishes -->[ \n]*<!-- New "
-                 ."Column starts -->[ \n]*<td align=\"left\" width=\"70%\" "
-                 ."bgcolor=\"#FFFFFF\">[ \n]*this is the decision[ \n]*"
+                 ."[ \n]+<b>"
+                 ."Decision:<\/b>[ \n]+<\/td>[ \n]+<!-- Column "
+                 ."finishes -->[ \n]+<!-- New "
+                 ."Column starts -->[ \n]+<td align=\"left\" width=\"70%\" "
+                 ."bgcolor=\"#FFFFFF\">[ \n]+this is the decision[ \n]+"
                  ."<\/td>\n")));
-        $this->_testFor_patterns( $text, $pats, 11 );
+        $this->_testFor_patterns( $text, $pats, 11, "test 1" );
 
         // second call, one record
         $auth->set_uname("username_two");
@@ -285,13 +285,14 @@ extends UnitTest
             9=>("<font color=\"#000000\"><b>Milestone Delivery"
                 ." - Referee Decision<\/b><\/font>"),
             10=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF\">"
-                 ."[ \n]*<b>"
-                 ."Decision:<\/b>[ \n]*<\/td>[ \n]*<!-- Column finishes -->"
-                 ."[ \n]*<!-- New "
-                 ."Column starts -->[ \n]*<td align=\"left\" width=\"70%\" "
-                 ."bgcolor=\"#FFFFFF\">[ \n]*this is the decision"
-                 ."[ \n]*<\/td>\n")));
-        $this->_testFor_patterns( $text, $pats, 11 );
+                 ."[ \n]+<b>"
+                 ."Decision:<\/b>[ \n]+<\/td>[ \n]+"
+                 .$this->p_regexp_html_comment
+                 ."[ \n]+<!-- New "
+                 ."Column starts -->[ \n]+<td align=\"left\" width=\"70%\" "
+                 ."bgcolor=\"#FFFFFF\">[ \n]+this is the decision"
+                 ."[ \n]+<\/td>\n")));
+        $this->_testFor_patterns( $text, $pats, 11, "test 2" );
         
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );

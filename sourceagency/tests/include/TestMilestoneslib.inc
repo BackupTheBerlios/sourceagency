@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMilestoneslib.inc,v 1.14 2002/04/23 11:48:15 riessen Exp $
+# $Id: TestMilestoneslib.inc,v 1.15 2002/04/23 12:09:59 riessen Exp $
 #
 ######################################################################
 
@@ -171,41 +171,41 @@ extends UnitTest
         $text = capture_stop_and_get();
         $this->_testFor_captured_length( 4697, "test 3" );
         $pats = array( 0=> ("<td align=\"center\" width=\"7%\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]*<b>Number<\/b>[ \n]*<\/td>"),
+                            ."#FFFFFF\">[ \n]+<b>Number<\/b>[ \n]+<\/td>"),
                        1=> ("<td align=\"\" width=\"53%\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]*<b>Goals<\/b>[ \n]*<\/td>"),
+                            ."#FFFFFF\">[ \n]+<b>Goals<\/b>[ \n]+<\/td>"),
                        2=> ("<td align=\"center\" width=\"16%\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]*<b>Release Date<\/b>"
-                            ."[ \n]*<\/td>"),
+                            ."#FFFFFF\">[ \n]+<b>Release Date<\/b>"
+                            ."[ \n]+<\/td>"),
                        3=> ("<td align=\"center\" width=\"12%\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]*<b>Product<\/b>[ \n]*<\/td>"),
+                            ."#FFFFFF\">[ \n]+<b>Product<\/b>[ \n]+<\/td>"),
                        4=> ("<td align=\"center\" width=\"8%\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]*<b>Payment<\/b>[ \n]*<\/td>"),
+                            ."#FFFFFF\">[ \n]+<b>Payment<\/b>[ \n]+<\/td>"),
                        5=> ("<td align=\"center\" width=\"14%\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]*<b>Status<\/b>[ \n]*<\/td>"),
+                            ."#FFFFFF\">[ \n]+<b>Status<\/b>[ \n]+<\/td>"),
                        6=> ("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]*<b>0<\/b>[ \n]*<\/td>"),
+                            ."#FFFFFF\">[ \n]+<b>0<\/b>[ \n]+<\/td>"),
                        7=> ("<td align=\"\" width=\"\" bgcolor=\"#FFFFFF\">"
-                            ."[ \n]*<b>"
-                            ."goals_3<\/b>[ \n]*<\/td>"),
+                            ."[ \n]+<b>"
+                            ."goals_3<\/b>[ \n]+<\/td>"),
                        8=> ("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]*<b><\/b>[ \n]*<\/td>"),
+                            ."#FFFFFF\">[ \n]+<b><\/b>[ \n]+<\/td>"),
                        9=> ("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]*<b>product_3<\/b>[ \n]*<\/td>"),
+                            ."#FFFFFF\">[ \n]+<b>product_3<\/b>[ \n]+<\/td>"),
                        10=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]*<b>payment_3% <\/b>[ \n]*<\/td>"),
+                            ."#FFFFFF\">[ \n]+<b>payment_3% <\/b>[ \n]+<\/td>"),
                        11=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."#FFFFFF\">[ \n]*<b>Proposed<\/b>[ \n]*<\/td>"),
+                            ."#FFFFFF\">[ \n]+<b>Proposed<\/b>[ \n]+<\/td>"),
                        12=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."gold\">[ \n]*<b>1<\/b>[ \n]*<\/td>"),
+                            ."gold\">[ \n]+<b>1<\/b>[ \n]+<\/td>"),
                        13=>("<td align=\"\" width=\"\" bgcolor=\"gold\">"
-                            ."[ \n]*<b>goals_4<\/b>[ \n]*<\/td>"),
+                            ."[ \n]+<b>goals_4<\/b>[ \n]+<\/td>"),
                        14=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."gold\">[ \n]*<b><\/b>[ \n]*<\/td>"),
+                            ."gold\">[ \n]+<b><\/b>[ \n]+<\/td>"),
                        15=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."gold\">[ \n]*<b>product_4<\/b>[ \n]*<\/td>"),
+                            ."gold\">[ \n]+<b>product_4<\/b>[ \n]+<\/td>"),
                        16=>("<td align=\"center\" width=\"\" bgcolor=\""
-                            ."gold\">[ \n]*<b>payment_4% <\/b>[ \n]*<\/td>"));
+                            ."gold\">[ \n]+<b>payment_4% <\/b>[ \n]+<\/td>"));
         $this->_testFor_patterns( $text, $pats, 17 );
 
         // finally check that everything went smoothly with the DB
