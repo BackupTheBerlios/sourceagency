@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: admprojectslib.inc,v 1.4 2002/03/27 19:33:29 grex Exp $
+# $Id: admprojectslib.inc,v 1.5 2002/03/27 19:38:19 grex Exp $
 #
 ######################################################################
 
@@ -184,7 +184,7 @@ function show_admprojects()
             } elseif  ($configured == 1 && $db->f('perms') == 'devel') {
                 $bx->box_column('center','',$bgcolor,
                                 html_form_action($PHP_SELF,array(), 'POST')
-                                .html_form_hidden('proid' $db->f('proid'))
+                                .html_form_hidden('proid', $db->f('proid'))
                                 .html_form_submit('Accept','accept').'<br>'
                                 .html_form_submit('Delete','delete')
                                 .html_form_end());
