@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: English-lang.inc,v 1.14 2002/04/02 15:04:22 riessen Exp $
+# $Id: English-lang.inc,v 1.15 2002/04/15 15:53:57 riessen Exp $
 #
 ######################################################################
 
@@ -66,7 +66,31 @@ function translate_real($phrase) {
     case "step_6_explanation":
         $tmp = "Final rating between sponsors and developers.";
         break;
-    default:   $tmp = "$phrase";  break;
+
+    /** Documentation for pages. *-page-name are the one line 
+        names of a page, *-doco is the documentation for that
+        page **/
+    case "index-page-name":
+        $tmp = "SourceAgency: Front Page";
+        break;
+    case "index-doco":
+        $tmp = ("SourceAgency is a Open Source project exchange. It is the "
+                ."place where developers meet sponsors, and sponsors can "
+                ."describe the software requirements.<p>" );
+        break;
+
+    case "faq-page-name":
+        $tmp = "Frequently Asked Questions";
+        break;
+    case "faq-doco":
+        $tmp = ( "The FAQ page provides answers to some common questions.<p>"
+                 ."Questions can be asked by sending the SourceAgency "
+                 ."developers <a href=\"mailto:sourceagency-support@"
+                 ."lists.berlios.de?subject=FAQ Question\">feedback</a>!");
+        break;
+    default:   
+        $tmp = "$phrase";  
+        break;
     }
     return($tmp);
 }
