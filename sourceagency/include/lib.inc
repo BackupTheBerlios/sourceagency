@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.20 2002/01/09 16:04:47 riessen Exp $
+# $Id: lib.inc,v 1.21 2002/01/11 13:33:00 riessen Exp $
 #
 ######################################################################
 
@@ -913,6 +913,7 @@ function show_project_participants($proid,$participant_type) {
     $bx->box_end();
 }
 
+// REFACTOR: could be moved to html.inc ????
 function lib_comment_it($proid,$type,$number,$ref,$subject,$text) {
     global $sess;
     
@@ -925,6 +926,7 @@ function lib_comment_it($proid,$type,$number,$ref,$subject,$text) {
     print " ]</FONT>\n";
 }
 
+// REFACTOR: could be moved to html.inc ????
 function lib_previous_comment($proid,$type,$number,$ref,$text) {
     global $sess;
     
@@ -945,6 +947,7 @@ function lib_show_comments_on_it($proid,$type_cmt,$number,$cmt_id) {
         $number_selection = "AND number='0'";
     }
 
+    // FIXME: this is confusing: this $db is not the global one ....
     $db = new DB_SourceAgency;
     $db->query("SELECT * FROM comments,auth_user WHERE proid='$proid' AND "
                ."type='" . $type_cmt . "' " . $number_selection
