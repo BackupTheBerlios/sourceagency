@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.20 2002/04/10 00:36:31 grex Exp $
+# $Id: security.inc,v 1.21 2002/04/10 11:17:18 grex Exp $
 #
 ######################################################################
 
@@ -1005,6 +1005,10 @@ function security_accept_by_view($proid, $page)
 
     // FIXME: will cause a parse error or database error if the
     // FIXME: page variable isn't a column defined in the table 'views'
+    // FIXME: Any idea of how I can solve this problem?
+    // FIXME: making an array and looking if $page is in the array?
+    // FIXME:    --> but that will make configuration harder as adding
+    // FIXME         something means to change the SQL and the config.inc file
     $db_local = new DB_SourceAgency;
     $db_local->query("SELECT $page FROM views WHERE proid='$proid'");
     $db_local->next_record();
