@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: consultantslib.inc,v 1.5 2002/03/27 14:17:44 grex Exp $
+# $Id: consultantslib.inc,v 1.6 2002/03/28 00:53:44 grex Exp $
 #
 ######################################################################
 
@@ -33,7 +33,7 @@
  *  consultant varchar(16) NOT NULL:
  *      Username of the user who proposes himself as consultant
  *  status char(1) NOT NULL:
- *      Status of his proposal as consultan
+ *      Status of his proposal as consultant
  *  creation timestamp(14):
  *      Timestamp of the last time the rating was modified
  *
@@ -46,6 +46,8 @@
  * Displays the Consultant proposals on a project (and its status)
  *
  * Should print something like this
+ * +----------------------------------------------------------+
+ * | Consultants                                              |
  * +----------------------------------------------------------+
  * | +----------++--------------++-------------++-----------+ |
  * | |  Number  ||   Username   ||    Status   || Creation  | |
@@ -219,7 +221,6 @@ function consultants_wanted($proid)
         $t->translate('This project does not require any consultants'));
         return 0;
     }
-
 }
 ?>
 
