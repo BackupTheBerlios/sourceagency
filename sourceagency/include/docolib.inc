@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: docolib.inc,v 1.4 2002/07/22 11:26:54 riessen Exp $
+# $Id: docolib.inc,v 1.5 2002/11/04 15:50:36 erik Exp $
 #
 ######################################################################
 
@@ -82,7 +82,7 @@ function doco_form()
     $bx->box_column ('right', '30%', '',
                      '<b>'.$t->translate('Description').'</b> (*): ');
     $bx->box_column ('left','70%','',
-                     html_textarea('doco', 40, 7, 'virtual', 255, $doco));
+                     html_textarea('doco', 60, 20, 'virtual', 255, $doco));
 
     $bx->box_next_row_of_columns();
 
@@ -157,7 +157,7 @@ function doco_mod($db)
     $bx->box_column ('right', '30%', '',
                      '<b>'.$t->translate('doco').'</b> (*): ');
     $bx->box_column ('left','70%','',
-                     html_textarea('doco', 40, 7, 'virtual', 255, 
+                     html_textarea('doco', 60, 20, 'virtual', 255, 
                                    $db->f('doco')));
 
     $bx->box_next_row_of_columns();
