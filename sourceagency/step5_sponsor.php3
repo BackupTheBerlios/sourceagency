@@ -41,41 +41,47 @@ $page = "step5_sponsor";
 if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
-  print "This is the page where sponsors accept or reject milestones.\n";
+  if (step5_iteration($proid) != 3) {
+	print "This is the page where sponsors accept or reject milestones.\n";
 
-  $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
-  $db->next_record();
-  $decision_value = $db->f("quorum");
+	$db->query("SELECT quorum FROM configure WHERE proid='$proid'");
+	$db->next_record();
+	$decision_value = $db->f("quorum");
 
-  $milestone_number = followup_current_milestone($proid);
-  $time = followup_current_time($proid,$milestone_number);
-  $location = followup_location($proid,$milestone_number);
+	$milestone_number = followup_current_milestone($proid);
+	$time = followup_current_time($proid,$milestone_number);
+	$location = followup_location($proid,$milestone_number);
 
-  if(isset($Yes) && !empty($Yes)) {
+	if(isset($Yes) && !empty($Yes)) {
 
-	$bx->box_full("<b>A decision has been made</b>","And this is the decision: FIXME");
+		$bx->box_full("<b>A decision has been made</b>","And this is the decision: FIXME");
 
+	} else {
+
+		$voted_yet=0;
+
+		if (!strcmp($vote,"vote")) {
+			put_decision_step5_into_database($proid,$decision,$milestone_number,$time);
+		}
+
+		// If the sponsor has already voted, then we look for his vote
+
+			if(!isset($decision) || empty($decision)) {
+			$db->query("SELECT decision FROM decisions_step5 WHERE proid='$proid' AND decision_user='".$auth->auth["uname"]."' AND number='$milestone_number' AND time='$time'");
+			$db->next_record();
+			$decision=$db->f("decision");
+			}
+
+		$quorum = show_decision_step5($proid,$milestone_number,$time);
+	}
+	if ($quorum || (isset($Yes) && !empty($Yes))) {
+		if ($No || !isset($Yes) || empty($Yes)) are_you_sure_message_step5($proid);
+		else decisions_step5_sponsors($proid,$milestone_number,$time);
+	}
   } else {
 
-	$voted_yet=0;
+	print "hola";
 
-	if (!strcmp($vote,"vote")) {
-		put_decision_step5_into_database($proid,$decision,$milestone_number,$time);
-  	}
-
-  	// If the sponsor has already voted, then we look for his vote
-
-  	if(!isset($decision) || empty($decision)) {
-		$db->query("SELECT decision FROM decisions_step5 WHERE proid='$proid' AND decision_user='".$auth->auth["uname"]."' AND number='$milestone_number' AND time='$time'");
-		$db->next_record();
-		$decision=$db->f("decision");
-  	}
-
-	$quorum = show_decision_step5($proid,$milestone_number,$time);
-  }
-  if ($quorum || (isset($Yes) && !empty($Yes))) {
-	if ($No || !isset($Yes) || empty($Yes)) are_you_sure_message_step5($proid);
-	else decisions_step5_sponsors($proid,$milestone_number,$time);
   }
 
 /*
