@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browse.php3,v 1.9 2002/04/30 10:02:49 riessen Exp $
+# $Id: browse.php3,v 1.10 2002/05/02 11:13:06 riessen Exp $
 #
 ######################################################################  
 
@@ -46,6 +46,7 @@ $bx->box_columns_begin(2);
 
 $bx->box_column_start('','50%','');
 $bx->box_begin();
+$bx->box_set_body_valign( 'top' );
 $bx->box_title($t->translate('Categories'));
 $bx->box_body_begin();
 
