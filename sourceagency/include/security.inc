@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.12 2001/11/29 15:38:47 grex Exp $
+# $Id: security.inc,v 1.13 2002/02/07 12:21:19 riessen Exp $
 #
 ######################################################################
 
@@ -593,6 +593,7 @@ function is_project_initiator($proid) {
 function is_accepted_sponsor($proid) {
   global $auth;
 
+  // FIXME: this should be defined if we actual do a query, i.e. inside the if
   $db_local = new DB_SourceAgency;
 
   if (isset($auth) && !empty($auth->auth["perm"])) { 
@@ -921,6 +922,8 @@ function is_first_sponsor_or_dev($proid) {
 			if ($db_local->num_rows() > 0) return 1;
 			else return 0;
 		}
+                // FIXME: there is an else missing: what is returned
+                // FIXME: if is_accepted_sponsor returns false ?
 	}
 }
 
