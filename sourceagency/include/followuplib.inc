@@ -1,5 +1,5 @@
 <?php
-
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ===============================================================
@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: followuplib.inc,v 1.9 2002/03/22 16:24:43 grex Exp $
+# $Id: followuplib.inc,v 1.10 2002/04/08 22:14:34 grex Exp $
 #
 ######################################################################
 
@@ -63,6 +63,16 @@
  * Preview of a milestone submitted by a developer
  *
  * @param   int       $proid         Project id
+ *
+ * @global  object    $t             Translation object
+ * @global  object    $bx            Box object
+ * @global  object    $db            PHPLib database object
+ * @global  object    $auth          PHPLib authentication object
+ *
+ * @global  int       $milestone_number   Milestone number of the current milestone
+ * @global  string    $location           URL where the release can be found
+ * @global  int       $count              Number of times this milestone has been submitted
+ *
  * @access  public
  * @see followup_devel_form()
  */
@@ -71,8 +81,8 @@ function followup_devel_preview($proid)
 {
     global $t, $db, $bx, $auth, $milestone_number, $location, $count;
 
-    // FIXME: nothing to ensure that there really is a single 
-    // FIXME: record of information
+    /* ASSUME: there is a single record of information */
+    /* (this is controlled at the time records are inserted/updated in database */
     $db->query("SELECT * FROM milestones WHERE proid='$proid' AND number='$milestone_number'");
     $db->next_record();
 
@@ -129,7 +139,18 @@ function followup_devel_preview($proid)
  * Preview of a decision taken by a referee on a milestone
  *
  * @param   int       $proid         Project id
- * @access  publi
+ *
+ * @global  object    $t             Translation object
+ * @global  object    $bx            Box object
+ * @global  object    $db            PHPLib database object
+ * @global  object    $auth          PHPLib authentication object
+ *
+ * @global  int       $milestone_number   Milestone number of the current milestone
+ * @global  string    $location           URL where the release can be found
+ * @global  int       $count              Number of times this milestone has been submitted
+ * @global  string    $decision           Referee decision
+ *
+ * @access  public
  * @see followup_referee_form()
  */
 
@@ -137,8 +158,8 @@ function followup_referee_preview($proid)
 {
     global $t, $bx, $db, $auth, $milestone_number, $location, $count, $decision;
 
-    // FIXME: nothing to ensure that there really is a single 
-    // FIXME: record of information
+    /* ASSUME: there is a single record of information */
+    /* (this is controlled at the time records are inserted/updated in database */
     $db->query("SELECT * FROM milestones WHERE proid='$proid' AND number='$milestone_number'");
     $db->next_record();
 
@@ -200,6 +221,15 @@ function followup_referee_preview($proid)
  * Form to submit a milestone URL by a developer
  *
  * @param   int       $proid         Project id
+ *
+ * @global  object    $t             Translation object
+ * @global  object    $bx            Box object
+ * @global  object    $db            PHPLib database object
+ *
+ * @global  int       $milestone_number   Milestone number of the current milestone
+ * @global  string    $location           URL where the release can be found
+ * @global  int       $count              Number of times this milestone has been submitted
+ *
  * @access  public
  * @see followup_devel_preview()
  */
@@ -208,8 +238,8 @@ function followup_devel_form($proid)
 {
     global $bx, $db, $t, $milestone_number, $location, $count;
 
-    // FIXME: nothing to ensure that there really is a single 
-    // FIXME: record of information
+    /* ASSUME: there is a single record of information */
+    /* (this is controlled at the time records are inserted/updated in database */
     $db->query("SELECT * FROM milestones WHERE proid='$proid' AND number='$milestone_number'");
     $db->next_record();
 
@@ -276,6 +306,16 @@ function followup_devel_form($proid)
  * Form to submit a decision on a milestone by a referee
  *
  * @param   int       $proid         Project id
+ *
+ * @global  object    $t             Translation object
+ * @global  object    $bx            Box object
+ * @global  object    $db            PHPLib database object
+ *
+ * @global  int       $milestone_number   Milestone number of the current milestone
+ * @global  string    $location           URL where the release can be found
+ * @global  int       $count              Number of times this milestone has been submitted
+ * @global  string    $decision           Referee decision
+ *
  * @access  public
  * @see followup_referee_preview()
  */
@@ -284,8 +324,8 @@ function followup_referee_form($proid)
 {
     global $bx, $t, $db, $milestone_number, $location, $count, $decision;
 
-    // FIXME: nothing to ensure that there really is a single 
-    // FIXME: record of information
+    /* ASSUME: there is a single record of information */
+    /* (this is controlled at the time records are inserted/updated in database */
     $db->query("SELECT * FROM milestones WHERE proid='$proid' AND number='$milestone_number'");
     $db->next_record();
 
@@ -369,7 +409,6 @@ function followup_referee_form($proid)
 
 function followup_current_milestone($proid)
 {
-
     $db_local = new DB_SourceAgency;
     $db_local->query("SELECT * FROM follow_up WHERE proid='$proid' ORDER BY milestone_number DESC");
     if ($db_local->num_rows() == 0) {
@@ -398,6 +437,7 @@ function followup_current_milestone($proid)
  *
  * @return  int                      Returns the number of times milestone is being submitted
  *                                   TODO: returns 0 in case of error.
+ *
  * @access  public
  * @see followup_current_milestone()
  */
@@ -427,6 +467,7 @@ function followup_current_count($proid, $milestone_number)
  *
  * @return  string                   Returns the URL of the milestone
  *                                   or 0 if error (no record)
+ *
  * @access  public
  * @see followup_current_milestone(), followup_current_count()
  */
@@ -453,6 +494,8 @@ function followup_location($proid, $milestone_number, $count)
  * @param   string    $location      URL
  * @param   int       $count         Number of times the current milestone has been submitted
  *                                   from followup_current_count()
+ *
+ * @global  object    $db            PHPLib database object
  *
  * @return  boolean                  TODO: should return if the insertion succeeded
  * @access  public
@@ -500,12 +543,15 @@ function followup_referee_decision($selected)
  * @param   int       $count         Number of times the current milestone has been submitted
  *                                   from followup_current_count()
  *
+ * @global  object    $db            PHPLib database object
+ * @global  object    $bx            Box object
+ *
  * @access  public
  */
 
 function followup_milestone_schedule($proid, $milestone_number, $count)
 {
-    global $db,$bx;
+    global $db, $bx;
 
     $db->query("SELECT release FROM milestones WHERE number='$milestone_number' AND proid='$proid'");
     $db->next_record();
@@ -598,5 +644,4 @@ function _current_iteration($proid)
     }
     return $current_iteration;
 }
-
 ?>
