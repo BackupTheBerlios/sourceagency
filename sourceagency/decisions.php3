@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisions.php3,v 1.3 2001/11/15 17:25:40 riessen Exp $
+# $Id: decisions.php3,v 1.4 2002/03/18 16:52:49 riessen Exp $
 #
 ######################################################################  
 
@@ -67,6 +67,7 @@ if (check_permission($proid,$page)) {
             case '2': $what = "content_id"; $table = "tech_content"; break;
             case '3': $what = "devid"; $table = "developing"; break;
             case '4': $what = "referee"; $table = "referees"; break;
+            // FIXME: missing default case
           }
           put_decision_into_database($proid,$project_status,$your_vote,
                                      $what,$table);
@@ -101,6 +102,7 @@ if (check_permission($proid,$page)) {
             htmlp_link("step6_edit.php3",array("proid" => $proid),
                        "Decision on step 6 (".$g_step_text[6].")"); 
             break;
+          // FIXME: missing default case
 	}
   }
 
@@ -113,6 +115,7 @@ if (check_permission($proid,$page)) {
         case '2': $what = "content_id"; $table = "tech_content"; break;
         case '3': $what = "devid"; $table = "developing"; break;
         case '4': $what = "referee"; $table = "referees"; break;
+        // FIXME: missing default case
       }
       if (decisions_decision_met($proid)) {
         put_into_next_step($proid,$project_status,$what,$table);
@@ -131,6 +134,7 @@ if (check_permission($proid,$page)) {
     print ( "<p align=right>Not voted yet: <b>"
             .((round((100 - $voted_yet)*100))/50)."%</b>\n");
   }
+  // NOI18N
   print "<br><font size=-1>...Explanation...</font>\n";
     
   $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
