@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lang.inc,v 1.11 2002/04/02 12:28:04 grex Exp $
+# $Id: lang.inc,v 1.12 2002/04/02 14:12:13 grex Exp $
 #
 ######################################################################
 
@@ -29,8 +29,6 @@ $l->log( "Language: " . (isset( $lang ) ? $lang : "No Language set"));
 if ($sess->is_registered("la")) {
     if (isset($lang)) {
         $la = $lang;
-    } else {
-        $la = "English";
     }
 } else {
     if (isset($lang)) {
