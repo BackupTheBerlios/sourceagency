@@ -5,7 +5,7 @@
  * Copyright (c) 1998,1999 SH Online Dienst GmbH
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: session.inc,v 1.4 2001/11/20 14:38:38 riessen Exp $
+ * $Id: session.inc,v 1.5 2002/11/04 15:39:32 erik Exp $
  *
  */ 
 ######################################################################
@@ -25,7 +25,7 @@ class Session {
   var $fallback_mode;                 // If this doesn't work, fall back...
   var $lifetime = 0;                  // 0 = do session cookies, else minutes
 
-  var $cookie_domain = "";            // If set, the domain for which the
+  var $cookie_domain = "chesoo.fokus.gmd.de";            // If set, the domain for which the
   // session cookie is set.
 
   var $gc_time  = 1440;               // Purge all session data older than 1440 minutes.

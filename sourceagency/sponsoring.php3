@@ -40,7 +40,7 @@ $page = 'sponsoring';
 if (check_proid($proid)) {
     top_bar($proid, $page);
     
-    htmlp_image('ic/d.png', 0, 48, 48, $t->translate('Summary'));
+    htmlp_image('ic/d.png', 0, 60, 53, $t->translate('Summary'));
     print $t->translate("Here sponsors can involve themselves in projects")
       .".\n";
 

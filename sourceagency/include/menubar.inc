@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: menubar.inc,v 1.12 2002/05/07 20:17:55 grex Exp $
+# $Id: menubar.inc,v 1.13 2002/11/04 15:39:32 erik Exp $
 #
 ######################################################################
 
@@ -41,9 +41,9 @@ global $PHP_SELF;
 
 <?php
 if (isset($auth) && !empty($auth->auth['perm']) && !($logout) ) {
-  if ($perm->have_perm('devel_pending') 
+  if (/*$perm->have_perm('devel_pending') 
      || $perm->have_perm('sponsor_pending') 
-     || $perm->have_perm('devel') || $perm->have_perm('sponsor') 
+     ||*/ $perm->have_perm('devel') || $perm->have_perm('sponsor') 
      || $perm->have_perm('editor') || $perm->have_perm('admin')) {
 ?>
 <a href="<?php $sess->purl('logout.php3') ?>" class="menus"

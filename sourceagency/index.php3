@@ -18,6 +18,7 @@
 # the Free Software Foundation; either version 2 or later of the GPL.
 ######################################################################  
 
+#require("./include/prepend.php3");
 page_open(array('sess' => 'SourceAgency_Session'));
 if (isset($auth) && !empty($auth->auth['perm'])) {
   page_close();

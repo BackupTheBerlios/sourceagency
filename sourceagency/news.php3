@@ -39,7 +39,7 @@ $page = "news";
 if (check_proid($proid)) {
   top_bar($proid,$page);
 
-  htmlp_image("ic/b.png",0,48,48,"Summary");
+  htmlp_image("ic/b.png",0,60,60,"Summary");
 
   print $t->translate("News are posted by the project initiator. "
                       ."Any other contribution can be done by "

@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.47 2002/10/08 15:25:43 helix Exp $
+# $Id: lib.inc,v 1.48 2002/11/04 15:39:32 erik Exp $
 #
 ######################################################################
 
@@ -511,20 +511,20 @@ function _draw_top_bar( $project_title, $page, $proid = '',
                     24,24,$t->translate('Project History'));
     } else {
         htmlp_link('summary.php3',array('proid' => $proid),
-                   html_image('ic/a.png',abs(!strcmp('summary',$page)),
-                              36,36,$t->translate('Summary')));
+                   html_image('ic/ax.png',abs(!strcmp('summary',$page)),
+                              37,36,$t->translate('Summary')));
         htmlp_link('news.php3',array('proid' => $proid),
-                   html_image('ic/b.png',abs(!strcmp('news',$page)),
+                   html_image('ic/bx.png',abs(!strcmp('news',$page)),
                               36,36,$t->translate('News')));
         htmlp_link('comments.php3',array('proid' => $proid),
-                   html_image('ic/c.png',abs(!strcmp('comments',$page)),
-                              36,36,$t->translate('General Comments')));
+                   html_image('ic/cx.png',abs(!strcmp('comments',$page)),
+                              41,36,$t->translate('General Comments')));
         htmlp_link('sponsoring.php3',array('proid' => $proid),
-                   html_image('ic/d.png',abs(!strcmp('sponsoring',$page)),
-                              36,36,$t->translate('Sponsor Collaboration')));
+                   html_image('ic/dx.png',abs(!strcmp('sponsoring',$page)),
+                              41,36,$t->translate('Sponsor Collaboration')));
         htmlp_link('history.php3',array('proid' => $proid),
-                   html_image('ic/e.png',abs(!strcmp('history',$page)),
-                              36,36,$t->translate('Project History')));
+                   html_image('ic/ex.png',abs(!strcmp('history',$page)),
+                              42,36,$t->translate('Project History')));
     }
 
     // Blank space that
@@ -596,7 +596,7 @@ function summary($proid)
     $db_summary->query("SELECT COUNT(*) FROM news WHERE proid='$proid'");
     $db_summary->next_record();
     htmlp_link('news.php3',array('proid' => $proid),
-               html_image('ic/b.png',0,48,48,
+               html_image('ic/b.png',0,60,60,
                           $t->translate('News')) . '&nbsp;'
                . $t->translate('News'));
     print ( ' ( <B>' . $db_summary->f('COUNT(*)')
@@ -606,7 +606,7 @@ function summary($proid)
 
     // Commments
     htmlp_link('comments.php3',array('proid' => $proid),
-               html_image('ic/c.png',0,48,48,
+               html_image('ic/c.png',0,60,53,
                           $t->translate('Comments'))
                . '&nbsp;'.$t->translate('General Comments'));
 
@@ -627,7 +627,7 @@ function summary($proid)
     // Sponsor Involvement
 
     htmlp_link('sponsoring.php3',array('proid' => $proid),
-               html_image('ic/d.png',0,48,48,$t->translate('News'))
+               html_image('ic/d.png',0,60,53,$t->translate('News'))
                . '&nbsp;'.$t->translate('Sponsoring Collaboration'));
     $db_summary->query("SELECT COUNT(*) FROM sponsoring WHERE proid='$proid' "
                        . "AND status='A'");
@@ -651,7 +651,7 @@ function summary($proid)
 
     // Project History
     htmlp_link('history.php3',array('proid' => $proid),
-               html_image('ic/e.png',0,48,48,'News').'&nbsp;'
+               html_image('ic/e.png',0,60,51,'News').'&nbsp;'
                .$t->translate('Project History'));
     print ('<BR><i>'
            .$t->translate("You'll find here all what has been posted to "

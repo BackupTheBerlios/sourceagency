@@ -35,8 +35,8 @@ $be = new box('80%',$th_box_frame_color,$th_box_frame_width,
 
 start_content();
 
-if ($perm->have_perm('user_pending')) {
-    $be->box_full($t->translate('Error'), $t->translate('Access denied'));
+if ($perm->have_perm('devel_pending') || $perm->have_perm('sponsor_pending')) {
+    $be->box_full($t->translate('Error'), $t->translate('You have not yet confirmed your account. Please check your e-mail, there should be a message that contains a confirmation link. Only after you have clicked this link you can start using SourceAgency.'));
     $auth->logout();
 } else {
     $msg = $t->translate('You are logged in as').' <b>'.$auth->auth['uname']

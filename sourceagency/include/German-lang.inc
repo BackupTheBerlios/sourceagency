@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: German-lang.inc,v 1.24 2002/10/08 15:25:43 helix Exp $
+# $Id: German-lang.inc,v 1.25 2002/11/04 15:39:31 erik Exp $
 #
 ######################################################################
 
@@ -362,8 +362,9 @@ function translate_real($phrase) {
     case 'Your authentication is valid until': $tmp = 'Ihre Authentifikation ist gültig bis'; break;
     case 'Your authentication was valid until': $tmp = 'Ihre Authentifikation war gültig bis'; break;
     case 'Your Comment': $tmp = 'Ihr Kommentar'; break;
+    case 'You have not yet confirmed your account. Please check your e-mail, there should be a message that contains a confirmation link. Only after you have clicked this link you can start using SourceAgency.' : $tmp = 'Sie haben Ihren Zugang noch nicht aktiviert. Bitte prüfen Sie Ihr Postfach, Sie sollten eine Nachricht erhalten haben, die einen Aktivierungs-Link (URL) enthält. Erst nach Anklicken dieses Links können Sie ihren SourceAgency-Zugang nutzen.'; break;
     case 'You will now have to wait for a SourceAgency editor to review your pending project': $tmp = 'Sie müssen sich nun gedulden, bis ein SourceAgency Editor Ihr Projekt begutachtet hat'; break;
-    case 'You will recieve an e-mail for every action in this project that has the importance you specify': $tmp = 'Sie erhalten eine E-Mail bei jeder Aktion des Projekts, die der angegebenen Wichtigkeit entspricht'; break;
+    case 'You will receive an e-mail for every action in this project that has the importance you specify': $tmp = 'Sie erhalten eine E-Mail bei jeder Aktion des Projekts, die der angegebenen Wichtigkeit entspricht'; break;
     case 'You will recieve an email for every action in this project that has': $tmp = 'Sie erhalten eine E-Mail bei jeder Aktion des Projekts von'; break;
     case 'accepted sponsoring collaborations': $tmp = 'angenommmene finanzielle Förderungen'; break;
     case 'by': $tmp = 'von'; break;

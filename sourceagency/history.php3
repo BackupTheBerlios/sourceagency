@@ -39,7 +39,7 @@ $page = "history";
 if (check_proid($proid)) {
   top_bar($proid,$page);
 
-  htmlp_image("ic/e.png",0,48,48,"Summary");
+  htmlp_image("ic/e.png",0,60,51,"Summary");
 
   print $t->translate('This is the chronological list of all the actions '
                       .'that have affected the current project').".<p>\n";

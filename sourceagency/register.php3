@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: register.php3,v 1.4 2002/05/07 11:26:58 riessen Exp $
+# $Id: register.php3,v 1.5 2002/11/04 15:41:11 erik Exp $
 #
 ######################################################################
 
@@ -69,7 +69,7 @@ while (is_array($HTTP_POST_VARS)
         }
         if (strcmp($password,$cpassword)) { // password are identical?
             $be->box_full($t->translate("Error"), 
-                           $t->translate("The passwords are not identical")
+                           $t->translate("The passwords $password vs. $cpassword are not identical")
                            .". ".$t->translate("Please try again")."!");
             break;
         }
