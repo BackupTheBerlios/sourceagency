@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.9 2001/11/08 16:17:41 riessen Exp $
+# $Id: lib.inc,v 1.10 2001/11/09 18:22:23 riessen Exp $
 #
 ######################################################################
 
@@ -254,6 +254,7 @@ function typestr($type) {
 }
 
 function increasecnt($id, $type) {
+  // TODO: function 'increasecnt' is defined by never used, can it be removed?
   global $db;
 
   $db_local = new DB_SourceAgency;
@@ -296,61 +297,68 @@ function checkcnt($id, $ipaddr, $type) {
   return $ret;
 }
 
-function top_bar($proid, $page) {
-  global $sess;
-
-  $db_top = new DB_SourceAgency;
-  $db_top->query("SELECT * FROM description WHERE proid='$proid'");
-  $db_top->next_record();
-
+function draw_top_bar( $project_title, $page, $proid = "", 
+                       $project_status = 0 ) {
+  global $t;
+  require("config.inc"); // needed for th_XXXXX variables
   $btop = new box("100%",$th_box_frame_color,1,$th_box_title_bgcolor,
                   $th_box_title_font_color,$th_box_title_align,
                   $th_box_body_bgcolor,$th_box_body_font_color,
                   $th_box_body_align);
 
-  $db_top = new DB_SourceAgency;
-  $db_top->query("SELECT * FROM description WHERE proid='$proid'");
-  $db_top->next_record();
-
   $btop->box_begin();
   $btop->box_body_begin();
   $btop->box_columns_begin(2);
-		// 1st column (left one)
+  // 1st column (left one)
   $btop->box_column("left","","","<FONT size=\"+2\"><B> "
-                    . $db_top->f("project_title") . " - $page</B></FONT>");
-		// 2nd column (right one)
+                    . $project_title . " - " . $t->translate($page) 
+                    . "</B></FONT>");
+  // 2nd column (right one)
   $btop->box_column_start("right","","");
 
-					// Actions listed and linked
-					// The current page has border = 1
+  // Actions listed and linked
+  // The current page has border = 1
 
-  htmlp_link("summary.php3",array("proid" => $proid),
-             html_image("ic/a.png",abs(!strcmp("summary",$page)),
-                        36,36,"Summary"));
-  htmlp_link("news.php3",array("proid" => $proid),
-             html_image("ic/b.png",abs(!strcmp("news",$page)),
-                        36,36,"News"));
-  htmlp_link("comments.php3",array("proid" => $proid),
-             html_image("ic/c.png",abs(!strcmp("comments",$page)),
-                        36,36,"General Comments"));
-  htmlp_link("sponsoring.php3",array("proid" => $proid),
-             html_image("ic/d.png",abs(!strcmp("sponsoring",$page)),
-                        36,36,"Sponsor Collaboration"));
-  htmlp_link("history.php3",array("proid" => $proid),
-             html_image("ic/e.png",abs(!strcmp("history",$page)),
-                        36,36,"Project History"));
+  if ( empty( $proid ) ) {
+    htmlp_image("ic/agrey.png",abs(!strcmp("summary",$page)),
+               24,24,"Summary");
+    htmlp_image("ic/bgrey.png",abs(!strcmp("news",$page)),
+               24,24,"News");
+    htmlp_image("ic/cgrey.png",abs(!strcmp("comments",$page)),
+               24,24,"General Comments");
+    htmlp_image("ic/dgrey.png",abs(!strcmp("sponsoring",$page)),
+               24,24,"Sponsor Collaboration");
+    htmlp_image("ic/egrey.png",abs(!strcmp("history",$page)),
+               24,24,"Project History");
+  } else {
+    htmlp_link("summary.php3",array("proid" => $proid),
+               html_image("ic/a.png",abs(!strcmp("summary",$page)),
+                          36,36,"Summary"));
+    htmlp_link("news.php3",array("proid" => $proid),
+               html_image("ic/b.png",abs(!strcmp("news",$page)),
+                          36,36,"News"));
+    htmlp_link("comments.php3",array("proid" => $proid),
+               html_image("ic/c.png",abs(!strcmp("comments",$page)),
+                          36,36,"General Comments"));
+    htmlp_link("sponsoring.php3",array("proid" => $proid),
+               html_image("ic/d.png",abs(!strcmp("sponsoring",$page)),
+                          36,36,"Sponsor Collaboration"));
+    htmlp_link("history.php3",array("proid" => $proid),
+               html_image("ic/e.png",abs(!strcmp("history",$page)),
+                          36,36,"Project History"));
+  }
 
-					// Blank space that
-					// limits actions from states
+  // Blank space that
+  // limits actions from states
 
   htmlp_image("blank.gif",0,36,36,"");
 
+  // Project steps
+  // In grey future steps
 
-					// Project steps
-					// In grey future steps
-
-  for($i=1;$i<7;$i++) {
-	if ($i <= $db_top->f("status")) {
+  // FIXME: number of steps (7) is hardcoded here
+  for( $i = 1; $i < 7; $i++) {
+	if ($i <= $project_status ) {
 		htmlp_link("step$i.php3",array("proid" => $proid),
                            html_image("ic/$i.png",abs(!strcmp($i,$page)),
                                       36,36,"Step $i"));
@@ -362,13 +370,32 @@ function top_bar($proid, $page) {
 
   $btop->box_next_row_of_columns();
 
-  $btop->box_colspan (2,"","#000000",html_image("",0,1,1,""));
+  $btop->box_colspan (2,"","#000000",html_image("blank.gif",0,1,1,""));
   $btop->box_columns_end();
   $btop->box_body_end();
   $btop->box_end();
 
   print "<br><p>\n";
+}
 
+function top_bar($proid, $page) {
+  global $sess, $t;
+
+  $db_top = new DB_SourceAgency;
+  $db_top->query("SELECT * FROM description WHERE proid='$proid'");
+  $db_top->next_record();
+
+  $db_top = new DB_SourceAgency;
+  $db_top->query("SELECT * FROM description WHERE proid='$proid'");
+
+  if ( $db_top->num_rows() == 0 ) {
+    draw_top_bar( "Invalid Project Id", $page );
+  } else {
+    $db_top->next_record();
+    draw_top_bar( $db_top->f("project_title"), $page, 
+                  $proid, $db_top->f("status") );
+    
+  }
 }
 
 
@@ -1097,4 +1124,25 @@ function lib_insertion_finished() {
         . "<br>When the project is reviewed this will also change.\n";
 }
 
+function start_content() {
+    // this is defined so that the pages don't have to drop out of php
+    // mode in order to write the html comment and also so that all pages
+    // write the same thing
+    print "\n\n<!-- content -->\n\n";
+}
+
+function end_content() {
+    // see comment for start_content
+    print "\n\n<!-- end content -->\n\n";
+}
+
+function is_not_set_or_empty( $val ) {
+    return ( !isset( $val ) || empty( $val ) );
+}
+function is_set_and_not_empty( $val ) {
+    // this is not the same as !is_not_set_or_empty($val) because
+    // a value can be set and empty, and is_not_set_or_empty would
+    // return false
+    return ( isset( $val ) && !empty( $val ) );
+}
 ?>
