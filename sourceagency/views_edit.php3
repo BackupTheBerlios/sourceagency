@@ -28,13 +28,12 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require("viewslib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-
-<?php
-
+start_content();
 $page = "views_edit";
 
 if (check_permission($proid,$page)) {
@@ -42,20 +41,18 @@ if (check_permission($proid,$page)) {
 
   print "Project information access configuration.\n";
 
- if (!isset($submit) || empty($submit)) {
-	if (isset($preview) && !empty($preview)) views_preview($proid);
-	views_form($proid);
+  if ( is_not_set_or_empty( $submit ) ) {
+      if ( is_set_and_not_empty( $preview ) ) {
+          views_preview($proid);
+      }
+      views_form($proid);
   } else {
-	views_insert($proid,$configure,$views,$news,$comments,$history,$step3,$step4,$step5,$cooperation);
+      views_insert($proid,$configure,$views,$news,$comments,
+                   $history,$step3,$step4,$step5,$cooperation);
   }
-
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 @page_close();
 ?>

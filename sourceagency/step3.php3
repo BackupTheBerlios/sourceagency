@@ -62,9 +62,7 @@ if (check_permission($proid,$page)) {
   print "</ul>\n";
 
   if (is_accepted_sponsor($proid)) {
-      print ( "<p align=right>[ <b>"
-              .html_link("decisions.php3",array("proid" => $proid),
-                         "Decide!")."</b> ]\n");
+      create_decision_link( $proid );
   }
 }
 

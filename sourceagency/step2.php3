@@ -29,36 +29,39 @@ require("header.inc");
 require("contentlib.inc");
 require("developinglib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-
-<?php
-
+start_content();
 $page = "content suggestions";
 
 if (check_proid($proid)) {
   top_bar($proid,$page);
 
-  print "Project technical content suggestions. They can be made either by developers or by a sponsor (if the sponsor is owner of the project).\n";
+  print ( "Project technical content suggestions. They can be made "
+          . "either by developers or by a sponsor (if the sponsor is "
+          . "owner of the project).\n" );
 
-  print "<p align=right>[<b> ".html_link("step2_edit.php3",array("proid" => $proid),"Suggest a Technical Content")." </b>] &nbsp;<p>\n";
+  print ( "<p align=right>[<b> ". html_link("step2_edit.php3",
+                                            array("proid" => $proid),
+                                            "Suggest a Technical Content")
+          ." </b>] &nbsp;<p>\n" );
 
-  if (!isset($proposals) || empty($proposals)) $proposals = "no";
-  show_content($proid,$show_proposals,$which_proposals);
+  if ( is_not_set_or_empty( $proposals ) ) {
+      // FIXME: where is $proposals used? can it be removed?
+      $proposals = "no";
+  }
+  show_content( $proid, $show_proposals, $which_proposals );
 
   if (is_accepted_sponsor($proid)) {
-  	print "<p align=right>[ <b>".html_link("decisions.php3",array("proid" => $proid),"Decide!")."</b> ]\n";
+      create_decision_link( $proid );
   }
 
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 page_close();
 ?>

@@ -55,10 +55,8 @@ if (check_proid($proid)) {
   	show_consultants($proid);
   }
 
-  if (is_accepted_sponsor($proid)) {
-    print ( "<p align=right>[ <b>".html_link("decisions.php3",
-                                             array("proid" => $proid),
-                                             "Decide!")."</b> ]\n");
+  if ( is_accepted_sponsor($proid) ) {
+      create_decision_link( $proid );
   }
 }
 

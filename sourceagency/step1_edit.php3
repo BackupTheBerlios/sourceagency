@@ -28,13 +28,12 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require("consultantslib.inc");
 
-$bx = new box("80%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("80%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-
-<?php
-
+start_content();
 $page = "step1_edit";
 
 if (check_permission($proid,$page)) {
@@ -42,23 +41,22 @@ if (check_permission($proid,$page)) {
 
   print "Registered developers can offer themselves as consultants.\n";
   print "<br><p>\n";
-
+  
   if (consultants_wanted($proid)) {
-  	$bx->box_full($t->translate("Info box"), $t->translate("If you are a registered developer, you can propose yourself as a consultant for this project...."));
-
-  	if (!isset($submit) || empty($submit)) {
-		consultants_form($proid);
-  	} else {
-		consultants_insert($proid,$auth->auth["uname"]);
-  	}
+      $bx->box_full($t->translate("Info box"), 
+                     $t->translate("If you are a registered developer, "
+                                   ."you can propose yourself as a "
+                                   ."consultant for this project...."));
+      
+      if ( is_not_set_or_empty( $submit ) ) {
+          consultants_form($proid);
+      } else {
+          consultants_insert($proid,$auth->auth["uname"]);
+      }
   }
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 @page_close();
 ?>

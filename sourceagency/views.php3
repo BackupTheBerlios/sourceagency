@@ -28,13 +28,12 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require("viewslib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-
-<?php
-
+start_content();
 $page = "views";
 
 if (check_permission($proid,$page)) {
@@ -42,18 +41,17 @@ if (check_permission($proid,$page)) {
 
   print "Project information access configuration.\n";
 
-  print "<p align=right>[ <b>".html_link("views_edit.php3",array("proid" => $proid),"Configure the information access for this project")."</b> ] &nbsp;<p>\n";
+  print "<p align=right>[ <b>".html_link("views_edit.php3",
+                                         array("proid" => $proid),
+                                         "Configure the information "
+                                         ."access for this project")
+    ."</b> ] &nbsp;<p>\n";
  
 
   views_show($proid);
-
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 @page_close();
 ?>

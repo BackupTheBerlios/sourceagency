@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: users.php3,v 1.2 2001/11/26 10:49:23 riessen Exp $
+# $Id: users.php3,v 1.3 2002/03/20 14:41:54 riessen Exp $
 #
 ######################################################################
 
@@ -48,7 +48,7 @@ if ( ($config_perm_users != "all")
   $be->box_full($t->translate("Error"), $t->translate("Access denied"));
 } else {
 
-  if (!isset($by) || empty($by)) {
+  if ( is_not_set_or_empty( $by ) ) {
     $by = "%";
   }
 
