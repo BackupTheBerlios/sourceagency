@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: users.php3,v 1.6 2002/04/30 12:43:42 riessen Exp $
+# $Id: users.php3,v 1.7 2002/05/02 13:26:15 riessen Exp $
 #
 ######################################################################
 
@@ -85,7 +85,7 @@ if ( ($config_perm_users != 'all')
     $bx->box_body_begin();
 
     $bx->box_columns_begin(5);
-    $bx->box_column('right','5%','','<b>'.$t->translate('No').'</b>');
+    $bx->box_column('right','5%','','<b>'.$t->translate('No.').'</b>');
     $bx->box_column('center','25%','','<b>#&nbsp;'.$t->translate('Projects').'</b>');
     $bx->box_column('center','25%','','<b>'.$t->translate('Username').'</b>');
     $bx->box_column('center','25%','','<b>'.$t->translate('Realname').'</b>');
