@@ -1,5 +1,5 @@
 <?php
-
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ===============================================================
@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: ratingslib.inc,v 1.4 2002/03/24 02:13:15 grex Exp $
+# $Id: ratingslib.inc,v 1.5 2002/03/24 12:06:22 grex Exp $
 #
 ######################################################################
 
@@ -80,7 +80,7 @@
  *
  * @param   int       $proid         Project id
  * @param   string    $dev_or_spo    If the one who is rating is developer or sponsor
- * @param   int       $number        FIXME
+ * @param   int       $number        Sponsor id or Developer id
  * @access  public
  */
 
@@ -144,7 +144,7 @@ function ratings_form($proid, $dev_or_spo, $number)
  * @param   int       $proid         Project id
  * @param   string    $username      Username of the person to be rated
  * @param   string    $dev_or_spo    User type of the person to be rated (developer/sponsor)
- * @param   int       $id            FIXME
+ * @param   int       $id            Sponsor id or developer id
  * @access  public
  */
 
@@ -219,7 +219,7 @@ function ratings_form_full($proid, $username, $dev_or_spo, $id)
  * @param   int       $proid         Project id
  * @param   string    $username      Username of the person to be rated
  * @param   string    $dev_or_spo    User type of the person to be rated (developer/sponsor)
- * @param   int       $id            FIXME
+ * @param   int       $id            Sponsor id or Developer id
  * @access  public
  */
 
@@ -267,7 +267,7 @@ function ratings_form_empty($proid, $username, $dev_or_spo, $number)
  * @param   int       $proid         Project id
  * @param   string    $username      Username of the person to be rated
  * @param   string    $dev_or_spo    User type of the person to be rated (developer/sponsor)
- * @param   int       $number        FIXME
+ * @param   int       $number        Sponsor id or Developer id
  * @access  public
  */
 
@@ -318,7 +318,7 @@ function ratings_form_rated($proid, $username, $dev_or_spo, $number)
  *
  * @param   int       $proid         Project id
  * @param   string    $dev_or_spo    User type of the person to be rated (developer/sponsor)
- * @param   int       $number        FIXME
+ * @param   int       $number        Sponsor id or Developer id
  * @param   string    $username      Username of the person that is rating
  * @access  public
  */
@@ -413,7 +413,7 @@ function ratings_look_for_first_one($proid)
  * (we receive as a global variable if we want a developer or a sponsor)
  *
  * @param   int       $proid         Project id
- * @param   int       $number        FIXME
+ * @param   int       $number        Sponsor id or Developer id
  * @access  public
  */
 
