@@ -234,9 +234,7 @@ function followup_location($proid,$milestone_number) {
 function followup_insert($proid,$milestone_number,$iteration,$location,$time) {
   global $db;
 
-  if ($milestone_number == 1 && $iteration == 0 || $iteration == 0 && $time == 1) {
-	$db->query("UPDATE follow_up SET iteration='5' WHERE proid='$proid' AND milestone_number='$milestone_number'");
-	$milestone_number++;	
+  if ($milestone_number == 1 && $iteration == 1) {
 	$db->query("INSERT follow_up SET proid='$proid',milestone_number='$milestone_number',iteration='$iteration',location='$location',time='$time'");
   } else {
 	$db->query("UPDATE follow_up SET iteration='$iteration', location='$location', time='$time' WHERE proid='$proid' AND milestone_number='$milestone_number'");
