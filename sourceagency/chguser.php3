@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: chguser.php3,v 1.9 2002/05/10 11:59:36 grex Exp $
+# $Id: chguser.php3,v 1.10 2002/05/10 12:00:14 grex Exp $
 #
 ######################################################################
 
@@ -131,12 +131,12 @@ $bx->box_column('left', '50%', '', html_input_text('email_usr', 20, 128, $db->f(
 $bx->box_next_row_of_columns();
 
 $bx->box_column('right', '50%', '', '<b>'.$t->translate('Creation').':</b>');
-$bx->box_column('left', '50%', '', timestr(mktimestemp($db->f('creation_usr'))));
+$bx->box_column('left', '50%', '', timestr(mktimestamp($db->f('creation_usr'))));
 
 $bx->box_next_row_of_columns();
 
 $bx->box_column('right', '50%', '', '<b>'.$t->translate('Last Modification').':</b>');
-$bx->box_column('left', '50%', '', timestr(mktimestemp($db->f('modification_usr'))));
+$bx->box_column('left', '50%', '', timestr(mktimestamp($db->f('modification_usr'))));
 
 $bx->box_next_row_of_columns();
 
