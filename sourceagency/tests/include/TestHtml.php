@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.8 2001/11/20 16:39:30 riessen Exp $
+# $Id: TestHtml.php,v 1.9 2001/12/13 16:53:39 riessen Exp $
 #
 ######################################################################
 
@@ -130,7 +130,7 @@ extends TestCase
         // test the print variation of the same function
         htmlp_image("file", "border", "width", "height", "alternate");
         $text = capture_stop_and_get();
-        $this->_testFor_length( 86 );
+        $this->_testFor_length( 85 );
         $this->assertEquals( $expect, $text );
     }
 
