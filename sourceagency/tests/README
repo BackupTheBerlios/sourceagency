@@ -36,8 +36,8 @@ or modified: all unit tests should be running at 100% at all times!
 
 PhpUnit is required: the file phpunit.php should be in the
 directory defined by the environmental variable PHP_LIB_DIR. This
-variable is used to set the include_path in the constants.php,
-therefore set this to your php library directory, see: constants.php.
+variable is used to set the include_path in the constants.php file,
+therefore set this to your PHP library directory, see: constants.php.
 
 
 1. Defining a New Unit Test Class
@@ -103,14 +103,14 @@ Notes
    'security.inc' are to be tested, then the test file should be
    called 'TestSecurity.php', and hence the unit-test-class should be
    'UnitTestSecurity'.
-2. Each unit test class must being with 'UnitTest' and extend the
+2. Each unit test class must begin with 'UnitTest' and extend the
    UnitTest class. (The UnitTest class is defined in unit_test.php)
 3. The constants.php file needs to be included at the beginning of
    each unit test. This in turn includes utility classes such as
    mock_database and the UnitTest class.
 4. 'define_test_suite( __FILE__ )' is required at the end of the class 
    definition to ensure that unit test becomes a member of the overall 
-   unit test suite when executed through the RunAllTests or that it
+   unit test suite when executed through the RunAllTests and that it
    can be executed directly. (define_test_suite is defined in constants.php)
 5. PhpUnit naming conventions requires that test methods (i.e. those
    methods that perform tests) must begin with the string 'test' and be 
@@ -127,9 +127,10 @@ Notes
 
 2. Writing Test Methods
 -----------------------
-Each test function (method is a function defined on a specific class)
+Each test method (method being a function defined in a class)
 should only test one function/method of the target file/class. That
 is, they should not attempt to test all functions or the entire class.
+This allows errors to be pinpointed to functions/methods directly.
 
 The test function should attempt to test all aspects of the target
 function including all possible argument values and test all results
@@ -162,7 +163,7 @@ And the UnitTest class (unit_test.php) defines:
  * _testFor_... various others, see: unit_test.php for details
 
 Example 1: Testing Database Interaction
----------
+---------------------------------------
 
 This shows how with the help of the mock_database class, functions
 which require a database can be tested. The steps involved are:
@@ -185,12 +186,12 @@ function no_other_proposal_yet($proid) {
 
 line 01: creates a new instance of the DB_SourceAgency class which is
          replaced by an instance of the mock_database class.
-line 02: peform a query using the database class
+line 02: perform a query using the database class
 line 03: if the number of rows obtained by the query was zero, return 1
 line 04: if we came this far, return zero.
 
-Test method from 'TestSecurity.php', method 'testNo_other_proposal_yet' 
-on class 'UnitTestSecuroty':
+The corresponding test method from 'TestSecurity.php': method 
+'testNo_other_proposal_yet' on class 'UnitTestSecuroty':
 --------
     function testNo_other_proposal_yet() {
 01:        $db_config = new mock_db_configure( 3 );
@@ -216,15 +217,16 @@ on class 'UnitTestSecuroty':
 line 01: create a new instance of the mock_database configuration class. This
          is used to define what is expected of each instance of the
          mock_database class. The argument indicates how many instances of
-         mock_database are expected during the unit test: 3.
+         mock_database are expected during the test: 3.
 line 03: array db_q contains all the queries that are expected on the database
          object, in this case only one. 
 line 04: Generate test data. _generate_records generates an multi-dimensional
          array indexed from 0 to 2 (second argument is size) and the names in
          the array as first argument (i.e. "proid"). The values of the array
-         are a concatenation of the indexes, i.e. 
-         db_d[0]["proid"] = "proid_0", db_d[1]["proid"] = "proid_1", and 
-         db_d[2]["proid"] = "proid_2"
+         are a concatenation of the indexes, in this case: 
+           db_d[0]["proid"] = "proid_0", 
+           db_d[1]["proid"] = "proid_1", and 
+           db_d[2]["proid"] = "proid_2"
 line 06: Add an expected query to mock_database instance one (index 0). In 
          this case, the query is "SELECT * FROM developing WHERE 
          proid='proid_0'". This is the query that is expected for the first
@@ -233,7 +235,7 @@ line 06: Add an expected query to mock_database instance one (index 0). In
          the previous query.
 line 07: Add a result for the first call to the num_rows() call for instance
          one. In this case, the value returned will be 0. Similiarly to
-         add_query, add_num_row must called for _each_ call to the num_rows
+         add_query, add_num_row must be called for _each_ call to the num_rows
          method, regardless whether the same value is always returned.
 line 08: Add query "SELECT * FROM developing WHERE proid='proid_1'" to
          instance two (index 1) of mock_database.
@@ -243,14 +245,14 @@ line 10: Add query "SELECT * FROM developing WHERE proid='proid_2'" to
 line 11: Add num_rows() result to instance three, result is -1.
 line 13: Asserts that the returned value from the first call to the
          no_other_proposal_yet with the argument of 'proid_0' is
-         1. If this happens not to be the case, assertEquals(...) will cause
-         an error to be displayed when running the unit test. This call to
-         the no_other_proposal_yet causes instance one of the mock_database
+         1. If this is not the case, assertEquals(...) will display
+         an error when the unit test is run. This call to the 
+         no_other_proposal_yet causes instance one of the mock_database
          class to be created, thus the first call to the query method (line
          02 of function no_other_proposal_yet) is expecting the query:
          "SELECT * FROM developing WHERE proid='proid_0'" and the num_rows()
          call on line 03 of no_other_proposal_yet will return 0, thus the
-         overall call to the function should return 1, as we're expecting.
+         overall call to the function should return 1, as we are expecting.
 line 14: Asserts that the second call to no_other_proposal_yet, argument
          'proid_1', will return 0. This creates instance two (line 01 of
          no_other_proposal_yet) of mock_database.
@@ -258,11 +260,12 @@ line 15: Asserts that the third call to no_other_proposal_yet, argument
          'proid_2', will return 0. 
 line 17: _check_db is defined in the UnitTest-class and calls checks on the
          mock_database configuration object to ensure no errors occurred while
-         using the database. See mock_database.php and unit_test.php for 
-         more details.
+         using the database. _check_db must always be called if a mock 
+         database object was described and used.  See mock_database.php 
+         and unit_test.php for more details.
 
-Example 2: Testing HTML Output
-----------
+Example 2: Testing generated HTML Output
+----------------------------------------
 
 This example shows how HTML output, that is normally sent directly to the
 client, is captured and tested for correctness. This type of capturing is
@@ -282,7 +285,9 @@ directly to the client, can be tested without using the capture functionality.
 The following breaks a rule established above: a test method should only test
 a single function/method, in this case 'testhtml_select_option' tests two: 
 'html_select_option' and 'htmlp_select_option'. The reason being that
-one (htmlp_select_option) calls the other (html_select_option).
+one (htmlp_select_option) calls the other (html_select_option) and
+that output is the same, the only difference is that htmlp_... dumps
+its output directly to the client.
 
 Functions being tested contained in 'html.inc':
 ------
@@ -298,23 +303,23 @@ function htmlp_select_option($value,$selected,$text) {
 ------
 
 htmlp_select_option:
-line 01: calls the html_select_option passing it's argument on and printing
+line 01: calls the html_select_option passing its argument on and prints
          the output of the call. (As an aside: this demostrates another
          benefit of unit tests, the original htmlp_select_option function
          was the same as the html_select_option except with a print instead
          of a return at the end. The unit test method was written, checked to
          be working for both functions, then htmlp_select_option was changed
-         to its present form and the unit test function (because it did not
-         break) proved nothing was broken.)
+         to its present form and the unit test function [because it did not
+         break] proved nothing was broken.)
 html_select_option:
-line 01: define and initialis the local variable 'output'.
+line 01: define and initialise the local variable 'output'.
 line 02: check whether the argument 'selected' was positive, if so, then add
          the string "selected " to the output string.
-line 03: further construction of the result string.
+line 03: further construction of the output string.
 line 04: return the constructed output string.
 
-Test method 'testhtml_select_option' from class 'UnitTestHtml', defined in 
-'TestHtml.php':
+Corresponding test method 'testhtml_select_option' in class
+'UnitTestHtml', defined in 'TestHtml.php':
 ------
     function setup() {
 01:        /* Called before each test method */
@@ -330,7 +335,7 @@ Test method 'testhtml_select_option' from class 'UnitTestHtml', defined in
 06:        $this->assertEquals( $expect, $actual );
 07:        htmlp_select_option( "value", "selected", "text" );
 08:        $text = capture_stop_and_get();
-09:        $this->_testFor_length( 36 );
+09:        $this->_testFor_captured_length( 36 );
 10:        $this->assertEquals( $expect, $text );
 11:
 12:        //
@@ -342,7 +347,7 @@ Test method 'testhtml_select_option' from class 'UnitTestHtml', defined in
 18:        capture_reset_and_start();
 19:        htmlp_select_option( "value", "", "" );
 20:        $text = capture_stop_and_get();
-21:        $this->_testFor_length( 23 );
+21:        $this->_testFor_captured_length( 23 );
 22:        $this->assertEquals( $expect, $text );
 23:
 24:        //
@@ -354,7 +359,7 @@ Test method 'testhtml_select_option' from class 'UnitTestHtml', defined in
 30:        capture_reset_and_start();
 31:        htmlp_select_option( "", false, "text" );
 32:        $text = capture_stop_and_get();
-33:        $this->_testFor_length( 22 );
+33:        $this->_testFor_captured_length( 22 );
 34:        $this->assertEquals( $expect, $text );
 35:
 36:        //
@@ -366,7 +371,7 @@ Test method 'testhtml_select_option' from class 'UnitTestHtml', defined in
 42:        capture_reset_and_start();
 43:        htmlp_select_option( "", true, "" );
 44:        $text = capture_stop_and_get();
-45:        $this->_testFor_length( 27 );
+45:        $this->_testFor_captured_length( 27 );
 46:        $this->assertEquals( $expect, $text );
     }
 ------
@@ -378,11 +383,10 @@ concatenated into the output string (line 03, html_select_option), this might
 be changed in the future and values might be tested for non-emptiness.
 
 line 04: obtain a value from calling html_select_option. In this case, the
-         test is whether the string "selected" is interpreted as being true:
-         this should be the case.
+         test is whether the string "selected" is interpreted as being true.
 line 05: define an expected value, note that this value is expected from 
          both functions and is tested against the output of both. It makes no
-         sense to test the output of html_select_option with that of 
+         sense to test the output of html_select_option with the output of 
          htmlp_select_option!
 line 06: assert that the expected value is the same as the one obtained from
          html_select_option. 
@@ -391,9 +395,9 @@ line 07: call htmlp_select_option with the same arguments as the call to
          capture_reset_and_start because the setup() method already called it.
 line 08: obtain the capture output and store it in a local variable.
 line 09: check that it's length is correct. Notice that the method
-         _testFor_length assumes that the capture utility is being used and
-         it uses the method capture_length() to obtain the length of the 
-         captured text.
+         _testFor_captured_length assumes that the capture utility is 
+         being used and it uses the method capture_length() to obtain 
+         the length of the last captured text.
 line 10: assert that the output from the print variation of the
          html_select_option is the same as the expected text.
 lines 
@@ -404,16 +408,18 @@ lines
 39 - 46: test that the selected value of true generates a selected option.
 
 Notice that the three last tests call the capture_reset_and_start method to
-ensure to restart the capturing of text. This prevents the output of the
+restart the capturing of text. This prevents the output of the
 previous cases interfering with the output of the case being tested.
 
 What the above example does not illustrate is the use of the pattern matching
 to ensure that specific information is being printed as part of a function.
+(Although a more recent version of TestHtml.php does use pattern matching
+in the test method, at the time of writing this was not the case).
 
 Example 3: Pattern Matching
-----------
+---------------------------
 
-Function 'lib_show_description':
+Function 'lib_show_description' defined in 'lib.inc':
 ------
 function lib_show_description($query) {
 01:    global $bx, $t, $sess;
@@ -443,7 +449,7 @@ function lib_show_description($query) {
 }
 ------
 
-Test method 'testLib_show_description' in 'TestLib.php':
+Corresponding test method 'testLib_show_description' in 'TestLib.php':
 ------
     function testLib_show_description() {
 01:        $db_config = new mock_db_configure( 2 );
@@ -469,21 +475,24 @@ Test method 'testLib_show_description' in 'TestLib.php':
 21:                       2=>("<b>Description<\/b>: description_0"),
 22:                       3=>("<b>Volume<\/b>: volume_0" ));
 23:        $this->_testFor_patterns($text, $pats, 4 );
-24:        $this->_testFor_length( 656 );
+24:        $this->_testFor_captured_length( 656 );
 25:
 26:        capture_reset_and_start();
 27:        lib_show_description( sprintf( $db_q[0], "X", "Y") );
 28:        $text = capture_stop_and_get();
-29:        $this->_testFor_length( 0 );
+29:        $this->_testFor_captured_length( 0 );
 30:
 31:        // check that the database component did not fail
 32:        $this->_check_db( $db_config );
     }
 ------
 
-Lines
+Note that the unit test function does not check the entire output
+obtained, rather, using the patterns, only for specific bits of information.
+
+lines
 01 - 13: mock database configuration.
-line 15: initialise the capturing functinoality
+line 15: initialise the capturing functionality
 line 16: make call to the function which is being tested
 line 17: obtain the captured text
 lines
@@ -493,9 +502,7 @@ line 23: check for the patterns in the captured output. Argument one is the
          of patterns to be matched, optional argument three is the size of the
          pattern array.
 line 24: Check that the overall length of the output matches the expected
-         length of 656. Note that the test function does not check the entire
-         output obtained, rather, using the patterns, only for specific bits
-         of information.
+         length of 656. 
 lines
 26 - 29: second test case, here no output is expected because the query passed
          as argument to the function does not generate any values from the 
@@ -517,14 +524,28 @@ system, i.e. database queries.
 It is also sometimes important to check that the function breaks,
 i.e. that specific things fail when using the function. For example,
 that a login function does not allow uses with a wrong password
-accesses. 
-
-Tip: sometimes when an assert fails, it might be a good idea to
-changes the assert so that failure is expected instead of changing the
-assert to perform correctly.
+accesses. Tip: sometimes when an assert fails, it might be a good idea to
+change the assert so that failure is expected instead of changing the
+assert to check the correct behaviour.
 
 
-4. Utilities
+4. Executing Unit Tests
+-----------------------
+Unit test classes may either be executed directly using the php
+intepreter version 4 or higher. Make sure that you change directory to
+the include directory, and then 'php4 TestHtml.php' (for example) will
+execute the unit test class for 'html.inc'.
+
+Tests may also be executed through the PHP module of an apache (or any
+other webserver with php capabilities). Again, ensure that it's
+version 4 or higher.
+
+A second possibility is executing all available unit tests using the
+RunAllTests.php script. This can be either executed directly using php
+4 or greater, or through a php capable web server.
+
+
+5. Utilities
 ------------
 All the following files are stored in the tests directory of the
 SourceAgency CVS repository. Their intention is to support the
@@ -556,7 +577,7 @@ creation and execution of unit tests.
   Defines the UnitTest class which should be the base class for all unit test
   classes.
 
-5. Resources
+6. Resources
 ------------
 1. PhpUnit 
    - http://sourceforge.net/projects/phpunit
@@ -566,8 +587,10 @@ creation and execution of unit tests.
    - http://www.junit.org
 4. Latest versions of this Readme
    - http://cvs.berlios.de/cgi-bin/cvsweb.cgi/sourceagency/tests/README?cvsroot=sourceagency
+5. Executing all SourceAgency unit tests
+   - http://sourceagency.berlios.de/beta/tests/RunAllTests.php
 
 --
 Gerrit Riessen, Gerrit.Riessen@open-source-consultants.de
 Copyright (C) 2002 Gerrit Riessen
-$Id: README,v 1.3 2002/02/13 12:13:41 riessen Exp $
+$Id: README,v 1.4 2002/04/23 14:03:05 riessen Exp $
