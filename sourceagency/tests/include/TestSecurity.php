@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.6 2001/11/20 10:51:02 riessen Exp $
+# $Id: TestSecurity.php,v 1.7 2001/12/13 16:53:16 riessen Exp $
 #
 ######################################################################
 
@@ -214,18 +214,16 @@ extends TestCase
         $db_config->set_nr_instance_expected( 4 );
         $db_q = array( // Arg: 1=proid, 2=proid, 3=developer name
                        0 => ("SELECT * FROM configure WHERE proid='%s' "
-                             . "AND proid='%s' AND developer='%s'"),
+                             . "AND developer='%s'"),
                        1 => ($this->query_is_accepted_developer));
         
         $db_config->add_query( sprintf( $db_q[1], $d["r0"], $d["u0"]),0);
-        $db_config->add_query( sprintf( $db_q[0], $d["r0"], $d["r0"], 
-                                        $d["u0"]),1);
+        $db_config->add_query( sprintf( $db_q[0], $d["r0"], $d["u0"]),1);
         $db_config->add_num_row( $d["e0"], 0 );
         $db_config->add_num_row( $d["e0"], 1 );
 
         $db_config->add_query( sprintf( $db_q[1], $d["r1"], $d["u1"]),2);
-        $db_config->add_query( sprintf( $db_q[0], $d["r1"], $d["r1"], 
-                                        $d["u1"]),3);
+        $db_config->add_query( sprintf( $db_q[0], $d["r1"], $d["u1"]),3);
         // is.accepted.developer returns true
         $db_config->add_num_row( 1, 2 );
         $db_config->add_num_row( $d["e1"], 3 );
