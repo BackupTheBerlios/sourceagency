@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: html.inc,v 1.18 2002/05/10 11:49:00 grex Exp $
+# $Id: html.inc,v 1.19 2002/05/15 16:06:31 riessen Exp $
 #
 ######################################################################
 
@@ -243,12 +243,13 @@ function htmlp_input_text($name, $size, $maxlength, $value)
  *
  * @access  public
  */
-function html_input_password($name, $size, $maxlength, $value= '')
+function html_input_password($name, $size, $maxlength, $value = '')
 {
-    $output = "\n".'   <input type="password" name="'.$name.'" size="'.$size.'" maxlength="'.$maxlength.'" value="'.$value.'">';
-    return($output);
+    return ( "\n".'   <input type="password" name="'.$name
+             .'" size="'.$size.'" maxlength="'.$maxlength
+             .'" value="'.$value.'">' );
 }
-function htmlp_input_password($name, $size, $maxlength, $value)
+function htmlp_input_password($name, $size, $maxlength, $value = '')
 {
     print html_input_password( $name, $size, $maxlength, $value );
 }
@@ -282,8 +283,8 @@ function htmlp_form_submit($value, $name='')
 
 function html_form_image($file, $description)
 {
-    $output = "\n".'   <input type="image" src="'.$file.'" alt="'.$description.'">';
-    return($output);
+    return ( "\n".'   <input type="image" src="'.$file
+             .'" alt="'.$description.'">' );
 }
 function htmlp_form_image($file, $description)
 {
@@ -300,8 +301,7 @@ function htmlp_form_image($file, $description)
 
 function html_form_reset($value = 'Reset')
 {
-    $output = "\n".'   <input type="reset" value="'.$value.'">';
-    return($output);
+    return ( "\n".'   <input type="reset" value="'.$value.'">' );
 }
 function htmlp_form_reset($value = 'Reset')
 {
