@@ -4,8 +4,12 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: mock_database.php,v 1.3 2001/10/22 10:06:15 riessen Exp $
+// $Id: mock_database.php,v 1.4 2001/10/23 09:45:01 riessen Exp $
 
+//
+// For an explanation of this class, see:
+//    http://wiki.berlios.de/index.php?SourceAgencyUnitTests
+//
 // require the Assert class
 include_once( 'phpunit.php' );
 
