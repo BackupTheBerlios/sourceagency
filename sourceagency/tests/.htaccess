@@ -1,12 +1,9 @@
 #
-# $Id: .htaccess,v 1.2 2002/02/19 16:54:03 riessen Exp $
+# $Id: .htaccess,v 1.3 2002/02/21 12:24:22 riessen Exp $
 #
 
+# location of the phpunit.php file
 SetEnv PHP_LIB_DIR /home/users/riessen/lib/php
-<Files RunAllTests.php>
-# Force apache to use PHP4 for RunAllTests
-  ForceType application/x-httpd-php
-</Files>
 
 <IfModule mod_php4.c>
 # This requires that "AllowOverride Options" is set in access.conf
@@ -14,5 +11,11 @@ SetEnv PHP_LIB_DIR /home/users/riessen/lib/php
 #
 # Because parts of the tests redeclare classes that are defined 
 # by the prepend file, we turn off prepending
-#    php_value auto_prepend_file "none"
+   php_value auto_prepend_file none
 </IfModule>
+
+<Files RunAllTests.php>
+# Force apache to use PHP4 for RunAllTests
+  ForceType application/x-httpd-php
+</Files>
+
