@@ -21,11 +21,8 @@ CREATE TABLE active_sessions (
 # Dumping data for table 'active_sessions'
 #
 
-INSERT INTO active_sessions VALUES ('7238e9fb0254e7ba972a7765875e1793','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20021024110108');
-INSERT INTO active_sessions VALUES ('66d66980f563a913a2e1d877ca50f5ee','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20021023204700');
+INSERT INTO active_sessions VALUES ('c3bdb4390b49d33086ea2c4fe6cdbb14','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0dlcm1hbic7ICRHTE9CQUxTWydhdXRoJ10gPSBuZXcgU291cmNlQWdlbmN5X0F1dGg7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGggPSBhcnJheSgpOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1aWQnXSA9ICc4Yzk1M2QwMTY3NzY0ZDU0NjY0ZWJhYzUyNjJhZWY1MCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICdkZXZlbCc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ2V4cCddID0gJzEwMzU1Njg3ODcnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydyZWZyZXNoJ10gPSAnMTAzNTU1OTExNyc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3VuYW1lJ10gPSAnZXJpayc7IA==','20021025172947');
 INSERT INTO active_sessions VALUES ('2c08ed769edb48fa8e8f81d37c806c86','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20021025091507');
-INSERT INTO active_sessions VALUES ('6a939a39a3c41719664287752f848016','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20021023192914');
-INSERT INTO active_sessions VALUES ('0a7942e8972905a954da4ad22025bf28','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20021024125925');
 INSERT INTO active_sessions VALUES ('81bf7f53362f4d4dde733234d3bf5d05','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0VuZ2xpc2gnOyAkR0xPQkFMU1snYXV0aCddID0gbmV3IFNvdXJjZUFnZW5jeV9BdXRoOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoID0gYXJyYXkoKTsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsndWlkJ10gPSAnOWRjNzFmNDA0ZjZjZGZkOTA5ZjgxN2E5MTZjY2UwYzMnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydwZXJtJ10gPSAnZGV2ZWwnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydleHAnXSA9ICcxMDM1NDgzNjk2JzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsncmVmcmVzaCddID0gJzEwMzU0NzQ2MjYnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1bmFtZSddID0gJ3J5NGFuJzsg','20021024175137');
 
 #
@@ -155,6 +152,7 @@ INSERT INTO configure VALUES (26,NULL,'No','Yes','Yes',NULL,'riessen');
 INSERT INTO configure VALUES (27,NULL,'No','Yes','',NULL,'admin');
 INSERT INTO configure VALUES (28,NULL,'No','Yes','Yes',NULL,'helix');
 INSERT INTO configure VALUES (30,NULL,'No','Yes','Yes',NULL,'helix');
+INSERT INTO configure VALUES (31,NULL,'No','Yes','Yes',NULL,'erik');
 
 #
 # Table structure for table 'consultants'
@@ -235,6 +233,7 @@ INSERT INTO counter VALUES (27,0,0);
 INSERT INTO counter VALUES (28,0,0);
 INSERT INTO counter VALUES (29,0,0);
 INSERT INTO counter VALUES (30,0,0);
+INSERT INTO counter VALUES (31,0,0);
 
 #
 # Table structure for table 'counter_check'
@@ -379,6 +378,7 @@ INSERT INTO description VALUES (27,'DevCounter','Expansion','DevCounter befragt 
 INSERT INTO description VALUES (28,'A New Project','Development','A very new program','helix','> 6 Man Months',0,20020907170611);
 INSERT INTO description VALUES (29,'pppp','Development','ggb aezztzbznjhesh','helix','< 6 Man Months',0,20020908000112);
 INSERT INTO description VALUES (30,'qqqq','Adaption','rusr tejn 73k zu','helix','< 0.25 Man Month',0,20020908000413);
+INSERT INTO description VALUES (31,'Lokalisierung des Scoop CMS','Adaption','Das Content Management System (CMS) Scoop muss für die Übersetzung in verschiedene Sprachen angepasst werden. Hauptproblem sind existierende Text-Blöcke im Quellcode, die in die Datenbank oder evtl., falls es sich um kürzere Textketten handelt, in eine Textdatei verschoben werden müssen.\r\n\r\nWeiterhin muss es einem Benutzer möglich sein, eine Sprachpräferenz auszuwählen. Anonyme Nutzer sollten das System in der in ihrem Browser eingestellten Sprache sehen. \r\n\r\nEine deutsche Übersetzung von Scoop ist Teil dieses Projekts. Fehlermeldungen bzw. Warnhinweise, die im Apache-Error-Log gespeichert werden, müssen nicht übersetzt werden.\r\n\r\nEs wäre u.U. wünschenswert, auch für von Nutzern beigesteuerte Kommentare und Stories ein Sprachattribut zu verwalten und Nutzern und Administratoren zu gestatten, Sprachfilter zu definieren. Dies ist jedoch kein unbedingt/sofort notwendiges Feature.','erik','< 2 Man Months',0,20021025172802);
 
 #
 # Table structure for table 'developing'
@@ -622,6 +622,7 @@ INSERT INTO history VALUES (30,'helix','Configure','Project configuration',20020
 INSERT INTO history VALUES (30,'helix','Configure','Project configuration modified',20020908000628);
 INSERT INTO history VALUES (3,'helix','Configure','Project configuration modified',20020911155112);
 INSERT INTO history VALUES (1,'nilix','sponsoring','Sponsor sponsor accepted as sponsor',20020911164915);
+INSERT INTO history VALUES (31,'erik','Configure','Project configuration',20021025172851);
 
 #
 # Table structure for table 'involved'
@@ -931,4 +932,5 @@ INSERT INTO views VALUES (27,'Project Participants','Project Participants','Proj
 INSERT INTO views VALUES (28,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20020907170611);
 INSERT INTO views VALUES (29,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20020908000112);
 INSERT INTO views VALUES (30,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20020908000413);
+INSERT INTO views VALUES (31,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20021025172802);
 
