@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: mock_database.php,v 1.6 2001/10/24 17:09:31 riessen Exp $
+// $Id: mock_database.php,v 1.7 2001/10/26 13:49:16 riessen Exp $
 
 //
 // For an explanation of this class, see:
@@ -97,13 +97,13 @@ class mock_db_configure
     // add a number of rows value. The row_size argument must be a integer.
     function add_num_row( $row_size, $inst_nr = 0, $index = -1 ) {
         global $g_mkdb_num_rows;
-        $this->_add_data_point( $g_mkdb_num_rows[$inst_nr],$row_size,$index );
+        $this->_add_data_point( $g_mkdb_num_rows,$inst_nr,$row_size,$index );
     }
 
     // add a query string. $query_string must be a string
     function add_query( $query_string, $inst_nr = 0, $index = -1 ) {
         global $g_mkdb_queries;
-        $this->_add_data_point( $g_mkdb_queries[$inst_nr], 
+        $this->_add_data_point( $g_mkdb_queries,$inst_nr, 
                                 $query_string, $index );
     }
 
@@ -113,7 +113,7 @@ class mock_db_configure
     // all databases created during the test.
     function add_record( $record, $inst_nr = 0, $index = -1 ) {
         global $g_mkdb_next_record_data;
-        $this->_add_data_point( $g_mkdb_next_record_data[$inst_nr], 
+        $this->_add_data_point( $g_mkdb_next_record_data,$inst_nr, 
                                 $record, $index );
     }
 
@@ -140,11 +140,17 @@ class mock_db_configure
         return $g_mkdb_failure_text;
     }
 
-    function _add_data_point( &$array, &$point, $index ) {
+    function _add_data_point( &$array, $inst_nr, &$point, $index ) {
+        if ( !isset( $array[$inst_nr] ) || !is_array($array[$inst_nr])) {
+            $array[$inst_nr] = array();
+        }
+
+        $ary = &$array[$inst_nr];
+
         if ( $index > -1 ) {
-            $array[ $index ] = $point;
+            $ary[ $index ] = $point;
         } else {
-            $array[] = $point;
+            $ary[] = $point;
         }
     }
 }

@@ -2,7 +2,7 @@
 #
 # personallib.inc
 #
-# $Id: personallib.inc,v 1.7 2001/10/25 12:15:21 riessen Exp $
+# $Id: personallib.inc,v 1.8 2001/10/26 13:49:16 riessen Exp $
 #
 
 ######################################################################
@@ -194,7 +194,7 @@ function personal_comments_long($username) {
 	if ($db_local->num_rows() == 0) {
             print "no comments posted\n";
         }
-	$i=0;
+	$i=0; // FIXME: where was $i set or is set?
 	print "<ul>\n";
 	while ($db_local->next_record()) {
 		print "<br><li>";
@@ -225,6 +225,7 @@ function personal_comments_long($username) {
                        ."<br>\n");
 	}
 	print "</ul>\n<p align=right>\n";
+        // FIXME: $i is never set, this isn't necessary
 	if ($i>10) {
           htmlp_link("personal_comments.php3",
                      array("username" => $username),
@@ -248,6 +249,8 @@ function personal_news_short($username) {
 	if ($db_local->num_rows() == 0) print "no news posted\n";
 	$i=0;
 	print "<ul>\n";
+        // FIXME: this returns too many results, 6 instead of 5 -- is this
+        // FIXME: correct behaviour?
 	while ($db_local->next_record() AND $i<6) {
 		print "<br><li>";
 		$db_count = new DB_SourceAgency;
@@ -274,6 +277,7 @@ function personal_news_short($username) {
                 $i++;
 	}
 	print "</ul>\n<p align=right>\n";
+        // FIXME: if $i changes above, then change this also
 	if ($i>5) {
             htmlp_link("personal_news.php3",
                        array("username" => $username),
