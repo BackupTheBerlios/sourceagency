@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisionslib.inc,v 1.16 2002/07/09 11:15:33 riessen Exp $
+# $Id: decisionslib.inc,v 1.17 2002/07/17 12:39:14 riessen Exp $
 #
 ######################################################################
 
@@ -91,7 +91,7 @@ function show_decision_consultants($proid)
 
 	    $bx->box_next_row_of_columns();
 
-	    $bx->box_column('','',$bgcolor,'<b>$i</b>');
+	    $bx->box_column('','',$bgcolor,"<b>$i</b>");
 	    $bx->box_column('','',$bgcolor,'<b>'.lib_nick($db->f('consultant')).'</b>');
 	    $bx->box_column('','',$bgcolor,'<b>'.show_status($db->f('status')).'</b>');
 	    $bx->box_column('','',$bgcolor,'<b>'.timestr(mktimestamp($db->f('creation'))).'</b>');
@@ -109,7 +109,9 @@ function show_decision_consultants($proid)
 	    } else {
                 $checked = '';
 	    }
-	    $bx->box_column('center','',$bgcolor,html_radio('your_vote',$db->f('consultant'),$checked));
+	    $bx->box_column('center','',$bgcolor,
+                            html_radio('your_vote',$db->f('consultant'),
+                                       $checked));
 	}
 
 	$bx->box_next_row_of_columns();
@@ -129,8 +131,12 @@ function show_decision_consultants($proid)
 	print '<p><b>'.$t->translate('No decision possible as there are '
                                      .'no offerings').".</b><p>\n";
     } else {
-        lib_die('Error in decisionslib.inc function '
-                .'show_decision_consultants()');
+      /** FIXME: why should there be an error here? This is the case where
+          FIXME: the project can have consultants and the there are 
+          FIXME: offerings ...
+      **/
+//          lib_die('Error in decisionslib.inc function '
+//                  .'show_decision_consultants()');
     }
     return $return_value;
 }
@@ -355,7 +361,8 @@ function show_decision_milestones($proid, $devid)
     if ($db->num_rows() != 0) {
 	$bx->box_begin();
 	// TODO: link to the page with the proposal of these milestones
-	$bx->box_title($t->translate('Milestones proposed by '.$milestone_user));
+        // FIXME: variable milestone_user is not defined
+	$bx->box_title($t->translate('Milestones proposed by '/*.$milestone_user*/));
 	$bx->box_body_begin();
 	$bx->box_columns_begin(8);
 
