@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: German-lang.inc,v 1.25 2002/11/04 15:39:31 erik Exp $
+# $Id: German-lang.inc,v 1.26 2002/11/06 13:27:46 erik Exp $
 #
 ######################################################################
 
@@ -146,7 +146,7 @@ function translate_real($phrase) {
     case 'Here you will find all the information related to you': $tmp = 'Hier finden Sie alle Informationen, die mit Ihnen in Beziehung stehen'; break;
     case 'Importance': $tmp = 'Wichtigkeit'; break;
     case 'Importance filter': $tmp = 'Wichtigkeitsfilter'; break;
-    case 'Index': $tmp = 'Index'; break;
+    case 'Index': $tmp = 'Hauptseite'; break;
     case 'Info box': $tmp = 'Information'; break;
     case 'Information access rights': $tmp = 'Zugriffrechte auf Informationen'; break;
     case 'In order to define a new project, you will have to follow these steps': $tmp = 'Um ein neues Projekt zu definieren, müssen Sie die folgenden Schritte ausführen'; break;
@@ -261,7 +261,7 @@ function translate_real($phrase) {
     case 'Propose Milestones': $tmp = 'Machen Sie Vorschläge für Meilensteine'; break;
     case 'Propose yourself as consultant': $tmp = 'Bieten Sie sich selbst als Berater an'; break;
     case 'Proposed': $tmp = 'Angeboten'; break;
-    case 'Q&amp;A': $tmp = 'F&amp;A'; break;
+    case 'Q&amp;A': $tmp = 'Fragen &amp; Antworten'; break;
     case 'Question': $tmp = 'Frage'; break;
     case 'Rated': $tmp = 'Bewerted'; break;
     case 'Rating': $tmp = 'Bewertung'; break;
