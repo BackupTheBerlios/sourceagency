@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: constants.php,v 1.15 2001/12/13 16:51:42 riessen Exp $
+# $Id: constants.php,v 1.16 2002/01/09 16:10:59 riessen Exp $
 #
 ######################################################################
 
@@ -28,12 +28,18 @@ if ( ! $env_php_lib_dir || $env_php_lib_dir == "" ) {
   $PHP_LIB_DIR = $env_php_lib_dir;
 }
 
+// this is were the phpunit class should be located, filename: phpunit.php
 ini_set('include_path', ini_get('include_path') . ':' . $PHP_LIB_DIR );
+// this is the location of the mock database and other unit test specific
+// stuff
 ini_set('include_path', ini_get('include_path') . ':' . getcwd() );
 
 if ( !defined("BEING_INCLUDED" ) ) {
-    ini_set('include_path', ini_get('include_path') . ':../../include' );
-    ini_set('include_path', ini_get('include_path') . ':../' );
+    ini_set('include_path', 
+            ini_get('include_path') . ':'.getcwd().'/../../include' );
+    ini_set('include_path', 
+            ini_get('include_path') . ':'.getcwd().'/../' );
+    include_once( "config.inc" );
 }
 
 // php unit test framework
@@ -42,6 +48,7 @@ include_once("phpunit.php");
 // because constants is included in the tests, need to prefix an "../"
 include_once( "mock_database.php" );
 include_once( "mock_auth.php" );
+include_once( "unit_test.php" );
 
 function _filename_to_classname( $filename ) {
   // needed to add this for PHP4.1.0 -- __FILE__ includes the
