@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.18 2002/04/30 11:31:26 riessen Exp $
+# $Id: browselib.inc,v 1.19 2002/05/02 11:02:16 riessen Exp $
 #
 ######################################################################
 
@@ -110,7 +110,7 @@ function browse_licenses()
     $i = 1;
     
     $bx->box_columns_begin(3);
-    $bx->box_column('right','6%','','<b>'.$t->translate('No').'</b>');
+    $bx->box_column('right','6%','','<b>'.$t->translate('No.').'</b>');
     $bx->box_column('center','20%','','<b>#&nbsp;'.$t->translate('Projects')
                     .'</b>');
     $bx->box_column('left','70%','','<b>'.$t->translate('License').'</b>');
@@ -169,7 +169,7 @@ function _browse_type()
     $bx->box_body_begin();
     
     $bx->box_columns_begin(3);
-    $bx->box_column('right','6%','','<b>'.$t->translate('No').'</b>');
+    $bx->box_column('right','6%','','<b>'.$t->translate('No.').'</b>');
     $bx->box_column('center','20%','','<b>#&nbsp;'.$t->translate('Projects')
                     .'</b>');
     $bx->box_column('left','70%','','<b>'.$t->translate('Type').'</b>');
@@ -223,7 +223,7 @@ function _browse_steps()
     $bx->box_body_begin();
 
     $bx->box_columns_begin(3);
-    $bx->box_column('right','6%','','<b>'.$t->translate('No').'</b>');
+    $bx->box_column('right','6%','','<b>'.$t->translate('No.').'</b>');
     $bx->box_column('center','20%','','<b>#&nbsp;'
                     .$t->translate('Projects').'</b>');
     $bx->box_column('left','70%','','<b>'.$t->translate('Step').'</b>');
@@ -278,7 +278,7 @@ function _browse_volume()
     $bx->box_body_begin();
     
     $bx->box_columns_begin(3);
-    $bx->box_column('right','6%','','<b>'.$t->translate('No').'</b>');
+    $bx->box_column('right','6%','','<b>'.$t->translate('No.').'</b>');
     $bx->box_column('center','20%','','<b>#&nbsp;'.$t->translate('Projects')
                     .'</b>');
     $bx->box_column('left','70%','','<b>'.$t->translate('Volume').'</b>');
@@ -331,7 +331,7 @@ function _browse_platform()
     $bx->box_body_begin();
 
     $bx->box_columns_begin(3);
-    $bx->box_column('right','6%','','<b>'.$t->translate('No').'</b>');
+    $bx->box_column('right','6%','','<b>'.$t->translate('No.').'</b>');
     $bx->box_column('center','20%','','<b>#&nbsp;'.$t->translate('Projects')
                     .'</b>');
     $bx->box_column('left','70%','','<b>'.$t->translate('Platform').'</b>');
@@ -384,7 +384,7 @@ function _browse_architecture()
     $bx->box_body_begin();
     
     $bx->box_columns_begin(3);
-    $bx->box_column('right','6%','','<b>'.$t->translate('No').'</b>');
+    $bx->box_column('right','6%','','<b>'.$t->translate('No.').'</b>');
     $bx->box_column('center','20%','','<b>#&nbsp;'
                     .$t->translate('Projects').'</b>');
     $bx->box_column('left','70%','','<b>'.$t->translate('Architecture')
@@ -438,7 +438,7 @@ function _browse_environment()
     $bx->box_body_begin();
     
     $bx->box_columns_begin(3);
-    $bx->box_column('right','6%','','<b>'.$t->translate('No').'</b>');
+    $bx->box_column('right','6%','','<b>'.$t->translate('No.').'</b>');
     $bx->box_column('center','20%','','<b>#&nbsp;'
                     .$t->translate('Projects').'</b>');
     $bx->box_column('left','70%','','<b>'.$t->translate('Environment').'</b>');
@@ -611,7 +611,7 @@ function _browse_project_name()
     $i = 1;
     
     $bx->box_columns_begin(3);
-    $bx->box_column('right','6%','','<b>'.$t->translate('No').'</b>');
+    $bx->box_column('right','6%','','<b>'.$t->translate('No.').'</b>');
     $bx->box_column('center','20%','','<b>#&nbsp;'.$t->translate('Projects')
                     .'</b>');
     $bx->box_column('left','70%','','<b>'.$t->translate('Project Name').'</b>');
