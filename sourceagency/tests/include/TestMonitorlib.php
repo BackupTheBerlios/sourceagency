@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMonitorlib.php,v 1.4 2002/02/25 16:10:04 riessen Exp $
+# $Id: TestMonitorlib.php,v 1.5 2002/04/12 14:25:33 riessen Exp $
 #
 ######################################################################
 
@@ -195,7 +195,7 @@ extends UnitTest
         capture_reset_and_start();
         monitor_show( $proid[1] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 3880 );
+        $this->_testFor_length( 3881 );
         
         $color = array( 0 => "gold", 1 => "#FFFFFF" );
 
@@ -230,15 +230,8 @@ extends UnitTest
 
     function testMonitor_preview() {
         global $importance, $auth;
-        
-        $db_config = new mock_db_configure( 1 );
         $row = array( 0 => $this->_generate_array(array("proid","uname"),0));
-        
-        $db_q = array( 0 => ("SELECT email_usr FROM auth_user WHERE "
-                             ."username='%s'"));
-        
-        $db_config->add_query( sprintf( $db_q[0], $row[0]["uname"] ), 0 );
-        
+                
         //
         // first call
         //
@@ -247,12 +240,9 @@ extends UnitTest
         capture_reset_and_start();
         monitor_preview( $row[0]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 803 + strlen( timestr( time() )));
+        $this->_testFor_length( 800 + strlen( timestr( time() )));
 
-        $this->_testFor_pattern( $text, "<b><b>by uname_0<\/b>" );
-
-        // finally check that everything went smoothly with the DB
-        $this->_check_db( $db_config );
+        $this->_testFor_pattern( $text, "<b>by uname_0<\/b>" );
     }
     
     function testMonitor_form() {
