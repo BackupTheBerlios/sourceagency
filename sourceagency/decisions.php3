@@ -1,5 +1,5 @@
 <?php
-
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ===============================================================
@@ -11,22 +11,22 @@
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
-# TODO: description missing
+# Page where sponsors make their decisions
 #
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisions.php3,v 1.5 2002/04/08 19:16:26 grex Exp $
+# $Id: decisions.php3,v 1.6 2002/04/10 13:02:48 grex Exp $
 #
 ######################################################################  
 
-page_open(array("sess" => "SourceAgency_Session"));
-if (isset($auth) && !empty($auth->auth["perm"])) {
+page_open(array('sess' => 'SourceAgency_Session'));
+if (isset($auth) && !empty($auth->auth['perm'])) {
   page_close();
-  page_open(array("sess" => "SourceAgency_Session",
-                  "auth" => "SourceAgency_Auth",
-                  "perm" => "SourceAgency_Perm"));
+  page_open(array('sess' => 'SourceAgency_Session',
+                  'auth' => 'SourceAgency_Auth',
+                  'perm' => 'SourceAgency_Perm'));
 }
 
 require('header.inc');
@@ -56,11 +56,8 @@ if (check_permission($proid, $page)) {
         $bx->box_full('<b>The next step has been reached</b>',
                       $t->translate('You are now in step ').$project_status);
 	$project_status -=1;
-
     } else {
-
 	$voted_yet=0;
-
 	if (!strcmp($vote, 'vote')) {
             switch($project_status) {
             case '1':
@@ -87,7 +84,6 @@ if (check_permission($proid, $page)) {
     	}
 
   	// If the sponsor has already voted, then we look for his vote
-
         if ( is_not_set_or_empty( $your_vote ) ) {
             $db->query("SELECT decision FROM decisions WHERE proid='$proid' "
                        ."AND decision_user='".$auth->auth["uname"]
@@ -186,7 +182,6 @@ if (check_permission($proid, $page)) {
 }
 
 end_content();
-
 require('footer.inc');
 page_close();
 ?>
