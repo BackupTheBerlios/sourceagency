@@ -35,7 +35,7 @@ $bx = new box('80%',$th_box_frame_color,$th_box_frame_width,
 
 start_content();
 
-$db->query('SELECT * FROM faq');
+$db->query("SELECT * FROM faq WHERE language='$la'");
 $i=1;
 
 while($db->next_record()) {
