@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestCommentslib.php,v 1.6 2002/05/28 09:11:56 riessen Exp $
+// $Id: TestCommentslib.php,v 1.7 2002/05/31 12:41:50 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -54,28 +54,24 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         comments_form( $proid );
-        $txt = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
 
-        $this->_checkFor_a_box( $txt, 'Your Comment' );
-        $this->_checkFor_a_form( $txt, 'PHP_SELF',
-                                          array('proid'=>$proid), 'POST' );
-        $this->_testFor_html_form_hidden( $txt, 'type', $type);
-        $this->_testFor_html_form_hidden( $txt, 'number', $number );
-        $this->_testFor_html_form_hidden( $txt, 'ref', $ref);
-        $this->_testFor_box_columns_begin( $txt, 2 );
-        $this->_testFor_box_columns_end( $txt );
+        $this->__checkFor_a_box( 'Your Comment' );
+        $this->__checkFor_a_form( 'PHP_SELF', array('proid' => $proid) );
+        $this->__testFor_html_form_hidden( 'type', $type);
+        $this->__testFor_html_form_hidden( 'number', $number );
+        $this->__testFor_html_form_hidden( 'ref', $ref);
+        $this->__checkFor_columns( 2 );
 
-        $this->_checkFor_column_titles( $txt, array("Subject","Body") );
-        $this->_checkFor_column_values( $txt, 
-          array( html_input_text('subject', 40, 128, stripslashes($subject)),
-               html_textarea('text',40, 7,'virtual',255,stripslashes($text))));
+        $this->__checkFor_column_titles( array("Subject","Body") );
+        $v=array( html_input_text('subject', 40, 128, stripslashes($subject)),
+                  html_textarea('text',40, 7,'virtual',255,
+                                stripslashes($text)));
+        $this->__checkFor_column_values( $v );
   
-        $this->_testFor_html_form_submit( $txt, $t->translate( 'Preview' ),
-                                                                   "preview");
-        $this->_testFor_html_form_submit( $txt, $t->translate( 'Submit' ),
-                                                                   "submit");
+        $this->__checkFor_submit_preview_buttons();
 
-        $this->_testFor_captured_length( 2500 + strlen( $sess->self_url() ));
+        $this->_testFor_string_length( 2500 + strlen( $sess->self_url() ));
     }
 
     function testComments_preview() {
@@ -92,17 +88,16 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         comments_preview( '' );
-        $txt = capture_stop_and_get();
-        
-        $this->_checkFor_a_box($txt,'Comment','','%s '.stripslashes($subject));
-        $this->_checkFor_a_box($txt,'PREVIEW','','<center><b>%s</b></center>');
+        $this->set_text( capture_stop_and_get() );
 
-        $this->_testFor_pattern( $txt, 
-                        $this->_to_regexp( lib_nick( $auth->auth['uname'] )));
-        $this->_testFor_pattern( $txt, 
-                           $this->_to_regexp("<p>".stripslashes($text)."\n"));
+        $this->__checkFor_a_box('Comment','%s '.stripslashes($subject));
+        $this->__checkFor_a_box('PREVIEW','<center><b>%s</b></center>');
+
+        $ps=array( 0=>$this->_to_regexp( lib_nick( $auth->auth['uname'])),
+                   1=>$this->_to_regexp("<p>".stripslashes($text)."\n"));
+        $this->__testFor_patterns( $ps, 2 );
         $this->_check_db( $db_config );
-        $this->_testFor_captured_length( 1020 );
+        $this->_testFor_string_length( 983 + strlen( timestr( time() ) ));
     }
     function testComments_insert() {
         $this->_test_to_be_completed();
@@ -173,8 +168,7 @@ extends UnitTest
             comments_show( $dat[$idx]["proid"], $dat[$idx]["type_cmt"],
                            $dat[$idx]["number"], $dat[$idx]["cmt_id"],
                            $dat[$idx]["ref"]);
-            $text = capture_stop_and_get();
-            $this->_testFor_captured_length( 0 );
+            $this->assert( strlen( capture_stop_and_get() ) == 0,'test '.$idx);
         }
 
         $this->_check_db( $db_config );

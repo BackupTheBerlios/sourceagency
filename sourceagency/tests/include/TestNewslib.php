@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestNewslib.php,v 1.18 2002/05/28 09:11:56 riessen Exp $
+# $Id: TestNewslib.php,v 1.19 2002/05/31 12:41:50 riessen Exp $
 #
 ######################################################################
 
@@ -65,19 +65,19 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         newsform( $proid ); 
-        $txt = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
 
-        $this->_checkFor_a_box( $txt, 'Editing News' );
-        $this->_checkFor_a_form($txt,'PHP_SELF',array('proid'=>$proid),'POST');
-        $this->_checkFor_columns( $txt, 2 );
+        $this->__checkFor_a_box( 'Editing News' );
+        $this->__checkFor_a_form('PHP_SELF',array('proid'=>$proid));
+        $this->__checkFor_columns( 2 );
 
-        $this->_checkFor_column_titles( $txt, array( 'Body', 'Subject' ));
-        $this->_checkFor_column_values( $txt,
+        $this->__checkFor_column_titles( array( 'Body', 'Subject' ));
+        $this->__checkFor_column_values(
             array( html_input_text('subject',40,128,$subject),
                    html_textarea('text',40,7,'virtual',255,$text )));
 
-        $this->_checkFor_submit_preview_buttons( $txt );
-        $this->_testFor_captured_length( 2307 + strlen( $sess->self_url() ) );
+        $this->__checkFor_submit_preview_buttons();
+        $this->_testFor_string_length( 2307 + strlen( $sess->self_url() ) );
     }
 
     function testNews_modify_form() {
@@ -91,19 +91,19 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         news_modify_form( $proid ); 
-        $txt = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
 
-        $this->_checkFor_a_box( $txt, 'Modifying News' );
-        $this->_checkFor_a_form($txt,'PHP_SELF',array('proid'=>$proid),'POST');
-        $this->_testFor_html_form_hidden( $txt, 'creation', $creation );
-        $this->_checkFor_columns( $txt, 2 );
-        $this->_checkFor_column_titles( $txt, array( 'Subject', 'Body' ) );
-        $this->_checkFor_column_values( $txt, 
+        $this->__checkFor_a_box( 'Modifying News' );
+        $this->__checkFor_a_form('PHP_SELF',array('proid'=>$proid));
+        $this->__testFor_html_form_hidden( 'creation', $creation );
+        $this->__checkFor_columns( 2 );
+        $this->__checkFor_column_titles( array( 'Subject', 'Body' ) );
+        $this->__checkFor_column_values(  
                  array(html_textarea('text',40,7,'virtual',255,$text),
                        html_input_text('subject',40,128,$subject)));
         
-        $this->_checkFor_submit_preview_buttons( $txt );
-        $this->_testFor_captured_length( 2366 + strlen( $sess->self_url() ));
+        $this->__checkFor_submit_preview_buttons();
+        $this->_testFor_string_length( 2366 + strlen( $sess->self_url() ));
     }
 
     function testNews_preview() {
@@ -117,14 +117,14 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         news_preview( $proid );
-        $txt = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
 
-        $this->_checkFor_a_box($txt,'PREVIEW','','<center><b>%s</b></center>');
-        $this->_checkFor_a_box($txt,'News','','%s: '.$subject);
+        $this->__checkFor_a_box('PREVIEW','<center><b>%s</b></center>');
+        $this->__checkFor_a_box('News','%s: '.$subject);
         
-        $this->_testFor_lib_nick( $txt, $auth->auth['uname'] );
+        $this->__testFor_lib_nick( $auth->auth['uname'] );
 
-        $this->_testFor_captured_length( 947 + strlen(timestr(time())));
+        $this->_testFor_string_length( 947 + strlen(timestr(time())));
     }
 
     function testNewsshow() {
@@ -189,11 +189,11 @@ extends UnitTest
         $db = new DB_SourceAgency;
         capture_reset_and_start();
         newsshow( $proid[0] );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 67, "test 1" );
-        $this->_testFor_pattern( $text, ("<p>There have not been posted any "
-                                         ."news by the project owner[(]s[)]."
-                                         ."<p>"));
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 1' );
+        $this->_testFor_string_length( 67 );
+        $this->__testFor_pattern( "<p>There have not been posted any "
+                                  ."news by the project owner[(]s[)].<p>" );
         
         //
         // second call, one record but no comment on it.
@@ -202,14 +202,15 @@ extends UnitTest
         $db = new DB_SourceAgency;
         capture_reset_and_start();
         newsshow( $proid[1] );
-        $txt = capture_stop_and_get();
-        $this->_testFor_captured_length( 894, "test 2" );
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( "test 2" );
+        $this->_testFor_string_length(894);
 
-        $this->_checkFor_a_box($txt,'News','','%s: '.$row[0]['subject_news']);
+        $this->__checkFor_a_box('News','%s: '.$row[0]['subject_news']);
 
-        $this->_testFor_lib_nick( $txt, $row[0]['user_news']);
+        $this->__testFor_lib_nick( $row[0]['user_news']);
         
-        $this->_testFor_lib_comment_it( $txt,$proid[1],'News',
+        $this->__testFor_lib_comment_it( $proid[1],'News',
                                         $row[0]['creation_news'],'0',
                                         'Re:'.$row[0]['subject_news'], 
                                         $t->translate('Comment This News!'));
@@ -221,19 +222,20 @@ extends UnitTest
         $db = new DB_SourceAgency;
         capture_reset_and_start();
         newsshow( $proid[2] );
-        $txt = capture_stop_and_get();
-        $this->_testFor_captured_length( 1943, "test 3" );
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 3' );
+        $this->_testFor_string_length( 1943 );
 
-        $this->_checkFor_a_box($txt,'News','','%s: '.$row[1]['subject_news']);
-        $this->_checkFor_a_box($txt,'News','','%s: '.$row[2]['subject_news']);
+        $this->__checkFor_a_box('News','%s: '.$row[1]['subject_news']);
+        $this->__checkFor_a_box('News','%s: '.$row[2]['subject_news']);
 
-        $this->_testFor_lib_nick( $txt, $row[1]['user_news']);
-        $this->_testFor_lib_nick( $txt, $row[2]['user_news']);
+        $this->__testFor_lib_nick( $row[1]['user_news']);
+        $this->__testFor_lib_nick( $row[2]['user_news']);
 
-        $this->_testFor_lib_comment_it( $txt,$proid[2],'News',
-                                        $row[2]['creation_news'],'0',
-                                        'Re:'.$row[2]['subject_news'], 
-                                        $t->translate( 'Comment This News!'));
+        $this->__testFor_lib_comment_it( $proid[2],'News',
+                                         $row[2]['creation_news'],'0',
+                                         'Re:'.$row[2]['subject_news'], 
+                                         $t->translate( 'Comment This News!'));
         // check that the database component did not fail
         $this->_check_db( $db_config );
     }
@@ -273,11 +275,11 @@ extends UnitTest
         capture_reset_and_start();
         news_insert( $row[0]["proid"],$row[0]["user"],$row[0]["subject"],
                      $row[0]["text"] );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 67, "test 1" );
-        $this->_testFor_pattern($text,("<p>There have not been posted any "
-                                       ."news by the project owner[(]s[)]"
-                                       ."[.]<p>\n"));
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 1' );
+        $this->_testFor_string_length( 67 );
+        $this->__testFor_pattern("<p>There have not been posted any news "
+                                 ."by the project owner[(]s[)][.]<p>\n");
 
         // check that the database component did not fail
         $this->_check_db( $db_config );
@@ -319,11 +321,11 @@ extends UnitTest
         capture_reset_and_start();
         news_modify( $row[0]["proid"],$row[0]["user"],$row[0]["subject"],
         $row[0]["text"], $row[0]["creation"]);
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 67, "test 1");
-        $this->_testFor_pattern($text,("<p>There have not been posted any "
-                                       ."news by the project owner[(]s[)]"
-                                       ."[.]<p>\n"));
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 1' );
+        $this->_testFor_string_length( 67 );
+        $this->__testFor_pattern("<p>There have not been posted any news "
+                                ."by the project owner[(]s[)][.]<p>\n");
 
         // check that the database component did not fail
         $this->_check_db( $db_config );

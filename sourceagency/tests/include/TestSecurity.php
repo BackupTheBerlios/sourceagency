@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.20 2002/05/15 13:23:58 riessen Exp $
+# $Id: TestSecurity.php,v 1.21 2002/05/31 12:41:50 riessen Exp $
 #
 ######################################################################
 
@@ -135,15 +135,16 @@ extends UnitTest
 
         capture_reset_and_start();
         $funct( $dat[0]["proid"], $dat[0]["page"] );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
 
-        $this->_testFor_captured_length( $len );
+        $this->_testFor_string_length( $len );
                                           
-        $this->_test_error_box( $text, $head_text, $body_text, $funct );
+        $this->set_msg( $funct );
+        $this->_test_error_box( $head_text, $body_text );
         $this->_check_db( $db_config );
     }
 
-    function _test_error_box( $text, $head_text, $body_text, $msg ) {
+    function _test_error_box( $head_text, $body_text ) {
         global $t;
 
         $pats = array( 0 => ("<font color=\"#000000\"><b>"
@@ -152,7 +153,7 @@ extends UnitTest
                        1 => ("<font color=\"#FF2020\">[ \n]+"
                              .$t->translate($body_text)."[ \n]+<\/font>") );
 
-        $this->_testFor_patterns( $text, $pats, 2, $msg );
+        $this->__testFor_patterns( $pats, 2 );
     }
 
     function testInvalid_project_id() {
@@ -231,62 +232,60 @@ extends UnitTest
         capture_reset_and_start();
         $this->assertEquals( 0, check_proid( $dat[0]['proid'] ),
                              "return value test 1" );
-        $text = capture_stop_and_get();
-        $this->_test_error_box( $text, "Error", "No project with this id.",
-                                "test 1" );
-        $this->_testFor_captured_length( 691, "test 1" );
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 1' );
+        $this->_test_error_box( "Error", "No project with this id." );
+        $this->_testFor_string_length( 691 );
 
         // second test: num_rows == 0
         capture_reset_and_start();
         $this->assertEquals( 0, check_proid( $dat[1]['proid'] ),
                              "return value test 2" );
-        $text = capture_stop_and_get();
-        $this->_test_error_box( $text, "Error", "No project with this id.",
-                                "test 2" );
-        $this->_testFor_captured_length( 691, "test 2" );
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 2' );
+        $this->_test_error_box( "Error", "No project with this id." );
+        $this->_testFor_string_length( 691 );
 
         // third test: status value is zero and permission editor is not set
         $GLOBALS['perm']->remove_perm( 'editor' );
         capture_reset_and_start();
         $this->assertEquals( 0, check_proid( $dat[2]['proid'] ), 
                              "return value test 3" );
-        $text = capture_stop_and_get();
-        $this->_test_error_box( $text, "Error", "Project pending for review "
-                                ."by an editor", "test 3" );
-        $this->_testFor_captured_length( 706, "test 3" );
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 3' );
+        $this->_test_error_box( "Error", "Project pending for review "
+                                ."by an editor" );
+        $this->_testFor_string_length( 706 );
 
         // fourth test: status value is zero and permission editor is set
         $GLOBALS['perm']->add_perm( 'editor' );
         capture_reset_and_start();
         $this->assertEquals( 1, check_proid( $dat[3]['proid'] ), 
                              "return value test 4" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 0, "test 4" );
+        $this->assert( strlen( capture_stop_and_get() ) == 0, 'test 4' );
 
         // fifth test: status value is minus one & perm editor is not set
         $GLOBALS['perm']->remove_perm( 'editor' );
         capture_reset_and_start();
         $this->assertEquals( 0, check_proid( $dat[4]['proid'] ), 
                              "return value test 5" );
-        $text = capture_stop_and_get();
-        $this->_test_error_box( $text, "Error", "Project was not accepted.",
-                                "test 5" );
-        $this->_testFor_captured_length( 692, "test 5" );
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 5' );
+        $this->_test_error_box( "Error", "Project was not accepted." );
+        $this->_testFor_string_length( 692 );
 
         // sixth test: status value is minus one & perm editor is set
         $GLOBALS['perm']->add_perm( 'editor' );
         capture_reset_and_start();
         $this->assertEquals( 1, check_proid( $dat[5]['proid'] ), 
                              "return value test 6" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 0, "test 6" );
+        $this->assert( strlen( capture_stop_and_get() ) == 0, 'test 6' );
 
         // seventh test: status value is one, num_rows > 0, proid is not empty
         capture_reset_and_start();
         $this->assertEquals( 1, check_proid( $dat[6]['proid'] ), 
                              "return value test 7" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 0, "test 7" );
+        $this->assert( strlen( capture_stop_and_get() ) == 0, 'test 7' );
         
         // check database object
         $this->_check_db( $db_config );
@@ -316,14 +315,15 @@ extends UnitTest
         $db_config->add_record( $rows[0], 0 );
         capture_reset_and_start();
         allowed_actions( 0, 0, "proid" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 185, "test 1" );
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 1' );
+        $this->_testFor_string_length( 185 );
         $ps=array(0=>sprintf( $p_i_g, '1' ),
                   1=>$p_f_g,
                   2=>eval( sprintf( $p_exp, "1" ) ),
                   3=>eval( sprintf( $p_text, "1" )));
-        $this->_testFor_patterns( $text, $ps, 4, "test 1" );
-        $text_0_0 = $text;
+        $this->__testFor_patterns( $ps, 4 );
+        $text_0_0 = $this->get_text();
 
         // test two: project status = -1, action number = 0, no consultants
         $db_config->add_query($this->query['allowed_actions_1'], 1 );
@@ -331,8 +331,7 @@ extends UnitTest
         $db_config->add_record( $rows[0], 1 );
         capture_reset_and_start();
         allowed_actions( -1, 0, "proid" );
-        $text = capture_stop_and_get();
-        $this->assertEquals( $text_0_0, $text, "test 2" );
+        $this->assertEquals( $text_0_0, capture_stop_and_get(), "test 2" );
 
         // test three: project status = 0, action number = 1, no consultants
         $db_config->add_query($this->query['allowed_actions_1'], 2 );
@@ -340,8 +339,7 @@ extends UnitTest
         $db_config->add_record( $rows[0], 2 );
         capture_reset_and_start();
         allowed_actions( 0, 1, "proid" );
-        $text = capture_stop_and_get();
-        $this->assertEquals( $text_0_0, $text, "test 3" );
+        $this->assertEquals( $text_0_0, capture_stop_and_get(), "test 3" );
 
         // test four: project status = 0, action number = 1, yes consultants
         $db_config->add_query($this->query['allowed_actions_1'], 3 );
@@ -352,8 +350,7 @@ extends UnitTest
         $db_config->add_record( $row0[0], 3 );
         capture_reset_and_start();
         allowed_actions( 0, 1, "proid" );
-        $text = capture_stop_and_get();
-        $this->assertEquals( $text_0_0, $text, "test 4" );
+        $this->assertEquals( $text_0_0, capture_stop_and_get(), "test 4" );
 
         // test five: project status = 1, action_number = 1, no consultants
         $db_config->add_query($this->query['allowed_actions_1'], 4 );
@@ -361,14 +358,15 @@ extends UnitTest
         $db_config->add_record( $rows[0], 4 );
         capture_reset_and_start();
         allowed_actions( 1, 1, "proid" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 249, "test 5" );
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 5' );
+        $this->_testFor_string_length( 249 );
         $ps[0] = sprintf( $p_i, "1" );
         $ps[1] = sprintf( $p_l, "1" );
         $ps[4] = $t->translate('this project is configured to have '
                                .'<b>no<\/b> consultants');
-        $this->_testFor_patterns( $text, $ps, 5, "test 5" );
-        $text_1_1 = $text;
+        $this->__testFor_patterns( $ps, 5 );
+        $text_1_1 = $this->get_text();
 
         // test six: project status = 2, action num = 1, no consultants
         $db_config->add_query($this->query['allowed_actions_1'], 5 );
@@ -376,8 +374,7 @@ extends UnitTest
         $db_config->add_record( $rows[0], 5 );
         capture_reset_and_start();
         allowed_actions( 2, 1, "proid" );
-        $text = capture_stop_and_get();
-        $this->assertEquals( $text_1_1, $text, "test 6" );
+        $this->assertEquals( $text_1_1, capture_stop_and_get(), "test 6" );
 
         // test seven: project status = 1, action num = 1, yes consultants
         $db_config->add_query($this->query['allowed_actions_1'], 6 );
@@ -388,12 +385,13 @@ extends UnitTest
         $db_config->add_record( $row0[0], 6 );
         capture_reset_and_start();
         allowed_actions( 1, 1, "proid" );
-        $text = capture_stop_and_get();
-        $ps[4] = '<B>COUNT[(][*][)]_0<\/B> '
-           .$t->translate('consultant offerings');
-        $this->_testFor_patterns( $text, $ps, "test 7" );
-        $this->_testFor_captured_length( 231, "test 7" );
-        $text_1_1_yes = $text;
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 7' );
+        $ps[4] = ( '<B>COUNT[(][*][)]_0<\/B> '
+                   .$t->translate('consultant offerings') );
+        $this->__testFor_patterns( $ps, 5 );
+        $this->_testFor_string_length( 231 );
+        $text_1_1_yes = $this->get_text();
 
         // test eight: project status = 2, action num = 1, yes consultants
         $db_config->add_query($this->query['allowed_actions_1'], 7 );
@@ -404,8 +402,7 @@ extends UnitTest
         $db_config->add_record( $row0[0], 7 );
         capture_reset_and_start();
         allowed_actions( 2, 1, "proid" );
-        $text = capture_stop_and_get();
-        $this->assertEquals( $text_1_1_yes, $text, "test 8" );
+        $this->assertEquals( $text_1_1_yes, capture_stop_and_get(), "test 8" );
 
         // test nine: project status = 2, action num = 0, yes consultants
         $db_config->add_query($this->query['allowed_actions_1'], 8 );
@@ -416,8 +413,7 @@ extends UnitTest
         $db_config->add_record( $row0[0], 8 );
         capture_reset_and_start();
         allowed_actions( 2, 0, "proid" );
-        $text = capture_stop_and_get();
-        $this->assertEquals( $text_1_1_yes, $text, "test 9" );
+        $this->assertEquals( $text_1_1_yes, capture_stop_and_get(), "test 9" );
 
         //************************************************************
         //********** tests 10 to 12: test action number = 2 **********
@@ -430,13 +426,14 @@ extends UnitTest
         $db_config->add_record( $rows[1], 9 );
         capture_reset_and_start();
         allowed_actions( 1, 2, "proid" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 10' );
         $ps=array(0=>sprintf( $p_i_g, '2' ),
                   1=>$p_f_g,
                   2=>eval( sprintf( $p_exp, "2" ) ),
                   3=>eval( sprintf( $p_text, "2" )));
-        $this->_testFor_patterns( $text, $ps, 4, "test 10" );
-        $this->_testFor_captured_length( 265, "test 10" );
+        $this->__testFor_patterns( $ps, 4 );
+        $this->_testFor_string_length( 265 );
 
         // test 11: project status 2, action number 2
         $db_config->add_query($this->query['allowed_actions_2'], 10 );
@@ -446,16 +443,17 @@ extends UnitTest
         $db_config->add_record( $rows[1], 10 );
         capture_reset_and_start();
         allowed_actions( 2, 2, "proid" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 11' );
         $ps[0] = sprintf( $p_i, "2" );
         $ps[1] = sprintf( $p_l, "2" );
         $ps[4] = ( '<B>COUNT[(][*][)]_0<\/B> '
                    .$t->translate('suggested project contents').', '
                    .'<B>COUNT[(][*][)]_1<\/B> '
                    .$t->translate('developing proposals') );
-        $this->_testFor_patterns( $text, $ps, 5, "test 11" );
-        $this->_testFor_captured_length( 358, "test 11" );
-        $text_2_2 = $text;
+        $this->__testFor_patterns( $ps, 5 );
+        $this->_testFor_string_length( 358 );
+        $text_2_2 = $this->get_text();
 
         // test 12: project status 3, action number 2
         $db_config->add_query($this->query['allowed_actions_2'], 11 );
@@ -465,8 +463,7 @@ extends UnitTest
         $db_config->add_record( $rows[1], 11 );
         capture_reset_and_start();
         allowed_actions( 3, 2, "proid" );
-        $text = capture_stop_and_get();
-        $this->assertEquals( $text_2_2, $text, "test 12" );
+        $this->assertEquals( $text_2_2, capture_stop_and_get(), "test 12" );
 
         //************************************************************
         //********** tests 13 to 15: test action number = 3 **********
@@ -477,37 +474,38 @@ extends UnitTest
         $db_config->add_record( $rows[0], 12 );
         capture_reset_and_start();
         allowed_actions( 2, 3, "proid" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 13' );
         $ps=array(0=>sprintf( $p_i_g, '3' ),
                   1=>$p_f_g,
                   2=>eval( sprintf( $p_exp, "3" ) ),
                   3=>eval( sprintf( $p_text, "3" )));
-        $this->_testFor_patterns( $text, $ps, 4, "test 13" );
-        $this->_testFor_captured_length( 175, "test 13" );
+        $this->__testFor_patterns( $ps, 4 );
+        $this->_testFor_string_length( 175 );
 
         // test 14: project status 3, action number 3
         $db_config->add_query($this->query['allowed_actions_3'], 13 );
-        $rows=$this->_generate_records(array("COUNT(*)"), 1 );
+        $rows = $this->_generate_records(array("COUNT(*)"), 1 );
         $db_config->add_record( $rows[0], 13 );
         capture_reset_and_start();
         allowed_actions( 3, 3, "proid" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 14' );
         $ps[0] = sprintf( $p_i, '3' );
         $ps[1] = sprintf( $p_l, '3' );
         $ps[4] = "<B>COUNT[(][*][)]_0<\/B> "
            .$t->translate("suggested milestones");
-        $this->_testFor_patterns( $text, $ps, 5, "test 14" );
-        $this->_testFor_captured_length( 222, "test 14" );
-        $text_3_3 = $text;
+        $this->__testFor_patterns( $ps, 5 );
+        $this->_testFor_string_length( 222 );
+        $text_3_3 = $this->get_text();
 
         // test 15: project status 4, action number 3
         $db_config->add_query($this->query['allowed_actions_3'], 14 );
-        $rows=$this->_generate_records(array("COUNT(*)"), 1 );
+        $rows = $this->_generate_records(array("COUNT(*)"), 1 );
         $db_config->add_record( $rows[0], 14 );
         capture_reset_and_start();
         allowed_actions( 4, 3, "proid" );
-        $text = capture_stop_and_get();
-        $this->assertEquals( $text_3_3, $text, "test 15" );
+        $this->assertEquals( $text_3_3, capture_stop_and_get(), "test 15" );
 
         //************************************************************
         //********** tests 16 to 18: test action number = 4 **********
@@ -518,13 +516,14 @@ extends UnitTest
         $db_config->add_record( $rows[0], 15 );
         capture_reset_and_start();
         allowed_actions( 3, 4, "proid" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 16' );
         $ps=array(0=>sprintf( $p_i_g, '4' ),
                   1=>$p_f_g,
                   2=>eval( sprintf( $p_exp, "4" ) ),
                   3=>eval( sprintf( $p_text, "4" )));
-        $this->_testFor_patterns( $text, $ps, 4, "test 16" );
-        $this->_testFor_captured_length( 225, "test 16" );
+        $this->__testFor_patterns( $ps, 4 );
+        $this->_testFor_string_length( 225 );
 
         // test 17: project status 4, action number 4
         $db_config->add_query($this->query['allowed_actions_4'], 16 );
@@ -532,13 +531,13 @@ extends UnitTest
         $db_config->add_record( $rows[0], 16 );
         capture_reset_and_start();
         allowed_actions( 4, 4, "proid" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
         $ps[0] = sprintf( $p_i, "4" );
         $ps[1] = sprintf( $p_l, "4" );
         $ps[4] = "<B>COUNT[(][*][)]_0<\/B> ".$t->translate("referees offered");
-        $this->_testFor_patterns( $text, $ps, 5, "test 17" );
-        $this->_testFor_captured_length( 268, "test 17" );
-        $text_4_4 = $text;
+        $this->__testFor_patterns( $ps, 5 );
+        $this->_testFor_string_length( 268 );
+        $text_4_4 = $this->get_text();
 
         // test 18: project status 5, action number 4
         $db_config->add_query($this->query['allowed_actions_4'], 17 );
@@ -546,8 +545,7 @@ extends UnitTest
         $db_config->add_record( $rows[0], 17 );
         capture_reset_and_start();
         allowed_actions( 5, 4, "proid" );
-        $text = capture_stop_and_get();
-        $this->assertEquals( $text_4_4, $text, "test 18" );
+        $this->assertEquals( $text_4_4, capture_stop_and_get(), "test 18" );
 
         //************************************************************
         //********** tests 19 to 21: test action number = 5 **********
@@ -555,31 +553,32 @@ extends UnitTest
         // test 19: project status 4, action number 5
         capture_reset_and_start();
         allowed_actions( 4, 5, "proid" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 19' );
         $ps=array(0=>sprintf( $p_i_g, '5' ),
                   1=>$p_f_g,
                   2=>eval( sprintf( $p_exp, "5" ) ),
                   3=>eval( sprintf( $p_text, "5" )));
-        $this->_testFor_patterns( $text, $ps, 4, "test 19" );
-        $this->_testFor_captured_length( 208, "test 19" );
+        $this->__testFor_patterns( $ps, 4 );
+        $this->_testFor_string_length( 208 );
 
         // test 20: project status 5, action number 5
         capture_reset_and_start();
         allowed_actions( 5, 5, "proid" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 20' );
         $ps[0] = sprintf( $p_i, "5" );
         $ps[1] = sprintf( $p_l, "5" );
         $ps[4] = ( "<B>x<\/B> ".$t->translate("milestones of")
                    ." <b>x<\/b> ".$t->translate("total milestones fulfilled"));
-        $this->_testFor_patterns( $text, $ps, 5, "test 20" );
-        $this->_testFor_captured_length( 275, "test 20" );
-        $text_5_5 = $text;
+        $this->__testFor_patterns( $ps, 5 );
+        $this->_testFor_string_length( 275 );
+        $text_5_5 = $this->get_text();
 
         // test 21: project status 6, action number 5
         capture_reset_and_start();
         allowed_actions( 6, 5, "proid" );
-        $text = capture_stop_and_get();
-        $this->assertEquals( $text_5_5, $text, "test 21" );
+        $this->assertEquals( $text_5_5, capture_stop_and_get(), "test 21" );
 
         //************************************************************
         //********** tests 22 to 24: test action number = 6 **********
@@ -587,30 +586,31 @@ extends UnitTest
         // test 22: project status 5, action number 6
         capture_reset_and_start();
         allowed_actions( 5, 6, "proid" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 22' );
         $ps=array(0=>sprintf( $p_i_g, '6' ),
                   1=>$p_f_g,
                   2=>eval( sprintf( $p_exp, "6" ) ),
                   3=>eval( sprintf( $p_text, "6" )));
-        $this->_testFor_patterns( $text, $ps, 4, "test 22" );
-        $this->_testFor_captured_length( 174, "test 22" );
+        $this->__testFor_patterns( $ps, 4 );
+        $this->_testFor_string_length( 174 );
 
         // test 23: project status 6, action number 6
         capture_reset_and_start();
         allowed_actions( 6, 6, "proid" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 23' );
         $ps[0] = sprintf( $p_i, "6" );
         $ps[1] = sprintf( $p_l, "6" );
         $ps[4] = ( "<br>" );
-        $this->_testFor_captured_length( 179, "test 23" );
-        $this->_testFor_patterns( $text, $ps, 5, "test 23" );
-        $text_6_6 = $text;
+        $this->_testFor_string_length( 179 );
+        $this->__testFor_patterns( $ps, 5 );
+        $text_6_6 = $this->get_text();
 
         // test 24: project status 7, action number 6
         capture_reset_and_start();
         allowed_actions( 7, 6, "proid" );
-        $text = capture_stop_and_get();
-        $this->assertEquals( $text_6_6, $text, "test 24" );
+        $this->assertEquals( $text_6_6, capture_stop_and_get(), "test 24" );
 
         $this->_check_db( $db_config );
     }
@@ -980,75 +980,82 @@ extends UnitTest
         capture_reset_and_start();
         $this->assertEquals( 0, step5_not_your_iteration( "proid", "page" ),
                              "test 1" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 1' );
         $ps[1] = sprintf( $p, $t->translate("The milestone has not "
                                             ."been posted by the developer"));
-        $this->_testFor_patterns( $text, $ps, 2, "test 1" );
-        $this->_testFor_captured_length( 2978, "test 1" );
+        $this->__testFor_patterns( $ps, 2 );
+        $this->_testFor_string_length( 2978 );
 
         // step5_iteration(..) returns 1
         capture_reset_and_start();
         $this->assertEquals( 0, step5_not_your_iteration( "proid", "page" ),
                              "test 2" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 2' );
         $ps[1] = sprintf( $p, $t->translate('The milestone has been posted. '
                                             .'Sponsors are studying whether '
                                             .'to accept it or not.'));
-        $this->_testFor_patterns( $text, $ps, 2, "test 2" );
-        $this->_testFor_captured_length( 3009, "test 2" );
+        $this->__testFor_patterns( $ps, 2 );
+        $this->_testFor_string_length( 3009 );
 
         // step5_iteration(..) returns 2
         capture_reset_and_start();
         $this->assertEquals( 0, step5_not_your_iteration( "proid", "page" ),
                              "test 3" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 3' );
         $ps[1] = sprintf( $p, $t->translate('Sponsors have rejected the '
                                             .'current milestone. The referee '
                                             .'is studying it.'));
-        $this->_testFor_patterns( $text, $ps, 2, "test 3" );
-        $this->_testFor_captured_length( 3001, "test 3" );
+        $this->__testFor_patterns( $ps, 2 );
+        $this->_testFor_string_length( 3001 );
 
         // step5_iteration(..) returns 3
         capture_reset_and_start();
         $this->assertEquals( 0, step5_not_your_iteration( "proid", "page" ),
                              "test 4" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 4' );
         $ps[1] = sprintf( $p, $t->translate('The referee has decided that '
                                             .'the milestone posted by the '
                                             .'developer does not fulfill '
                                             .'the promised goals. Sponsors '
                                             .'are deciding what is going to '
                                             .'happen to the project'));
-        $this->_testFor_patterns( $text, $ps, 2, "test 4" );
-        $this->_testFor_captured_length( 3092, "test 4" );
+        $this->__testFor_patterns( $ps, 2 );
+        $this->_testFor_string_length( 3092 );
 
         // step5_iteration(..) returns 4
         capture_reset_and_start();
         $this->assertEquals( 0, step5_not_your_iteration( "proid", "page" ),
                              "test 5" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 5' );
         $ps[1] = sprintf( $p, $t->translate('Unknown iteration'));
-        $this->_testFor_patterns( $text, $ps, 2, "test 5" );
-        $this->_testFor_captured_length( 2945, "test 5" );
+        $this->__testFor_patterns( $ps, 2);
+        $this->_testFor_string_length( 2945 );
 
         // step5_iteration(..) returns 5
         capture_reset_and_start();
         $this->assertEquals( 0, step5_not_your_iteration( "proid", "page" ),
                              "test 6" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 6' );
         $ps[1] = sprintf( $p, $t->translate('The follow_up process is '
                                             .'finished'));
-        $this->_testFor_patterns( $text, $ps, 2, "test 6" );
-        $this->_testFor_captured_length( 2961, "test 6" );
+        $this->__testFor_patterns( $ps, 2 );
+        $this->_testFor_string_length( 2961 );
 
         // step5_iteration(..) returns 6
         capture_reset_and_start();
         $this->assertEquals( 0, step5_not_your_iteration( "proid", "page" ),
                              "test 7" );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 7' );
         $ps[1] = sprintf( $p, $t->translate('Unknown iteration'));
-        $this->_testFor_patterns( $text, $ps, 2, "test 7" );
-        $this->_testFor_captured_length( 2945, "test 7" );
+        $this->__testFor_patterns( $ps, 2 );
+        $this->_testFor_string_length( 2945 );
         
         $this->_check_db( $db_config );
     }
@@ -1101,15 +1108,15 @@ extends UnitTest
 
         capture_reset_and_start();
         $this->assertEquals(0, milestone_not_possible( "proid", "page" ),"rv");
-        $text = capture_stop_and_get();
-
+        $this->set_text( capture_stop_and_get() );
+        
         $ps=array(0=>$t->translate('Milestone not possible'),
                   1=>$t->translate('Your milestones already reach 100%. '
                                    .'You should modify your existing '
                                    .'milestones before creating a new one.'));
 
-        $this->_testFor_patterns( $text, $ps, 2 );
-        $this->_testFor_captured_length( 3245 );
+        $this->__testFor_patterns( $ps, 2 );
+        $this->_testFor_string_length( 3245 );
         $this->_check_db( $db_config );
     }
 

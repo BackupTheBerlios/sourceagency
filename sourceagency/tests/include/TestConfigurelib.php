@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConfigurelib.php,v 1.3 2002/05/28 08:58:28 riessen Exp $
+// $Id: TestConfigurelib.php,v 1.4 2002/05/31 12:41:50 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -43,17 +43,17 @@ extends UnitTest
         $auth->set_perm("this is the permission");
 
         for ( $idx = -10; $idx < 120; $idx += 5 ) {
-            $text = select_quorum( $idx );
-            $this->_testFor_html_select( $text, "quorum",0,0,"test $idx" );
+            $this->set_text( select_quorum( $idx ) );
+            $this->set_msg( "Test $idx" );
+            $this->__testFor_html_select( "quorum", 0, 0 );
             for ( $jdx = 55; $jdx < 100; $jdx += 5 ) {
-              $this->_testFor_html_select_option( $text, $jdx, $jdx==$idx,
-                                                       $jdx.'%', "test $idx" );
+              $this->__testFor_html_select_option( $jdx, $jdx==$idx, $jdx.'%');
             }
-            $this->_testFor_html_select_end( $text, "test $idx" );
+            $this->__testFor_html_select_end();
             // length various by 9 according to whether something was selected
             // or not. For values under 55 or over 95 nothing will be selected.
-            $this->_testFor_string_length( $text, ( $idx < 55 || $idx > 95 
-                                                    ? 320 : 329),"Test $idx");
+            $this->_testFor_string_length( ( $idx < 55 || $idx > 95 
+                                                    ? 320 : 329));
         }
     }
 

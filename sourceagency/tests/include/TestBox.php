@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestBox.php,v 1.19 2002/05/28 08:58:28 riessen Exp $
+# $Id: TestBox.php,v 1.20 2002/05/31 12:41:50 riessen Exp $
 #
 ######################################################################
 
@@ -50,10 +50,9 @@ extends UnitTest
     function _test_box_method( $name, $exp_length, &$args ) {
         capture_reset_and_start();
         $this->_call_method( $name, $args, &$this->box );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( $exp_length );
-        $this->_call_method( '_testFor_'.$name, 
-                             array_merge( array('text' => &$text), $args ) );
+        $this->set_text( capture_stop_and_get() );
+        $this->_testFor_string_length( $exp_length );
+        $this->_call_method( '__testFor_'.$name, $args );
     }
 
     function _test_no_arg_method( $name, $exp_length ) {
@@ -84,12 +83,12 @@ extends UnitTest
         $title = "box_title";
         capture_reset_and_start();
         $this->box->box_title($title);
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 198 );
+        $this->set_text( capture_stop_and_get() );
+        $this->_testFor_string_length( 198 );
 
-        $this->_testFor_box_title_begin( $text );
-        $this->_testFor_box_title( $text, $title );
-        $this->_testFor_box_title_end( $text );
+        $this->__testFor_box_title_begin( );
+        $this->__testFor_box_title( $title );
+        $this->__testFor_box_title_end( );
     }
 
     function testBox_body_begin() {
@@ -104,12 +103,12 @@ extends UnitTest
         $body = "text for body";
         capture_reset_and_start();
         $this->box->box_body($body);
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 282 );
+        $this->set_text( capture_stop_and_get() );
+        $this->_testFor_string_length( 282 );
 
-        $this->_testFor_box_body_begin( $text );
-        $this->_testFor_box_body( $text, $body);
-        $this->_testFor_box_body_end( $text );
+        $this->__testFor_box_body_begin();
+        $this->__testFor_box_body($body);
+        $this->__testFor_box_body_end();
     }
 
     function testBox_full() {
@@ -117,25 +116,25 @@ extends UnitTest
         $body = "this is the body";
         capture_reset_and_start();
         $this->box->box_full($title, $body);
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 764 );
+        $this->set_text( capture_stop_and_get() );
+        $this->_testFor_string_length( 764 );
 
-        $this->_testFor_box_begin( $text );
-        $this->_testFor_box_title( $text, $title );
-        $this->_testFor_box_body( $text, $body );
-        $this->_testFor_box_end( $text );
+        $this->__testFor_box_begin();
+        $this->__testFor_box_title($title );
+        $this->__testFor_box_body($body );
+        $this->__testFor_box_end();
     }
 
     function testBox_strip() {
         $title = "thsi is teh title";
         capture_reset_and_start();
         $this->box->box_strip( $title );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
 
-        $this->_testFor_captured_length( 479 );
-        $this->_testFor_box_begin( $text );
-        $this->_testFor_box_title( $text, $title );
-        $this->_testFor_box_end( $text );
+        $this->_testFor_string_length( 479 );
+        $this->__testFor_box_begin();
+        $this->__testFor_box_title($title);
+        $this->__testFor_box_end();
     }
 
     function testBox_columns_begin() {

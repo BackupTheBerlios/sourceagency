@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestViewslib.php,v 1.8 2002/05/29 14:57:54 riessen Exp $
+// $Id: TestViewslib.php,v 1.9 2002/05/31 12:41:50 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -62,15 +62,14 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         views_form( $proid );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
         
-        $this->_testFor_captured_length( 9555 + strlen( $sess->self_url() ) );
+        $this->_testFor_string_length( 9555 + strlen( $sess->self_url() ) );
 
-        $this->_checkFor_a_box( $text, "Configure Information Access in this "
-                               ."Project");
-        $this->_checkFor_a_form( $text, 'PHP_SELF', 
-                                            array('proid'=>'proid'), 'POST' );
-        $this->_checkFor_columns( $text, 2 );
+        $this->__checkFor_a_box( "Configure Information Access in this "
+                                 ."Project");
+        $this->__checkFor_a_form( 'PHP_SELF', array('proid'=>'proid') );
+        $this->__checkFor_columns( 2 );
 
         $nbsp = ' &nbsp; &nbsp; &nbsp; ';
         $reco = $t->translate( 'Recommended' );
@@ -108,12 +107,13 @@ extends UnitTest
                   .$nbsp."(".$reco.": <i>".$ppart."</i>)"));
 
         while ( list( $key, $val ) = each( $v ) ) {
-            $this->_checkFor_column_titles( $text, array( $key ), "Test $key",
+            $this->set_msg( "Test $key" );
+            $this->__checkFor_column_titles( array( $key ),
                                             'right','30%','','<b>%s</b>: ');
-            $this->_checkFor_column_values( $text, array( $val ) );
+            $this->__checkFor_column_values( array( $val ) );
         }
                  
-        $this->_checkFor_submit_preview_buttons( $text );
+        $this->__checkFor_submit_preview_buttons( );
         $this->_check_db( $db_config );
     }
 
@@ -152,8 +152,8 @@ extends UnitTest
         capture_reset_and_start();
         $db = new DB_SourceAgency;
         call_user_func_array( 'views_modify', $args[0] );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 0 );
+        $this->set_text( capture_stop_and_get() );
+        $this->_testFor_string_length( 0 );
         $this->_check_db( $db_config );
     }
 
@@ -184,13 +184,12 @@ extends UnitTest
 
         capture_reset_and_start();
         views_preview( $proid );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 5020 + strlen(timestr(time())));
+        $this->set_text( capture_stop_and_get() );
+        $this->_testFor_string_length( 5020 + strlen(timestr(time())));
 
-        $this->_checkFor_a_box($text,'PREVIEW','',
-                                        "<center><b>%s</b></center>");
-        $this->_checkFor_a_box($text,'Project Information Access' );
-        $this->_testFor_pattern( $text, 
+        $this->__checkFor_a_box('PREVIEW',"<center><b>%s</b></center>");
+        $this->__checkFor_a_box('Project Information Access' );
+        $this->__testFor_pattern( 
                           $this->_to_regexp(lib_nick( $auth->auth['uname'])));
         $v=array( "View Project Configuration"=>$configure,
                   "Write and Modify news"=>$news,
@@ -202,12 +201,12 @@ extends UnitTest
                   "See Developing Cooperation Proposals"=>$cooperation,
                   "Project Permission Access"=>$views );
         while ( list( $key, $val ) = each( $v ) ) {
-            $this->_checkFor_column_titles( $text, array( $key ), '', 'right',
+            $this->__checkFor_column_titles( array( $key ), 'right',
                                                     '30%', '', "<b>%s</b>: " );
-            $this->_checkFor_column_values( $text, array( $val ) );
+            $this->__checkFor_column_values( array( $val ) );
         }
         
-        $this->_testFor_lib_comment_it( $text, $proid, 'Views', '', '0',
+        $this->__testFor_lib_comment_it( $proid, 'Views', '', '0',
                                  '', $t->translate( 'Comments on the views?'));
 
         $this->_check_db( $db_config );
@@ -240,11 +239,13 @@ extends UnitTest
         $lens=array(0=>465, 1=>474, 2=>290, 3=>299, 4=>425, 5=>434);
         for ( $idx = 0; $idx < 6; $idx++ ) {
 
-            $text = call_user_func_array( 'views_select_view', $args[$idx] );
+            $this->set_text( call_user_func_array( 'views_select_view', 
+                                                   $args[$idx] ));
+            $this->set_msg( "Test $idx" );
 
-            $this->_testFor_string_length( $text, $lens[$idx], "Test $idx" );
-            $this->_testFor_html_select($text, $args[$idx]['on_what']);
-            $this->_testFor_html_select_end($text);
+            $this->_testFor_string_length( $lens[$idx] );
+            $this->__testFor_html_select($args[$idx]['on_what']);
+            $this->__testFor_html_select_end();
 
             reset( $views_array );
             while (list(, $value) = each($views_array)) {
@@ -254,20 +255,20 @@ extends UnitTest
                     && $value!="Project Developers" 
                     && $value !="Project Initiator") {
                         $this->reverse_next_test();
-                        $this->_testFor_html_select_option( $text, $value, 
+                        $this->__testFor_html_select_option( $value, 
                                                false,$t->translate($value));
                         $this->reverse_next_test();
-                        $this->_testFor_html_select_option( $text, $value, 
+                        $this->__testFor_html_select_option( $value, 
                                                true,$t->translate($value));
                         continue; 
                     }
                 } else if ($args[$idx]['on_what']=="comments") {
                     if ($value=="Everybody") {
                         $this->reverse_next_test();
-                        $this->_testFor_html_select_option( $text, $value, 
+                        $this->__testFor_html_select_option( $value, 
                                                   false,$t->translate($value));
                         $this->reverse_next_test();
-                        $this->_testFor_html_select_option( $text, $value, 
+                        $this->__testFor_html_select_option( $value, 
                                                    true,$t->translate($value));
                         continue;
                     }
@@ -275,7 +276,7 @@ extends UnitTest
                 
                 $selected = ( $idx % 2 ? $args[$idx]['selected'] : 'fubar' );
 
-                $this->_testFor_html_select_option( $text, $value, 
+                $this->__testFor_html_select_option( $value, 
                                                     ($value==$selected),
                                                     $t->translate($value));
             }

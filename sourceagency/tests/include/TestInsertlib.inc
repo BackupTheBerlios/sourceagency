@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestInsertlib.inc,v 1.9 2002/05/28 08:58:28 riessen Exp $
+# $Id: TestInsertlib.inc,v 1.10 2002/05/31 12:41:50 riessen Exp $
 #
 ######################################################################
 
@@ -65,28 +65,26 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         insert_form();
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
 
-        $this->_checkFor_a_box( $text, 'New Project' );
-        $this->_checkFor_a_form( $text,'insert.php3',array(),'POST');
+        $this->__checkFor_a_box( 'New Project' );
+        $this->__checkFor_a_form( 'insert.php3', array() );
 
-        $this->_testFor_box_columns_begin( $text, 2 );
-        $this->_testFor_box_columns_end( $text );
+        $this->__checkFor_columns( 2 );
 
-        $this->_checkFor_column_titles( $text, array( 'Project Title', 'Type', 
-                                                      'Brief description',
-                                                      'Project Volume' ));
-        $this->_checkFor_column_values( $text,
-                  array( html_input_text('project_title', 40, 128, 
-                                         $project_title),
-                         select_from_config('type',  'project_types', $type),
-                         html_textarea('description', 40, 7, 'virtual',
-                                       255, $description),
-                         select_from_config('volume', 'project_volume', 
-                                            $volume) ));
-        $this->_testFor_html_form_submit( $text, $t->translate('Submit'),
-                                                                  'Submit');
-        $this->_testFor_captured_length( 3690 );
+        $this->__checkFor_column_titles( array( 'Project Title', 'Type', 
+                                                'Brief description',
+                                                'Project Volume' ));
+        $this->__checkFor_column_values( 
+            array( html_input_text('project_title', 40, 128, 
+                                   $project_title),
+                   select_from_config('type',  'project_types', $type),
+                   html_textarea('description', 40, 7, 'virtual',
+                                 255, $description),
+                   select_from_config('volume', 'project_volume', 
+                                      $volume)));
+        $this->__testFor_html_form_submit( $t->translate('Submit'), 'Submit');
+        $this->_testFor_string_length( 3690 );
     }
 
     function testProject_title_not_set() {
@@ -98,8 +96,9 @@ extends UnitTest
 
         capture_reset_and_start();
         project_title_not_set();
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 841, "test 1" );
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( "Test 1" );
+        $this->_testFor_string_length( 841 );
 
         require( 'config.inc' );
 
@@ -111,16 +110,16 @@ extends UnitTest
                               'volume' => $volume), 
                         $t->translate('New Projects'));
 
-        $this->_testFor_box_begin( $text, $th_box_frame_color,
+        $this->__testFor_box_begin( $th_box_frame_color,
                                     '', $th_box_frame_width );
-        $this->_testFor_box_title( $text, $t->translate('Error'),
+        $this->__testFor_box_title( $t->translate('Error'),
                             $th_box_title_font_color, $th_box_title_bgcolor,
                             $th_box_title_align);
-        $this->_testFor_box_body_begin( $text, $th_box_body_bgcolor,
+        $this->__testFor_box_body_begin( $th_box_body_bgcolor,
                             $th_box_body_align,'top',$th_box_error_font_color);
-        $this->_testFor_box_body( $text, $body_text,$th_box_error_font_color );
-        $this->_testFor_box_body_end( $text );
-        $this->_testFor_box_end( $text );
+        $this->__testFor_box_body( $body_text, $th_box_error_font_color );
+        $this->__testFor_box_body_end( );
+        $this->__testFor_box_end( );
     }
 
     function testDescription_not_set() {
@@ -132,8 +131,9 @@ extends UnitTest
 
         capture_reset_and_start();
         description_not_set();
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 851, "test 1" );
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 1' );
+        $this->_testFor_string_length( 851 );
         
         require( 'config.inc' );
 
@@ -144,16 +144,15 @@ extends UnitTest
                                    'type' => $type, 'volume' => $volume), 
                              $t->translate('New Projects'));
 
-        $this->_testFor_box_begin( $text, $th_box_frame_color,
-                                    '', $th_box_frame_width );
-        $this->_testFor_box_title( $text, $t->translate('Error'),
+        $this->__testFor_box_begin($th_box_frame_color,'',$th_box_frame_width);
+        $this->__testFor_box_title( $t->translate('Error'),
                             $th_box_title_font_color, $th_box_title_bgcolor,
                             $th_box_title_align);
-        $this->_testFor_box_body_begin( $text, $th_box_body_bgcolor,
+        $this->__testFor_box_body_begin( $th_box_body_bgcolor,
                             $th_box_body_align,'top',$th_box_error_font_color);
-        $this->_testFor_box_body( $text, $body_text,$th_box_error_font_color );
-        $this->_testFor_box_body_end( $text );
-        $this->_testFor_box_end( $text );
+        $this->__testFor_box_body( $body_text,$th_box_error_font_color );
+        $this->__testFor_box_body_end();
+        $this->__testFor_box_end();
     }
 
     function testNo_other_project_with_same_title() {
@@ -182,10 +181,8 @@ extends UnitTest
         $db = new DB_SourceAgency;
         capture_reset_and_start();
         $this->assertEquals( 1, no_other_project_with_same_title( 
-            $pt[0]["project_title"] ));
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 0, "test 1" );
-
+                                                   $pt[0]["project_title"] ));
+        $this->assert( strlen( capture_stop_and_get() ) == 0, 'test 1' );
 
         //
         // second call, num_row == 1
@@ -193,9 +190,10 @@ extends UnitTest
         $db = new DB_SourceAgency;
         capture_reset_and_start();
         $this->assertEquals( 0, no_other_project_with_same_title( 
-            $pt[1]["project_title"] ));
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 777, "test 2" );
+                                                  $pt[1]["project_title"] ));
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'Test 2' );
+        $this->_testFor_string_length( 777 );
         require( 'config.inc' );
 
         $body_text = $t->translate('Another project with that title '
@@ -204,16 +202,16 @@ extends UnitTest
                       .html_link('insform.php3', array(), 
                                  $t->translate('New Projects'));
 
-        $this->_testFor_box_begin( $text, $th_box_frame_color,
+        $this->__testFor_box_begin( $th_box_frame_color,
                                     '', $th_box_frame_width );
-        $this->_testFor_box_title( $text, $t->translate('Error'),
+        $this->__testFor_box_title( $t->translate('Error'),
                             $th_box_title_font_color, $th_box_title_bgcolor,
                             $th_box_title_align);
-        $this->_testFor_box_body_begin( $text, $th_box_body_bgcolor,
+        $this->__testFor_box_body_begin( $th_box_body_bgcolor,
                             $th_box_body_align,'top',$th_box_error_font_color);
-        $this->_testFor_box_body( $text, $body_text,$th_box_error_font_color );
-        $this->_testFor_box_body_end( $text );
-        $this->_testFor_box_end( $text );
+        $this->__testFor_box_body( $body_text,$th_box_error_font_color );
+        $this->__testFor_box_body_end();
+        $this->__testFor_box_end();
 
         //
         // third call, num_row == 2
@@ -221,9 +219,8 @@ extends UnitTest
         $db = new DB_SourceAgency;
         capture_reset_and_start();
         $this->assertEquals( 1, no_other_project_with_same_title( 
-            $pt[2]["project_title"] ));
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 0, "test 3" );
+                                                    $pt[2]["project_title"] ));
+        $this->assert( strlen( capture_stop_and_get() ) == 0, 'test 3' );
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );

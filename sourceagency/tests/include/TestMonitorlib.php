@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMonitorlib.php,v 1.11 2002/05/28 08:58:28 riessen Exp $
+# $Id: TestMonitorlib.php,v 1.12 2002/05/31 12:41:50 riessen Exp $
 #
 ######################################################################
 
@@ -48,10 +48,6 @@ extends UnitTest
     }
 
     function setup() {
-        // Called before each test method.
-        // if using the capturing routines then ensure that it's reset,
-        // it uses global variables
-        capture_reset_text();
     }
 
     function tearDown() {
@@ -76,50 +72,26 @@ extends UnitTest
                              ."proid='%s' AND (importance='middle' OR "
                              ."importance='high')"));
 
-        $row = array( 0 => $this->_generate_array( array( "proid", "subject",
-                                                          "message" ), 0),
-                      1 => $this->_generate_array( array( "proid", "subject",
-                                                          "message" ), 1),
-                      2 => $this->_generate_array( array( "proid", "subject",
-                                                          "message" ), 2));
+        $row=$this->_generate_records( array( 'proid','type','subject',
+                                              'message' ), 3 );
         $row[0]["type"] = "milestone_delivery"; // high propriety
         $row[1]["type"] = "configure"; // middle 
         $row[2]["type"] = "monitor"; // low
 
-        $db_config->add_record( false, 0 );
-        $db_config->add_record( false, 1 );
-        $db_config->add_record( false, 2 );
-
-        $db_config->add_query( sprintf( $db_q[0], $row[0]["proid"] ), 0 );
-        $db_config->add_query( sprintf( $db_q[1], $row[1]["proid"] ), 1 );
-        $db_config->add_query( sprintf( $db_q[2], $row[2]["proid"] ), 2 );
+        for ( $idx = 0; $idx < 3; $idx++ ) {
+          $db_config->add_record( false, $idx );
+          $db_config->add_query( sprintf( $db_q[$idx], $row[$idx]["proid"] ), 
+                                 $idx );
+        }
 
         // 
-        // first call, high propriety
+        // three calls testing the three different priorities
         //
-        capture_reset_and_start();
-        monitor_mail( $row[0]["proid"], $row[0]["type"], $row[0]["subject"],
-                      $row[0]["message"]);
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 0, "test 1" );
-
-        // 
-        // second call, middle propriety
-        //
-        capture_reset_and_start();
-        monitor_mail( $row[1]["proid"], $row[1]["type"], $row[1]["subject"],
-                      $row[1]["message"]);
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 0, "test 2" );
-        
-        // 
-        // third call, middle propriety
-        //
-        capture_reset_and_start();
-        monitor_mail( $row[2]["proid"], $row[2]["type"], $row[2]["subject"],
-                      $row[2]["message"]);
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 0, "test 3" );
+        for ( $idx = 0; $idx < 3; $idx++ ) {
+          capture_reset_and_start();
+          call_user_func_array( 'monitor_mail', $row[$idx] );
+          $this->assert( strlen( capture_stop_and_get() ) == 0, 'test '.$idx );
+        }
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -155,11 +127,12 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         monitor_show( $proid[0] );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 41, "test 1" );
-        $this->_testFor_pattern( $text, 
-                   ("<p>".$t->translate("Nobody is monitoring this "
-                                        ."project")."[.]<p>\n"));
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 1' );
+        $this->_testFor_string_length( 41 );
+        $this->__testFor_pattern( "<p>"
+                                  .$t->translate("Nobody is monitoring this "
+                                                 ."project")."[.]<p>\n");
         // 
         // second call, 4 records
         //
@@ -167,37 +140,36 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         monitor_show( $proid[1] );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 5255, "test 2" );
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 2' );
+        $this->_testFor_string_length( 5255 );
         
         $color = array( 0 => "gold", 1 => "#FFFFFF" );
 
-        $this->_checkFor_a_box( $text, 'All these users are monitor '
-                                      .'this project');
-        $this->_testFor_box_columns_begin( $text, 5 );
-        $this->_testFor_box_columns_end( $text );
+        $this->__checkFor_a_box( 'All these users are monitor this project');
+        $this->__checkFor_columns( 5 );
     
         $w=array( 'Number'=>'10%','Username'=>'20%','Type'=>'20%',
                   'Importance filter'=>'20%','Creation'=>'30%');
         while ( list( $key, $val ) = each( $w ) ) {
-            $this->_checkFor_column_titles( $text, array( $key ), '',
-                                                         'center', $val, '');
+            $this->__checkFor_column_titles( array( $key ),'center', $val, '');
         }
         for ( $idx = 0; $idx < 4; $idx++ ) {
-            $this->_testFor_box_column( $text, 'center','',$color[$idx%2],
-                                          '<b>'.($idx+1).'</b>', "Test $idx" );
-            $this->_testFor_box_column( $text, 'center','',$color[$idx%2],
+            $this->set_msg( 'test '. $idx );
+            $this->__testFor_box_column( 'center','',$color[$idx%2],
+                                          '<b>'.($idx+1).'</b>');
+            $this->__testFor_box_column( 'center','',$color[$idx%2],
                                         '<b>'.lib_nick($row[$idx]['username'])
-                                        .'</b>', "Test $idx" );
-            $this->_testFor_box_column( $text, 'center','',$color[$idx%2],
+                                        .'</b>');
+            $this->__testFor_box_column( 'center','',$color[$idx%2],
                                         '<b>'.$row[$idx]['perms']
-                                        .'</b>', "Test $idx" );
-            $this->_testFor_box_column( $text, 'center','',$color[$idx%2],
+                                        .'</b>');
+            $this->__testFor_box_column( 'center','',$color[$idx%2],
                                         '<b>'.$row[$idx]['importance']
-                                        .'</b>', "Test $idx" );
+                                        .'</b>');
             $str = timestr_middle(mktimestamp($row[$idx]['creation']));
-            $this->_testFor_box_column( $text, 'center','',$color[$idx%2],
-                                        '<b>'.$str.'</b>', "Test $idx" );
+            $this->__testFor_box_column( 'center','',$color[$idx%2],
+                                        '<b>'.$str.'</b>');
             
         }
 
@@ -217,11 +189,9 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         monitor_preview( $row[0]["proid"] );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1021 + strlen( timestr( time() )), 
-                                         "test 1");
-
-        $this->_testFor_pattern( $text, "<b>by uname_0<\/b>", "test 1" );
+        $this->set_text( capture_stop_and_get() );
+        $this->_testFor_string_length( 1021 + strlen( timestr( time() )) );
+        $this->__testFor_pattern( "<b>by uname_0<\/b>" );
     }
     
     function testMonitor_form() {
@@ -232,17 +202,14 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         monitor_form( $proid );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1897 + strlen( $sess->self_url()));
+        $this->set_text( capture_stop_and_get() );
+        $this->_testFor_string_length( 1897 + strlen( $sess->self_url()));
 
-        $this->_checkFor_a_box( $text, 'Monitor this project' );
-        $this->_checkFor_a_form( $text, 'PHP_SELF', array('proid' => $proid),
-                                                                     'POST' );
-        $this->_testFor_box_columns_begin( $text, 2 );
-        $this->_testFor_box_columns_end( $text );
-        
-        $this->_checkFor_column_titles( $text, array( 'Importance' ));
-        $this->_checkFor_submit_preview_buttons( $text );
+        $this->__checkFor_a_box( 'Monitor this project' );
+        $this->__checkFor_a_form( 'PHP_SELF', array('proid' => $proid) );
+        $this->__checkFor_columns( 2 );
+        $this->__checkFor_column_titles( array( 'Importance' ));
+        $this->__checkFor_submit_preview_buttons( );
     }
 
     function testMailuser() {
@@ -259,16 +226,16 @@ extends UnitTest
 
     function testSelect_importance() {
         foreach( array( 'fubar','low','medium','high', 'snafu' ) as $val ) {
-            $text = select_importance( $val );
-            $this->_testFor_html_select( $text, 'importance' );
+            $this->set_text( select_importance( $val ) );
+            $this->set_msg( 'Test '. $val );
+            $this->__testFor_html_select( 'importance' );
             $sed = false; // set if something was selected
             foreach( array( 'low','medium','high') as $imp ) {
-                $this->_testFor_html_select_option($text,$imp,$imp==$val,$imp);
+                $this->__testFor_html_select_option($imp, $imp==$val, $imp);
                 $sed = $sed || ( $imp == $val );
             }
-            $this->_testFor_html_select_end( $text );
-            $this->_testFor_string_length( $text, ($sed ? 164 : 155), 
-                                             "Test $val" );
+            $this->__testFor_html_select_end();
+            $this->_testFor_string_length( ($sed ? 164 : 155) );
         }
     }
 

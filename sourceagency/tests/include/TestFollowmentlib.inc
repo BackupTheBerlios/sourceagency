@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowmentlib.inc,v 1.7 2002/05/28 08:58:28 riessen Exp $
+# $Id: TestFollowmentlib.inc,v 1.8 2002/05/31 12:41:50 riessen Exp $
 #
 ######################################################################
 
@@ -85,30 +85,33 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         show_followment($proid[0]["proid"]);
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 73, "test 1" );
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( "Test 1" );
+        $this->_testFor_string_length( 73 );
 
         $p = $this->_to_regexp( $t->translate( "There have not been "
-                                                     ."posted any milestones "
-                                                     ."by the project main "
-                                                     ."developer"). ".\n");
-        $this->_testFor_pattern( $text, $p, "test 1");
+                                               ."posted any milestones "
+                                               ."by the project main "
+                                               ."developer"). ".\n");
+        $this->__testFor_pattern( $p );
 
         // second call, num_row == 1, next_record == false
         $db = new DB_SourceAgency;
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         show_followment($proid[1]["proid"]);
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 956, "test 2" );
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( "Test 2" );
+        $this->_testFor_string_length( 956 );
 
-        $this->_checkFor_a_box( $text, 'Milestones' );
+        $this->__checkFor_a_box( 'Milestones' );
         
         foreach ( array( "Number","Goals","Release Date","Product",
                          "Payment", "Status", "Creation" ) as $val ) {
             $p=$this->_to_regexp(  "<td align=center><b>"
                                          .$t->translate($val)."</b></td>");
-            $this->_testFor_pattern( $text, $p, "Test $val" );
+            $this->set_msg( "Test $val" );
+            $this->__testFor_pattern( $p );
         }
 
         // third call, num_row == 3, next_record == rows:0,1,2
@@ -116,32 +119,34 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         show_followment($proid[2]["proid"]);
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1469, "test 3" );
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( "Test 3" );
+        $this->_testFor_string_length( 1469 );
 
-        $this->_checkFor_a_box( $text, 'Milestones' );
+        $this->__checkFor_a_box( 'Milestones' );
 
         foreach ( array( "Number","Goals","Release Date","Product",
                          "Payment", "Status", "Creation" ) as $val ) {
             $p=$this->_to_regexp(  "<td align=center><b>"
                                          .$t->translate($val)."</b></td>");
-            $this->_testFor_pattern( $text, $p, "Test $val" );
+            $this->set_msg( "Test $val" );
+            $this->__testFor_pattern( $p );
         }
 
         $colors = array( 0 => "gold", 1 => "#FFFFFF" );
         for ( $idx = 0; $idx < 3; $idx++ ) {
             $bgc = $colors[ $idx % 2 ];
             $r = $row[$idx];
-            $this->_testFor_pattern( $text, "bgcolor=$bgc" );
+            $this->__testFor_pattern( "bgcolor=$bgc" );
             foreach ( array( $r["number"],$r["goals"],$r["product"],
                              timestr_middle(mktimestamp($r["release"])),
                              show_status($r["status"]), $r["payment"],
                              timestr_short(mktimestamp($r["creation"])))
                       as $val ) {
-                $p=$this->_to_regexp("<td><b>".$val."</b></td>");
-                $this->_testFor_pattern( $text, $p, "Test $val" );
+                $p = $this->_to_regexp("<td><b>".$val."</b></td>");
+                $this->set_msg( "Test $val" );
+                $this->__testFor_pattern( $p );
             }
-            
         }
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );

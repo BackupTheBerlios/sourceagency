@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestStatslib.php,v 1.2 2002/05/29 15:42:08 riessen Exp $
+// $Id: TestStatslib.php,v 1.3 2002/05/31 12:41:50 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -37,13 +37,13 @@ extends UnitTest
     function testStats_end() {
         capture_reset_and_start();
         stats_end();
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
         $a=array( "</table>\n",
                   "</TD></TR></TABLE>\n",
                   "</TD></TR></TABLE></CENTER>\n",
                   "<BR>\n" );
-        $this->assertEquals( implode( '', $a ), $text );
-        $this->_testFor_captured_length( strlen(implode( '', $a ) ) );
+        $this->assertEquals( implode( '', $a ), $this->get_text() );
+        $this->_testFor_string_length( strlen(implode( '', $a ) ) );
     }
 
     function testStatslib_top() {
@@ -56,15 +56,15 @@ extends UnitTest
 
         capture_reset_and_start();
         stats_subtitle($msg);
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
 
         $a=array( "<tr><td bgcolor=\"".$color."\"><B>".$msg."</B></td>\n",
                   "<td bgcolor=\"".$color."\">&nbsp;</td>",
                   "<td bgcolor=\"".$color."\">&nbsp;</td>",
                   "<td bgcolor=\"".$color."\">&nbsp;</td>",
                   "<td bgcolor=\"".$color."\">&nbsp;</td></tr>" );
-        $this->assertEquals( implode( '', $a ), $text );
-        $this->_testFor_captured_length( strlen(implode( '', $a ) ) );
+        $this->assertEquals( implode( '', $a ), $this->get_text() );
+        $this->_testFor_string_length( strlen(implode( '', $a ) ) );
     }
 
     function testStats_title() {
@@ -73,7 +73,7 @@ extends UnitTest
 
         capture_reset_and_start();
         stats_title($msg);
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
 
         $a=array( "<center>\n",
                   "<table width=600 border=0 cellspacing=0 cellpadding=0 "
@@ -88,8 +88,8 @@ extends UnitTest
                   "</tr><tr bgcolor=\"".$GLOBALS["th_box_body_bgcolor"]
                   ."\"><td>\n",
                   "<table border=0 width=100% cellspacing=0>\n");
-        $this->assertEquals( implode( '', $a ), $text );
-        $this->_testFor_captured_length( strlen(implode( '', $a ) ) );
+        $this->assertEquals( implode( '', $a ), $this->get_text() );
+        $this->_testFor_string_length( strlen(implode( '', $a ) ) );
     }
 }
 

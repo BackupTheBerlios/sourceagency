@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestRatingslib.php,v 1.2 2002/05/29 15:42:08 riessen Exp $
+// $Id: TestRatingslib.php,v 1.3 2002/05/31 12:41:50 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -40,16 +40,14 @@ extends UnitTest
         $proid = "this is the proid";
         capture_reset_and_start();
         ratings_form_finish( $proid );
-        $text = capture_stop_and_get();
-        
-        $this->_checkFor_a_form( $text, 'PHP_SELF', array('proid' => $proid),
-                                          'POST');
-        $this->_testFor_html_form_hidden( $text, 'dev_or_spo', '' );
-        $this->_testFor_html_form_hidden( $text, 'id_number', '' );
-        $this->_testFor_html_form_submit( $text, 
-                                          $t->translate('Rating finished'),
-                                         'finished');
-        $this->_testFor_captured_length( 233 + strlen( $sess->self_url() ) );
+        $this->set_text( capture_stop_and_get() );
+
+        $this->__checkFor_a_form( 'PHP_SELF', array('proid' => $proid) );
+        $this->__testFor_html_form_hidden( 'dev_or_spo', '' );
+        $this->__testFor_html_form_hidden( 'id_number', '' );
+        $this->__testFor_html_form_submit( $t->translate('Rating finished'),
+                                                                   'finished');
+        $this->_testFor_string_length( 233 + strlen( $sess->self_url() ) );
         
     }
 

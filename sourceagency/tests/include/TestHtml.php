@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.24 2002/05/28 08:58:28 riessen Exp $
+# $Id: TestHtml.php,v 1.25 2002/05/31 12:41:50 riessen Exp $
 #
 ######################################################################
 
@@ -50,7 +50,7 @@ extends UnitTest
     // and end of the argument list). This is called to generated the exact
     // desired output for the function being tested.
     function _test_html_function( $name, &$args, $exp_length ) {
-        $test_for_func = '_testFor_' . $name;
+        $test_for_func = '__testFor_' . $name;
         $print_func = ereg_replace('^html_','htmlp_',$name);
         $no_chance = 0;
 
@@ -76,24 +76,22 @@ extends UnitTest
 
         for ( $idx = 0; $idx < count($args); $idx++ ) {
             // first test the function that returns a value, i.e. html_XXXX
-            $text = call_user_func_array( $name, $args[$idx] );
-            // never use arguments for the function that are called 'text'
-            // or 'msg', these are arguments to the _testFor_XXXX method
-            $args2 = array_merge( array( 'text' => &$text ), 
-                                  $args[$idx],
-                                  array( 'msg' => "test $idx" ) );
+            $this->set_text( call_user_func_array( $name, $args[$idx] ) );
+            $this->set_msg( "test $idx" );
             // call the _testFor_html_XXXX method of the class which
             // generates an expected value for the htmlp_XXXX function call
             // This method is normally defined in the UnitTest class.
-            $expect = $this->_call_method( $test_for_func, $args2 );
-            $this->assertEquals( $expect, $text, "assert 1: test $idx" );
+            $expect = $this->_call_method( $test_for_func, $args[$idx] );
+            $this->assertEquals( $expect, $this->get_text(), 
+                                                     "assert 1: test $idx" );
             // call the print variation of the function assuming that it's
             // called htmlp_XXXX instead of html_XXXX
             capture_reset_and_start();
             call_user_func_array( $print_func, $args[$idx] );
-            $text = capture_stop_and_get();
-            $this->_testFor_captured_length( $exp_length[$idx], "test $idx" );
-            $this->assertEquals( $expect, $text, "assert 2: test $idx" );
+            $this->set_text( capture_stop_and_get() );
+            $this->_testFor_string_length( $exp_length[$idx] );
+            $this->assertEquals( $expect, $this->get_text(), 
+                                                    "assert 2: test $idx" );
         }
     }
 

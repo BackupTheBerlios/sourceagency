@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowuplib.inc,v 1.12 2002/05/28 08:58:28 riessen Exp $
+# $Id: TestFollowuplib.inc,v 1.13 2002/05/31 12:41:50 riessen Exp $
 #
 ######################################################################\
 
@@ -85,11 +85,10 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         followup_devel_preview($proid[0]["proid"]);
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 3849 + strlen(timestr(time())), 
-                                         "test 1");
+        $this->set_text( capture_stop_and_get() );
+        $this->_testFor_string_length( 3849 + strlen(timestr(time())) );
         
-        $this->_testFor_common_patterns( $text, 'Milestone Delivery' ); 
+        $this->_testFor_common_patterns( 'Milestone Delivery' ); 
 
         // second call, one record
         $auth->set_uname("username_two");
@@ -100,14 +99,13 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         followup_devel_preview($proid[1]["proid"]);
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length(3874+strlen(timestr(time())),"test 2");
+        $this->set_text( capture_stop_and_get() );
+        $this->_testFor_string_length(3874+strlen(timestr(time())));
  
         $rows = array( ' ', $row['goals'],
                        timestr_middle(mktimestamp($row["release"])),
                        $row['product'], $row['payment'] );
-        $this->_testFor_common_patterns($text,"Milestone Delivery",
-                                         $rows);
+        $this->_testFor_common_patterns("Milestone Delivery",$rows);
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -148,12 +146,13 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         followup_referee_preview($proid[0]["proid"]);
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length(4273+strlen(timestr(time())),"test 1");
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( "Test 1" );
+        $this->_testFor_string_length(4273+strlen(timestr(time())));
         
         $rows = array( ' ', $decision );
         $cols = array( 'Decision' );
-        $this->_testFor_common_patterns( $text, "Milestone Delivery"
+        $this->_testFor_common_patterns( "Milestone Delivery"
                                         ." - Referee Decision", $rows, $cols );
         
         // second call, one record
@@ -166,14 +165,15 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         followup_referee_preview($proid[1]["proid"]);
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length(4298+strlen(timestr(time())),"test 2");
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( "Test 2" );
+        $this->_testFor_string_length(4298+strlen(timestr(time())));
 
         $rows = array( ' ', $decision, $row['goals'],
                        timestr_middle(mktimestamp($row["release"])),
                        $row['product'], $row['payment'] );
         $cols = array( 'Decision' );
-        $this->_testFor_common_patterns( $text, "Milestone Delivery"
+        $this->_testFor_common_patterns( "Milestone Delivery"
                                         ." - Referee Decision", $rows, $cols );
         
         // finally check that everything went smoothly with the DB
@@ -402,29 +402,27 @@ extends UnitTest
         $this->_test_to_be_completed();
     }
 
-    function _testFor_common_patterns( $text, $title, 
-                                             $row = array(), $col = array() ) {
+    function _testFor_common_patterns( $title, $row=array(), $col=array() ) {
         global $t, $auth;
         global $milestone_number, $location, $count;
 
-        $this->_checkFor_a_box( $text, $title );
-        $this->_checkFor_a_box($text,'PREVIEW','',
-                                        "<center><b>%s</b></center>");
-        $this->_testFor_pattern( $text, 
+        $this->__checkFor_a_box( $title );
+        $this->__checkFor_a_box('PREVIEW',"<center><b>%s</b></center>");
+        $this->__testFor_pattern( 
                      $this->_to_regexp(lib_nick($auth->auth["uname"])));
-        $this->_checkFor_columns( $text, 2 );
+        $this->__checkFor_columns( 2 );
 
         foreach ( array_merge( $col, array( 'Milestone number', 'Goals', 
                                             'Release Date','Product',
                                             'Payment', 'Location', 'Count'))
                   as $val ) {
-            $this->_testFor_box_column($text, "right","30%","","<b>"
+            $this->__testFor_box_column("right","30%","","<b>"
                                                  .$t->translate($val).":</b>");
         }
 
-        $this->_checkFor_column_values( $text, 
+        $this->__checkFor_column_values(  
                       array_merge( $row, array( $milestone_number, $count,
-                                html_link( $location, array(), $location ))));
+                      html_link( $location, array(), $location ))));
     }
 }
 

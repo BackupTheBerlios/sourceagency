@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConsultantslib.php,v 1.7 2002/05/28 09:11:56 riessen Exp $
+// $Id: TestConsultantslib.php,v 1.8 2002/05/31 12:41:50 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -77,40 +77,39 @@ extends UnitTest
         $bx = new box;
         capture_reset_and_start();
         show_consultants( $dat[0]["proid"] );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( "test 1" );
 
-        $this->_testFor_string_length( $text, 64, "test 1" );
-        $this->_testFor_pattern( $text, "No developers have offered "
-                                 ."themselves as consultants yet" );
+        $this->_testFor_string_length( 64 );
+        $this->__testFor_pattern( "No developers have offered "
+                                  ."themselves as consultants yet" );
 
         // second test: three pieces of data
         $db = new DB_SourceAgency;
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         show_consultants( $dat[1]["proid"] );
-        $text = capture_stop_and_get();
-
-        $this->_checkFor_a_box( $text, 'Consultants' );
-        $this->_checkFor_columns( $text, 4 );
-
-        $this->_checkFor_column_titles( $text,array("Number","Username",
-                                                    "Status","Creation"), 
-                                       '','','','' );
+        $this->set_text( capture_stop_and_get() );
+        $this->set_msg( 'test 2' );
+        $this->__checkFor_a_box( 'Consultants' );
+        $this->__checkFor_columns( 4 );
+        $this->__checkFor_column_titles(array("Number","Username",
+                                              "Status","Creation"), '','','' );
 
         $colors = array( 1 => 'gold', 0 => '#FFFFFF' );
         for ( $idx = 1; $idx < 4; $idx++ ) {
-            $bgc = $colors[ $idx % 2];
             $row = $rows[ $idx - 1 ];
-            $this->_testFor_box_next_row_of_columns( $text, "Test $idx" );
-            $this->_checkFor_column_values( $text, 
-                      array( '<b>'.$idx.'</b>',
-                             '<b>'.lib_nick($row['username']),
-                             '<b>'.show_status($row["status"]).'</b>',
-                             '<b>'.timestr(mktimestamp($row["creation"]))
-                             .'</b>'), '', '', '', $bgc);
+            $this->set_msg( "Test $idx" );
+            $this->__testFor_box_next_row_of_columns();
+            $this->__checkFor_column_values(  
+                         array( '<b>'.$idx.'</b>',
+                                '<b>'.lib_nick($row['username']),
+                                '<b>'.show_status($row["status"]).'</b>',
+                                '<b>'.timestr(mktimestamp($row["creation"]))
+                                .'</b>'), '', '', $colors[ $idx % 2] );
         }
 
-        $this->_testFor_captured_length( 3573, "test 2");
+        $this->_testFor_string_length( 3573 );
         $this->_check_db( $db_config );
     }
 
@@ -125,23 +124,22 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         consultants_form( $proid );
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
 
-        $this->_checkFor_a_box( $text, 'Offer yourself as project consultant');
+        $this->__checkFor_a_box( 'Offer yourself as project consultant' );
 
-        $this->_checkFor_a_form( $text, 'PHP_SELF', array('proid'=>$proid));
-        $this->_checkFor_columns( $text, 2 );
+        $this->__checkFor_a_form( 'PHP_SELF', array('proid'=>$proid));
+        $this->__checkFor_columns( 2 );
 
-        $this->_checkFor_column_titles( $text, array("Your username",
-                                                     "Check if you want to "
-                                                     ."be a consultant"),
-                                        '', 'right', '45%', '' );
-        $this->_checkFor_column_values( $text, array( $uname, 
+        $this->__checkFor_column_titles( array("Your username","Check if you "
+                                               ."want to be a consultant"),
+                                         'right', '45%', '' );
+        $this->__checkFor_column_values( array( $uname, 
                          html_checkbox('check','check',''),
                          html_form_submit($t->translate('Submit'),'submit')),
-                         '', 'left', '55%', '' );
-        $this->_testFor_box_next_row_of_columns( $text );
-        $this->_testFor_captured_length( 2184 + strlen( $sess->self_url() ));
+                         'left', '55%', '' );
+        $this->__testFor_box_next_row_of_columns();
+        $this->_testFor_string_length( 2184 + strlen( $sess->self_url() ));
     }
 
     function testConsultants_wanted() {
@@ -166,26 +164,24 @@ extends UnitTest
         $db = new DB_SourceAgency;
         capture_reset_and_start();
         $this->assertEquals(1, consultants_wanted($dat[0]["proid"]),"test 1");
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 0 );
+        $this->assert( strlen( capture_stop_and_get() ) == 0, 'test 1' );
 
         // second test: project is configured to have no consultants
         $db = new DB_SourceAgency;
         capture_reset_and_start();
         $this->assertEquals(0, consultants_wanted($dat[1]["proid"]),"test 2");
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
 
         include( 'config.inc' ); // for th_box_{error|title}_font_color
-        $this->_testFor_box_title($text,
-                                    $t->translate('No consultants wanted'),
+        $this->__testFor_box_title($t->translate('No consultants wanted'),
                                     $th_box_title_font_color,
                                     $th_box_title_bgcolor,
                                     $th_box_title_align );
-        $this->_testFor_box_body( $text,$t->translate("This project does "
-                                                      ."not require "
-                                                      ."any consultants"), 
-                                  $th_box_error_font_color );
-        $this->_testFor_captured_length( 728 );
+        $this->__testFor_box_body( $t->translate("This project does "
+                                                 ."not require "
+                                                 ."any consultants"), 
+                                   $th_box_error_font_color );
+        $this->_testFor_string_length( 728 );
         $this->_check_db( $db_config );
     }
 
@@ -213,14 +209,14 @@ extends UnitTest
         $bx = $this->_create_default_box();
         capture_reset_and_start();
         consultants_insert( $dat[0]["proid"], $dat[0]["user"]);
-        $text = capture_stop_and_get();
+        $this->set_text( capture_stop_and_get() );
         
         // the basics for show_consultants(...), assume that the rest
         // is also present
-        $this->_checkFor_a_box( $text, 'Consultants' );
-        $this->_checkFor_columns( $text, 4 );
+        $this->__checkFor_a_box( 'Consultants' );
+        $this->__checkFor_columns( 4 );
 
-        $this->_testFor_captured_length( 1494 );
+        $this->_testFor_string_length( 1494 );
         $this->_check_db( $db_config );
     }
 }
