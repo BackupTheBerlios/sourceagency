@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.23 2002/07/22 11:26:54 riessen Exp $
+# $Id: browselib.inc,v 1.24 2002/09/05 08:14:06 helix Exp $
 #
 ######################################################################
 
@@ -187,11 +187,11 @@ function _browse_type()
                             html_link('browse.php3',
                                       array('through' => 'type', 
                                             'type' => 
-                                            $project_types[$i]),$num));
+                                            $t->translate($project_types[$i])),$num));
         } else {
             $bx->box_column('center','',$bgcolor,$num);
         }
-  	$bx->box_column('left','',$bgcolor,$project_types[$i]);
+  	$bx->box_column('left','',$bgcolor,$t->translate($project_types[$i]));
   	$bx->box_next_row_of_columns();
     }
     $bx->box_columns_end();
