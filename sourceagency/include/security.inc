@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.11 2001/11/21 19:45:34 riessen Exp $
+# $Id: security.inc,v 1.12 2001/11/29 15:38:47 grex Exp $
 #
 ######################################################################
 
@@ -141,7 +141,7 @@ function check_proid ($proid) {
     $db_check->query("SELECT * FROM description WHERE proid='$proid'"); 
     $db_check->next_record();
     if ($db_check->num_rows() == 0 || empty($proid)) {
-	// FIXME: what???
+	// WISH: config.inc should not be required another time, as it is done at the beginning of every page.
 	require("config.inc");
 	$be = new box("80%",$th_box_frame_color,$th_box_frame_width,
                       $th_box_title_bgcolor,$th_box_title_font_color,
@@ -209,7 +209,7 @@ function check_permission($proid,$page) {
        && !is_project_initiator($proid))) {
       if (isset($auth) && !strcmp($db_check->f("description_user"),
                                   $auth->auth["uname"])) {
-		// FIXME - FIXME - FIXME what? fix what?
+		// WISH: config.inc should be not required another time as it should have been done at the beginning of every page
           require("config.inc");
           $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
                         $th_box_title_bgcolor,$th_box_title_font_color,
@@ -623,6 +623,7 @@ function _check_permissions( $perm ) {
 
   // FIXME: isn't this information already stored in the perm object
   // FIXME: for the user????, can't we use perm->have_perm('....')
+  // FIXME (by grex) Gerrit, you are right! this could have been done by the perm object.
   $db_local = new DB_SourceAgency;
   // modification to allow for multiple permissions, problems
   // occur if other permissions _contain_ the string 'devel'  
@@ -692,9 +693,9 @@ function is_main_developer($proid) {
   if (isset($auth) && !empty($auth->auth["perm"]) 
       && is_accepted_developer($proid)) {
 	$db_local = new DB_SourceAgency;
-        // FIXME: proid='..' appears _twice_ in the following query
+
 	$db_local->query("SELECT * FROM configure WHERE proid='$proid' "
-                         ."AND proid='$proid' AND developer='"
+                         ."AND developer='"
                          .$auth->auth["uname"]."'");
 	if ($db_local->num_rows() > 0) return 1;
   }
