@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: refereeslib.inc,v 1.3 2002/03/28 00:53:44 grex Exp $
+# $Id: refereeslib.inc,v 1.4 2002/05/06 13:09:40 riessen Exp $
 #
 ######################################################################
 
@@ -72,7 +72,8 @@ function show_referees($proid)
 {
     global $t, $bx, $db;
 
-    $query = "SELECT * FROM referees,auth_user WHERE proid='$proid' AND username=referee ORDER BY creation";
+    $query = ( "SELECT * FROM referees,auth_user WHERE proid='$proid' "
+               ."AND username=referee ORDER BY creation" );
     $db->query($query);
 
     if ($db->num_rows() != 0) {
@@ -81,27 +82,26 @@ function show_referees($proid)
 	$bx->box_body_begin();
 	$bx->box_columns_begin(4);
 
-	$bx->box_column('','','','<b>Number</b>');
-	$bx->box_column('','','','<b>Username</b>');
-	$bx->box_column('','','','<b>Status</b>');
-	$bx->box_column('','','','<b>Creation</b>');
+	$bx->box_column('','','','<b>'.$t->translate('Number').'</b>');
+	$bx->box_column('','','','<b>'.$t->translate('Username').'</b>');
+	$bx->box_column('','','','<b>'.$t->translate('Status').'</b>');
+	$bx->box_column('','','','<b>'.$t->translate('Creation').'</b>');
 
 	$i =0;
 
 	while($db->next_record()) {
 	    $i++;
-	    if ($i%2 != 0) {
-                $bgcolor = 'gold';
-            } else {
-                $bgcolor = '#FFFFFF';
-            }
+            $bgcolor = ( $i%2 != 0 ? 'gold' : '#FFFFFF' );
 
  	    $bx->box_next_row_of_columns();
 
             $bx->box_column('','',$bgcolor,"<b>$i</b>");
-            $bx->box_column('','',$bgcolor,'<b>'.lib_nick($db->f('username')).'</b>');
-	    $bx->box_column('','',$bgcolor,'<b>'.show_status($db->f('status')).'</b>');
-            $bx->box_column('','',$bgcolor,'<b>'.timestr(mktimestamp($db->f('creation'))).'</b>');
+            $bx->box_column('','',$bgcolor,'<b>'
+                            .lib_nick($db->f('username')).'</b>');
+	    $bx->box_column('','',$bgcolor,'<b>'
+                            .show_status($db->f('status')).'</b>');
+            $bx->box_column('','',$bgcolor,'<b>'
+                            .timestr(mktimestamp($db->f('creation'))).'</b>');
 	}
 
 	$bx->box_columns_end();
@@ -110,7 +110,8 @@ function show_referees($proid)
     }
 
     if ($db->num_rows() == 0) {
-	print "<p>There are no developers that have offered themselves as referees.<p>\n";
+	print "<p>".$t->translate("There are no developers that have "
+                                  ."offered themselves as referees").".<p>\n";
     }
 }
 
@@ -137,18 +138,22 @@ function referees_form($proid)
 
     $bx->box_columns_begin(2);
 
-    $bx->box_column ('right','45%','','<b>'.$t->translate('Your username').'</b>: ');
+    $bx->box_column ('right','45%','','<b>'
+                     .$t->translate('Your username').'</b>: ');
     $bx->box_column ('left','55%','',$auth->auth['uname']);
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ('right','45%','','<b>'.$t->translate('Check if you want to be a referee').'</b>: ');
+    $bx->box_column ('right','45%','','<b>'
+                     .$t->translate('Check if you want to be a referee')
+                     .'</b>: ');
     $bx->box_column ('left','55%','',html_checkbox('check','check',''));
 
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('right','45%','','&nbsp;');
-    $bx->box_column ('left','55%','',html_form_submit('Submit','submit'));
+    $bx->box_column ('left','55%','',html_form_submit($t->translate('Submit'),
+                                                      'submit'));
     htmlp_form_end();
     $bx->box_columns_end();
 
@@ -172,13 +177,15 @@ function referees_insert($proid, $user)
 {
     global $db;
 
-    $db->query("INSERT referees SET proid='$proid',referee='$user',status='P'");
+    $db->query("INSERT referees SET proid='$proid',referee='$user',"
+               ."status='P'");
 
     include('monitorlib.inc');
     // WISH: config.inc should not be required another time,
     // as it is done at the beginning of every page.
     include('config.inc');
-    monitor_mail($proid,'referees', 'New referee proposed for project $proid', 'Event has happened');
+    monitor_mail($proid,'referees', 'New referee proposed for project $proid',
+                 'Event has happened');
 
     show_referees($proid);
 }

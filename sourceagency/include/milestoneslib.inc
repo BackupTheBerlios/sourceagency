@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.16 2002/04/15 09:37:12 riessen Exp $
+# $Id: milestoneslib.inc,v 1.17 2002/05/06 13:09:40 riessen Exp $
 #
 ######################################################################
 
@@ -102,17 +102,21 @@ function show_milestones($proid, $devid, $who_wants_to_see)
 
         $bx->box_begin();
         // TODO: it would be nice to have a link to the proposal these milestones refere to
-        $bx->box_title($t->translate('Milestones proposed by '
-                                     . $milestone_user));
+        $bx->box_title($t->translate('Milestones proposed by' )
+                              . ' ' . $milestone_user);
         $bx->box_body_begin();
         $bx->box_columns_begin(6);
       
-        $bx->box_column('center','7%','','<b>Number</b>');
-        $bx->box_column('','53%','','<b>Goals</b>');
-        $bx->box_column('center','16%','','<b>Release Date</b>');
-        $bx->box_column('center','12%','','<b>Product</b>');
-        $bx->box_column('center','8%','','<b>Payment</b>');
-        $bx->box_column('center','14%','','<b>Status</b>');
+        $bx->box_column('center','7%','','<b>'.$t->translate('Number').'</b>');
+        $bx->box_column('','53%','','<b>'.$t->translate('Goals').'</b>');
+        $bx->box_column('center','16%','','<b>'
+                        .$t->translate('Release Date').'</b>');
+        $bx->box_column('center','12%','','<b>'
+                        .$t->translate('Product').'</b>');
+        $bx->box_column('center','8%','','<b>'
+                        .$t->translate('Payment').'</b>');
+        $bx->box_column('center','14%','','<b>'
+                        .$t->translate('Status').'</b>');
       
         while($db->next_record()) {
             $bgcolor = ( $db->f('number')%2 ? 'gold' : '#FFFFFF' );
@@ -150,7 +154,8 @@ function show_milestones($proid, $devid, $who_wants_to_see)
       
         $bx->box_next_row_of_columns();
       
-        $bx->box_colspan('4','right','#CCCCCC','<b>Total:</b>');
+        $bx->box_colspan('4','right','#CCCCCC','<b>'
+                         .$t->translate('Total').':</b>');
         $bx->box_column('center','','#CCCCCC','<b>'.$total_payment.'% </b>');
         $bx->box_column('center','','#CCCCCC','&nbsp;');
       
@@ -191,12 +196,13 @@ function milestones_preview($proid, $devid)
     $bx->box_body_begin();
     $bx->box_columns_begin(6);
 
-    $bx->box_column('center','7%','','<b>Number</b>');
-    $bx->box_column('','53%','','<b>Goals</b>');
-    $bx->box_column('center','16%','','<b>Release Date</b>');
-    $bx->box_column('center','12%','','<b>Product</b>');
-    $bx->box_column('center','8%','','<b>Payment</b>');
-    $bx->box_column('center','14%','','<b>Status</b>');
+    $bx->box_column('center','7%','','<b>'.$t->translate('Number').'</b>');
+    $bx->box_column('','53%','','<b>'.$t->translate('Goals').'</b>');
+    $bx->box_column('center','16%','','<b>'
+                    .$t->translate('Release Date').'</b>');
+    $bx->box_column('center','12%','','<b>'.$t->translate('Product').'</b>');
+    $bx->box_column('center','8%','','<b>'.$t->translate('Payment').'</b>');
+    $bx->box_column('center','14%','','<b>'.$t->translate('Status').'</b>');
 
     $bgcolor = 'gold';
 
@@ -210,7 +216,8 @@ function milestones_preview($proid, $devid)
                     '<b>'.timestr_middle($tStamp).'</b>');
     $bx->box_column('center','',$bgcolor,'<b>$product</b>');
     $bx->box_column('center','',$bgcolor,'<b>$payment %</b>');
-    $bx->box_column('center','',$bgcolor,'<b>Proposed</b>');
+    $bx->box_column('center','',$bgcolor,'<b>'
+                    .$t->translate('Proposed').'</b>');
 
     $bx->box_columns_end();
     $bx->box_body_end();
