@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestNewslib.php,v 1.9 2002/04/12 13:35:34 riessen Exp $
+# $Id: TestNewslib.php,v 1.10 2002/04/22 14:08:59 riessen Exp $
 #
 ######################################################################
 
@@ -61,30 +61,35 @@ extends UnitTest
         capture_start();
         newsform( "proid" ); 
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1811 + strlen( $sess->self_url() ));
+        $this->_testFor_length( 2222 + strlen( $sess->self_url() ), "test 1");
 
         $ps=array( 0=> "<font color=\"#000000\"><b>Editing News<\/b><\/font>",
                    1=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF\">"
-                       ."<b>Subject<\/b> [(]128[)]: <\/td>\n<!-- Column "
-                       ."finishes -->\n<!-- New Column starts -->\n<td "
+                       ."[ \n]*<b>Subject<\/b> [(]128[)]:[ \n]*<\/td>"
+                       ."[ \n]*<!-- Column "
+                       ."finishes -->[ \n]*<!-- New Column starts -->"
+                       ."[ \n]*<td "
                        ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."<input type=\"text\" name=\"subject\" size=\"40\" "
+                       ."[ \n]*<input type=\"text\" name=\"subject\" "
+                       ."size=\"40\" "
                        ."maxlength=\"128\" value=\"this is the subject"
-                       ."\">\n<\/td>\n"),
+                       ."\">[ \n]*<\/td>\n"),
                    2=>("<form action=\""
                        . ereg_replace( "/", "\/", $sess->self_url() )
                        ."[?]proid=proid\" method=\"POST\">"),
                    3=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\"><b>Body<\/b> [(][*][)]: <\/td>\n<!-- Column "
-                       ."finishes -->\n<!-- New Column starts -->\n<td align"
-                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."<textarea cols=\"40\" rows=\"7\" name=\"text\" wrap"
+                       ."\">[ \n]*<b>Body<\/b> [(][*][)]:[ \n]*<\/td>"
+                       ."[ \n]*<!-- Column "
+                       ."finishes -->[ \n]*<!-- New Column starts -->"
+                       ."[ \n]*<td align"
+                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]*"
+                       ."<textarea name=\"text\" cols=\"40\" rows=\"7\" wrap"
                        ."=\"virtual\" maxlength=\"255\">this is the text<\/"
-                       ."textarea>\n<\/td>\n"),
+                       ."textarea>[ \n]*<\/td>\n"),
                    4=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
-                       ."\"><input type=\"submit\" value=\"Preview\" "
-                       ."name=\"preview\">\n<input type=\"submit\" value="
-                       ."\"Submit\" name=\"submit\">\n<\/td>\n"));
+                       ."\">[ \n]*<input type=\"submit\" value=\"Preview\" "
+                       ."name=\"preview\">[ \n]*<input type=\"submit\" value="
+                       ."\"Submit\" name=\"submit\">[ \n]*<\/td>\n"));
         $this->_testFor_patterns( $text, $ps, 5 );
 
     }
@@ -98,32 +103,38 @@ extends UnitTest
         capture_start();
         news_modify_form( "proid" ); 
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1865 + strlen( $sess->self_url() ));
+        $this->_testFor_length( 2281 + strlen( $sess->self_url() ), "test 1");
 
         $ps=array( 0=>("<font color=\"#000000\"><b>Modifying News<\/b>"
                        ."<\/font>"),
                    1=>("<form action=\""
                        .ereg_replace( "/", "\/", $sess->self_url() )
-                       ."[?]proid=proid\" method=\"POST\"><input type=\""
+                       ."[?]proid=proid\" method=\"POST\">[ \n]*<input type=\""
                        ."hidden\" name=\"creation\" value=\"asdasd\">"),
                    2=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\"><b>Subject<\/b> [(]128[)]: <\/td>\n<!-- Column "
-                       ."finishes -->\n<!-- New Column starts -->\n<td align"
-                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
+                       ."\">[ \n]*<b>Subject<\/b> [(]128[)]:[ \n]*"
+                       ."<\/td>[ \n]*<!-- Column "
+                       ."finishes -->[ \n]*<!-- New Column starts -->"
+                       ."[ \n]*<td align"
+                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]*"
                        ."<input type=\"text\" name=\"subject\" size=\"40\" "
-                       ."maxlength=\"128\" value=\"this is the subject\">\n"
-                       ."<\/td>\n"),
+                       ."maxlength=\"128\" value=\"this is the subject\">"
+                       ."[ \n]*<\/td>\n"),
                    3=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\"><b>Body<\/b> [(][*][)]: <\/td>\n<!-- Column "
-                       ."finishes -->\n<!-- New Column starts -->\n<td align"
+                       ."\">[ \n]*<b>Body<\/b> [(][*][)]:[ \n]*<\/td>"
+                       ."[ \n]*<!-- Column "
+                       ."finishes -->[ \n]*<!-- New Column starts -->"
+                       ."[ \n]*<td align"
                        ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."<textarea cols=\"40\" rows=\"7\" name=\"text\" wrap"
+                       ."[ \n]*<textarea name=\"text\" cols=\"40\" "
+                       ."rows=\"7\" wrap"
                        ."=\"virtual\" maxlength=\"255\">this is the "
-                       ."text<\/textarea>\n<\/td>\n"),
+                       ."text<\/textarea>[ \n]*<\/td>\n"),
                    4=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\""
-                       ."><input type=\"submit\" value=\"Preview\" name="
-                       ."\"preview\">\n<input type=\"submit\" value=\"Submit"
-                       ."\" name=\"submit\">\n<\/td>\n"));
+                       .">[ \n]*<input type=\"submit\" value=\"Preview\" name="
+                       ."\"preview\">[ \n]*<input type=\"submit\" "
+                       ."value=\"Submit"
+                       ."\" name=\"submit\">[ \n]*<\/td>\n"));
         $this->_testFor_patterns( $text, $ps, 5 );
     }
 
@@ -135,45 +146,59 @@ extends UnitTest
         capture_start();
         news_preview( "fubar" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 2575 + strlen(timestr(time()))
-                                + strlen( $sess->self_url() ) );
+        $this->_testFor_length( 3089 + strlen(timestr(time()))
+                                + strlen( $sess->self_url() ), "test 1");
         $ps=array( 0=>("<font color=\"#000000\"><b><center><b>PREVIEW<\/b>"
                        ."<\/center><\/b><\/font>"),
-                   1=>("<tr bgcolor=\"#CCCCCC\"><td align=\"\">\n<font color="
+                   1=>("<tr bgcolor=\"#CCCCCC\">[ \n]*<td align=\"\">"
+                       ."[ \n]*<font color="
                        ."\"#000000\"><b>News: this is the subject<\/b><\/"
-                       ."font>\n<\/td><\/tr>\n"),
-                   2=>("<tr bgcolor=\"#FFFFFF\"><td align=\"\"><font color="
+                       ."font>[ \n]*<\/td>[ \n]*<\/tr>\n"),
+                   2=>("<tr bgcolor=\"#FFFFFF\">[ \n]*<td align=\"\">"
+                       ."<font color="
                        ."\"#000000\">\n<b>by username<\/b> -"),
-                   3=>("<tr bgcolor=\"#CCCCCC\"><td align=\"\">\n<font color"
-                       ."=\"#000000\"><b>Modifying News<\/b><\/font>\n"
-                       ."<\/td><\/tr>\n"),
-                   4=>("<tr bgcolor=\"#FFFFFF\"><td align=\"\"><font color="
-                       ."\"#000000\">\n<form action=\""
+                   3=>("<tr bgcolor=\"#CCCCCC\">[ \n]*<td align=\"\">"
+                       ."[ \n]*<font color"
+                       ."=\"#000000\"><b>Modifying News<\/b><\/font>"
+                       ."[ \n]*<\/td>[ \n]*<\/tr>\n"),
+                   4=>("<tr bgcolor=\"#FFFFFF\">[ \n]*<td align=\"\">"
+                       ."<font color="
+                       ."\"#000000\">[ \n]*<form action=\""
                        .ereg_replace( "/", "\/", $sess->self_url() )
-                       ."[?]proid=proid\" method=\"POST\"><input type=\""
-                       ."hidden\" name=\"creation\" value=\"asdasd\"><!-- "
-                       ."table with 2 columns -->\n<table border=\"0\" "
+                       ."[?]proid=proid\" method=\"POST\">[ \n]*<input type=\""
+                       ."hidden\" name=\"creation\" value=\"asdasd\">"
+                       ."[ \n]*<!-- "
+                       ."table with 2 columns -->[ \n]*<table border=\"0\" "
                        ."cellspacing=\"0\" cellpadding=\"3\" align=\"center"
-                       ."\" width=\"100%\" valign=\"top\">\n<tr colspan=\"2\""
+                       ."\" width=\"100%\" valign=\"top\">[ \n]*"
+                       ."<tr colspan=\"2\""
                        .">\n"),
                    5=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\"><b>Subject<\/b> [(]128[)]: <\/td>\n<!-- Column "
-                       ."finishes -->\n<!-- New Column starts -->\n<td align"
+                       ."\">[ \n]*<b>Subject<\/b> [(]128[)]:[ \n]*"
+                       ."<\/td>[ \n]*<!-- Column "
+                       ."finishes -->[ \n]*<!-- New Column starts -->"
+                       ."[ \n]*<td align"
                        ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."<input type=\"text\" name=\"subject\" size=\"40\" "
-                       ."maxlength=\"128\" value=\"this is the subject\">\n"
+                       ."[ \n]*<input type=\"text\" name=\"subject\" "
+                       ."size=\"40\" "
+                       ."maxlength=\"128\" value=\"this is the subject\">"
+                       ."[ \n]*"
                        ."<\/td>\n"),
                    6=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
-                       ."\"><b>Body<\/b> [(][*][)]: <\/td>\n<!-- Column "
-                       ."finishes -->\n<!-- New Column starts -->\n<td align"
+                       ."\">[ \n]*<b>Body<\/b> [(][*][)]:[ \n]*<\/td>"
+                       ."[ \n]*<!-- Column "
+                       ."finishes -->[ \n]*<!-- New Column starts -->"
+                       ."[ \n]*<td align"
                        ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."<textarea cols=\"40\" rows=\"7\" name=\"text\" wrap"
+                       ."[ \n]*<textarea name=\"text\" cols=\"40\" "
+                       ."rows=\"7\" wrap"
                        ."=\"virtual\" maxlength=\"255\">this is the text<\/"
-                       ."textarea>\n<\/td>\n"),
+                       ."textarea>[ \n]*<\/td>\n"),
                    7=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
-                       ."<input type=\"submit\" value=\"Preview\" name"
-                       ."=\"preview\">\n<input type=\"submit\" value=\"Submit"
-                       ."\" name=\"submit\">\n<\/td>\n"));
+                       ."[ \n]*<input type=\"submit\" value=\"Preview\" name"
+                       ."=\"preview\">[ \n]*<input type=\"submit\" "
+                       ."value=\"Submit"
+                       ."\" name=\"submit\">[ \n]*<\/td>\n"));
 
         $this->_testFor_patterns( $text, $ps, 8 );
     }
@@ -240,7 +265,7 @@ extends UnitTest
         capture_start();
         newsshow( $proid[0] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 67 );
+        $this->_testFor_length( 67, "test 1" );
         $this->_testFor_pattern( $text, ("<p>There have not been posted any "
                                          ."news by the project owner[(]s[)]."
                                          ."<p>"));
@@ -252,23 +277,23 @@ extends UnitTest
         capture_reset_and_start();
         newsshow( $proid[1] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 722 );
+        $this->_testFor_length( 788, "test 2" );
 
-        $this->_testFor_pattern( $text, ("<font color=\"#000000\"><b>News: "
-                                         ."subject_news_0<\/b><\/font>"));
+        $ps=array( 0=>("<font color=\"#000000\"><b>News: "
+                       ."subject_news_0<\/b><\/font>"),
+                   1=>("<tr bgcolor=\"#FFFFFF\">[ \n]*<td align"
+                       ."=\"\"><font color=\"#000000\">[ \n]*"
+                       ."<b><b>by user_news_0<\/b> - <\/b>"
+                       ."[ \n]*<p>text_news_0[ \n]*<\/font>[ \n]*<\/td>"
+                       ."[ \n]*<\/tr>\n"),
+                   2=>("<FONT SIZE=-1>[[] <a href=\""
+                       ."comments_edit.php3[?]proid="
+                       ."proid_1[&]type=News[&]number="
+                       ."creation_news_0[&]ref=0[&]subject="
+                       ."Re%3Asubject_news_0\">Comment "
+                       ."This News!<\/a>[ \n]* []]<\/FONT>\n"));
+        $this->_testFor_patterns( $text, $ps, 3 );
 
-        $this->_testFor_pattern( $text, ("<tr bgcolor=\"#FFFFFF\"><td align"
-                                         ."=\"\"><font color=\"#000000\">\n"
-                                         ."<b><b>by user_news_0<\/b> - <\/b>"
-                                         ."\n<p>text_news_0\n<\/font><\/td>"
-                                         ."<\/tr>\n"));
-
-        $this->_testFor_pattern( $text, ("<FONT SIZE=-1>[[] <a href=\""
-                                         ."comments_edit.php3[?]proid="
-                                         ."proid_1[&]type=News[&]number="
-                                         ."creation_news_0[&]ref=0[&]subject="
-                                         ."Re%3Asubject_news_0\">Comment "
-                                         ."This News!<\/a>\n []]<\/FONT>\n"));
         //
         // third call, two records, the second has a comment which makes
         // a recursive call to show_comments_on_it which in turn has no rows
@@ -277,45 +302,40 @@ extends UnitTest
         capture_reset_and_start();
         newsshow( $proid[2] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1591 );
+        $this->_testFor_length( 1722, "test 3" );
 
-        $this->_testFor_pattern( $text, ("<font color=\"#000000\"><b>News: "
-                                         ."subject_news_1<\/b><\/font>"));
-
-        $this->_testFor_pattern( $text, ("<tr bgcolor=\"#FFFFFF\"><td align"
-                                         ."=\"\"><font color=\"#000000\">\n"
-                                         ."<b><b>by user_news_1<\/b> - <\/b>"
-                                         ."\n<p>text_news_1\n<\/font><\/td>"
-                                         ."<\/tr>\n"));
-
-        $this->_testFor_pattern( $text, ("<FONT SIZE=-1>[[] <a href=\""
-                                         ."comments_edit.php3[?]proid="
-                                         ."proid_2[&]type=News[&]number="
-                                         ."creation_news_1[&]ref=0[&]subject="
-                                         ."Re%3Asubject_news_1\">Comment "
-                                         ."This News!<\/a>\n []]<\/FONT>\n"));
-        
-        $this->_testFor_pattern( $text, ("<font color=\"#000000\"><b>News: "
-                                         ."subject_news_2<\/b><\/font>"));
-        
-        $this->_testFor_pattern( $text, ("<tr bgcolor=\"#FFFFFF\"><td align"
-                                         ."=\"\"><font color=\"#000000\">\n"
-                                         ."<b><b>by user_news_2<\/b> - <\/b>"
-                                         ."\n<p>text_news_2\n<\/font><\/td>"
-                                         ."<\/tr>\n"));
-
-        $this->_testFor_pattern( $text, ("<FONT SIZE=-1>[[] <a href=\""
-                                         ."comments_edit.php3[?]proid="
-                                         ."proid_2[&]type=News[&]number="
-                                         ."creation_news_2[&]ref=0[&]subject="
-                                         ."Re%3Asubject_news_2\">Comment "
-                                         ."This News!<\/a>\n []]<\/FONT>\n"));
-        
-        $this->_testFor_pattern( $text, ("<li><a href=\"comments.php3[?]"
-                                         ."proid=proid_2[&]type=News[&]"
-                                         ."number=creation_news_2[&]ref=0\">"
-                                         ."subject_cmt_3<\/a>\n by <b>"
-                                         ."user_cmt_3<\/b> on <b><\/b>\n"));
+        $ps=array( 0=>("<font color=\"#000000\"><b>News: "
+                       ."subject_news_1<\/b><\/font>"),
+                   1=>("<tr bgcolor=\"#FFFFFF\">[ \n]*<td align"
+                       ."=\"\"><font color=\"#000000\">[ \n]*"
+                       ."<b><b>by user_news_1<\/b> - <\/b>"
+                       ."[ \n]*<p>text_news_1[ \n]*<\/font>[ \n]*<\/td>"
+                       ."[ \n]*<\/tr>\n"),
+                   2=>("<FONT SIZE=-1>[[] <a href=\""
+                       ."comments_edit.php3[?]proid="
+                       ."proid_2[&]type=News[&]number="
+                       ."creation_news_1[&]ref=0[&]subject="
+                       ."Re%3Asubject_news_1\">Comment "
+                       ."This News!<\/a> []]<\/FONT>\n"),
+                   3=>("<font color=\"#000000\"><b>News: "
+                       ."subject_news_2<\/b><\/font>"),
+                   4=>("<tr bgcolor=\"#FFFFFF\">[ \n]*<td align"
+                       ."=\"\"><font color=\"#000000\">[ \n]*"
+                       ."<b><b>by user_news_2<\/b> - <\/b>"
+                       ."[ \n]*<p>text_news_2[ \n]*<\/font>[ \n]*<\/td>"
+                       ."[ \n]*<\/tr>\n"),
+                   5=>("<FONT SIZE=-1>[[] <a href=\""
+                       ."comments_edit.php3[?]proid="
+                       ."proid_2[&]type=News[&]number="
+                       ."creation_news_2[&]ref=0[&]subject="
+                       ."Re%3Asubject_news_2\">Comment "
+                       ."This News!<\/a> []]<\/FONT>\n"),
+                   6=>("<li><a href=\"comments.php3[?]"
+                       ."proid=proid_2[&]type=News[&]"
+                       ."number=creation_news_2[&]ref=0\">"
+                       ."subject_cmt_3<\/a> by <b>"
+                       ."user_cmt_3<\/b> on <b><\/b>\n"));
+        $this->_testFor_patterns( $text, $ps, 7 );
         
         // check that the database component did not fail
         $this->_check_db( $db_config );
@@ -357,7 +377,7 @@ extends UnitTest
         news_insert( $row[0]["proid"],$row[0]["user"],$row[0]["subject"],
                      $row[0]["text"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 67 );
+        $this->_testFor_length( 67, "test 1" );
         $this->_testFor_pattern($text,("<p>There have not been posted any "
                                        ."news by the project owner[(]s[)]"
                                        ."[.]<p>\n"));
@@ -403,7 +423,7 @@ extends UnitTest
         news_modify( $row[0]["proid"],$row[0]["user"],$row[0]["subject"],
         $row[0]["text"], $row[0]["creation"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 67 );
+        $this->_testFor_length( 67, "test 1");
         $this->_testFor_pattern($text,("<p>There have not been posted any "
                                        ."news by the project owner[(]s[)]"
                                        ."[.]<p>\n"));
