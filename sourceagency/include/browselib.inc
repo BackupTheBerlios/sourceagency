@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.16 2002/04/30 11:23:58 riessen Exp $
+# $Id: browselib.inc,v 1.17 2002/04/30 11:24:41 riessen Exp $
 #
 ######################################################################
 
@@ -624,7 +624,7 @@ function _browse_project_name()
 
   	$db2 = new DB_SourceAgency;
   	$db2->query('SELECT COUNT(*) FROM description WHERE status > 0'
-                     ." AND  project_title LIKE '" . $ltr . "'%");
+                     ." AND  project_title LIKE '" . $ltr . "%'");
   	$db2->next_record();
   	$num = '['.sprintf('%03d',$db2->f('COUNT(*)')).']';
   	$bx->box_column('right','',$bgcolor,$i);
