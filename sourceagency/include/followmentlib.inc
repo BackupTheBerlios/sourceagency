@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: followmentlib.inc,v 1.4 2002/05/13 10:23:09 riessen Exp $
+# $Id: followmentlib.inc,v 1.5 2002/05/28 08:54:51 riessen Exp $
 #
 ######################################################################
 
@@ -42,9 +42,10 @@ function show_followment($proid) {
 	echo "<td align=center><b>".$t->translate("Creation")."</b></td>";
 	echo "</tr>\n";
 
+        $colors = array( 0 => "gold", 1 => "#FFFFFF" );
 	while($db->next_record()) {
 
-            $bgcolor = $db->f("number")%2 != 0 ? "gold" : "#FFFFFF";
+            $bgcolor = $colors[ $db->f("number") % 2 ];
 
             echo "<tr bgcolor=$bgcolor>\n";
             echo "<td><b>".$db->f("number")."</b></td>";

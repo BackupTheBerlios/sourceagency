@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.38 2002/05/02 12:01:39 riessen Exp $
+# $Id: lib.inc,v 1.39 2002/05/28 08:55:18 riessen Exp $
 #
 ######################################################################
 
@@ -1426,8 +1426,6 @@ function lib_in_step($proid, $step_num)
 // REFACTOR: could be moved to html.inc ????
 function lib_comment_it($proid, $type, $number, $ref, $subject, $text)
 {
-    global $sess;
-
     print '<FONT SIZE=-1>[ ';
     htmlp_link('comments_edit.php3', array('proid'   => $proid, 
                                            'type'    => $type, 
