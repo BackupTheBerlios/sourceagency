@@ -27,36 +27,35 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 
 require("header.inc");
 require("refereeslib.inc");
+require("decisionslib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-
-<?php
-
+start_content();
 $page = "referees";
 
 if (check_proid($proid)) {
   top_bar($proid,$page);
 
-  print "Referee registration and selection. Any developer who has the skills to be a referee can propose himself as one.\n";
+  print "Referee registration and selection. Any developer who has "
+      ."the skills to be a referee can propose himself as one.\n";
 
-  print "<p align=right>[ <b>".html_link("step4_edit.php3",array("proid" => $proid),"Propose yourself as referee")."</b> ]\n";
+  print "<p align=right>[ <b>".html_link("step4_edit.php3",
+                                         array("proid" => $proid),
+                                         "Propose yourself as referee")
+      ."</b> ]\n";
 
   show_referees($proid);
 
   if (is_accepted_sponsor($proid) || is_main_developer($proid)) {
       create_decision_link( $proid );
   }
-
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 @page_close();
 ?>

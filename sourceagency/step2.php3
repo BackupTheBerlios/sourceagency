@@ -28,6 +28,7 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require("contentlib.inc");
 require("developinglib.inc");
+require("decisionslib.inc");
 
 $bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
               $th_box_title_bgcolor,$th_box_title_font_color,
