@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: RunAllTests.php,v 1.5 2001/11/20 10:51:02 riessen Exp $
+# $Id: RunAllTests.php,v 1.6 2001/12/13 16:50:49 riessen Exp $
 #
 ######################################################################
 
@@ -33,12 +33,24 @@ ini_set( 'include_path', ini_get('include_path') . ':../../include'  );
 define( "BEING_INCLUDED", "yes" );
 
 include_once( "constants.php" );
+// needed to include the config file ....
+include_once( "config.inc" );
 
 // define required global variables.
 // required for the $sess global variable
 include_once( "session.inc" );
 $sess = new Session;
 global $sess;
+
+// seems to require a logger ....
+include_once( "logger.inc" );
+$l = new Logger;
+global $l;
+
+global $lang;
+$lang = "English";
+include_once( "lang.inc" );
+
 
 // defines the global translation object
 include_once( "translation.inc" );
@@ -50,10 +62,6 @@ include_once( "box.inc" );
 $bx = new box;
 global $bx;
 
-// seems to require a logger ....
-include_once( "logger.inc" );
-$l = new Logger;
-global $l;
 
 // define the global TestSuite
 $suite = new TestSuite;
