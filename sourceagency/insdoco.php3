@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: insdoco.php3,v 1.4 2002/04/19 10:32:04 grex Exp $
+# $Id: insdoco.php3,v 1.5 2002/04/20 00:03:31 grex Exp $
 #
 ######################################################################  
 
@@ -63,13 +63,13 @@ if (($config_perm_admdoco != 'all')
     	 	                               .html_form_hidden('modify', 0)
     	 	                               .html_form_hidden('delete', 2)
     	 	                               .html_form_hidden('docoid', $db->f('docoid'))
-                                               .html_form_submit($t->translate('Yes, Delete'), 'Delete')
+                                               .html_form_submit($t->translate('Yes, Delete'))
                                                .html_form_end()
                                                .html_form_action('PHP_SELF')
     	 	                               .html_form_hidden('modify', 1)
     	 	                               .html_form_hidden('delete', 0)
     	 	                               .html_form_hidden('docoid', $db->f('docoid'))
-                                               .html_form_submit($t->translate('No, just modify'), 'modify')
+                                               .html_form_submit($t->translate('No, just modify'))
                                                .html_form_end());
             $bx->box_columns_end();
             $bx->box_body_end();
