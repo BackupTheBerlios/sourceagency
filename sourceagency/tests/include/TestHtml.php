@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.4 2001/11/08 16:17:42 riessen Exp $
+# $Id: TestHtml.php,v 1.5 2001/11/12 13:20:22 riessen Exp $
 #
 ######################################################################
 
@@ -46,13 +46,22 @@ extends TestCase
     }
 
     function test__html_link() {
-        $actual = html_link('fubar','what','hello world' );
-        // TODO: isn't this wrong? the query doesn't even appear
-        $expect = "<a href=\"fubar\">hello world</a>";
+        $actual = html_link('fubar',array( 'one' => 'what'),'hello world' );
+        $expect = "<a href=\"fubar?one=what\">hello world</a>";
         $this->assertEquals( $expect, $actual );
         
         $actual = html_link( 'snafu', "", 'goodbye cruel world' );
         $expect = "<a href=\"snafu\">goodbye cruel world</a>";
+        $this->assertEquals( $expect, $actual );
+
+        $actual = html_link('fubar',array( 'one' => 'what the hell'),
+                            'hello world' );
+        $expect = "<a href=\"fubar?one=what+the+hell\">hello world</a>";
+        $this->assertEquals( $expect, $actual );
+
+        $actual = html_link('fubar',array( 'one' => 'what+the+hell'),
+                            'hello world' );
+        $expect = "<a href=\"fubar?one=what%2Bthe%2Bhell\">hello world</a>";
         $this->assertEquals( $expect, $actual );
     }
 
