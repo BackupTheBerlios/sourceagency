@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestBox.php,v 1.2 2001/10/24 11:16:57 riessen Exp $
+// $Id: TestBox.php,v 1.3 2001/10/24 15:31:44 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -36,6 +36,10 @@ extends TestCase
     // the _testFor_XXXXX methods perform the regular expression matches
     // for the individual tests, the reason for splitting them away from
     // the tests is that some of them are reused.
+    function _testFor_length( $length ) {
+        $this->assertEquals( $length, capture_text_length(), 
+                             "Length mismatch" );
+    }
     function _testFor_box_begin( $text ) {
         $this->assertRegexp( "/<table border=0 cellspacing=0 cellpadding=0 "
                              . "bgcolor=\"frame_color\" width=\"box_width\" "
@@ -104,7 +108,13 @@ extends TestCase
         $this->assertRegexp( "/<\/tr>\n<!--[^-]+-->\n<tr>\n/",
                              $text, "box next row of columns mismatch" );
     }
-
+    function _testFor_box_colspan( $text, $nr_cols, $align, $bgcolor,
+                                   $insert_text ) {
+        $this->assertRegexp( "/<!--[^-]+-->\n<td colspan=\"".$nr_cols."\" "
+                             ."align=\"".$align."\" bgcolor=\"".$bgcolor."\">"
+                             .$insert_text."<\/td>\n<!--[^-]+-->\n/",$text,
+                             "box colspan mismatch" );
+    }
 
     // the following the individual test methods
     function testBox_begin() {
@@ -112,7 +122,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->assertEquals( 212, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 212 );
         $this->_testFor_box_begin( $text );
     }
 
@@ -121,7 +131,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->assertEquals( 49, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 49 );
         $this->_testFor_box_end( $text );
     }
 
@@ -131,7 +141,7 @@ extends TestCase
         capture_stop();
         
         $text = capture_text_get();
-        $this->assertEquals( 78, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 78 );
         $this->_testFor_box_title_begin( $text );
     }
 
@@ -141,7 +151,7 @@ extends TestCase
         capture_stop();
         
         $text = capture_text_get();
-        $this->assertEquals( 34, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 34 );
         $this->_testFor_box_title_end( $text );
     }
 
@@ -151,7 +161,7 @@ extends TestCase
         capture_stop();
         
         $text = capture_text_get();
-        $this->assertEquals( 167, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 167 );
 
         $this->_testFor_box_title_begin( $text );
         $this->_testFor_box_title( $text, $title );
@@ -163,7 +173,7 @@ extends TestCase
         capture_stop();
         
         $text = capture_text_get();
-        $this->assertEquals( 105, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 105 );
         $this->_testFor_box_body_begin( $text );
     }
 
@@ -172,7 +182,7 @@ extends TestCase
         capture_stop();
         
         $text = capture_text_get();
-        $this->assertEquals( 40, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 40 );
         $this->_testFor_box_body_end( $text );
     }
 
@@ -182,7 +192,7 @@ extends TestCase
         capture_stop();
         
         $text = capture_text_get();
-        $this->assertEquals( 196, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 196 );
         $this->_testFor_box_body_begin( $text );
         $this->_testFor_box_body( $text, $body);
         $this->_testFor_box_body_end( $text );
@@ -195,7 +205,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->assertEquals( 635, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 635 );
         $this->_testFor_box_begin( $text );
         $this->_testFor_box_title( $text, $title );
         $this->_testFor_box_body( $text, $body );
@@ -208,7 +218,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->assertEquals( 436, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 436 );
         $this->_testFor_box_begin( $text );
         $this->_testFor_box_title( $text, $title );
         $this->_testFor_box_end( $text );
@@ -220,7 +230,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->assertEquals( 161, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 161 );
         $this->_thisFor_box_columns_begin( $text, $nr_cols );
     }
 
@@ -232,7 +242,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->assertEquals( 126, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 126 );
         $this->_testFor_box_column_start( $text, $align, $width, $bg_color );
 
         capture_reset_text();
@@ -241,7 +251,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->assertEquals( 105, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 105 );
         $this->_testFor_box_column_start( $text, $align, $width );
     }
 
@@ -250,7 +260,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->assertEquals( 31, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 31 );
         $this->_testFor_box_column_finish( $text );
     }
 
@@ -259,7 +269,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->assertEquals( 47, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 47 );
         $this->_testFor_box_columns_end( $text );
     }
 
@@ -272,7 +282,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->assertEquals( 195, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 195 );
         $this->_testFor_box_column_start( $text, $align, $width, $bgcolor );
         $this->assertRegexp( "/" . $inserted_text . "/", $text, 
                              "box column mismatch");
@@ -284,16 +294,8 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->assertEquals( 50, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 50 );
         $this->_testFor_box_next_row_of_columns( $text );
-    }
-
-    function _testFor_box_colspan( $text, $nr_cols, $align, $bgcolor,
-                                   $insert_text ) {
-        $this->assertRegexp( "/<!--[^-]+-->\n<td colspan=\"".$nr_cols."\" "
-                             ."align=\"".$align."\" bgcolor=\"".$bgcolor."\">"
-                             .$insert_text."<\/td>\n<!--[^-]+-->\n/",$text,
-                             "box colspan mismatch" );
     }
 
     function testBox_colspan() {
@@ -305,7 +307,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->assertEquals( 262, capture_text_length(), "Length mismatch" );
+        $this->_testFor_length( 262 );
         $this->_testFor_box_colspan( $text, $nr_cols, $align, $bgcolor, 
                                      $insert_text);
     }
