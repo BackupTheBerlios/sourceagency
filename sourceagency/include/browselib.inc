@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.9 2002/04/17 10:47:58 grex Exp $
+# $Id: browselib.inc,v 1.10 2002/04/17 10:59:57 grex Exp $
 #
 ######################################################################
 
@@ -157,7 +157,7 @@ function browse_licenses()
  *
  * @access  private
  */
-function browse_type()
+function _browse_type()
 {
     global $bx, $t;
     
