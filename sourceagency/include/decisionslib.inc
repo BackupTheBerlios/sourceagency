@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisionslib.inc,v 1.7 2001/12/17 10:06:11 grex Exp $
+# $Id: decisionslib.inc,v 1.8 2002/03/20 14:41:33 riessen Exp $
 #
 ######################################################################
 
@@ -862,4 +862,11 @@ function decisions_decision_met_on_step5 ($proid, $milestone_number, $count) {
     }
 }
 
+function create_decision_link( $proid ) {
+    global $t;
+    print ( "<p align=\"right\">[ <b>"
+            .html_link( "decisions.php3",
+                        array("proid" => $proid),
+                        $t->translate("Decide!") )."</b> ]\n");
+}
 ?>
