@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.18 2002/03/06 12:44:35 riessen Exp $
+# $Id: config.inc,v 1.19 2002/03/06 12:58:00 riessen Exp $
 #
 ######################################################################
 
@@ -331,7 +331,7 @@ $th_font_color = "#333333";
 $th_hover_font_color = "#FF0000";
 
 $th_nav_bgcolor = "#FFCC33";
-$th_navstrip_bgcolor = "#000000";
+$th_navstrip_bgcolor = "#7B7B7B";
 $th_nav_font_color = "#333333";
 $th_navstrip_font_color = "#FFFFFF";
 
