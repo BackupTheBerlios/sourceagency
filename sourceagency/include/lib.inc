@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.24 2002/03/27 12:54:29 riessen Exp $
+# $Id: lib.inc,v 1.25 2002/03/27 12:56:30 riessen Exp $
 #
 ######################################################################
 
@@ -629,7 +629,7 @@ function calendar_box($proid) {
         default:
             $nature = "Unknown";
     }
-    $bx->box_column ("left","","", "&nbsp;" . $nature);
+    $bx->box_column ("left","","", "&nbsp;" . $t->translate($nature));
     
     $bx->box_next_row_of_columns();
 
