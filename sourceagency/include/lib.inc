@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.36 2002/04/24 22:05:21 grex Exp $
+# $Id: lib.inc,v 1.37 2002/04/25 06:36:23 grex Exp $
 #
 ######################################################################
 
@@ -299,9 +299,9 @@ function lib_merge_arrays($array1, $array2)
  */
 function _lib_show_more_links($start, $end)
 {
-    while ($i=$start; $i<$end; $i++) {
+#    while ($i=$start; $i<$end; $i++) {
         print html_link($link, lib_merge_arrays($query, array('current' => $i*10)), ($i-1).'1-'.($i*10)).' ';
-    }
+#    }
 }
 
 /**
