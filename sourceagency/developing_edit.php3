@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: developing_edit.php3,v 1.2 2001/11/16 10:56:36 riessen Exp $
+# $Id: developing_edit.php3,v 1.3 2002/03/18 16:53:31 riessen Exp $
 #
 ######################################################################  
 
@@ -31,12 +31,12 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require ("developinglib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-
-<?php
+start_content();
 
 $page = "developing_edit";
 
@@ -47,19 +47,21 @@ if (check_permission($proid,$page)) {
   print "<br><p>\n";
 
   if (!isset($submit) || empty($submit)) {
-	if (isset($preview) && !empty($preview)) developing_preview($proid);
-	developing_form($proid,$content_id);
+      if (isset($preview) && !empty($preview)) {
+          developing_preview($proid);
+      }
+      developing_form($proid,$content_id);
   } else {
-	developing_insert($proid,$auth->auth["uname"],$content_id, $cost, $license, $cooperation, $valid_day, $valid_month, $valid_year, $start_day, $start_month, $start_year, $duration);
+      developing_insert($proid,$auth->auth["uname"],$content_id, $cost, 
+      $license, $cooperation, $valid_day, $valid_month, $valid_year, 
+      $start_day, $start_month, $start_year, $duration);
   }
-
+  
 }
 
-?>
 
-<!-- end content -->
+end_content();
 
-<?php
 require("footer.inc");
 @page_close();
 ?>
