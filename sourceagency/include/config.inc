@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.25 2002/05/07 19:20:28 grex Exp $
+# $Id: config.inc,v 1.26 2002/05/07 21:58:37 grex Exp $
 #
 ######################################################################
 
@@ -77,10 +77,10 @@ $org_logo_height = '60';
 ######################################################################
 
 $ts_array = array (
-	'Home'		=> $sys_url_title.'index.php',
-	'About us'	=> $sys_url_title.'about/index.php',
-	'Partners'	=> $sys_url_title.'partners/index.php',
-	'Contact'	=> $sys_url_title.'contact/index.php'
+	'Home'		=> $sys_url_title.'index.php.en',
+	'About us'	=> $sys_url_title.'about/index.php.en',
+	'Partners'	=> $sys_url_title.'partners/index.php.en',
+	'Contact'	=> $sys_url_title.'contact/index.php.en'
 );
 
 ######################################################################
