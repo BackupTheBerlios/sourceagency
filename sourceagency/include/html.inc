@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: html.inc,v 1.12 2002/04/20 00:01:35 grex Exp $
+# $Id: html.inc,v 1.13 2002/04/20 00:26:47 grex Exp $
 #
 ######################################################################
 
@@ -46,7 +46,7 @@ function html_link($address, $query, $text)
         $output = '<a href="'.$sess->url($address).'">'.$text.'</a>';
     } else {
         $output = '<a href="'.$sess->url($address)
-             .$sess->add_query($query).'">'.$text.'</a>\n';
+             .$sess->add_query($query).'">'.$text.'</a>';
     }
     
     return $output;
