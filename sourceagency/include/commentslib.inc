@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: commentslib.inc,v 1.5 2002/04/18 13:40:24 grex Exp $
+# $Id: commentslib.inc,v 1.6 2002/05/07 12:28:36 riessen Exp $
 #
 ######################################################################
 
@@ -112,15 +112,16 @@ function comments_show($proid, $type_cmt, $number, $cmt_id, $ref)
    	$bx->box_end();
 
 	lib_comment_it($proid, $db->f('type'), $db->f('number'), $db->f('id'), 
-                       'Re:'.$db->f('subject_cmt'), 'Comment it!');
+                    'Re:'.$db->f('subject_cmt'), $t->translate('Comment it!'));
 
 	$db_ref = new DB_SourceAgency;
 	$db_ref->query("SELECT ref FROM comments WHERE proid='$proid' "
                        ."AND type='".$db->f("type")."' AND id='"
                        .$db->f('ref')."'");
+
 	$db_ref->next_record();
 	lib_previous_comment($proid, $db->f('type'), $db->f('number'), 
-                             $db_ref->f('ref'), 'Previous');
+                             $db_ref->f('ref'), $t->translate('Previous'));
 
   	lib_show_comments_on_it($proid, $type_cmt, $number, $db->f('id'));
     }
@@ -174,8 +175,9 @@ function comments_form($proid)
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('right', '30%', '', '&nbsp;');
-    $bx->box_column ('left', '70%', '', html_form_submit('Preview', 'preview')
-                     .html_form_submit('Submit', 'submit'));
+    $bx->box_column ('left', '70%', '', 
+                     html_form_submit($t->translate('Preview'), 'preview')
+                     .html_form_submit($t->translate('Submit'), 'submit'));
     htmlp_form_end();
     $bx->box_columns_end();
 
@@ -242,7 +244,7 @@ function comments_preview($proid)
  */
 function comments_insert($proid, $user, $type_cmt, $number, $ref, $subject, $text)
 {
-    global $db;
+    global $db, $t;
 
     $db->query("SELECT * FROM comments WHERE proid='$proid' AND "
                ."type='$type_cmt' AND number='$number'");
@@ -257,9 +259,12 @@ function comments_insert($proid, $user, $type_cmt, $number, $ref, $subject, $tex
     /* WISH: config.inc included only once */
     include('config.inc');
 
-    monitor_mail($proid, 'comments',  'New Comment',  'New Comment on project '
-                 ."$proid\n Subject: $subject\n by $user\n\n You can see it "
-                 ."at: $sys_urlcomments.php3?proid=$proid&type=$type_cmt&"
+    monitor_mail($proid, 'comments',  $t->translate('New Comment'),  
+                 $t->translate('New Comment on project')
+                 ." $proid\n Subject: $subject\n "
+                 .$t->translate("by")." $user\n\n "
+                 .$t->translate("You can see it at")
+                 .": $sys_urlcomments.php3?proid=$proid&type=$type_cmt&"
                  ."number=$number&id=$id");
 
     comments_show($proid, $type_cmt, $number, $id, $ref);
@@ -285,7 +290,7 @@ function comments_insert($proid, $user, $type_cmt, $number, $ref, $subject, $tex
 function comments_modify($proid, $user, $type_cmt, $number,
                          $cmt_id, $ref, $subject, $text)
 {
-    global $db;
+    global $db, $t;
 
     $db->query("UPDATE comments SET user_cmt='devel', subject_cmt='$subject', "
                ."text_cmt='$text' WHERE proid='$proid' AND type='$type_cmt'  "
@@ -295,9 +300,12 @@ function comments_modify($proid, $user, $type_cmt, $number,
     /* WISH: config.inc included only once */
     include('config.inc');
 
-    monitor_mail($proid,'comments', 'Comment modified', 'Modification on a '
-                 ."comment on project $proid\n Subject: $subject\n by "
-                 ."$user\n\n You can see it at: $sys_urlcomments.php3?"
+    monitor_mail($proid, 'comments', $t->translate('Comment modified'), 
+                 $t->translate('Modification on a comment on project')
+                 ." $proid\n Subject: $subject\n ".$t->translate("by")
+                 ." $user\n\n "
+                 .$t->translate("You can see it at")
+                 .": $sys_urlcomments.php3?"
                  ."proid=$proid&type=$type_cmt&number=$number&id=$id");
 
     comments_show($proid, $type_cmt, $number, $cmt_id, $ref);
@@ -338,19 +346,22 @@ function comments_modify_form($proid)
     $bx->box_column ('right', '30%', '', '<b>'
                      .stripslashes($t->translate('Subject')).'</b> (128): ');
     $bx->box_column ('left', '70%', '', html_input_text('subject', 40, 128,
-                                                        stripslashes($subject)));
+                                                     stripslashes($subject)));
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ('right', '30%', '', '<b>'.stripslashes($t->translate('Body'))
+    $bx->box_column ('right', '30%', '', '<b>'
+                     .stripslashes($t->translate('Body'))
                      .'</b> (*): ');
-    $bx->box_column ('left', '70%', '', html_textarea('text', 40, 7, 'virtual', 255,
-                                                      stripslashes($text)));
+    $bx->box_column ('left', '70%', '', 
+                     html_textarea('text', 40, 7, 'virtual', 255,
+                                   stripslashes($text)));
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('right', '30%', '', '&nbsp;');
-    $bx->box_column ('left', '70%', '', html_form_submit('Preview', 'preview')
-                     .html_form_submit('Submit', 'submit'));
+    $bx->box_column ('left', '70%', '', 
+                     html_form_submit($t->translate('Preview'), 'preview')
+                     .html_form_submit($t->translate('Submit'), 'submit'));
     htmlp_form_end();
     $bx->box_columns_end();
 
@@ -377,7 +388,7 @@ function comments_missing_parameters()
                   $th_box_title_align, $th_box_body_bgcolor, 
                   $th_box_error_font_color, $th_box_body_align);
 
-    $be->box_full($t->translate('Error'),  $t->translate('Missing Parameters'));
+    $be->box_full($t->translate('Error'), $t->translate('Missing Parameters'));
 }
 
 ?>
