@@ -1,13 +1,13 @@
 <?php
 
 ######################################################################
-# SourceAgency: Software Announcement & Retrieval System
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #             Gregorio Robles (grex@scouts-es.org)
 #
-# BerliOS SourceAgency: http://sourcewell.berlios.de
+# BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
 # Editing sponsoring involvements is possible here
@@ -15,6 +15,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: developing_edit.php3,v 1.2 2001/11/16 10:56:36 riessen Exp $
+#
 ######################################################################  
 
 page_open(array("sess" => "SourceAgency_Session"));
