@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: ratingslib.inc,v 1.2 2001/11/08 16:17:41 riessen Exp $
+# $Id: ratingslib.inc,v 1.3 2001/12/18 20:00:19 grex Exp $
 #
 ######################################################################
 
@@ -31,18 +31,26 @@ function ratings_form($proid,$dev_or_spo,$number) {
   $bx->box_column_start("center","33%","white");
   $db->query("SELECT * FROM developing WHERE proid='$proid' AND status='A' AND developer!='".$auth->auth["uname"]."' ORDER BY devid");
   while($db->next_record()) {
-	if (!strcmp($dev_or_spo,"developer") && $db->f("devid")==$number) ratings_form_full($proid,$db->f("developer"),"developer",$db->f("devid"));
-	elseif (!ratings_rated_yet($proid,$db->f("developer"),$auth->auth["uname"])) ratings_form_empty($proid,$db->f("developer"),"developer",$db->f("devid"));
-	else ratings_form_rated($proid,$db->f("developer"),"developer",$db->f("devid"));
+	if (!strcmp($dev_or_spo,"developer") && $db->f("devid")==$number) {
+	    ratings_form_full($proid,$db->f("developer"),"developer",$db->f("devid"));
+        } elseif (!ratings_rated_yet($proid,$db->f("developer"),$auth->auth["uname"])) {
+	    ratings_form_empty($proid,$db->f("developer"),"developer",$db->f("devid"));
+        } else {
+	    ratings_form_rated($proid,$db->f("developer"),"developer",$db->f("devid"));
+        }
   }
   $bx->box_column_finish($proid);
 
   $bx->box_column_start("center","33%","white");
   $db->query("SELECT * FROM sponsoring WHERE proid='$proid' AND status='A' AND sponsor!='".$auth->auth["uname"]."' ORDER BY spoid");
   while($db->next_record()) {
-	if (!strcmp($dev_or_spo,"sponsor") && $db->f("spoid")==$number) ratings_form_full($proid,$db->f("sponsor"),"sponsor",$db->f("spoid"));
-	elseif (!ratings_rated_yet($proid,$db->f("sponsor"),$auth->auth["uname"])) ratings_form_empty($proid,$db->f("sponsor"),"sponsor",$db->f("spoid"));
-	else ratings_form_rated($proid,$db->f("sponsor"),"sponsor",$db->f("spoid"));
+	if (!strcmp($dev_or_spo,"sponsor") && $db->f("spoid")==$number) {
+	    ratings_form_full($proid,$db->f("sponsor"),"sponsor",$db->f("spoid"));
+	} elseif (!ratings_rated_yet($proid,$db->f("sponsor"),$auth->auth["uname"])) {
+	    ratings_form_empty($proid,$db->f("sponsor"),"sponsor",$db->f("spoid"));
+	} else {
+            ratings_form_rated($proid,$db->f("sponsor"),"sponsor",$db->f("spoid"));
+        }
   }
   $bx->box_column_finish();
 
@@ -59,7 +67,12 @@ function ratings_form_full($proid,$username,$dev_or_spo,$id) {
   global $db, $bx, $t, $sess, $auth;
 
   include("config.inc");
-  $array = $sponsor_rates_developer;
+
+  if ($dev_or_spo = "sponsor") {
+      $array = $developer_rates_sponsor;
+  } elseif ($dev_or_spo = "developer") {
+      $array = $sponsor_rates_developer;
+  }
 
   $bx->box_begin();
   $bx->box_title("Rate ".$username);
@@ -112,7 +125,13 @@ function ratings_form_empty($proid,$username,$dev_or_spo,$number) {
   global $bx, $t, $sess;
 
   include("config.inc");
-  $array = $sponsor_rates_developer;
+
+  if ($dev_or_spo = "sponsor") {
+      $array = $sponsor_rates_developer;
+  } elseif ($dev_or_spo = "developer") {
+      $array = $developer_rates_sponsor;
+  }
+
   $bx->box_begin();
   $bx->box_title($username);
   $bx->box_body_begin();
@@ -141,7 +160,13 @@ function ratings_form_rated($proid,$username,$dev_or_spo,$number) {
   global $bx, $t, $sess;
 
   include("config.inc");
-  $array = $sponsor_rates_developer;
+
+  if ($dev_or_spo = "sponsor") {
+      $array = $sponsor_rates_developer;
+  } elseif ($dev_or_spo = "developer") {
+      $array = $developer_rates_sponsor;
+  }
+
   $bx->box_begin();
   $bx->box_title($username);
   $bx->box_body_begin();
@@ -182,29 +207,26 @@ function ratings_insert($proid,$dev_or_spo,$number,$by_whom) {
   $db->next_record();
   $to_whom = $db->f($dev_or_spo);
 
-  include("config.inc");
-
   $string = $auth->auth["perm"]."_rates_".$dev_or_spo;
-
+  include("config.inc");
   switch ($string) {
-	case "sponsor_rates_developer":	$array = $sponsor_rates_developer; break;
+	case "sponsor_rates_devel":	$array = $sponsor_rates_developer; break;
 	case "sponsor_rates_sponsor": $array = $sponsor_rates_developer; break;
-	case "developer_rates_sponsor": $array = $sponsor_rates_developer; break;
-	case "developer_rates_developer": $array = $sponsor_rates_developer; break;
+	case "devel_rates_sponsor": $array = $developer_rates_sponsor; break;
+	case "devel_rates_devel": $array = $developer_rates_sponsor; break;
   }
 
   if (ratings_rated_yet($proid,$to_whom,$by_whom)) {
 	for($i=0;$i<sizeof($array);$i++) {
-		$db->query("UPDATE ratings SET rating='".$GLOBALS["$array[$i]"]."'  WHERE proid='$proid' AND to_whom='$to_whom' AND by_whom='$by_whom' AND on_what='$array[$i]'");
+		$db->query("UPDATE ratings SET rating='".$GLOBALS[$array[$i]]."'  WHERE proid='$proid' AND to_whom='$to_whom' AND by_whom='$by_whom' AND on_what='".$array[$i]."'");
   	}
   } else {
-
 	$db->query("SELECT volume FROM description WHERE proid='$proid'");
 	$db->next_record();
 	$volume = $db->f("volume");
-
+ 
 	for($i=0;$i<sizeof($array);$i++) {
-		$db->query("INSERT ratings SET proid='$proid', to_whom='$to_whom', by_whom='$by_whom', rating='".$GLOBALS["$array[$i]"]."', on_what='$array[$i]', project_importance='$volume'");
+		$db->query("INSERT ratings SET proid='$proid', to_whom='$to_whom', by_whom='$by_whom', rating='".$GLOBALS[$array[$i]]."', on_what='".$array[$i]."', project_importance='$volume'");
   	}
   }
 }

@@ -38,6 +38,13 @@ $bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcol
 
 $page = "step6_edit";
 
+/*
+// Debugging information
+print "<br><b>Dev_or_spo: </b>".$dev_or_spo;
+// ID number contains devid for developers (table developing) and spoid for sponsors (table sponsoring)
+print "<br><b>ID_number: </b>".$id_number;
+*/
+
 if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
@@ -46,11 +53,23 @@ if (check_permission($proid,$page)) {
 	ratings_look_for_next_one($proid,&$id_number);
   }
 
-  if(!isset($dev_or_spo) || empty($dev_or_spo) || empty($id_number) || !isset($id_number)) $id_number = ratings_look_for_first_one($proid);
+  if(!isset($dev_or_spo) || empty($dev_or_spo) || is_not_set_or_empty( $id_number )) {
+     $id_number = ratings_look_for_first_one($proid);
+  }
 
-  print "bla,bla,bla\n";
-  if (!isset($finished) && empty($finished)) ratings_form($proid,$dev_or_spo,$id_number);
-  else ratings_in_history($proid,$auth->auth["uname"]);
+  print "Project participants have the opportunity to rate the other project members.\n";
+
+/*
+// Debugging information
+print "<p><b>Dev_or_spo2: </b>".$dev_or_spo;
+print "<br><b>ID_number2: </b>".$id_number;
+*/
+
+  if (!isset($finished) && empty($finished)) {
+      ratings_form($proid,$dev_or_spo,$id_number);
+  } else {
+     ratings_in_history($proid,$auth->auth["uname"]);
+  }
 }
 
 ?>
