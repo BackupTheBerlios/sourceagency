@@ -457,6 +457,7 @@ function is_main_developer($proid) {
 
   if (isset($auth) && !empty($auth->auth["perm"]) && is_accepted_developer($proid)) {
 	$db_local = new DB_SourceAgency;
+        // FIXME: proid='..' appears _twice_ in the following query
 	$db_local->query("SELECT * FROM configure WHERE proid='$proid' AND proid='$proid' AND developer='".$auth->auth["uname"]."'");
 	if ($db_local->num_rows() > 0) return 1;
   }
