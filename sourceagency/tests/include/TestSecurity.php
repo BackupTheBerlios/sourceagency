@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.7 2001/12/13 16:53:16 riessen Exp $
+# $Id: TestSecurity.php,v 1.8 2002/01/11 13:41:00 riessen Exp $
 #
 ######################################################################
 
@@ -32,7 +32,7 @@ if ( !defined("BEING_INCLUDED" ) ) {
 include_once( 'security.inc' );
 
 class UnitTestSecurity
-extends TestCase
+extends UnitTest
 {
     var $query_is_accepted_developer = 
         "SELECT * FROM developing WHERE proid='%s' AND status='A' AND developer='%s'";
@@ -49,8 +49,7 @@ extends TestCase
                     "u1"=>"snafu","p1"=>"p2","e1"=>1,
                     "u2"=>"user3","p2"=>"",  "e2"=>0);
 
-        $db_config = new mock_db_configure;
-        $db_config->set_nr_instance_expected( 4 );
+        $db_config = new mock_db_configure( 4 );
         $db_q = array( // Arg: 1=user name
                        0 => ("SELECT * FROM auth_user WHERE perms "
                              ."LIKE '%%sponsor%%' AND username='%s'"));
@@ -76,8 +75,7 @@ extends TestCase
         $this->assertEquals( 0, is_sponsor() );
         
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, $db_config->did_db_fail(),
-                            $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 
     function testIs_accepted_sponsor() {
@@ -89,11 +87,10 @@ extends TestCase
                     "u2"=>"user3","r2"=>"proid3","p2"=>"",  "e2"=>0);
         $proid4 = "proid";
 
-        $db_config = new mock_db_configure;
         // REFACTOR: need four instances instead of 2 because the
         // REFACTOR: instantiation of the database class happens before
         // REFACTOR: the if in is_accepted_sponsor
-        $db_config->set_nr_instance_expected( 4 );
+        $db_config = new mock_db_configure( 4 );
         $db_q = array( // Arg: 1=proid, 2=sponsor name
                        0 => ("SELECT * FROM sponsoring WHERE proid='%s'"
                              . " AND status='A' AND sponsor='%s'"));
@@ -116,8 +113,7 @@ extends TestCase
         $this->assertEquals( 0, is_accepted_sponsor( $proid4 ) );
 
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, $db_config->did_db_fail(),
-                            $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 
     function testIs_accepted_referee() {
@@ -129,11 +125,10 @@ extends TestCase
                     "u2"=>"user3","r2"=>"proid3","p2"=>"",  "e2"=>0);
         $proid4 = "proid";
 
-        $db_config = new mock_db_configure;
         // REFACTOR: need four instances instead of 2 because the
         // REFACTOR: instantiation of the database class happens before
         // REFACTOR: the if in is_accepted_referee
-        $db_config->set_nr_instance_expected( 4 );
+        $db_config = new mock_db_configure( 4 );
         $db_q = array( // Arg: 1=proid, 2=sponsor name
                        0 => ("SELECT * FROM referees WHERE proid='%s' AND"
                              . " status='A' AND referee='%s'"));
@@ -156,8 +151,7 @@ extends TestCase
         $this->assertEquals( 0, is_accepted_referee( $proid4 ), __LINE__ );
         
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, $db_config->did_db_fail(),
-                            $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 
     function testIs_accepted_developer() {
@@ -169,10 +163,9 @@ extends TestCase
                     "u2"=>"user3","r2"=>"proid3","p2"=>"",  "e2"=>0);
         $proid4 = "proid";
 
-        $db_config = new mock_db_configure;
         // REFACTOR: 4 DB instances instead of 2 -- should move the creation
         // REFACTOR: of the DB in is_accepted_developer inside the if statement
-        $db_config->set_nr_instance_expected( 4 );
+        $db_config = new mock_db_configure( 4 );
         $db_q = array( // Arg: 1=proid, 2=developer name
                        0 => ($this->query_is_accepted_developer));
         
@@ -194,8 +187,7 @@ extends TestCase
         $this->assertEquals( 0, is_accepted_developer( $proid4 ), __LINE__ );
 
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, $db_config->did_db_fail(),
-                            $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 
     function testIs_main_developer() {
@@ -210,8 +202,9 @@ extends TestCase
                     "u2"=>"user3","r2"=>"proid3","p2"=>"",  "e2"=>0);
         $proid4 = "proid";
 
-        $db_config = new mock_db_configure;
-        $db_config->set_nr_instance_expected( 4 );
+        // require four instances of the DB_SourceAgency class
+        $db_config = new mock_db_configure( 4 );
+
         $db_q = array( // Arg: 1=proid, 2=proid, 3=developer name
                        0 => ("SELECT * FROM configure WHERE proid='%s' "
                              . "AND developer='%s'"),
@@ -242,8 +235,7 @@ extends TestCase
         $this->assertEquals( 0, is_main_developer( $proid4 ), __LINE__ );
 
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, $db_config->did_db_fail(),
-                            $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 
     function testIs_first_sponsor_or_dev() {
@@ -254,8 +246,7 @@ extends TestCase
 //          $user1 = "fubar";
 //          $perm1 = "perm1";
 
-//          $db_config = new mock_db_configure;
-//          $db_config->set_nr_instance_expected( 4 );
+//          $db_config = new mock_db_configure( 4 );
 //          $db_q = array( // Arg: 1=user name
 //                         0 => ("SELECT * FROM configure WHERE sponsor='%s'"));
 
@@ -266,9 +257,7 @@ extends TestCase
 //          $auth->set_perm( $perm1 );
 //          $this->assertEquals( 1, is_first_sponsor_or_dev( $proid1 ));
 
-//          // if using a database, then ensure that it didn't fail
-//          $this->assertEquals(false, $db_config->did_db_fail(),
-//                              $db_config->error_message() );
+      // $this->_check_db( $db_config );
     }
 }
 

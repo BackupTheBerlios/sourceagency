@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.8 2002/01/09 16:24:57 riessen Exp $
+# $Id: TestLib.php,v 1.9 2002/01/11 13:41:00 riessen Exp $
 #
 ######################################################################
 
@@ -128,6 +128,14 @@ extends UnitTest
 
     function testLib_nick() {
         $this->assertEquals( "<b>by FUBAR</b>", lib_nick( "FUBAR" ) );
+
+        capture_start();
+        lib_pnick( "SNAFU" );
+        capture_stop();
+
+        $text = capture_text_get();
+        $this->_testFor_length( 15 );
+        $this->assertEquals( "<b>by SNAFU</b>", $text );
     }
 
     function testSelect_date() {
@@ -230,10 +238,9 @@ extends UnitTest
     }
 
     function testCalendar_box() {
-        $db_config = new mock_db_configure;
         // 4 instances required: 2 for the no budget case, and 2 for the
         // budget is set case.
-        $db_config->set_nr_instance_expected( 4 );
+        $db_config = new mock_db_configure( 4 );
         $db_q = array( 0 => ("SELECT * FROM description,auth_user WHERE "
                              . "proid='%s' AND description_user = username"),
                        1 => ("SELECT SUM(budget) FROM sponsoring WHERE "
@@ -351,8 +358,7 @@ extends UnitTest
                                          ." euro<\/td>"));
 
         // check that the database component did not fail
-        $this->assertEquals( false, $db_config->did_db_fail(),
-                             $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 
     function testCheckcnt() {
@@ -360,8 +366,7 @@ extends UnitTest
         // global $db variable
         global $db;
 
-        $db_config = new mock_db_configure;
-        $db_config->set_nr_instance_expected( 2 );
+        $db_config = new mock_db_configure( 2 );
         $db_q = array( 0 => ("DELETE FROM counter_check WHERE "
                              ."DATE_FORMAT(creation_cnt,'%Y-%m-%d') != '"
                              . date("Y-m-d") . "'"),
@@ -394,9 +399,186 @@ extends UnitTest
         $this->assertEquals( 0, checkcnt( $dat["p2"], $dat["ip2"],$dat["t2"]));
 
         // check that the database component did not fail
-        $this->assertEquals( false, $db_config->did_db_fail(),
-                             $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
+
+    function testLicensep() {
+        $db_config = new mock_db_configure( 1 );
+        $db_q = array( 0 => ("SELECT * FROM licenses ORDER BY license ASC") );
+
+        $db_config->add_query( $db_q[0], 0 );
+
+        $row = array();
+        $row[0] = array( "license" => "snafu" );
+        $db_config->add_record( $row[0], 0 );
+        $row[1] = array( "license" => "fritz" );
+        $db_config->add_record( $row[1], 0 );
+        $row[2] = array( "license" => "fubar" );
+        $db_config->add_record( $row[2], 0 );
+        $row[3] = array( "license" => "hugo" );
+        $db_config->add_record( $row[3], 0 );
+
+        capture_start();
+        licensep( $row[0]["license"] );
+        capture_stop();
+
+        $text = capture_text_get();
+        $this->_testFor_length( 153 );
+
+        $this->_testFor_pattern( $text, "selected value=\"".$row[0]["license"]
+                                        ."\">".$row[0]["license"]."" );
+
+        for ( $idx = 1; $idx < count( $row ); $idx++ ) {
+            $this->_testFor_pattern( $text, ("value=\"".$row[$idx]["license"]
+                                             . "\">" .$row[$idx]["license"]));
+        }
+
+        // check that the database component did not fail
+        $this->_check_db( $db_config );
+    }
+
+    function testLib_show_description() {
+        $db_config = new mock_db_configure( 2 );
+        $db_q = array( 0 => ("SELECT * FROM *"),
+                       1 => ("SELECT X FROM Y") );
+
+        $db_config->add_query( $db_q[0], 0 );
+        $db_config->add_query( $db_q[1], 1 );
+
+        $row = array();
+        $row[0] = $this->_generate_array( array( "proid", "description",
+                                                 "description_creation",
+                                                 "volume", "description_user",
+                                                 "project_title", "type"), 1);
+        $db_config->add_record( $row[0], 0 );
+        $db_config->add_num_row( 1, 0 );
+        $db_config->add_num_row( 0, 1 );
+
+        capture_start();
+        lib_show_description( $db_q[0] );
+        capture_stop();
+        
+        $text = capture_text_get();
+        $this->_testFor_pattern( $text, ("<b>by description_user_1<\/b>"));
+        $this->_testFor_pattern( $text, ("<a href=\"summary.php3\?proid="
+                                         ."proid_1\">project_title_1<\/a>" ));
+        $this->_testFor_pattern( $text, "<b>Description<\/b>: description_1");
+        $this->_testFor_pattern( $text, "<b>Volume<\/b>: volume_1" );
+
+        $this->_testFor_length( 656 );
+
+        capture_reset_text();
+        capture_start();
+        lib_show_description( $db_q[1] );
+        capture_stop();
+
+        $text = capture_text_get();
+        $this->_testFor_length( 0 );
+
+        // check that the database component did not fail
+        $this->_check_db( $db_config );
+    }
+
+    function testLib_show_comments_on_it() {
+        // because lib_show_comments_on_it is a recursive function, this
+        // test method is kind of complex.
+        $db_config = new mock_db_configure( 5 );
+        $db_q = array( 0 => ("SELECT * FROM comments,auth_user WHERE "
+                             ."proid='%s' AND type='%s' AND number='%s' "
+                             . "AND ref='%s' AND user_cmt=username "
+                             . "ORDER BY creation_cmt ASC") );
+
+        // data for 2 calls 
+        $dat = array( 0 => $this->_generate_array( array( "proid", "cmt_type",
+                                                          "num", "cmt_id"),0),
+                      1 => $this->_generate_array( array( "proid", "cmt_type",
+                                                          "num", "cmt_id"),1));
+        // data records 
+        $row = array();
+        for ( $idx = 0; $idx < 3; $idx++ ) {
+            $row[$idx] = 
+                 $this->_generate_array( array( "user_cmt", "subject_cmt",
+                                                "creation_cmt", "id" ), $idx );
+        }
+
+        $db_config->add_record( $row[0], 1 );
+        $db_config->add_record( $row[1], 1 );
+        $db_config->add_record( $row[2], 2 );
+
+        $db_config->add_query( sprintf( $db_q[0], $dat[0]["proid"],
+                                        $dat[0]["cmt_type"], $dat[0]["num"], 
+                                        $dat[0]["cmt_id"]), 0 );
+
+        $db_config->add_query( sprintf( $db_q[0], $dat[1]["proid"],
+                                        $dat[1]["cmt_type"], $dat[1]["num"], 
+                                        $dat[1]["cmt_id"]), 1 );
+
+        $db_config->add_query( sprintf( $db_q[0], $dat[1]["proid"],
+                                        $dat[1]["cmt_type"], $dat[1]["num"], 
+                                        $row[0]["id"]), 2 );
+
+        $db_config->add_query( sprintf( $db_q[0], $dat[1]["proid"],
+                                        $dat[1]["cmt_type"], $dat[1]["num"], 
+                                        $row[2]["id"]), 3 );
+
+        $db_config->add_query( sprintf( $db_q[0], $dat[1]["proid"],
+                                        $dat[1]["cmt_type"], $dat[1]["num"], 
+                                        $row[1]["id"]), 4 );
+
+        $db_config->add_num_row( 0, 0 ); // first call, 1st instance
+        $db_config->add_num_row( 2, 1 ); // second call, 2nd instance
+        $db_config->add_num_row( 1, 2 ); //  3rd instance created by 2nd inst
+        $db_config->add_num_row( 0, 3 ); //   4th instance created by 3rd
+        $db_config->add_num_row( 0, 4 ); //  5th instance created by 2nd inst  
+
+
+        //
+        // no data points and no recursive call
+        //
+        capture_start();
+        lib_show_comments_on_it( $dat[0]["proid"],$dat[0]["cmt_type"],
+                                 $dat[0]["num"], $dat[0]["cmt_id"] );
+        capture_stop();
+        
+        $text = capture_text_get();
+        $this->_testFor_length( 4 );
+        $this->assertEquals( "<p>\n", $text );
+
+        //
+        // this has two data points and does a recursive call ...
+        //
+        capture_reset_text();
+        capture_start();
+        lib_show_comments_on_it( $dat[1]["proid"],$dat[1]["cmt_type"],
+                                 $dat[1]["num"], $dat[1]["cmt_id"] );
+        capture_stop();
+
+        $text = capture_text_get();
+        $this->_testFor_length( 439 );
+
+        $this->_testFor_pattern( $text, ("<li><a href=\"comments[.]php3\?"
+                                         . "proid=proid_1&type=cmt_type_1&"
+                                         . "number=num_1&ref=cmt_id_1\">"
+                                         . "subject_cmt_0<\/a>\n by <b>"
+                                         . "user_cmt_0<\/b> on <b><\/b>"
+                                         . "\n<ul>"));
+        $this->_testFor_pattern( $text, ("<li><a href=\"comments[.]php3\?"
+                                         ."proid=proid_1&type=cmt_type_1&"
+                                         ."number=num_1&ref=id_0\">"
+                                         ."subject_cmt_2<\/a>\n by <b>"
+                                         ."user_cmt_2<\/b> on <b><\/b>\n<p>"
+                                         ."\n<\/ul>"));
+        $this->_testFor_pattern( $text, ("<li><a href=\"comments[.]php3\?"
+                                         ."proid=proid_1&type=cmt_type_1&"
+                                         ."number=num_1&ref=cmt_id_1\">"
+                                         ."subject_cmt_1<\/a>\n by <b>"
+                                         ."user_cmt_1<\/b> on <b><\/b>\n<p>"
+                                         ."\n<\/ul>"));
+
+        // finally check that everything went smoothly with the DB
+        $this->_check_db( $db_config );
+    }
+
 }
 
 define_test_suite( __FILE__ );

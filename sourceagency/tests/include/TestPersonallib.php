@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestPersonallib.php,v 1.17 2002/01/09 16:30:02 riessen Exp $
+# $Id: TestPersonallib.php,v 1.18 2002/01/11 13:41:00 riessen Exp $
 #
 ######################################################################
 
@@ -118,8 +118,7 @@ extends UnitTest
         $user_type2 = "developer";
         $status2 = "D";
 
-        $db_config = new mock_db_configure;
-        $db_config->set_nr_instance_expected( 5 );
+        $db_config = new mock_db_configure( 5 );
         $db_q = array( // Arg: 1=user name
                        0 => ("SELECT * FROM auth_user WHERE perms "
                              ."LIKE '%%sponsor%%' "
@@ -204,8 +203,7 @@ extends UnitTest
         // TODO: actually exist in the database
 
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, $db_config->did_db_fail(),
-                            $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 
     function testPersonal_comments_short() {
@@ -213,8 +211,7 @@ extends UnitTest
         $user2 = "snafu";
         $user3 = "fritz";
 
-        $db_config = new mock_db_configure;
-        $db_config->set_nr_instance_expected( 4 );
+        $db_config = new mock_db_configure( 4 );
         $db_q = array( 0 => ("SELECT * FROM comments WHERE user_cmt='%s' "
                              . "AND comments.proid"),
                        1 => ("SELECT COUNT(*) FROM comments WHERE proid='%s'"
@@ -356,16 +353,14 @@ extends UnitTest
                                       $row6['project_title']);
 
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, $db_config->did_db_fail(),
-                            $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 
     function testPersonal_comments_long() {
         $user1 = "fubar";
         $user2 = "snafu";
         
-        $db_config = new mock_db_configure;
-        $db_config->set_nr_instance_expected( 4 );
+        $db_config = new mock_db_configure( 4 );
         $db_q = array( 0 => ("SELECT * FROM comments WHERE user_cmt='%s' "
                              . "AND comments.proid"),
                        1 => ("SELECT COUNT(*) FROM comments WHERE "
@@ -459,8 +454,7 @@ extends UnitTest
                                       $row6['project_title']);
 
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, $db_config->did_db_fail(),
-                            $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 
     function testPersonal_news_short() {
@@ -468,8 +462,7 @@ extends UnitTest
         $user2 = "snafu";
         $user3 = "fritz";
 
-        $db_config = new mock_db_configure;
-        $db_config->set_nr_instance_expected( 10 );
+        $db_config = new mock_db_configure( 10 );
         $db_q = array( 0 => ("SELECT * FROM news WHERE user_news='%s'"),
                        1 => ("SELECT COUNT(*) FROM comments WHERE proid="
                              . "'%s' AND type='News' AND ref='%s'"),
@@ -488,6 +481,10 @@ extends UnitTest
         
         $db_config->add_num_row(7, 4); // fritz generates 7 results
         $db_config->add_num_row(7, 4); // fritz generates 7 results
+        // instance 4 does not use all of its defined records because 
+        // news_short only displays the first 5 records, this means that
+        // instance four has 2 too many records, ignore that error.
+        $db_config->ignore_errors( MKDB_RECORD_COUNT, 4 );
 
         $row1 = $this->_generate_array( array( 'id', 'proid','subject_news',
                                                'creation_news'), 1 );
@@ -678,20 +675,18 @@ extends UnitTest
         $this->_testFor_pattern( $text, "See all the comments..." );
 
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, $db_config->did_db_fail(),
-                            $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 
     function testPersonal_news_long() {
         $user1 = "fubar";
         $user2 = "snafu";
 
-        $db_config = new mock_db_configure;
         // 4 instances: 1 for the fubar query, 3 for the snafu query (we
         // call personal_news_long twice). The snafu database has two
         // entries, each of which create separate database instances, hence
         // we need a total of 3 instances for the snafu query
-        $db_config->set_nr_instance_expected( 4 );
+        $db_config = new mock_db_configure( 4 );
 
         $db_q = array( 0 => ("SELECT * FROM news WHERE user_news='%s' "
                                ."AND news.proid"),
@@ -768,8 +763,7 @@ extends UnitTest
                                    $row6['project_title']);
 
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, $db_config->did_db_fail(),
-                            $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 
     function testPersonal_consultants() {
@@ -777,8 +771,7 @@ extends UnitTest
         $user2 = "snafu"; $status2 = "A";
         $user3 = "fritz"; $status3 = "R";
         
-        $db_config = new mock_db_configure;
-        $db_config->set_nr_instance_expected( 3 );
+        $db_config = new mock_db_configure( 3 );
         $db_q = ("SELECT * FROM consultants,description WHERE "
                  . "consultant='%s' AND consultants.status"
                  . "='%s' AND consultants.proid="
@@ -858,8 +851,7 @@ extends UnitTest
                                                       $row3['project_title'],
                                                       $row3['status']);
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, $db_config->did_db_fail(),
-                            $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 
     function testPersonal_referees() {
@@ -867,8 +859,7 @@ extends UnitTest
         $user2 = "snafu"; $status2 = "A";
         $user3 = "fritz"; $status3 = "R";
         
-        $db_config = new mock_db_configure;
-        $db_config->set_nr_instance_expected( 3 );
+        $db_config = new mock_db_configure( 3 );
 
         $db_q = ("SELECT * FROM referees,description WHERE "
                  . "referee='%s' AND referees.status='%s'"
@@ -948,8 +939,7 @@ extends UnitTest
                                                    $row3['project_title'],
                                                    $row3['status']);
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, $db_config->did_db_fail(),
-                            $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 
     function testPersonal_cooperation() {
@@ -958,8 +948,7 @@ extends UnitTest
         $user2 = "snafu"; $status2 = "A";
         $user3 = "fritz"; $status3 = "R";
 
-        $db_config = new mock_db_configure;
-        $db_config->set_nr_instance_expected( 3 );
+        $db_config = new mock_db_configure( 3 );
 
         $db_q = ("SELECT * FROM cooperation,description,developing "
                  . "WHERE cooperation.developer='%s' AND "
@@ -1036,14 +1025,12 @@ extends UnitTest
                                                        $row3['project_title'],
                                                        $row3['devid'] );
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, $db_config->did_db_fail(),
-                            $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 
     function testPersonal_my_projects() {
 
-        $db_config = new mock_db_configure;
-        $db_config->set_nr_instance_expected( 3 );
+        $db_config = new mock_db_configure( 3 );
 
         $db_q = ("SELECT * FROM description WHERE "
                  . "description_user='%s' ORDER BY "
@@ -1110,8 +1097,7 @@ extends UnitTest
                                      $row3['project_title'],$row3['status']);
 
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, $db_config->did_db_fail(),
-                            $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 
     function testPersonal_Monitored_Projects() {
@@ -1120,8 +1106,7 @@ extends UnitTest
                  ."monitor.proid=description.proid AND monitor"
                  .".username='%s' ORDER BY creation DESC");
 
-        $db_config = new mock_db_configure;
-        $db_config->set_nr_instance_expected( 3 );
+        $db_config = new mock_db_configure( 3 );
 
         $db_config->add_num_row(0, 0);
         $db_config->add_num_row(1, 1);
@@ -1185,8 +1170,7 @@ extends UnitTest
                                      $row3['project_title'], $row3['status']);
 
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, $db_config->did_db_fail(),
-                            $db_config->error_message() );
+        $this->_check_db( $db_config );
     }
 }
 
