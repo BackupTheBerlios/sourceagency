@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMilestoneslib.inc,v 1.10 2002/03/20 10:53:36 riessen Exp $
+# $Id: TestMilestoneslib.inc,v 1.11 2002/03/20 11:09:28 riessen Exp $
 #
 ######################################################################
 
@@ -219,7 +219,8 @@ extends UnitTest
                              . "number='%s',goals='%s',release='%s',"
                              . "product='%s',payment='%s',status='P',"
                              . "creation=NOW()"),
-                       1 => ("SELECT * FROM milestones WHERE number='%s'"));
+                       1 => ("SELECT * FROM milestones WHERE number='%s' "
+                             . "AND proid='%s'" ));
 
         $ln = ( "<p align=right>[[] <a href=\"step3_edit[.]php3[?]proid=%s"
                 ."[&]a=1\"><b>Propose Milestones<\/b><\/a>\n []]<\/p>" );
@@ -230,7 +231,8 @@ extends UnitTest
         //
         // test 1 -- everything is fine
         //
-        $db_config->add_query( sprintf( $db_q[1], $dat[0]["num"]), 0 );
+        $db_config->add_query( sprintf( $db_q[1], $dat[0]["num"],
+                                        $dat[0]["pid"]), 0 );
         $db_config->add_query( sprintf( $db_q[0], $dat[0]["pid"],
                                         $dat[0]["dev"], $dat[0]["num"], 
                                         $dat[0]["goals"], 
@@ -254,7 +256,8 @@ extends UnitTest
         //
         $dat[1]["goals"] = "";
 
-        $db_config->add_query( sprintf( $db_q[1], $dat[1]["num"]), 1 );
+        $db_config->add_query( sprintf( $db_q[1], $dat[1]["num"], 
+                                        $dat[1]["pid"]), 1 );
         $db_config->add_num_row( 0, 1 );
 
         $db = new DB_SourceAgency;
@@ -272,7 +275,8 @@ extends UnitTest
         //
         // test 3 -- number used is already taken
         //
-        $db_config->add_query( sprintf( $db_q[1], $dat[2]["num"]), 2 );
+        $db_config->add_query( sprintf( $db_q[1], $dat[2]["num"],
+                                        $dat[2]["pid"]), 2 );
         $db_config->add_num_row( 1, 2 );
 
         $db = new DB_SourceAgency;

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.9 2002/03/20 10:53:36 riessen Exp $
+# $Id: milestoneslib.inc,v 1.10 2002/03/20 11:09:28 riessen Exp $
 #
 ######################################################################
 
@@ -225,7 +225,8 @@ function milestones_insert($proid,$devid,$number,$goals,$release_day,
   global $db;
   if ( is_set_and_not_empty( $number ) ) {
       
-      $db->query( "SELECT * FROM milestones WHERE number='$number'" );
+      $db->query( "SELECT * FROM milestones WHERE number='$number' AND "
+                  . "proid='$proid'" );
 
       if ( $db->num_rows() > 0 ) {
           generate_failed_box( "Insert Failed", 
