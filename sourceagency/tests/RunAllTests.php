@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: RunAllTests.php,v 1.4 2001/11/12 13:19:26 riessen Exp $
+# $Id: RunAllTests.php,v 1.5 2001/11/20 10:51:02 riessen Exp $
 #
 ######################################################################
 
@@ -49,6 +49,11 @@ global $t;
 include_once( "box.inc" );
 $bx = new box;
 global $bx;
+
+// seems to require a logger ....
+include_once( "logger.inc" );
+$l = new Logger;
+global $l;
 
 // define the global TestSuite
 $suite = new TestSuite;

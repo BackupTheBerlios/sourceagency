@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.5 2001/11/08 16:17:42 riessen Exp $
+# $Id: TestSecurity.php,v 1.6 2001/11/20 10:51:02 riessen Exp $
 #
 ######################################################################
 
@@ -52,8 +52,8 @@ extends TestCase
         $db_config = new mock_db_configure;
         $db_config->set_nr_instance_expected( 4 );
         $db_q = array( // Arg: 1=user name
-                       0 => ("SELECT * FROM auth_user WHERE perms='sponsor' "
-                             . "AND username='%s'"));
+                       0 => ("SELECT * FROM auth_user WHERE perms "
+                             ."LIKE '%%sponsor%%' AND username='%s'"));
         // Database instances:
         //    0 created by fubar (user1)
         //    1 created by snafu (user2)

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestPersonallib.php,v 1.14 2001/11/08 16:17:42 riessen Exp $
+# $Id: TestPersonallib.php,v 1.15 2001/11/20 10:51:02 riessen Exp $
 #
 ######################################################################
 
@@ -43,19 +43,19 @@ extends TestCase
 {
     // can't split the value for p_line_template, it generates a parse error
     // Arg: 1=proid,2=project title,3=status
-    var $p_line_template = "Project:[^\\n]*summary[.]php3[?]proid=%s[^\\n]*%s[^\\n]*step <b>%s<\\/b>[^\\n]*<br>";
+    var $p_line_template = "Project:[^\\n]*summary[.]php3[?]proid=%s[^\\n]*%s[^\\n]*\\n [(]step <b>%s<\\/b>[^\\n]*<br>";
     // Arg: 1=proid,2=project title,3=proid,4=devid
-    var $p_cooperation_line_template = "Project:[^\\n]*step2[.]php3[?]proid=%s[^\\n]*%s<\/a>[^\\n]*[(]to this[^\\n]*step2[.]php3[?]proid=%s&show_proposals=yes&which_proposals=%s[^\\n]*development<\\/a>[)]<br>";
+    var $p_cooperation_line_template = "Project:[^\\n]*step2[.]php3[?]proid=%s[^\\n]*%s<\/a>\\n[^\\n]*[(]to this[^\\n]*step2[.]php3[?]proid=%s&show_proposals=yes&which_proposals=%s[^\\n]*development<\/a>\\n[)]<br>";
     // Arg: 1=proid,2=project title,3=status
-    var $p_referee_line_template = "Project:[^\\n]*step4[.]php3[?]proid=%s[^\\n]*%s<\/a>[^\\n]*[(]step <b>%s<\/b>[)]<br>";
+    var $p_referee_line_template = "Project:[^\\n]*step4[.]php3[?]proid=%s[^\\n]*%s<\/a>[^\\n]*\\n [(]step <b>%s<\/b>[)]<br>";
     // Arg: 1=proid,2=project title,3=status
-    var $p_consultant_line_template = "Project:[^\\n]*step1[.]php3[?]proid=%s[^\\n]*%s<\/a>[^\\n]*[(]step <b>%s<\/b>[)]<br>";
+    var $p_consultant_line_template = "Project:[^\\n]*step1[.]php3[?]proid=%s[^\\n]*%s<\/a>[^\\n]*\\n [(]step <b>%s<\/b>[)]<br>";
     // Arg: 1=project id,2=subject news,3=count star,4=reference project id(2),
     // Arg: 5=reference project title
-    var $p_news_long_template = "<br><li>News: <b><a href=\"news.php3[?]proid=%s\">%s<\/a><\/b>[^(]*[(]<b>%s<\/b>[ \\n]*comments on it[)][^<]*<br>[^o\\n]*osted to <a href=\"summary.php3[?]proid=%s\">%s<\/a><br>";
+    var $p_news_long_template = "<br><li>News: <b><a href=\"news.php3[?]proid=%s\">%s<\/a>\\n<\/b>[^(]*[(]<b>%s<\/b>[ \\n]*comments on it[)][^<]*<br>[^o\\n]*osted to <a href=\"summary.php3[?]proid=%s\">%s<\/a>\\n<br>";
     // Arg: 1=type, 2=proid, 3=type, 4=number, 5=reference, 6=subject cmt
     // Arg: 7=count star, 8=proid(from description) 9=project title
-    var $p_comment_line_template = "<br><li>Comment [(]%s[)]: <b><a href=\"comments[.]php3[?]proid=%s&type=%s&number=%s&ref=%s\">%s<\/a><\/b>  [(]<b>%s<\/b> comments on it[)][\\n]+<br>&nbsp; &nbsp; &nbsp; posted to <a href=\"summary[.]php3[?]proid=%s\">%s<\/a><br>";
+    var $p_comment_line_template = "<br><li>Comment [(]%s[)]: <b><a href=\"comments[.]php3[?]proid=%s&type=%s&number=%s&ref=%s\">%s<\/a>\\n<\/b>  [(]<b>%s<\/b> comments on it[)][\\n]+<br>&nbsp; &nbsp; &nbsp; posted to <a href=\"summary[.]php3[?]proid=%s\">%s<\/a>\\n<br>";
 
     function UnitTestPersonallib( $name ) {
         $this->TestCase( $name );
@@ -145,7 +145,8 @@ extends TestCase
         $db_config = new mock_db_configure;
         $db_config->set_nr_instance_expected( 5 );
         $db_q = array( // Arg: 1=user name
-                       0 => ("SELECT * FROM auth_user WHERE perms='sponsor' "
+                       0 => ("SELECT * FROM auth_user WHERE perms "
+                             ."LIKE '%%sponsor%%' "
                              . "AND username='%s'"),
                        // Arg: 1=table name,2=user_type,3=user name,4=table name
                        // Arg: 5=status, 6=table name,
@@ -153,7 +154,8 @@ extends TestCase
                              . "%s='%s' AND %s.status='%s' AND %s.proid="
                              . "description.proid  ORDER BY creation DESC"),
                        // Arg: 1=user name
-                       2 => ("SELECT * FROM auth_user WHERE perms='devel' "
+                       2 => ("SELECT * FROM auth_user WHERE perms "
+                             . "LIKE '%%devel%%' "
                              . "AND username='%s'"));
 
         // Database instances: 
@@ -358,7 +360,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 1102 );
+        $this->_testFor_length( 1106 );
 
         $this->_testFor_pattern( $text, "Last 10 Comments by " . $user2 );
         $this->assertNotRegexp( "/no comments posted/", $text );
@@ -457,7 +459,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 1098 );
+        $this->_testFor_length( 1102 );
 
         $this->_testFor_pattern( $text, "All Comments by " . $user2 );
         $this->assertNotRegexp( "/no comments posted/", $text );
@@ -636,7 +638,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 995 );
+        $this->_testFor_length( 999 );
         $this->_testFor_pattern( $text, "Last 5 News by " . $user2 );
         $this->assertNotRegexp( "/no news posted/", $text, 
                                 "[User: ".$user2."] has news posted");
@@ -659,7 +661,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 2003 );
+        $this->_testFor_length( 2015 );
         $this->_testFor_pattern( $text, "Last 5 News by " . $user3 );
         $this->assertNotRegexp( "/no news posted/", $text, 
                                 "[User: ".$user3."] has news posted");
@@ -777,7 +779,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 1012 );
+        $this->_testFor_length( 1016 );
         $this->_testFor_pattern( $text, "All Comments by " . $user2 );
 
         $this->_testFor_news_link( $text, $row1['proid'],$row1['subject_news'],
@@ -850,7 +852,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 604 );
+        $this->_testFor_length( 605 );
         // check title string
         $this->_testFor_pattern( $text, ("Consultant [(]"
                                          .show_status( $status2 )."[)]")); 
@@ -867,7 +869,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 695 );
+        $this->_testFor_length( 697 );
         // check title string
         $this->_testFor_pattern( $text, ("Consultant [(]"
                                          .show_status( $status3 )."[)]")); 
@@ -940,7 +942,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 601 );
+        $this->_testFor_length( 602 );
         // check title string
         $this->_testFor_pattern( $text, ("Referee [(]"
                                          .show_status( $status2 )."[)]")); 
@@ -957,7 +959,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 692 );
+        $this->_testFor_length( 694 );
         // check title string
         $this->_testFor_pattern( $text, ("Referee [(]"
                                          .show_status( $status3 )."[)]")); 
@@ -1027,7 +1029,7 @@ extends TestCase
         personal_cooperation( $user2, $status2 );
         capture_stop();
         
-        $this->_testFor_length( 697 );
+        $this->_testFor_length( 699 );
         $text = capture_text_get();
         // check the title string
         $this->_testFor_pattern( $text, ("Developing Cooperation [(]"
@@ -1043,7 +1045,7 @@ extends TestCase
         personal_cooperation( $user3, $status3 );
         capture_stop();
         
-        $this->_testFor_length( 869 );
+        $this->_testFor_length( 873 );
         $text = capture_text_get();
         // check the title string
         $this->_testFor_pattern( $text, ("Developing Cooperation [(]"
@@ -1109,7 +1111,7 @@ extends TestCase
         personal_my_projects( "snafu" );
         capture_stop();
         
-        $this->_testFor_length( 596 );
+        $this->_testFor_length( 597 );
         $text = capture_text_get();
         $this->_testFor_pattern( $text, "My Projects" ); // title
         $this->_testFor_project_link($text,$row1['proid'],
@@ -1121,7 +1123,7 @@ extends TestCase
         personal_my_projects( "fritz" );
         capture_stop();
 
-        $this->_testFor_length( 689 );
+        $this->_testFor_length( 691 );
         $text = capture_text_get();
         $this->_testFor_pattern( $text, "My Projects" ); // title
         $this->_testFor_project_link($text,$row2['proid'],
@@ -1184,7 +1186,7 @@ extends TestCase
         personal_monitored_projects( "snafu" );
         capture_stop();
         
-        $this->_testFor_length( 603 );
+        $this->_testFor_length( 604 );
         $text = capture_text_get();
         $this->_testFor_pattern( $text, "Monitored Projects" ); // title
         $this->_testFor_project_link($text,$row1['proid'],
@@ -1196,7 +1198,7 @@ extends TestCase
         personal_monitored_projects( "fritz" );
         capture_stop();
 
-        $this->_testFor_length( 696 );
+        $this->_testFor_length( 698 );
         $text = capture_text_get();
         $this->_testFor_pattern( $text, "Monitored Projects" ); // title
         $this->_testFor_project_link($text,$row2['proid'],
