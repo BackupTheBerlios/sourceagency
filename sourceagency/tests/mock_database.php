@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: mock_database.php,v 1.5 2001/10/24 16:36:22 riessen Exp $
+// $Id: mock_database.php,v 1.6 2001/10/24 17:09:31 riessen Exp $
 
 //
 // For an explanation of this class, see:
@@ -117,9 +117,20 @@ class mock_db_configure
                                 $record, $index );
     }
 
-    // returns true if the database failed.
+    // returns true if the database failed. This also checks whether 
+    // the number of expected instance equals the number of instances
+    // actually created .....
     function did_db_fail() {
-        global $g_mkdb_failed;
+        global $g_mkdb_failed, $g_mkdb_failure_text, $g_mkdb_instance_counter,
+            $g_mkdb_nr_instance_expected;
+
+        if ( $g_mkdb_instance_counter != $g_mkdb_nr_instance_expected ) {
+            $g_mkdb_failure_text 
+                 .= ("\n\n****** Instance creation count mismatch ******\n"
+                     . "Expected: " . $g_mkdb_nr_instance_expected 
+                     . " but created: " . $g_mkdb_instance_counter . "\n");
+            $g_mkdb_failed = true;
+        }
         return $g_mkdb_failed;
     }
 

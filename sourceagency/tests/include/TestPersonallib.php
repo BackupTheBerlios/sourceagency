@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestPersonallib.php,v 1.7 2001/10/24 16:36:22 riessen Exp $
+// $Id: TestPersonallib.php,v 1.8 2001/10/24 17:09:31 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -85,37 +85,78 @@ extends TestCase
     //
     // Start of the actual test methods
     //
-//      function testPersonal_news_long() {
-//          $user1 = "fubar";
-//          $user2 = "snafu";
+    function testPersonal_news_long() {
+        $user1 = "fubar";
+        $user2 = "snafu";
 
-//          $db_config = new mock_db_configure;
-//          $db_q = ("SELECT * FROM comments WHERE user_cmt='%s' "
-//                   ."AND comments.proid");
-//          $db_config->add_query( sprintf( $db_q, $user1 ));
-//          $db_config->add_query( sprintf( $db_q, $user2 ));
+        $db_config = new mock_db_configure;
+        $db_config->set_nr_instance_expected( 3 );
 
-//          $db_config->add_record( false );
-//          $row1 = array( 'id'            => 'reference_id',
-//                         'proid'         => 'project_id' );
-//          $db_config->add_record( $row1 );
-//          $row1 = array( 'id'            => 'reference_id',
-//                         'proid'         => 'project_id',
-//                         'project_title' => 'project_title' );
-//          $db_config->add_record( $row1 );
-//          $db_config->add_record( false );
+        $db_q = ("SELECT * FROM comments WHERE user_cmt='%s' "
+                 ."AND comments.proid");
+        $db_config->add_query( sprintf( $db_q, $user1 ), 0);
+        $db_config->add_query( sprintf( $db_q, $user2 ), 1);
 
-//          $db_q = ("SELECT COUNT(*) FROM comments WHERE proid='%s"
-//                   ."' AND type='News' AND ref='%s'");
-//          $db_config->add_query( sprintf( $db_q, $row1['proid'], $row1['id']));
+        $db_config->add_num_row(0, 0);
+        $db_config->add_num_row(1, 1);
 
-//          $db_config->add_num_row(0);
-//          $db_config->add_num_row(1);
-        
-//          // if using a database, then ensure that it didn't fail
-//          $this->assertEquals(false, $db_config->did_db_fail(),
-//                              $db_config->error_message() );
-//      }
+        $db_config->add_record( false, 0 );
+        $row2 = array( 'id'            => 'reference_id',
+                       'proid'         => 'project_id',
+                       'project_title' => 'project_title',
+                       'subject_news'  => 'subject news',
+                       'creation_news' => 'creation_news');
+        $db_config->add_record( $row2, 1 );
+        $db_config->add_record( false, 1 );
+
+        $row1 = array( 'id'            => 'reference_id_instance_2',
+                       'proid'         => 'project_id_instance_2',
+                       'COUNT(*)'      => 'count star value' );
+        $db_config->add_record( $row1, 2 );
+        $row3 = array( 'project_title' => 'reference_id_instance_2',
+                       'proid'         => 'project_id_instance_2');
+        $db_config->add_record( $row3, 2 );
+
+        $db_q = ("SELECT COUNT(*) FROM comments WHERE proid='%s"
+                 ."' AND type='News' AND ref='%s'");
+        $db_config->add_query(sprintf( $db_q, $row2['proid'], $row2['id']),2);
+        $db_q = ("SELECT * FROM description WHERE proid='%s'");
+        $db_config->add_query(sprintf( $db_q, $row2['proid']),2);
+
+        //
+        // fubar query
+        //
+        capture_start();
+        // here next_record will not be called
+        personal_news_long( $user1 );
+        capture_stop();
+
+        $text = capture_text_get();
+        $this->_testFor_length( 559 );
+        //
+        // TODO: need to complete this test ....
+        //
+
+        //
+        // snafu query
+        //
+        capture_reset_text();
+        capture_start();
+        // here next_record will not be called
+        personal_news_long( $user2 );
+        capture_stop();
+
+        $text = capture_text_get();
+        $this->_testFor_length( 775 );
+
+        //
+        // TODO: need to complete this test ....
+        //
+
+        // if using a database, then ensure that it didn't fail
+        $this->assertEquals(false, $db_config->did_db_fail(),
+                            $db_config->error_message() );
+    }
 
     function testPersonal_consultants() {
         $user1 = "fubar"; $status1 = "D";
