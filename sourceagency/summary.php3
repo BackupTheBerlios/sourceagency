@@ -1,8 +1,8 @@
 <?php
 
 ######################################################################
-# SourceAgency: 
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #             Gregorio Robles (grex@scouts-es.org)
@@ -15,6 +15,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: summary.php3,v 1.2 2001/11/26 13:56:54 riessen Exp $
+#
 ######################################################################  
 
 page_open(array("sess" => "SourceAgency_Session"));
@@ -27,12 +30,12 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 
 require("header.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-
-<?php
+start_content();
 
 $page = "summary";
 
@@ -50,11 +53,7 @@ if (check_proid($proid)) {
   lib_comment_it($proid,"General","0","0","","General Comments");
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 @page_close();
 ?>

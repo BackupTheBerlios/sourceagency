@@ -1,8 +1,8 @@
 <?php
 
 ######################################################################
-# SourceAgency: Software Announcement & Retrieval System
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
@@ -16,6 +16,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: licnotavailable.php3,v 1.2 2001/11/26 13:56:54 riessen Exp $
+#
 ######################################################################  
 
 
@@ -29,16 +32,18 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 
 require("header.inc");
 
-$be = new box("",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
-?>
+$be = new box("80%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_error_font_color,$th_box_body_align);
 
-<!-- content -->
-<?php
-$be->box_full($t->translate("Error"), $t->translate("License description is not available").".");
-?>
-<!-- end content -->
+start_content();
 
-<?php
+$be->box_full($t->translate("Error"), 
+              $t->translate("License description is not available").".");
+
+end_content();
+
 require("footer.inc");
 page_close();
 ?>
