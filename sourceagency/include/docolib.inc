@@ -5,36 +5,38 @@
 # ===============================================================
 #
 # Copyright (c) 2001-2 by
-#                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
-#                Gregorio Robles (grex@scouts-es.org)
+#                Gregorio Robles (grex@scouts-es.org) and
+#                Lutz Henckel (lutz.henckel@fokus.gmd.de)
 #
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
-# Library with the functions for the faqs
+# Library with the functions for the page documentations
 #
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: faqlib.inc,v 1.4 2002/04/19 10:20:59 grex Exp $
+# $Id: docolib.inc,v 1.1 2002/04/19 10:20:59 grex Exp $
 #
 ######################################################################
 
 /**
- * This library contains functionality needed for the faq
- *
- * It handles data from the 'faq' table in the database
+ * This library contains functionality needed for the page documentations
+ * 
+ * It handles data from the 'doco' table in the database
  * Table database contains following data:
  *
- *  faqid int(8) unsigned DEFAULT '0' NOT NULL auto_increment:
- *       FAQ ID (Primary Key)
+ *  docoid int(8) unsigned DEFAULT '0' NOT NULL auto_increment:
+ *       Documentation ID (Primary Key)
  *  language varchar(24) NOT NULL:
- *       (Human) language in which the FAQ is written
- *  question blob NOT NULL:
- *       Question
- *  answer blob NOT NULL:
- *       Answer
+ *       (Human) language in which the DOCO is written
+ *  page varchar(64) NOT NULL:
+ *       Page that is going to be described (without extension)
+ *  header varchar(255) NOT NULL:
+ *       Title
+ *  doco blob NOT NULL:
+ *       Description
  *
  * @author  Gregorio Robles <grex@scouts-es.org>
  * @access  public
@@ -42,7 +44,7 @@
  */
 
 /**
- * Box with the FAQ form
+ * Box with the documentation insertion form
  *
  * @global  object    $sess          PHPLib session object
  * @global  object    $bx            Box object
@@ -50,28 +52,35 @@
  *
  * @access  public
  */
-function faqform()
+function doco_form()
 {
     global $sess, $bx, $t;
 
     $bx->box_begin();
-    $bx->box_title($t->translate('New Frequently Asked Question'));
+    $bx->box_title($t->translate('New Page Documentation Entry'));
     $bx->box_body_begin();
     htmlp_form_action('PHP_SELF');
 
     $bx->box_columns_begin(2);
 
     $bx->box_column ('right','30%','',
-                     '<b>'.$t->translate('Question').'</b> (*): ');
+                     '<b>'.$t->translate('Page (without extension)').'</b> (64): ');
     $bx->box_column ('left', '70%', '',
-                     html_textarea('question', 40, 4, 'virtual', 255, $question));
+                     html_input_text('page', 40, 64, $page));
+
+    $bx->box_next_row_of_columns();
+
+    $bx->box_column ('right','30%','',
+                     '<b>'.$t->translate('Header').'</b> (255): ');
+    $bx->box_column ('left', '70%', '',
+                     html_input_text('header', 40, 255, $header));
 
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('right', '30%', '',
-                     '<b>'.$t->translate('Answer').'</b> (*): ');
+                     '<b>'.$t->translate('Description').'</b> (*): ');
     $bx->box_column ('left','70%','',
-                     html_textarea('answer', 40, 7, 'virtual', 255, $answer));
+                     html_textarea('doco', 40, 7, 'virtual', 255, $doco));
 
     $bx->box_next_row_of_columns();
 
@@ -87,7 +96,7 @@ function faqform()
 }
 
 /**
- * Shows a FAQ
+ * Shows a page documentation entry
  *
  * WISH: it should be better to do not pass this as parameter
  * @param   object    $db            PHPLib database abstraction object
@@ -97,16 +106,15 @@ function faqform()
  *
  * @access  public
  */
-function faqshow($db)
+function doco_show($db)
 {
     global $t, $bx;
 
-    $bx->box_full($t->translate('Question').'</B>: '.$db->f('question'),
-                  '<b>'.$t->translate('Answer').'</b>: '.$db->f('answer'));
+    $bx->box_full($db->f('page').': '.$db->f('header'), $db->f('doco'));
 }
 
 /**
- * Form for modifying FAQ
+ * Form for modifying a page documentation entry
  *
  * WISH: it should be better to do not pass this as parameter
  * @param   object    $db            PHPLib database abstraction object
@@ -117,12 +125,12 @@ function faqshow($db)
  *
  * @access  public
  */
-function faqmod($db)
+function doco_mod($db)
 {
     global $sess, $t, $bx;
 
     $bx->box_begin();
-    $bx->box_title($t->translate('Modify a Frequently Asked Question'));
+    $bx->box_title($t->translate('Modify a Page documentation entry'));
     $bx->box_body_begin();
 
     htmlp_form_action('PHP_SELF');
@@ -130,20 +138,25 @@ function faqmod($db)
     $bx->box_columns_begin(2);
 
     $bx->box_column ('right','30%','',
-                     '<b>'.$t->translate('Question').'</b> (*): ');
+                     '<b>'.$t->translate('Page (without extension)').'</b> (64): ');
     $bx->box_column ('left', '70%', '',
-                     html_textarea('question', 40, 4, 'virtual', 255, $db->f('question')));
+                     html_input_text('page', 40, 64, $db->f('page')));
+
+    $bx->box_column ('right','30%','',
+                     '<b>'.$t->translate('Header').'</b> (255): ');
+    $bx->box_column ('left', '70%', '',
+                     html_input_text('header', 40, 64, $db->f('header')));
 
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('right', '30%', '',
-                     '<b>'.$t->translate('Answer').'</b> (*): ');
+                     '<b>'.$t->translate('doco').'</b> (*): ');
     $bx->box_column ('left','70%','',
-                     html_textarea('answer', 40, 7, 'virtual', 255, $db->f('answer')));
+                     html_textarea('doco', 40, 7, 'virtual', 255, $db->f('doco')));
 
     $bx->box_next_row_of_columns();
 
-    htmlp_form_hidden('faqid', $db->f('faqid'));
+    htmlp_form_hidden('docoid', $db->f('docoid'));
     htmlp_form_hidden('modify', 2);
     $bx->box_column ('right','30%','','&nbsp;');
     $bx->box_column ('left','70%','',

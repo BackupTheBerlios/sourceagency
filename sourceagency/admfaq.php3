@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: admfaq.php3,v 1.4 2002/04/18 14:33:02 grex Exp $
+# $Id: admfaq.php3,v 1.5 2002/04/19 10:20:59 grex Exp $
 #
 ######################################################################  
 
@@ -32,7 +32,7 @@ if (isset($auth) && !empty($auth->auth['perm'])) {
 
 require('header.inc');
 
-$bx = new box('100%',$th_box_frame_color,$th_box_frame_width,
+$bx = new box('97%',$th_box_frame_color,$th_box_frame_width,
               $th_box_title_bgcolor,$th_box_title_font_color,
               $th_box_title_align,$th_box_body_bgcolor,
               $th_box_body_font_color,$th_box_body_align);
