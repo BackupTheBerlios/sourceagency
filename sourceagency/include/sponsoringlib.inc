@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: sponsoringlib.inc,v 1.7 2002/04/10 00:36:31 grex Exp $
+# $Id: sponsoringlib.inc,v 1.8 2002/04/11 13:13:51 riessen Exp $
 #
 ######################################################################
 
@@ -268,10 +268,22 @@ function sponsoring_insert($proid, $user, $sponsoring_text, $budget, $valid_day,
                 . "sponsor='$user'" );
     
     if ( $db->num_rows() == 1 ) {
-        $db->query("UPDATE sponsoring SET sponsoring_text='$sponsoring_text',"
-                   ."budget='$budget', status='$status', valid='$valid',"
-                   ."begin='$begin',finish='$finish' "
-                   ."WHERE proid='$proid' AND sponsor='$user'");
+        /** Retrieve the current budget and check whether the new budget
+            is greater than the previous budget value **/
+        $db->next_record();
+        $old_budget = $db->f( "budget" );
+        if ( lib_past_step( $proid, 2 ) && $old_budget > $budget ) {
+            generate_failed_box( "Sponsoring", 
+                                 "After Project Step 2, budget may not be "
+                                 . "decreased (Old budget: $old_budget, New "
+                                 . "budget: $budget)" );
+        } else {
+            $db->query("UPDATE sponsoring SET "
+                       . "sponsoring_text='$sponsoring_text', "
+                       . "budget='$budget', status='$status', valid='$valid',"
+                       . "begin='$begin', finish='$finish' "
+                       . "WHERE proid='$proid' AND sponsor='$user'");
+        }
     } else if ( $db->num_rows() == 0 ) {
         $db->query("INSERT sponsoring SET proid='$proid',sponsor='$user',"
                    ."sponsoring_text='$sponsoring_text',budget='$budget', "
