@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.14 2001/12/19 10:42:14 grex Exp $
+# $Id: config.inc,v 1.15 2001/12/19 10:51:42 grex Exp $
 #
 ######################################################################
 
@@ -122,6 +122,8 @@ $g_step_text[4] = "Referees";
 $g_step_text[5] = "Project Follow-up";
 $g_step_text[6] = "Rating";
 
+$g_step_explanation[-1] = "step_-1_explanation";   
+$g_step_explanation[0] = "step_0_explanation";
 $g_step_explanation[1] = "step_1_explanation";
 $g_step_explanation[2] = "step_2_explanation";
 $g_step_explanation[3] = "step_3_explanation";
