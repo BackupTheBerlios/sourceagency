@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.15 2002/04/22 12:59:24 riessen Exp $
+# $Id: TestLib.php,v 1.16 2002/04/23 11:49:14 riessen Exp $
 #
 ######################################################################
 
@@ -135,7 +135,7 @@ extends UnitTest
         capture_start();
         lib_pnick( "SNAFU" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 15 );
+        $this->_testFor_captured_length( 15 );
         $this->assertEquals( "<b>by SNAFU</b>", $text );
     }
 
@@ -281,7 +281,7 @@ extends UnitTest
         capture_start();
         calendar_box( $dat["r0"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 3299, "test 1" );
+        $this->_testFor_captured_length( 3299, "test 1" );
         $ps=array( 0=>("<b>Project Owner\(s\):<\/b>[ \n]*<\/td>[ \n]*"
                        . $this->p_regexp_html_comment . "[ \n]*"
                        . $this->p_regexp_html_comment . "[ \n]*"
@@ -320,7 +320,7 @@ extends UnitTest
         capture_reset_and_start();
         calendar_box( $dat["r2"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 3305, "test 2" );
+        $this->_testFor_captured_length( 3305, "test 2" );
         $ps=array( 0=>("<b>Project Owner\(s\):<\/b>[ \n]*<\/td>[ \n]*"
                        . $this->p_regexp_html_comment . "[ \n]*"
                        . $this->p_regexp_html_comment . "[ \n]*"
@@ -377,7 +377,7 @@ extends UnitTest
         capture_start();
         licensep( $row[0]["license"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 198, "test 1" );
+        $this->_testFor_captured_length( 198, "test 1" );
 
         $this->_testFor_pattern( $text, "selected value=\"".$row[0]["license"]
                                         ."\">".$row[0]["license"]."" );
@@ -416,12 +416,12 @@ extends UnitTest
                        2=>("<b>Description<\/b>: description_0"),
                        3=>("<b>Volume<\/b>: volume_0" ));
         $this->_testFor_patterns($text, $pats, 4 );
-        $this->_testFor_length( 722, "test 1" );
+        $this->_testFor_captured_length( 722, "test 1" );
 
         capture_reset_and_start();
         lib_show_description( sprintf( $db_q[0], "X", "Y") );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 0 );
+        $this->_testFor_captured_length( 0, "test 2" );
 
         // check that the database component did not fail
         $this->_check_db( $db_config );
@@ -479,7 +479,7 @@ extends UnitTest
         lib_show_comments_on_it( $dat[0]["proid"],$dat[0]["cmt_type"],
                                  $dat[0]["num"], $dat[0]["cmt_id"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 4, "test 1" );
+        $this->_testFor_captured_length( 4, "test 1" );
         $this->assertEquals( "<p>\n", $text );
 
         //
@@ -489,7 +489,7 @@ extends UnitTest
         lib_show_comments_on_it( $dat[1]["proid"],$dat[1]["cmt_type"],
                                  $dat[1]["num"], $dat[1]["cmt_id"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 436, "test 2" );
+        $this->_testFor_captured_length( 436, "test 2" );
 
         $ps=array(0=>("<li><a href=\"comments[.]php3\?proid=proid_1&type="
                       ."cmt_type_1&number=num_1&ref=cmt_id_1\">subject_cmt_0"
