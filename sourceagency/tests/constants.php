@@ -4,10 +4,15 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: constants.php,v 1.9 2001/10/22 10:06:15 riessen Exp $
+// $Id: constants.php,v 1.10 2001/10/23 16:36:33 riessen Exp $
 //
 // php library root directory
-$PHP_LIB_DIR = "/www/development/lib/php";
+$env_php_lib_dir = getenv( "PHP_LIB_DIR" );
+if ( ! $env_php_lib_dir || $env_php_lib_dir == "" ) {
+  $PHP_LIB_DIR = "/www/development/lib/php";
+} else {
+  $PHP_LIB_DIR = $env_php_lib_dir;
+}
 
 ini_set('include_path', ini_get('include_path') . ':' . $PHP_LIB_DIR );
 ini_set('include_path', ini_get('include_path') . ':' . getcwd() );
