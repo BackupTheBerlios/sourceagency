@@ -5,7 +5,7 @@
  * Copyright (c) 1998,1999 SH Online Dienst GmbH
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: session.inc,v 1.2 2001/11/08 16:17:41 riessen Exp $
+ * $Id: session.inc,v 1.3 2001/11/20 11:54:05 riessen Exp $
  *
  */ 
 ######################################################################
@@ -15,48 +15,48 @@
 ######################################################################
 
 class Session {
-  var $classname = "Session";         ## Needed for object serialization.
+  var $classname = "Session";         // Needed for object serialization.
+  
+  // Define the parameters of your session by either overwriting
+  // these values or by subclassing session (recommended).
 
-  ## Define the parameters of your session by either overwriting
-  ## these values or by subclassing session (recommended).
+  var $magic = "KaiserinAugusta";     // Some string you should change.
+  var $mode = "cookie";               // We propagate session IDs with cookies
+  var $fallback_mode;                 // If this doesn't work, fall back...
+  var $lifetime = 0;                  // 0 = do session cookies, else minutes
 
-  var $magic = "KaiserinAugusta";     ## Some string you should change.
-  var $mode = "cookie";               ## We propagate session IDs with cookies
-  var $fallback_mode;                 ## If this doesn't work, fall back...
-  var $lifetime = 0;                  ## 0 = do session cookies, else minutes
+  var $cookie_domain = "";            // If set, the domain for which the
+  // session cookie is set.
 
-  var $cookie_domain = "";            ## If set, the domain for which the
-                                      ## session cookie is set.
+  var $gc_time  = 1440;               // Purge all session data older than 1440 minutes.
+  var $gc_probability = 1;            // Garbage collect probability in percent
 
-  var $gc_time  = 1440;               ## Purge all session data older than 1440 minutes.
-  var $gc_probability = 1;            ## Garbage collect probability in percent
+  var $auto_init = "";                // Name of the autoinit-File, if any.
+  var $secure_auto_init = 1;          // Set to 0 only, if all pages call
+  // page_close() guaranteed.
 
-  var $auto_init = "";                ## Name of the autoinit-File, if any.
-  var $secure_auto_init = 1;          ## Set to 0 only, if all pages call
-                                      ## page_close() guaranteed.
+  var $allowcache = "private";        // Set this to 'private' to allow private
+  // caching; set this to 'public' to allow
+  // public caching; set this to 'no' to
+  // never cache the page.
+  var $allowcache_expire = 1440;      // If you allowcache, data expires in this
+  // many minutes.
+  var $that_class = "";               // Name of data storage container
 
-  var $allowcache = "private";        ## Set this to 'private' to allow private
-                                      ## caching; set this to 'public' to allow
-                                      ## public caching; set this to 'no' to
-                                      ## never cache the page.
-  var $allowcache_expire = 1440;      ## If you allowcache, data expires in this
-                                      ## many minutes.
-  var $that_class = "";               ## Name of data storage container
+  //
+  // End of parameters.
+  //
 
-  ##
-  ## End of parameters.
-  ##
-
-  var $name;                          ## Session name
-  var $id;                            ## Unique Session ID
+  var $name;                          // Session name
+  var $id;                            // Unique Session ID
   var $that;
 
-  var $pt = array();                  ## This Array contains the registered things
-  var $in = false;                    ## Marker: Did we already include the autoinit file?
+  var $pt = array();                  // This Array contains the registered things
+  var $in = false;                    // Marker: Did we already include the autoinit file?
 
-  ## register($things):
-  ##
-  ## call this function to register the things that should become persistent
+  // register($things):
+  //
+  // call this function to register the things that should become persistent
 
   function register($things) {
     $things = explode(",",$things);
@@ -86,11 +86,11 @@ class Session {
     }
   }
 
-  ## get_id():
-  ##
-  ## Propagate the session id according to mode and lifetime.
-  ## Will create a new id if necessary. To take over abandoned sessions,
-  ## one may provide the new session id as a parameter (not recommended).
+  // get_id():
+  //
+  // Propagate the session id according to mode and lifetime.
+  // Will create a new id if necessary. To take over abandoned sessions,
+  // one may provide the new session id as a parameter (not recommended).
 
   function get_id($id = "") {
     global $HTTP_COOKIE_VARS, $HTTP_GET_VARS, $HTTP_POST_VARS, $QUERY_STRING;
@@ -104,13 +104,13 @@ class Session {
         case "get":
           if ("" == ($id = isset($HTTP_GET_VARS[$this->name]) ? $HTTP_GET_VARS[$this->name] : ""))
             $id = isset($HTTP_POST_VARS[$this->name]) ? $HTTP_POST_VARS[$this->name] : "";
-        break;
+          break;
         case "cookie":
           $id = isset($HTTP_COOKIE_VARS[$this->name]) ? $HTTP_COOKIE_VARS[$this->name] : "";
         break;
         default:
           die("This has not been coded yet.");
-        break;
+          break;
       }
     }
  
@@ -127,26 +127,26 @@ class Session {
         if ( 0 < $this->lifetime ) {
           SetCookie($this->name, $id, time()+$this->lifetime*60, "/", $this->$cookie_domain);
         }
-      break;
+        break;
       case "get":
         if ( isset($QUERY_STRING) ) {
           $QUERY_STRING = ereg_replace(
             "(^|&)".quotemeta(urlencode($this->name))."=".$id."(&|$)",
             "\\1", $QUERY_STRING);
         }
-      break;
+        break;
       default:
         ;
-      break;
+        break;
     }
  
     $this->id = $id;
   }
 
-  ## put_id():
-  ## 
-  ## Stop using the current session id (unset cookie, ...) and
-  ## abandon a session.
+  // put_id():
+  // 
+  // Stop using the current session id (unset cookie, ...) and
+  // abandon a session.
   function put_id() {
     global $HTTP_COOKIE_VARS;
  
@@ -155,32 +155,32 @@ class Session {
     switch ($this->mode) {
       case "inline":
         die("This has not been coded yet.");
-      break;
+        break;
  
       case "get":
         die("This has not been coded yet.");
-      break;
+        break;
  
       default:
-            SetCookie($this->name, "", 0, "/", $this->cookie_domain);
-            $HTTP_COOKIE_VARS[$this->name] = "";
-      break;
+        SetCookie($this->name, "", 0, "/", $this->cookie_domain);
+        $HTTP_COOKIE_VARS[$this->name] = "";
+        break;
     }
   }
 
-  ## delete():
-  ##
-  ## Delete the current session record and put the session id.
+  // delete():
+  //
+  // Delete the current session record and put the session id.
   
   function delete() {
-      $this->that->ac_delete($this->id, $this->name);
-      $this->put_id();
+    $this->that->ac_delete($this->id, $this->name);
+    $this->put_id();
   }
 
-  ## url($url):
-  ##
-  ## Helper function: returns $url concatenated with the current 
-  ## session $id.
+  // url($url):
+  //
+  // Helper function: returns $url concatenated with the current 
+  // session $id.
    
   function url($url){
     $url=ereg_replace("[&?]+$", "", $url);
@@ -189,12 +189,12 @@ class Session {
       case "get":
  
         $url .= ( strpos($url, "?") != false ?  "&" : "?" ).
-                urlencode($this->name)."=".$this->id;
+           urlencode($this->name)."=".$this->id;
  
       break;
       default:
         ;
-      break;
+        break;
     }
     return $url;
   }
@@ -207,7 +207,7 @@ class Session {
     global $PHP_SELF, $QUERY_STRING;
 
     return $this->url($PHP_SELF.
-           ((isset($QUERY_STRING) && ("" != $QUERY_STRING)) ? "?".$QUERY_STRING : ""));
+    ((isset($QUERY_STRING) && ("" != $QUERY_STRING)) ? "?".$QUERY_STRING : ""));
   }
 
   function pself_url() {
@@ -215,39 +215,42 @@ class Session {
   }
   
   function hidden_session()
-  {
-    printf("<input type=\"hidden\" name=\"%s\" value=\"%s\">\n", $this->name, $this->id);
-  }
+    {
+      printf("<input type=\"hidden\" name=\"%s\" value=\"%s\">\n", 
+             $this->name, $this->id);
+    }
 
   function add_query($qarray) {
     global $PHP_SELF;
     global $QUERY_STRING;
 
-			// fix no.1: Gregorio Robles <grex@scouts-es.org>
-			// We want to start always with a "clean"
-			// query url string!!!!
+    // fix no.1: Gregorio Robles <grex@scouts-es.org>
+    // We want to start always with a "clean"
+    // query url string!!!!
     $QUERY_STRING = "";
-			// end fix
+    // end fix
 
     if ((isset($QUERY_STRING) && ("" != $QUERY_STRING))
-     || ($this->mode == "get")) {
+        || ($this->mode == "get")) {
       $sep_char = "&";
     } else {
       $sep_char = "?";
     }
 
     $qstring = "";
-    while (list($k, $v) = each($qarray)) {
+    if ( isset( $qarray ) && !empty( $qarray ) && is_array( $qarray )) {
+        while (list($k, $v) = each($qarray)) {
 
-				// Fix no. 2 for SourceWell
-				// when iter from show_more function
-				// then do not print a question mark
-      if ($k == "iter") $sep_char = "&";
-      $v = ereg_replace("%20", " ", $v); 
-				// end fix no. 2 Grex
+            // Fix no. 2 for SourceWell
+            // when iter from show_more function
+            // then do not print a question mark
+            if ($k == "iter") $sep_char = "&";
+            $v = ereg_replace("%20", " ", $v); 
+            // end fix no. 2 Grex
 
-      $qstring .= $sep_char . urlencode($k) . "=" . urlencode($v);
-      $sep_char = "&";
+            $qstring .= $sep_char . urlencode($k) . "=" . urlencode($v);
+            $sep_char = "&";
+        }
     }
 
     return $qstring;
@@ -257,68 +260,68 @@ class Session {
     print $this->add_query($qarray);
   }
 
-  ## serialize($prefix,&$str):
-  ##
-  ## appends a serialized representation of $$prefix
-  ## at the end of $str.
-  ##
-  ## To be able to serialize an object, the object must implement
-  ## a variable $classname (containing the name of the class as string)
-  ## and a variable $persistent_slots (containing the names of the slots
-  ## to be saved as an array of strings).
-  ##
-  ## You don't need to know...
+  // serialize($prefix,&$str):
+  //
+  // appends a serialized representation of $$prefix
+  // at the end of $str.
+  //
+  // To be able to serialize an object, the object must implement
+  // a variable $classname (containing the name of the class as string)
+  // and a variable $persistent_slots (containing the names of the slots
+  // to be saved as an array of strings).
+  //
+  // You don't need to know...
   function serialize($prefix, $str) {
     static $t,$l,$k;
 
-    ## Determine the type of $$prefix
+    // Determine the type of $$prefix
     eval("\$t = gettype(\$$prefix);");
     switch ( $t ) {
 
       case "array":
-        ## $$prefix is an array. Enumerate the elements and serialize them.
+        // $$prefix is an array. Enumerate the elements and serialize them.
         eval("reset(\$$prefix); \$l = gettype(list(\$k)=each(\$$prefix));");
         $str .= "\$$prefix = array(); ";
         while ( "array" == $l ) {
-          ## Structural recursion
+          // Structural recursion
           $this->serialize($prefix."['".ereg_replace("([\\'])", "\\\\1", $k)."']", &$str);
           eval("\$l = gettype(list(\$k)=each(\$$prefix));");
         }
 
-      break;
+        break;
       case "object":
-        ## $$prefix is an object. Enumerate the slots and serialize them.
+        // $$prefix is an object. Enumerate the slots and serialize them.
         eval("\$k = \$${prefix}->classname; \$l = reset(\$${prefix}->persistent_slots);");
         $str.="\$$prefix = new $k; ";
         while ( $l ) {
-          ## Structural recursion.
+          // Structural recursion.
           $this->serialize($prefix."->".$l,&$str);
           eval("\$l = next(\$${prefix}->persistent_slots);");
         }
 
-      break;
+        break;
       default:
-        ## $$prefix is an atom. Extract it to $l, then generate code.
+        // $$prefix is an atom. Extract it to $l, then generate code.
         eval("\$l = \$$prefix;");
         $str.="\$$prefix = '".ereg_replace("([\\'])", "\\\\1", $l)."'; ";
 
 
-      break;
+        break;
     }
   }
 
   function get_lock() {
-      $this->that->ac_get_lock();
+    $this->that->ac_get_lock();
   }
 
   function release_lock() {
-      $this->that->ac_release_lock();
+    $this->that->ac_release_lock();
   }
 
-  ## freeze():
-  ##
-  ## freezes all registered things ( scalar variables, arrays, objects ) into
-  ## a database table
+  // freeze():
+  //
+  // freezes all registered things ( scalar variables, arrays, objects ) into
+  // a database table
 
   function freeze() {
     $str="";
@@ -339,9 +342,9 @@ class Session {
     if(!$r) $this->that->ac_halt("Session: freeze() failed.");
   }
 
-  ## thaw:
-  ##
-  ## Reload frozen variables from the database and microwave them.
+  // thaw:
+  //
+  // Reload frozen variables from the database and microwave them.
 
   function thaw() {
     $this->get_lock();
@@ -351,18 +354,18 @@ class Session {
     eval(sprintf(";%s",$vals));
   }
 
-  ##
-  ## Garbage collection
-  ##
-  ## Destroy all session data older than this
-  ##
+  //
+  // Garbage collection
+  //
+  // Destroy all session data older than this
+  //
   function gc() {
-      $this->that->ac_gc($this->gc_time, $this->name);
+    $this->that->ac_gc($this->gc_time, $this->name);
   }
 
-  ##
-  ## Variable precedence functions
-  ##
+  //
+  // Variable precedence functions
+  //
   function reimport_get_vars() {
     $this->reimport_any_vars("HTTP_GET_VARS");
   }
@@ -387,9 +390,9 @@ class Session {
     }
   }
 
-  ##
-  ## All this is support infrastructure for the start() method
-  ##
+  //
+  // All this is support infrastructure for the start() method
+  //
 
   function set_container(){   
     $name = $this->that_class;
@@ -405,9 +408,9 @@ class Session {
   function release_token(){ 
     global $HTTP_COOKIE_VARS, $HTTP_GET_VARS, $HTTP_HOST, $HTTPS;
     if (   isset($this->fallback_mode)
-    && ( "get" == $this->fallback_mode ) 
-    && ( "cookie" == $this->mode )
-    && ( ! isset($HTTP_COOKIE_VARS[$this->name]) ) ) {
+           && ( "get" == $this->fallback_mode ) 
+           && ( "cookie" == $this->mode )
+           && ( ! isset($HTTP_COOKIE_VARS[$this->name]) ) ) {
       if ( isset($HTTP_GET_VARS[$this->name]) ) {
         $this->mode = $this->fallback_mode;
       } else {
@@ -415,7 +418,7 @@ class Session {
         $this->get_id($sid);
 	$this->mode = $this->fallback_mode;
         if( isset($HTTPS) && $HTTPS == 'on' ){
-        ## You will need to fix suexec as well, if you use Apache and CGI PHP
+          // You will need to fix suexec as well, if you use Apache and CGI PHP
           $PROTOCOL='https';
         } else {
           $PROTOCOL='http';
@@ -427,35 +430,35 @@ class Session {
   }   
 
   function put_headers() {
-    # Allowing a limited amount of caching, as suggested by
-    # Padraic Renaghan on phplib@lists.netuse.de.
-    #
-    # Note that in HTTP/1.1 the Cache-Control headers override the Expires
-    # headers and HTTP/1.0 ignores headers it does not recognize (e.g,
-    # Cache-Control). Mulitple Cache-Control directives are split into 
-    # mulitple headers to better support MSIE 4.x.
-    #
-    # Added pre- and post-check for MSIE 5.x as suggested by R.C.Winters,
-    # see http://msdn.microsoft.com/workshop/author/perf/perftips.asp#Use%20Cache-Control%20Extensions
-    # for details
+# Allowing a limited amount of caching, as suggested by
+# Padraic Renaghan on phplib@lists.netuse.de.
+#
+# Note that in HTTP/1.1 the Cache-Control headers override the Expires
+# headers and HTTP/1.0 ignores headers it does not recognize (e.g,
+# Cache-Control). Mulitple Cache-Control directives are split into 
+# mulitple headers to better support MSIE 4.x.
+#
+# Added pre- and post-check for MSIE 5.x as suggested by R.C.Winters,
+# see http://msdn.microsoft.com/workshop/author/perf/perftips.asp#Use%20Cache-Control%20Extensions
+# for details
     switch ($this->allowcache) {
 
       case "public":
         $exp_gmt = gmdate("D, d M Y H:i:s", time() + $this->allowcache_expire * 60) . " GMT";
-        $mod_gmt = gmdate("D, d M Y H:i:s", getlastmod()) . " GMT";                             
-        header("Expires: " . $exp_gmt);
-        header("Last-Modified: " . $mod_gmt);
-        header("Cache-Control: public");
-        header("Cache-Control: max-age=" . $this->allowcache_expire * 60);
+      $mod_gmt = gmdate("D, d M Y H:i:s", getlastmod()) . " GMT";                             
+      header("Expires: " . $exp_gmt);
+      header("Last-Modified: " . $mod_gmt);
+      header("Cache-Control: public");
+      header("Cache-Control: max-age=" . $this->allowcache_expire * 60);
       break;
  
       case "private":
         $mod_gmt = gmdate("D, d M Y H:i:s", getlastmod()) . " GMT";
-        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-        header("Last-Modified: " . $mod_gmt);
-        header("Cache-Control: private");
-        header("Cache-Control: max-age=" . $this->allowcache_expire * 60);
-        header("Cache-Control: pre-check=" . $this->allowcache_expire * 60);
+      header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+      header("Last-Modified: " . $mod_gmt);
+      header("Cache-Control: private");
+      header("Cache-Control: max-age=" . $this->allowcache_expire * 60);
+      header("Cache-Control: pre-check=" . $this->allowcache_expire * 60);
       break;
 
       default:
@@ -464,15 +467,15 @@ class Session {
         header("Cache-Control: no-cache");
         header("Cache-Control: post-check=0, pre-check=0");
         header("Pragma: no-cache");
-      break;
+        break;
     }
   }
 
-  ##
-  ## Garbage collection
-  ##
-  ## Destroy all session data older than this
-  ##
+  //
+  // Garbage collection
+  //
+  // Destroy all session data older than this
+  //
   function gc() {
     srand(time());
     if ((rand()%100) < $this->gc_probability) {
@@ -481,9 +484,9 @@ class Session {
   }
 
 
-  ##
-  ## Initialization
-  ##
+  //
+  // Initialization
+  //
 
   function start($sid = "") {
     $this->set_container();
