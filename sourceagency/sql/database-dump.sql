@@ -21,9 +21,9 @@ CREATE TABLE active_sessions (
 # Dumping data for table 'active_sessions'
 #
 
-INSERT INTO active_sessions VALUES ('9140fe2578421e79994aef77ecee6b26','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20020418111856');
+INSERT INTO active_sessions VALUES ('9140fe2578421e79994aef77ecee6b26','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0VuZ2xpc2gnOyAkR0xPQkFMU1snYXV0aCddID0gbmV3IFNvdXJjZUFnZW5jeV9BdXRoOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoID0gYXJyYXkoKTsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsndWlkJ10gPSAnYzhhMTc0ZTBiZGRhMjAxMWZmNzk4YjIwZjIxOWFkYzUnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydwZXJtJ10gPSAnZWRpdG9yLGFkbWluJzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsnZXhwJ10gPSAnMTAxOTE1MDk1OSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3JlZnJlc2gnXSA9ICcxMDE5MTM4NzQzJzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsndW5hbWUnXSA9ICdhZG1pbic7IA==','20020418165919');
+INSERT INTO active_sessions VALUES ('7049793b3a3fc1d3defc128eff6ed3a2','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0VuZ2xpc2gnOyAkR0xPQkFMU1snYXV0aCddID0gbmV3IFNvdXJjZUFnZW5jeV9BdXRoOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoID0gYXJyYXkoKTsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsndWlkJ10gPSAnZjRjNzU2ZGZjOGU1NWExMzFkMmE3ZDRiZTllM2UxMWInOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydwZXJtJ10gPSAnZGV2ZWwnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydleHAnXSA9ICcxMDE5MTQ1NDY4JzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsncmVmcmVzaCddID0gJzEwMTkxMzY0MjEnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1bmFtZSddID0gJ3JpZXNzZW4nOyA=','20020418152751');
 INSERT INTO active_sessions VALUES ('6e09eb66ee2a416f32ceef4b31118346','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0VuZ2xpc2gnOyAkR0xPQkFMU1snYXV0aCddID0gbmV3IFNvdXJjZUFnZW5jeV9BdXRoOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoID0gYXJyYXkoKTsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsndWlkJ10gPSAnZm9ybSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICcnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydleHAnXSA9ICcyMTQ3NDgzNjQ3JzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsncmVmcmVzaCddID0gJzIxNDc0ODM2NDcnOyA=','20020417170638');
-INSERT INTO active_sessions VALUES ('9e65da30fb14a932850d406e4424a8b5','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnR2VybWFuJzsg','20020417132129');
 
 #
 # Table structure for table 'auth_user'
@@ -385,6 +385,36 @@ INSERT INTO developing VALUES (2,4,3,'devel',1234,'Public Domain','A','No',20010
 INSERT INTO developing VALUES (3,6,4,'devel',12,'The GNU General Public License (GPL)','A','No',20041231120000,20011010120000,1,20011010183231);
 INSERT INTO developing VALUES (4,24,7,'admin',123,'The Common Public License','P','No',20010101120000,20010101120000,1,20020327121345);
 INSERT INTO developing VALUES (5,1,8,'devel',2,'The Common Public License','P','No',20010101120000,20010101120000,1,20020327130234);
+
+#
+# Table structure for table 'doco'
+#
+
+CREATE TABLE doco (
+  docoid int(8) unsigned NOT NULL auto_increment,
+  language varchar(24) NOT NULL default '',
+  page varchar(64) NOT NULL default '',
+  header varchar(255) NOT NULL default '',
+  doco blob NOT NULL,
+  PRIMARY KEY  (docoid)
+) TYPE=MyISAM;
+
+#
+# Dumping data for table 'doco'
+#
+
+INSERT INTO doco VALUES (1,'English','index','SourceAgency: Front Page','SourceAgency is a Open Source project exchange. It is the place where developers meet sponsors, and sponsors can describe the software requirements.<p> Two nature-types of projects are available: developing and sponsoring.<ul><li>Developing are those projects that are being developed by developers and are looking for finanical sponsorship.<li>Sponsoring projects are ones where sponsor(s) are looking for a developer group to develop a needed solution for them.</ul><p> All projects developed using the SourceAgency/Berlios platform are Open Source projects and use Open Source Licenses.');
+INSERT INTO doco VALUES (2,'English','faq','Frequently Asked Questions','The FAQ page provides answers to some common questions.<p> Questions can be asked by sending the SourceAgency  developers <a href=\"mailto:sourceagency-support@lists.berlios.de?subject=FAQ Question\">feedback</a>!');
+INSERT INTO doco VALUES (3,'English','login','Login Page','Here registered users may login. If you are not a registered user, then you can register <a href=\"register.php3\">here</a>');
+INSERT INTO doco VALUES (4,'English','doco','Documentation Page','Page specific documentation is generated using this page. Each pages documentation can be accessed using the \"What this\" link on the left hand side menubar.');
+INSERT INTO doco VALUES (5,'English','users','User Listing','Listing of the different types of registered users. This  allows developers to directly contact sponsors and sponsors  to directly contact developers.<p> Three listings available:<ul> <li><a href=\"users.php3\">All Users</a> <li><a href=\"users.php3?type=devel\">All Developers</a> <li><a href=\"users.php3?type=sponsor\">All Sponsors</a> </ul>');
+INSERT INTO doco VALUES (6,'English','browse','Project Browsing','All currently registered and accepted projects can be browsed based on several different categories based on the projects configuration.<p> Projects matching a category are listed below the category listing.');
+INSERT INTO doco VALUES (7,'English','licenses','Open Source License Listing','Provides a listing of all accepted Open Source licenses. Each project must choice a license for each Technical Content made to a project. <p>As SourceAgency only provides support for the development of Open Source Software, therefore all licenses are Open Source licenses approved by the <a href=\"http://opensource.org\">Open Source Initiative (OSI)</a>.');
+INSERT INTO doco VALUES (8,'English','insform','Project Register Form','Here registered user may enter new project descriptions.<p>The nature of the project is defined by the type of user: developer enter descriptions of developing projects, while sponsors enter descriptions of sponsoring projects.');
+INSERT INTO doco VALUES (9,'English','remind','Password Reminder','Registered user may have their forgotten password sent to their email address.');
+INSERT INTO doco VALUES (10,'English','chguser','Change User Information','Registered users may change their personal information using this page.');
+INSERT INTO doco VALUES (11,'English','register','User Registration','New users can register to become SourceAgency users.<p> SourceAgency has two <b>types</b> of users:<ul><li>Developers who can <a href=\"insform.php3\">register</a> developing projects and who are interested in getting involved projects as a developer <li>Sponsors can <a href=\"insform.php3\">register</a> sponsoring projects and represent businesses interested in getting specific software modules to fill the business needs.</ul>');
+INSERT INTO doco VALUES (12,'English','summary','Project Summary','This is a projects Home Page and displays information relating to its status and progress.<p>Each project has 6 steps which define its status:<ul><li>Step 1: Consultancy <ul><li></ul><li>Step 2: Technical Specifications<ul><li></ul><li>Step 3: Milestones<ul><li></ul><li>Step 4: Referees<ul><li></ul><li>Step 5: Project Follow-up<ul><li></ul><li>Step 6: Rating<ul><li></ul></ul>Beyond this, each project has a:<ul> <li>News page for current news about the project <li>Comments page ....<li>Sponsorship page for sponsors to provide sponsorship <li>Project History Page ....</ul>');
 
 #
 # Table structure for table 'faq'
