@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: ratingslib.inc,v 1.8 2002/05/03 11:14:07 riessen Exp $
+# $Id: ratingslib.inc,v 1.9 2002/05/29 15:42:08 riessen Exp $
 #
 ######################################################################
 
@@ -586,10 +586,11 @@ function show_personal_rating($proid, $username)
  */
 function ratings_form_finish($proid)
 {
+  global $t;
   htmlp_form_action('PHP_SELF',array('proid' => $proid),'POST');
   htmlp_form_hidden('dev_or_spo','');
   htmlp_form_hidden('id_number','');
-  htmlp_form_submit('Rating finished','finished');
+  htmlp_form_submit($t->translate('Rating finished'),'finished');
   htmlp_form_end();
 }
 

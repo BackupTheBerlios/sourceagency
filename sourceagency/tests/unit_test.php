@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.17 2002/05/29 14:57:01 riessen Exp $
+# $Id: unit_test.php,v 1.18 2002/05/29 15:42:08 riessen Exp $
 #
 ######################################################################
 
@@ -144,7 +144,7 @@ extends TestCase
 
     // passed a mock_db_configure object, this method ensures nothing failed
     // while using the database objects.
-    function _check_db( $db_config ) {
+    function _check_db( &$db_config ) {
         $this->assert(!$db_config->did_db_fail(),$db_config->error_message());
     }
 

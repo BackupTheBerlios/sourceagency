@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestRatingslib.php,v 1.1 2002/05/15 15:46:17 riessen Exp $
+// $Id: TestRatingslib.php,v 1.2 2002/05/29 15:42:08 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -35,7 +35,22 @@ extends UnitTest
     }
 
     function testRatings_form_finish() {
-        $this->_test_to_be_completed();
+        global $sess, $t;
+
+        $proid = "this is the proid";
+        capture_reset_and_start();
+        ratings_form_finish( $proid );
+        $text = capture_stop_and_get();
+        
+        $this->_checkFor_a_form( $text, 'PHP_SELF', array('proid' => $proid),
+                                          'POST');
+        $this->_testFor_html_form_hidden( $text, 'dev_or_spo', '' );
+        $this->_testFor_html_form_hidden( $text, 'id_number', '' );
+        $this->_testFor_html_form_submit( $text, 
+                                          $t->translate('Rating finished'),
+                                         'finished');
+        $this->_testFor_captured_length( 233 + strlen( $sess->self_url() ) );
+        
     }
 
     function testRatings_form_full() {
@@ -63,7 +78,23 @@ extends UnitTest
     }
 
     function testRatings_rated_yet() {
-        $this->_test_to_be_completed();
+        $args=$this->_generate_records(array('proid', 'to_whom', 'by_whom'),3);
+
+        $db_config = new mock_db_configure( 3 );
+
+        $q = "SELECT * FROM ratings WHERE proid='%s' AND to_whom='%s' "
+             ."AND by_whom='%s'";
+        
+        for ( $idx = 0; $idx < 3; $idx++ ) {
+            $db_config->add_query( sprintf( $q, $args[$idx]['proid'],
+                        $args[$idx]['to_whom'],$args[$idx]['by_whom']), $idx );
+            $db_config->add_num_row( $idx-1, $idx );
+            $r = ( $idx > 1 || $idx < 1 ? 1 : 0 ); 
+            $this->assertEquals( $r, call_user_func_array('ratings_rated_yet',
+                                                          $args[$idx]));
+        }
+
+        $this->_check_db( $db_config );
     }
 
     function testShow_participants_rating() {
