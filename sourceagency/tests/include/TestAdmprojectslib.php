@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestAdmprojectslib.php,v 1.2 2002/06/10 15:35:52 riessen Exp $
+// $Id: TestAdmprojectslib.php,v 1.3 2002/06/11 14:11:12 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -68,15 +68,12 @@ extends UnitTest
     function _call_show_admprojects( $string_length, &$data, $bgc ) {
         global $bx;
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        show_admprojects();
-        $this->set_text( capture_stop_and_get() );
-        $this->_testFor_string_length( $string_length );
+        $this->capture_call( 'show_admprojects', $string_length );
         $this->_testFor_show_admprojects_basics( $data, $bgc );
     }
 
     function testShow_admprojects() {
-        global $bx, $t;
+        global $bx, $t, $sess;
 
         $db_config = new mock_db_configure( 33 );
 
@@ -132,16 +129,14 @@ extends UnitTest
 
         // test one, no projects
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        show_admprojects();
-        $this->set_text( capture_stop_and_get() );
-        $this->_testFor_string_length( 780 );
+        $this->capture_call( 'show_admprojects', 780 );
         $this->_checkFor_box_full( 
             $t->translate('Pending Project Administration'),
             $t->translate('No pending projects') );
 
         // test two, test using the sponsor, configured == 3
-        $this->_call_show_admprojects( 4800, $d[0], $bgc[0] );
+        $this->_call_show_admprojects( 4800 + strlen( $sess->self_url() ), 
+                                       $d[0], $bgc[0] );
         $co = '<b>'.$t->translate('Yes')
              .'</b><br>'
              .html_link($table[0].'.php3',
@@ -157,7 +152,8 @@ extends UnitTest
         $this->_testFor_html_form_submit( $t->translate( 'Delete' ), 'delete');
 
         // test three, test using the sponsor, configured == 2
-        $this->_call_show_admprojects( 4683, $d[1], $bgc[0] );
+        $this->_call_show_admprojects( 4683 + strlen( $sess->self_url() ),
+                                       $d[1], $bgc[0] );
         $co = '<b>'.$t->translate('Partially')
              .'</b><br>'
              .html_link($table[1].'.php3',
@@ -170,7 +166,8 @@ extends UnitTest
         $this->_testFor_html_form_submit( $t->translate( 'Review' ), 'review');
 
         // test four, test using the sponsor, configured == 1
-        $this->_call_show_admprojects( 4685, $d[2], $bgc[0] );
+        $this->_call_show_admprojects( 4685 + strlen( $sess->self_url() ), 
+                                       $d[2], $bgc[0] );
         $co= '<b>'.$t->translate('Partially')
              .'</b><br>'
              .html_link('configure.php3',
@@ -183,7 +180,8 @@ extends UnitTest
         $this->_testFor_html_form_submit( $t->translate( 'Review' ), 'review');
 
         // test five, test using the sponsor, configured == 0
-        $this->_call_show_admprojects( 4613, $d[3], $bgc[0] );
+        $this->_call_show_admprojects( 4613 + strlen( $sess->self_url() ), 
+                                       $d[3], $bgc[0] );
         $co = '<b>'.$t->translate('No').'</b><br>'; 
         $this->_testFor_box_column( 'center', '',$bgc[0], $co );
         $this->_testFor_html_form_hidden( 'proid', $d[3]['proid'] );
@@ -192,7 +190,8 @@ extends UnitTest
         $this->_testFor_html_form_submit( $t->translate( 'Review' ), 'review');
 
         // test six: test using developer, configured == 1
-        $this->_call_show_admprojects( 4733, $d[4], $bgc[1] );
+        $this->_call_show_admprojects( 4733 + strlen( $sess->self_url() ), 
+                                       $d[4], $bgc[1] );
         $co = '<b>'.$t->translate('Yes')
              .'</b><br>'
              .html_link('configure.php3',
@@ -207,7 +206,8 @@ extends UnitTest
 
         // test seven, eight, nine: test using developer, configured == {0,2,3}
         for ( $idx = 5; $idx < 8; $idx++ ) {
-            $this->_call_show_admprojects( 4613, $d[$idx], $bgc[1] );
+            $this->_call_show_admprojects( 4613 + strlen( $sess->self_url() ), 
+                                           $d[$idx], $bgc[1]);
             $co = '<b>'.$t->translate('No').'</b><br>'; 
             $this->_testFor_box_column( 'center', '',$bgc[1], $co );
             $this->_testFor_html_form_hidden( 'proid', $d[$idx]['proid'] );
@@ -258,10 +258,8 @@ extends UnitTest
             $db_config->add_record( $d2[$jdx], $jdx );
             $db = new DB_SourceAgency;
 
-            capture_reset_and_start();
-            admprojects_insert( $args[$jdx]['proid'], $idx );
-            $this->set_text( capture_stop_and_get() );
-            $this->_testFor_string_length( 0 );
+            $this->capture_call( 'admprojects_insert', 0, 
+                                 array( $args[$jdx]['proid'], $idx) );
         }
         $this->_check_db( $db_config );
     }
