@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: German-lang.inc,v 1.12 2002/05/03 07:01:42 riessen Exp $
+# $Id: German-lang.inc,v 1.13 2002/05/03 10:42:54 riessen Exp $
 #
 ######################################################################
 
@@ -35,6 +35,8 @@ function translate_real($phrase) {
         case 'AdmDoco': $tmp = 'Dokumentationverwaltung'; break;
         case 'Administration': $tmp = 'Administration'; break;
         case 'All': $tmp = 'Alle'; break;
+        case 'All Comments by': $tmp = $phrase; break;
+        case 'All the rating on ': $tmp = $phrase; break;
         case 'An error has ocurred': $tmp = 'Ein Fehler ist aufgetretten'; break;
         case 'Answer': $tmp = 'Anwort'; break;
         case 'Architecture': $tmp = 'Architektur'; break;
@@ -66,6 +68,7 @@ function translate_real($phrase) {
         case 'Developers Wanted': $tmp = 'Entwickler gesucht'; break;
         case 'Developers': $tmp = 'Entwickler'; break;
         case 'Developing': $tmp = 'In Entwicklung'; break;
+        case 'Developing Cooperation': $tmp = $phrase; break;
         case 'E-Mail': $tmp = 'E-Mail'; break;
         case 'Either your Username or Password are invalid': $tmp = 'Entweder haben Sie den falschen Benutzernamen oder Passwort eingegeben'; break;
         case 'English': $tmp = 'Englisch'; break;
@@ -83,16 +86,21 @@ function translate_real($phrase) {
         case 'General Comments': $tmp = 'Generelle Kommentare'; break;
         case 'General comments can be posted': $tmp = 'Generelle Kommentare können angegeben'; break;
         case 'German': $tmp = 'Deutsch'; break;
+        case 'Global personal rating: ': $tmp = $phrase; break;
         case 'Go': $tmp = 'Los'; break;
+        case 'Hi': $tmp = $phrase; break;
         case 'Here you have to enter all the <b>project related</b> data. This should only give an idea to other people what you are planning.': $tmp = 'Bitte beschreiben Sie jetzt das Projekt. Die Information sollte andere leute über das Projekt Informieren'; break;
         case 'Home': $tmp = 'Home'; break;
         case 'If you are not yet a registered User, please select': $tmp = 'Falls Sie ein nicht bekannter Nutzer sind, bitte wählen'; break;
+        case "In this page you'll find all the information related to you": $tmp = $phrase; break;
         case 'Index': $tmp = 'Index'; break;
         case 'Info box': $tmp = 'Information Kasten'; break;
         case 'Information access configuration': $tmp = 'Konfiguration von Information zugriffrechte'; break;
         case 'Insert a License': $tmp = 'Lizenz angeben'; break;
         case 'Insert': $tmp = 'Einfügen'; break;
         case 'Language': $tmp = 'Sprache'; break;
+        case 'Last 10 Comments by': $tmp = $phrase; break;
+        case 'Last 5 News by': $tmp = $phrase; break;
         case 'Latest News': $tmp = 'Nueste Neuigkeiten'; break;
         case 'License Administration': $tmp = 'Lizenz Administration'; break;
         case 'License URL': $tmp = 'Lizenz URL'; break;
@@ -105,6 +113,8 @@ function translate_real($phrase) {
         case 'Milestones': $tmp = 'Meilensteine'; break;
         case 'Modification': $tmp = 'Änderung'; break;
         case 'Monitor This Project': $tmp = 'Projektüberwachung'; break;
+        case 'Monitored Projects': $tmp = $phrase; break;
+        case 'My Projects': $tmp = $phrase; break;
         case 'New Frequently Asked Question': $tmp = 'Neue Häufig gestellte Frage'; break;
         case 'New License Name': $tmp = 'Neuen Lizenzname'; break;
         case 'New License URL': $tmp = 'Neue Lizenz URL'; break;
@@ -114,10 +124,15 @@ function translate_real($phrase) {
         case 'New User': $tmp = 'Neuer Benutzer'; break;
         case 'News': $tmp = 'Nachrichten'; break;
         case 'Newsletter': $tmp = 'Newsletter'; break;
+        case 'No consultant proposal with this status': $tmp = $phrase; break;
         case 'No consultants wanted': $tmp = 'Keine Berater erwünscht'; break;
+        case 'No developing cooperation proposal with this status': $tmp = $phrase; break;
+        case 'No personal projects': $tmp = $phrase; break;
+        case 'No rating yet': $tmp = 'Noch keine Bewertung'; break;
         case 'No': $tmp = 'Nein'; break;
         case 'No.': $tmp = 'Nr.'; break;
         case 'Not Logged in': $tmp = 'Nicht eingeloggt'; break;
+        case 'Not related to any project with': $tmp = $phrase; break;
         case 'Open Source Project Mediation & Management': $tmp = 'Open Source Projekt Vermittlung & Leitung'; break;
         case 'Open Source Software Projects': $tmp = 'Open-Source-Software-Projekte'; break;
         case 'Our apologies. Documentation only available in English.': $tmp = 'Die Dokumentation ist leider nicht in Deutsch verfügbar.'; break;
@@ -145,6 +160,7 @@ function translate_real($phrase) {
         case 'Projects': $tmp = 'Projekte'; break;
         case 'Q&amp;A': $tmp = 'F&amp;A'; break;
         case 'Question': $tmp = 'Frage'; break;
+        case 'Rated': $tmp = $phrase; break;
         case 'Rating': $tmp = 'Bewertung'; break;
         case 'Realname': $tmp = 'Namen'; break;
         case 'Receive an email update when something happens in this project': $tmp = 'Schick mir eine Mail wenn sich das Projekt ändert'; break;
@@ -156,6 +172,8 @@ function translate_real($phrase) {
         case 'Rename a License': $tmp = 'Lizenz umbenennen'; break;
         case 'Rename': $tmp = 'Umbenennen'; break;
         case 'Search': $tmp = 'Suche'; break;
+        case 'See all the comments': $tmp = $phrase; break;
+        case 'See complete ratings...': $tmp = $phrase; break;
         case 'SourceAgency Login': $tmp = 'Einloggen zu SourceAgency'; break;
         case 'SourceAgency': $tmp = 'SourceAgency'; break;
         case 'Spanish': $tmp = 'Spanisch'; break;
@@ -179,6 +197,7 @@ function translate_real($phrase) {
         case 'There have not been posted any news by the project owner(s)': $tmp = 'Keine Neuigkeiten sind von die Projektbesitzer aufgegeben wurden'; break;
         case 'This is all over now. You have been logged out': $tmp = 'Sie sind jetzt ausgeloggt'; break;
         case 'This is interesting if you are a sponsor and you are interested in joining this project': $tmp = 'Dies ist von Interesse wenn Sie ein Sponsor sind und möchten diese Projekt unterstützen'; break;
+        case 'This is your personal page.': $tmp = $phrase; break;
         case 'Type': $tmp = 'Typ'; break;
         case 'Unknown': $tmp = 'Unbekannt'; break;
         case 'User Administration': $tmp = 'Benutzer Administration'; break;
@@ -195,24 +214,32 @@ function translate_real($phrase) {
         case 'accepted sponsoring collaborations': $tmp = 'angenommmene finanzille Beteiligung'; break;
         case 'by': $tmp = 'von'; break;
         case 'comments': $tmp = 'Kommentare'; break;
+        case 'comments on it': $tmp = $phrase; break;
         case 'configure': $tmp = 'Konfigurieren'; break;
         case 'consultants': $tmp = 'Berater'; break;
         case 'content suggestions': $tmp = 'Inhaltsvorschläge'; break;
         case 'feedback': $tmp = 'Rückmeldung'; break;
         case 'general comments': $tmp = 'Generelle Kommatare'; break;
         case 'history': $tmp = 'Historie'; break;
+        case 'in': $tmp = $phrase; break;
         case 'milestones': $tmp = 'Meilensteine'; break;
         case 'news for this project': $tmp = 'Neuigkeiten des Projektes'; break;
         case 'news': $tmp = 'Neuigkeiten'; break;
         case 'news_edit': $tmp = 'Editieren von Neuigkeiten'; break;
+        case 'no comments posted': $tmp = $phrase; break;
+        case 'no news posted': $tmp = $phrase; break;
         case 'non-accepted sponsoring proposals for this project': $tmp = 'nicht angenommmene Finanzierungangebote für dieses Projekt'; break;
+        case 'on project': $tmp = $phrase; break;
         case 'other comments on this project': $tmp = 'andere Kommentare zu diesem Projekt'; break;
         case 'permission': $tmp = 'Berechtigung'; break;
+        case 'posted to': $tmp = $phrase; break;
         case 'project_name': $tmp = 'Projektname'; break;
         case 'sponsoring': $tmp = 'Finanzielle Unterstützung'; break;
+        case 'status': $tmp = $phrase; break;
         case 'step1_edit': $tmp = 'Neue Berater vorschlagen'; break;
         case 'step3_edit': $tmp = 'Neue Meilensteine definieren'; break;
         case 'summary': $tmp = 'Zusammenfassung'; break;
+        case 'to this': $tmp = $phrase; break;
         case 'views': $tmp = 'Zugriff auf Projekt Informationen'; break;
         case 'with': $tmp = 'mit'; break;
 
