@@ -48,8 +48,9 @@ ALT="<?php echo $sys_logo_alt;?>"></a>
 <td align="center" valign="middle">
 <center>
 <font font="times" size="+10" color="red">BETA BETA BETA</font><br>
-This site is being beta tested, please send any and all 
-<a href="mailto:riessen@berlios.de?subject=SourceAgency Feedback&cc=grex@scouts-es.org&cc=lutz.henckel@fokus.fhg.de"
+This site is being beta tested, 
+please send any and all
+ <a href="mailto:sourceagency-support@lists.berlios.de?subject=SourceAgency Beta Feedback&cc=grex@scouts-es.org&cc=lutz.henckel@fokus.fhg.de&cc=riessen@berlios.de"
 >feedback</a>!
 </center>
 </td>
