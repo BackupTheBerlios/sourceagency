@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: personallib.inc,v 1.17 2002/05/03 10:34:28 riessen Exp $
+# $Id: personallib.inc,v 1.18 2002/05/03 11:14:56 riessen Exp $
 #
 ######################################################################
 
@@ -58,7 +58,7 @@ function personal_ratings_short($username)
     $db_local->query("SELECT rating FROM ratings WHERE "
                      ."to_whom='$username'");
     if ($db_local->num_rows() == 0) {
-        print "Not rated yet\n";
+        print $t->translate('Not rated yet')."\n";
     } else {
 	while ($db_local->next_record()) {
 	    $i+=1;
@@ -207,7 +207,8 @@ function personal_comments_short($username)
                          .$db_local->f("type")."' AND ref='"
                          .$db_local->f("id")."'");
       	$db_count->next_record();
-       	print ( $t->translate('Comment').' ('.$db_local->f('type').'): <b>'
+       	print ( $t->translate('Comment').' ('
+                .$t->translate($db_local->f('type')).'): <b>'
                 .html_link('comments.php3',
                            array('proid' => $db_local->f('proid'), 
                            'type' => $db_local->f('type'), 
@@ -221,7 +222,7 @@ function personal_comments_short($username)
 	$db_count->query("SELECT * FROM description WHERE proid='"
                          .$db_local->f('proid')."'");
 	$db_count->next_record();
-	print( '<br>&nbsp; &nbsp; &nbsp; posted to '
+	print( '<br>&nbsp; &nbsp; &nbsp; '.$t->translate('posted to').' '
               .html_link('summary.php3',
                          array('proid' => $db_count->f('proid')), 
                          $db_count->f('project_title'))."<br>\n");
@@ -272,7 +273,8 @@ function personal_comments_long($username)
                          ."' AND type='".$db_local->f("type")
                          ."' AND ref='".$db_local->f("id")."'");
 	$db_count->next_record();
-	print ($t->translate('Comment').' ('.$db_local->f('type').'): <b>'
+	print ($t->translate('Comment') . ' ('
+               .$t->translate($db_local->f('type')) . '): <b>'
                .html_link('comments.php3',
                           array('proid' => $db_local->f('proid'), 
                                 'type' => $db_local->f('type'), 
@@ -356,7 +358,7 @@ function personal_news_short($username)
 	$db_count->query("SELECT * FROM description WHERE proid='"
                          .$db_local->f("proid")."'");
 	$db_count->next_record();
-	print ( '<br>&nbsp; &nbsp; &nbsp; posted to '
+	print ( '<br>&nbsp; &nbsp; &nbsp; '.$t->translate('posted to').' '
                . html_link('summary.php3',
                            array('proid' => $db_count->f('proid')), 
                 $db_count->f('project_title'))."<br>\n");
