@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.20 2002/05/02 11:29:15 riessen Exp $
+# $Id: browselib.inc,v 1.21 2002/05/28 08:53:34 riessen Exp $
 #
 ######################################################################
 
@@ -267,6 +267,7 @@ function _browse_volume()
 {
     global $bx, $t;
 
+    // defines the variable project_volume
     require('config.inc');
     
     $bx->box_begin();
@@ -320,6 +321,7 @@ function _browse_platform()
 {
     global $bx, $t;
     
+    // defines the variable platform_array
     require('config.inc');
     
     $bx->box_begin();
@@ -344,7 +346,7 @@ function _browse_platform()
   	$db2->next_record();
   	$num = '['.sprintf('%03d',$db2->f('COUNT(*)')).']';
   	$bx->box_column('right','',$bgcolor,$i+1);
-	if ($num !=0) {
+	if ($num != "[000]") {
             $bx->box_column('center','',$bgcolor,
                             html_link('browse.php3',
                                       array('through' => 'platform', 
@@ -373,6 +375,7 @@ function _browse_architecture()
 {
     global $bx, $t;
     
+    // defines the variable architecture_array
     require('config.inc');
     
     $bx->box_begin();
@@ -427,6 +430,7 @@ function _browse_environment()
 {
     global $bx, $t;
     
+    // defines the varible environment_array
     require('config.inc');
     
     $bx->box_begin();
@@ -479,8 +483,6 @@ function _browse_environment()
 function _browse_not_yet()
 {
     global $bx, $t;
-    
-    require('config.inc');
     
     $bx->box_begin();
     $bx->box_title($t->translate('Not yet available'));
@@ -559,7 +561,8 @@ function browse_list($by, $what)
                      ." AND  project_title LIKE '". $what . "%'";
         break;
     default:
-        lib_die('Error in browselib.inc function browse_list. $by not specified');  
+        lib_die('Error in browselib.inc function browse_list. '.$by
+                .' not specified');  
     }
     _browse_output($query);
 }
