@@ -18,32 +18,38 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: logger.inc,v 1.5 2001/12/13 16:41:01 riessen Exp $
+# $Id: logger.inc,v 1.6 2001/12/13 16:49:39 riessen Exp $
 #
 ######################################################################
 
-class Logger {
-    var $logger_file_pointer = -1;
+// this is global because we don't want new instances of the logger
+// using a new file_pointer, hence this isn't an instance variable 
+// on the logger class
+$g_logger_file_pointer = -1;
 
+class Logger {
     function Logger() {
     }
 
     // called in the header 
     function open() {
-        $this->logger_file_pointer = fopen( "/tmp/sourceagency.log", "a+" );
+        global $g_logger_file_pointer;
+        $g_logger_file_pointer = fopen( "/tmp/sourceagency.log", "a+" );
     }
 
     function log( $msg ) {
-        if ( $this->logger_file_pointer > -1 ) {
-            fwrite( $this->logger_file_pointer, "[" . date("D M j G:i:s T Y")
+        global $g_logger_file_pointer;
+        if ( $g_logger_file_pointer > -1 ) {
+            fwrite( $g_logger_file_pointer, "[" . date("D M j G:i:s T Y")
                                                        . "]: " . $msg . "\n" );
         }
     }
 
     // called in the footer
     function close() {
-        if ( $this->logger_file_pointer > -1 ) {
-            fclose( $this->logger_file_pointer );
+        global $g_logger_file_pointer;
+        if ( $g_logger_file_pointer > -1 ) {
+            fclose( $g_logger_file_pointer );
         }
     }
 }
