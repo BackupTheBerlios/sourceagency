@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.7 2001/11/20 14:09:50 riessen Exp $
+# $Id: TestHtml.php,v 1.8 2001/11/20 16:39:30 riessen Exp $
 #
 ######################################################################
 
@@ -124,7 +124,7 @@ extends TestCase
     function test__html_image() {
         $actual = html_image("file", "border", "width", "height", "alternate");
         $expect = ("<img src=\"images/file\" border=\"border\" width=\"width\""
-                   . " height=\"height\" alt=\"alternate\">\n");
+                   . " height=\"height\" alt=\"alternate\">");
         $this->assertEquals( $expect, $actual );
         
         // test the print variation of the same function
