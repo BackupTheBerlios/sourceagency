@@ -5,14 +5,19 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestBrowselib.php,v 1.5 2002/06/11 13:01:19 riessen Exp $
+// $Id: TestBrowselib.php,v 1.6 2002/06/14 09:14:12 riessen Exp $
 
 include_once( '../constants.php' );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-}
-
+include_once( 'html.inc' );
+include_once( 'security.inc' );
+include_once( 'box.inc' );
+include_once( "translation.inc" );
 include_once( 'browselib.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    $GLOBALS['t'] = new translation("English");
+}
 
 class UnitTestBrowselib
 extends UnitTest

@@ -16,16 +16,16 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestBox.php,v 1.21 2002/06/04 10:57:52 riessen Exp $
+# $Id: TestBox.php,v 1.22 2002/06/14 09:14:12 riessen Exp $
 #
 ######################################################################
 
 include_once( "../constants.php" );
 
+include_once( "box.inc" );
+
 if ( !defined("BEING_INCLUDED" ) ) {
 }
-
-include_once( "box.inc" );
 
 class UnitTestBox
 extends UnitTest

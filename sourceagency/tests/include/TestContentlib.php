@@ -5,14 +5,18 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestContentlib.php,v 1.2 2002/06/06 08:18:27 riessen Exp $
+// $Id: TestContentlib.php,v 1.3 2002/06/14 09:14:12 riessen Exp $
 
 include_once( '../constants.php' );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-}
-
+include_once( 'html.inc' );
+include_once( 'lib.inc' );
 include_once( 'contentlib.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    include_once( "translation.inc" );
+    $GLOBALS[ 't' ] = new translation("English");
+}
 
 class UnitTestContentlib
 extends UnitTest
@@ -58,11 +62,7 @@ extends UnitTest
         $db->query( 'fubar' );
         $db->next_record();
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        call_user_func_array( 'content_box_footer', $args[0] );
-        $this->set_text( capture_stop_and_get() );
-
-        $this->_testFor_string_length( 895 );
+        $this->capture_call( 'content_box_footer', 895, $args[0] );
         $this->_check_db( $db_config );
     }
     function testContent_form() {
@@ -96,9 +96,8 @@ extends UnitTest
         $proid = 'this is the proid';
 
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        content_preview( $proid );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( 'content_preview', 1075 + strlen(timestr(time())),
+                             array( &$proid ) );
         
         $this->_checkFor_a_box( 'Technical Content' );
         $this->_testFor_lib_nick( $auth->auth['uname'] );
@@ -114,7 +113,6 @@ extends UnitTest
             $str .= '<b>'.$t->translate( $key ).':</b> '.$val."\n";
             $this->_testFor_pattern( $this->_to_regexp( $str ) );
         }
-        $this->_testFor_string_length( 1075 + strlen( timestr( time() ) ) );
 
         // test two: no documentation data
         $docs = '';

@@ -16,26 +16,25 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestPersonallib.php,v 1.29 2002/06/04 10:57:52 riessen Exp $
+# $Id: TestPersonallib.php,v 1.30 2002/06/14 09:14:12 riessen Exp $
 #
 ######################################################################
 
 include_once( "../constants.php" );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-    include_once( 'box.inc' );
-    $bx = new box;
-    include_once( 'session.inc' );
-    $sess = new session;
-    include_once( "translation.inc" );
-    $t = new translation("English");
-} 
-
+include_once( 'box.inc' );
 include_once( 'lib.inc' ); // need this for show_status(..)
 include_once( 'html.inc' ); // implicitly required by personallib.inc
 include_once( 'security.inc' ); // required for personal_related_projects
 
 include_once( 'personallib.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    include_once( 'session.inc' );
+    $GLOBALS['sess'] = new session;
+    include_once( "translation.inc" );
+    $GLOBALS['t'] = new translation("English");
+} 
 
 //
 // REFACTOR: This entire test class is in bad need of refactoring

@@ -16,24 +16,23 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.22 2002/06/04 10:57:52 riessen Exp $
+# $Id: TestSecurity.php,v 1.23 2002/06/14 09:14:12 riessen Exp $
 #
 ######################################################################
 
 include_once( "../constants.php" );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-    include_once( 'box.inc' );
-    $bx = new box;
-    include_once( 'session.inc' );
-    $sess = new session;
-    include_once( "translation.inc" );
-    $t = new translation("English");
-} 
-
+include_once( 'box.inc' );
 include_once( 'lib.inc' );
 include_once( 'html.inc' );
 include_once( 'security.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    include_once( 'session.inc' );
+    $GLOBALS[ 'sess' ] = new session;
+    include_once( "translation.inc" );
+    $GLOBALS[ 't' ] = new translation("English");
+} 
 
 class UnitTestSecurity
 extends UnitTest
@@ -133,13 +132,10 @@ extends UnitTest
         $db_config->add_query( sprintf( $db_q[0], $dat[0]["proid"] ), 0 );
         $db_config->add_num_row( 0, 0 );
 
-        capture_reset_and_start();
-        $funct( $dat[0]["proid"], $dat[0]["page"] );
-        $this->set_text( capture_stop_and_get() );
-
-        $this->_testFor_string_length( $len );
-                                          
         $this->set_msg( $funct );
+
+        $this->capture_call( $funct, $len, &$dat[0] );
+                                          
         $this->_test_error_box( $head_text, $body_text );
         $this->_check_db( $db_config );
     }

@@ -16,16 +16,18 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLang.php,v 1.6 2002/01/28 02:11:11 riessen Exp $
+# $Id: TestLang.php,v 1.7 2002/06/14 09:14:12 riessen Exp $
 #
 ######################################################################
 
 include_once( "../constants.php" );
 
+include_once( 'lang.inc' );
+
 if ( !defined("BEING_INCLUDED" ) ) {
     // required for the $sess global variable
     include_once( "session.inc" );
-    $sess = new Session;
+    $GLOBALS[ 'sess' ] = new Session;
 }
 
 class UnitTestLang

@@ -5,14 +5,17 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDevelopinglib.php,v 1.3 2002/06/06 14:27:33 riessen Exp $
+// $Id: TestDevelopinglib.php,v 1.4 2002/06/14 09:14:12 riessen Exp $
 
 include_once( '../constants.php' );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-}
-
+include_once( 'html.inc' );
 include_once( 'developinglib.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    include_once( "translation.inc" );
+    $GLOBALS[ 't' ] = new translation("English");
+}
 
 class UnitTestDevelopinglib
 extends UnitTest
@@ -49,26 +52,25 @@ extends UnitTest
 
     function testDeveloping_select_cooperation() {
         global $t;
+        $func_name = 'developing_select_cooperation';
         $v = array( 'No', 'no', 'yes', 'Yes', 'Yes Please', 'NO', 'YES' );
         while ( list( , $val ) = each( $v ) ) {
-            capture_reset_and_start();
-            $this->set_text( developing_select_cooperation( $val ) );
-            $this->assertEquals(0,strlen(capture_stop_and_get()),
-                                "Test $val: " . capture_text_get());
+            $this->push_msg( 'Test '. $val );
+            $this->set_text( $this->capture_call( $func_name, 0,array(&$val)));
             $this->_testFor_html_select( 'cooperation' );
             $this->_testFor_html_select_option( 'No', ($val=='No'), 
                                                 $t->translate('No'));
             $this->_testFor_html_select_end();
             $this->_testFor_string_length( ($val=='No'? 93 : 84 ) );
+            $this->pop_msg();
         }
     }
 
     function testSelect_duration() {
+        $func_name = 'select_duration';
         for ( $idx = -10; $idx < 110; $idx++ ) {
-            capture_reset_and_start();
-            $this->set_text( select_duration( $idx ) );
-            $this->assertEquals(0,strlen(capture_stop_and_get()),
-                                "test $idx: " . capture_text_get());
+            $this->push_msg( 'Test ' . $idx );
+            $this->set_text($this->capture_call($func_name,0,array(&$idx)));
             // if something is selected, then strings is longer
             $this->_testFor_string_length(($idx<1||$idx>100 ? 2936:2945));
             $this->_testFor_html_select( 'duration' );
@@ -76,6 +78,7 @@ extends UnitTest
                 $this->_testFor_html_select_option( $jdx, ($jdx==$idx), $jdx );
             }
             $this->_testFor_html_select_end();
+            $this->pop_msg();
         }
     }
 

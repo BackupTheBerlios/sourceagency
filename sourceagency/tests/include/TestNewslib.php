@@ -16,28 +16,26 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestNewslib.php,v 1.20 2002/06/04 10:57:52 riessen Exp $
+# $Id: TestNewslib.php,v 1.21 2002/06/14 09:14:12 riessen Exp $
 #
 ######################################################################
 
 include_once( "../constants.php" );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-    // required for the $sess global variable
-    include_once( "session.inc" );
-    $sess = new Session;
-    
-    // global translation object
-    include_once( "translation.inc" );
-    $t = new translation("English");
-
-    include_once( "box.inc" );
-    $bx = new box;
-}
-
+include_once( "box.inc" );
 include_once( 'html.inc' );
 include_once( 'lib.inc' );
 include_once( 'newslib.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    // required for the $sess global variable
+    include_once( "session.inc" );
+    $GLOBALS[ 'sess' ] = new Session;
+    
+    // global translation object
+    include_once( "translation.inc" );
+    $GLOBALS[ 't' ] = new translation("English");
+}
 
 class UnitTestNewslib
 extends UnitTest

@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: constants.php,v 1.24 2002/05/16 15:02:51 riessen Exp $
+# $Id: constants.php,v 1.25 2002/06/14 09:14:11 riessen Exp $
 #
 ######################################################################
 
@@ -26,6 +26,12 @@ if ( ! $env_php_lib_dir || $env_php_lib_dir == "" ) {
 } else {
   $PHP_LIB_DIR = $env_php_lib_dir;
 }
+
+// for obtaining time information
+function getmicrotime(){ 
+    list($usec, $sec) = explode(" ",microtime()); 
+    return ((float)$usec + (float)$sec); 
+} 
 
 // extension to the in_array function which takes regular expressions
 function in_array_regexp( $rexp, &$array ) {
@@ -52,6 +58,9 @@ ini_set('include_path', $PHP_LIB_DIR . ':' . ini_get('include_path') );
 ini_set('include_path', getcwd() . ':' . ini_get('include_path') );
 
 if ( !defined("BEING_INCLUDED" ) ) {
+    global $start_time;
+    $start_time = getmicrotime();
+
     ini_set('include_path', 
             ini_get('include_path') . ':'.getcwd().'/../../include' );
     ini_set('include_path', 
@@ -59,15 +68,12 @@ if ( !defined("BEING_INCLUDED" ) ) {
 
     include_once( "config.inc" );
     include_once( "session.inc" );
-    $sess = new Session;
-    global $sess;
+    $GLOBALS['sess'] = new Session;
     
     include_once( "logger.inc" );
-    $l = new Logger;
-    global $l;
+    $GLOBALS[ 'l' ] = new Logger;
     
-    global $lang;
-    $lang = "English";
+    $GLOBALS[ 'lang' ] = "English";
     include_once( "lang.inc" );
 }
 
@@ -99,11 +105,14 @@ function define_test_suite( $filename ) {
         global $suite;
         $suite->addTest( new TestSuite( _filename_to_classname($filename) ) );
     } else {
-        // do the test.
+        // doing a single test, no global suite
         $suite = new TestSuite(_filename_to_classname( $filename ));
         $testRunner = new TestRunner;
         $testRunner->run( $suite );
         mkdb_check_did_db_fail_calls();
+        global $start_time;
+        $time = getmicrotime() - $start_time;
+        print "Completed test in $time seconds\n";
     }
 }
 

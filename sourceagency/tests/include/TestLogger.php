@@ -5,14 +5,14 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestLogger.php,v 1.2 2002/06/06 14:27:33 riessen Exp $
+// $Id: TestLogger.php,v 1.3 2002/06/14 09:14:12 riessen Exp $
 
 include_once( '../constants.php' );
 
+include_once( 'logger.inc' );
+
 if ( !defined("BEING_INCLUDED" ) ) {
 }
-
-include_once( 'logger.inc' );
 
 class UnitTestLogger
 extends UnitTest

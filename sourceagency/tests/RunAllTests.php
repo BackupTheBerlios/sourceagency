@@ -15,15 +15,15 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: RunAllTests.php,v 1.14 2002/05/16 15:01:16 riessen Exp $
+# $Id: RunAllTests.php,v 1.15 2002/06/14 09:14:11 riessen Exp $
 #
 ######################################################################
 
 if ( floor( phpversion() ) < 4 ) {
-  print( "Require atleast version 4 of php to run tests\n" );
-  exit;
+    print( "Require atleast version 4 of php to run tests\n" );
+    exit;
 }
-
+    
 ini_set( 'include_path', 
          getcwd() . '/../include' . ':' . ini_get('include_path') );
 
@@ -31,6 +31,8 @@ ini_set( 'include_path',
 define( "BEING_INCLUDED", "yes" );
 
 include_once( "constants.php" );
+$time_start = getmicrotime();
+
 // needed to include the config file ....
 include_once( "config.inc" );
 
@@ -42,24 +44,18 @@ global $sess;
 
 // seems to require a logger ....
 include_once( "logger.inc" );
-$l = new Logger;
-global $l;
+$GLOBALS['l'] = new Logger;
 
 global $lang;
 $lang = "English";
 include_once( "lang.inc" );
 
-
 // defines the global translation object
 include_once( "translation.inc" );
-$t = new translation( "English" );
-global $t;
+$GLOBALS['t'] = new translation( "English" );
 
 // define a box object
 include_once( "box.inc" );
-$bx = new box;
-global $bx;
-
 
 // define the global TestSuite
 $suite = new TestSuite;
@@ -94,5 +90,9 @@ scan_directory( );
 $testRunner = new TestRunner;
 $testRunner->run( $suite );
 mkdb_check_did_db_fail_calls();
+
+// finally print information about how long the tests took
+$time = getmicrotime() - $time_start;
+print "Executed all tests in $time seconds";
 
 ?>

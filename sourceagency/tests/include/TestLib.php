@@ -16,26 +16,25 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.26 2002/06/11 14:01:17 riessen Exp $
+# $Id: TestLib.php,v 1.27 2002/06/14 09:14:12 riessen Exp $
 #
 ######################################################################
 
 include_once( "../constants.php" );
 
+include_once( 'box.inc' );
+include_once( 'security.inc' );
+include_once( 'lib.inc' );
+
 if ( !defined("BEING_INCLUDED" ) ) {
     // required for the $sess global variable
     include_once( "session.inc" );
-    $sess = new Session;
+    $GLOBALS[ 'sess' ] = new Session;
     
     // global translation object
     include_once( "translation.inc" );
-    $t = new translation("English");
-
-    include_once( "box.inc" );
-    $bx = new box;
+    $GLOBALS[ 't' ] = new translation("English");
 }
-
-include_once( 'lib.inc' );
 
 class UnitTestLib
 extends UnitTest
@@ -48,6 +47,7 @@ extends UnitTest
     }
     function tearDown() {
         unset( $GLOBALS[ 'bx' ] );
+        unset( $GLOBALS[ 'db' ] );
     }
 
     function testMonth() {
@@ -140,12 +140,9 @@ extends UnitTest
         $this->_testFor_string_length( 15 );
 
         $uname = 'SNAFU';
-        capture_reset_and_start();
-        lib_pnick( $uname );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( 'lib_pnick', 15, array( $uname ) );
         $this->assertEquals( "<b>by $uname</b>",  
                              $this->_testFor_lib_nick($uname));
-        $this->_testFor_string_length( 15 );
     }
 
     function testSelect_date() {
@@ -333,34 +330,51 @@ extends UnitTest
         $this->_check_db( $db_config );
     }
 
+    function testLicense() {
+        $this->testLicensep();
+    }
 
     function testLicensep() {
-        $db_config = new mock_db_configure( 1 );
+        $db_config = new mock_db_configure( 2 );
         $db_q = array( 0 => ("SELECT * FROM licenses ORDER BY license ASC") );
 
         $db_config->add_query( $db_q[0], 0 );
         $db_config->add_num_row( 1, 0 );
+        $db_config->add_query( $db_q[0], 1 );
+        $db_config->add_num_row( 1, 1 );
 
-        $row = array();
-        $row[0] = array( "license" => "snafu" );
-        $db_config->add_record( $row[0], 0 );
-        $row[1] = array( "license" => "fritz" );
-        $db_config->add_record( $row[1], 0 );
-        $row[2] = array( "license" => "fubar" );
-        $db_config->add_record( $row[2], 0 );
-        $row[3] = array( "license" => "hugo" );
-        $db_config->add_record( $row[3], 0 );
+        $row =$this->_generate_records( array( 'license' ), 10 );
+        for ( $idx = 0; $idx < count( $row ); $idx++ ) {
+            $db_config->add_record( $row[$idx], 0 );
+            $db_config->add_record( $row[$idx], 1 );
+        }
 
+        // test one using the licensep function
         $this->set_msg( 'test 1' );
-        $this->capture_call( 'licensep', 198, array( 0=>$row[0]["license"]));
+        $this->capture_call( 'licensep', 490, array( 0=>$row[0]["license"]));
 
-        $this->_testFor_pattern( "selected value=\"".$row[0]["license"]
-                                        ."\">".$row[0]["license"]."" );
-
-        for ( $idx = 1; $idx < count( $row ); $idx++ ) {
-            $this->set_msg( "row: " . $idx . " missing");
-            $this->_testFor_pattern( "value=\"" . $row[$idx]["license"]
-                                      . "\">" . $row[$idx]["license"] );
+        $this->_testFor_html_select( 'license' );
+        $this->_testFor_html_select_end();
+        for ( $idx = 0; $idx < count( $row ); $idx++ ) {
+            $this->push_msg( "row: " . $idx . " missing");
+            $this->_testFor_html_select_option( $row[$idx]["license"],
+                            $row[$idx]["license"] == $row[0]['license'],
+                            $row[$idx]["license"]);
+            $this->pop_msg();
+        }
+        
+        // test two using the license function
+        $this->set_msg( 'test 2' );
+        $this->set_text( $this->capture_call( 'license', 0, 
+                                              array( 0=>$row[1]["license"])));
+        $this->_testFor_html_select( 'license' );
+        $this->_testFor_html_select_end();
+        for ( $idx = 0; $idx < count( $row ); $idx++ ) {
+            $this->push_msg( "row: " . $idx . " missing");
+            $this->_testFor_html_select_option( $row[$idx]["license"],
+                            $row[$idx]["license"] == $row[1]['license'],
+                            $row[$idx]["license"]);
+            $this->pop_msg();
         }
 
         // check that the database component did not fail
@@ -497,21 +511,39 @@ extends UnitTest
     }
 
     function testEnd_content() {
-        capture_reset_and_start();
-        end_content();
-        $this->assertEquals( "\n\n<!-- end content -->\n\n", 
-                             capture_stop_and_get() );
-    }
-    function testFollowup() {
-        $this->_test_to_be_completed();
+        $this->capture_call( 'end_content', 24 );
+        $this->assertEquals("\n\n<!-- end content -->\n\n", $this->get_text());
     }
 
     function testIs_not_set_or_empty() {
-        $this->_test_to_be_completed();
+        $m = 'is_not_set_or_empty';
+
+        /** test is set but empty **/
+        $empty = "";
+        $this->assertEquals(true,$this->capture_call( $m,0,array( &$empty )));
+        /** test is not set (value is also empty) */
+        $uset = "fubar";
+        unset( $uset );
+        $this->assertEquals(true,$this->capture_call( $m,0,array( &$uset )));
+        /** test value is set and is not empty **/
+        $set = "this is set and not empty";
+        $this->assertEquals(false,$this->capture_call( $m,0,array( &$set )));
+        /* can't test is not set and not empty */
     }
 
     function testIs_set_and_not_empty() {
-        $this->_test_to_be_completed();
+        $m = 'is_set_and_not_empty';
+        /** test is set but empty **/
+        $empty = "";
+        $this->assertEquals(false,$this->capture_call( $m,0,array( &$empty )));
+        /** test is not set (value is also empty) */
+        $unset = "fubar";
+        unset( $unset );
+        $this->assertEquals(false,$this->capture_call( $m,0,array( &$unset )));
+        /** test value is set and is not empty **/
+        $set = "this is set and not empty";
+        $this->assertEquals(true,$this->capture_call( $m,0,array( &$set )));
+        /* can't test is not set and not empty */
     }
 
     function testLib_comment_it() {
@@ -522,7 +554,23 @@ extends UnitTest
     }
 
     function testLib_count_total() {
-        $this->_test_to_be_completed();
+        $d=$this->_generate_records( array( 'COUNT(*)' ), 10 );
+        $args=$this->_generate_records(array('table','where'), count($d) );
+        $db_config = new mock_db_configure( count($d) );
+        $m = 'lib_count_total';
+
+        for ( $idx = 0; $idx < count( $d ); $idx++ ) {
+            $d[$idx]['COUNT(*)'] = $idx;
+            if ( $idx % 2 ) {
+                $args[$idx]['where'] = '';
+            }
+            $q = sprintf( "SELECT COUNT(*) FROM %s %s", $args[$idx]['table'],
+                          ( $idx % 2 ? '' : 'WHERE '.$args[$idx]['where']));
+            $db_config->add_query( $q, $idx );
+            $db_config->add_record( $d[$idx], $idx );
+            $this->assertEquals($idx, $this->capture_call($m,0,$args[$idx]));
+        }
+        $this->_check_db( $db_config );
     }
 
     function testLib_die() {
@@ -545,62 +593,295 @@ extends UnitTest
     }
 
     function testLib_get_project_step() {
-        $this->_test_to_be_completed();
+        global $db;
+
+        $db_config = new mock_db_configure( 3 );
+        $q = "SELECT status FROM description WHERE proid='%s'";
+        $args = $this->_generate_records( array( 'proid' ), 2 );
+        $d = $this->_generate_records( array( 'status' ), 1 );
+
+        $db_config->add_query( sprintf( $q, $args[0]['proid'] ), 1 );
+        $db_config->add_query( sprintf( $q, $args[1]['proid'] ), 2 );
+        $db_config->add_num_row( 0, 1 );
+        $db_config->add_num_row( 1, 2 );
+        $db_config->add_record( $d[0], 2 );
+
+        $db_config->add_query( "SELECT email_usr FROM auth_user WHERE perms "
+                               ."LIKE '%admin%'", 0 );
+        $db_config->add_record( FALSE, 0 );
+        
+        // test one, no data
+        $db = new DB_SourceAgency; // for the lib_die(...) call
+        $this->assertEquals( 0, $this->capture_call( 'lib_get_project_step', 
+                                                     812, $args[0]));
+        $this->_testFor_pattern( 'Error in lib.inc in function lib_in_step: '
+                                 .'no step for the given project');
+
+        // test two, one status data point
+        $this->assertEquals( $d[0]['status'],
+                        $this->capture_call( 'lib_get_project_step', 
+                                             0, $args[1]));
+        $this->_check_db( $db_config );
     }
+
+    function testStart_content() {
+        $this->capture_call( 'start_content', 20 );
+        $this->assertEquals( "\n\n<!-- content -->\n\n", $this->get_text() );
+    }
+
 
     function testLib_insertion_finished() {
-        $this->_test_to_be_completed();
-    }
-
-    function testLib_insertion_information() {
-        $this->_test_to_be_completed();
+        global $auth;
+        $auth->set_uname( 'fubar' );
+        $this->capture_call( 'lib_insertion_finished', 427 );
+        $this->_testFor_html_link( 'personal.php3',
+                                   array( 'username' => $auth->auth['uname'] ),
+                                   'Personal Page');
     }
 
     function testLib_in_step() {
-        $this->_test_to_be_completed();
-    }
+        $d = $this->_generate_records( array( 'status' ), 25 );
+        $args = $this->_generate_records(array('proid','step_num'),count($d));
+        $db_config = new mock_db_configure( count($d) );
+        $q = "SELECT status FROM description WHERE proid='%s'";
 
-    function testLib_merge_arrays() {
-        $this->_test_to_be_completed();
+        for ( $idx = count($d)/-2; $idx < count($d)/2; $idx++ ) {
+            $jdx = $idx + count($d)/2;
+            $db_config->add_query( sprintf( $q, $args[$jdx]['proid']), $jdx);
+            $db_config->add_num_row( 1, $jdx );
+            $d[$jdx]['status'] = $idx;
+            $db_config->add_record( $d[$jdx], $jdx );
+            $args[$jdx]['step_num'] = 0;
+
+            $this->assertEquals( $idx == $args[$jdx]['step_num'],
+                                 $this->capture_call( 'lib_in_step', 0, 
+                                                      $args[$jdx] ), 
+                                 "Test $idx (SN = $args[$jdx]['step_num'])");
+        }
+        $this->_check_db( $db_config );
     }
 
     function testLib_past_step() {
-        $this->_test_to_be_completed();
+        $d = $this->_generate_records( array( 'status' ), 10 );
+        $args = $this->_generate_records(array('proid','step_num'),count($d));
+        $db_config = new mock_db_configure( count($d) );
+        $q = "SELECT status FROM description WHERE proid='%s'";
+
+        for ( $idx = count($d)/-2; $idx < count($d)/2; $idx++ ) {
+            $jdx = $idx + count($d)/2;
+            $db_config->add_query( sprintf( $q, $args[$jdx]['proid']), $jdx);
+            $db_config->add_num_row( 1, $jdx );
+            $d[$jdx]['status'] = $idx;
+            $db_config->add_record( $d[$jdx], $jdx );
+            $args[$jdx]['step_num'] = 0;
+
+            $this->assertEquals( $idx > $args[$jdx]['step_num'],
+                                 $this->capture_call( 'lib_past_step', 0, 
+                                                      $args[$jdx] ), 
+                                 "Test $idx (SN = $args[$jdx]['step_num'])");
+        }
+        $this->_check_db( $db_config );
     }
 
     function testLib_pnick() {
-        $this->_test_to_be_completed();
+        $this->testLib_nick();
     }
 
-    function testLib_previous_comment() {
-        $this->_test_to_be_completed();
+    function testLib_insertion_information() {
+        global $bx, $t, $auth;
+
+        $title_text = 'Project Insertion process';
+        $sponsor_text=('You are logged in in SourceAgency as sponsor <p>In '
+                       .'order to insert a project, you will have to follow '
+                       .'this steps: <ul><li>Fill out the insertion formular '
+                       .'<li>Configure the project parameters <li>Fill out a '
+                       .'sponsoring involvement form for your project</ul> '
+                       .'<p>After that you should wait for a BerliOS editor to'
+                       .' review your project');
+        $devel_text=('In order to insert a project, you will have to follow '
+                     .'this steps: <ul><li>Fill out the insertion formular '
+                     .'<li>Configure the project parameters </ul> <p>After '
+                     .'that you should wait for a BerliOS editor to review '
+                     .'your project');
+
+        $auth->set_uname( 'this is the username' );
+        $db_config = new mock_db_configure( 6 );
+        $q = ( "SELECT * FROM auth_user WHERE perms LIKE '%%%s%%'"
+               ." AND username='%s'" );
+
+        // first test, nothing is printed because user is neither 
+        // sponsor nor developer
+        $auth->set_perm( "" );
+        $bx = $this->_create_default_box();
+        $this->capture_call( 'lib_insertion_information', 0 );
+        
+        // second test, user is sponsor
+        $auth->set_perm( "always" );
+        $bx = $this->_create_default_box();
+        $db_config->add_query(sprintf( $q,'sponsor',$auth->auth['uname']),0);
+        $db_config->add_num_row( 1, 0 );
+        $db_config->add_query(sprintf( $q,'devel',$auth->auth['uname']),1);
+        $db_config->add_num_row( 0, 1 );
+        $this->capture_call( 'lib_insertion_information', 1085);
+        $this->_checkFor_box_full( $t->translate($title_text),
+                                   $t->translate($sponsor_text));
+        $this->reverse_next_test();
+        $this->_testFor_pattern($this->_to_regexp($t->translate($devel_text)));
+
+        // third test, user is developer
+        $auth->set_perm( "always" );
+        $bx = $this->_create_default_box();
+        $db_config->add_query(sprintf( $q,'sponsor',$auth->auth['uname']),2);
+        $db_config->add_num_row( 0, 2 );
+        $db_config->add_query(sprintf( $q,'devel',$auth->auth['uname']),3);
+        $db_config->add_num_row( 1, 3 );
+        $this->capture_call( 'lib_insertion_information', 978);
+        $this->_checkFor_box_full( $t->translate($title_text),
+                                   $t->translate($devel_text));
+        $this->reverse_next_test();
+        $this->_testFor_pattern($this->_to_regexp(
+                                             $t->translate($sponsor_text)));
+        
+        // fourth test, user is both developer and sponsor
+        $auth->set_perm( "always" );
+        $bx = $this->_create_default_box();
+        $db_config->add_query(sprintf( $q,'sponsor',$auth->auth['uname']),4);
+        $db_config->add_num_row( 1, 4 );
+        $db_config->add_query(sprintf( $q,'devel',$auth->auth['uname']),5);
+        $db_config->add_num_row( 1, 5 );
+        $this->capture_call( 'lib_insertion_information', 2063);
+        $this->_checkFor_box_full( $t->translate($title_text),
+                                   $t->translate($devel_text));
+        $this->_checkFor_box_full( $t->translate($title_text),
+                                   $t->translate($sponsor_text));
+        
+        $this->_check_db( $db_config );
+    }
+
+    function testLib_merge_arrays() {
+        // TODO: should also test non-array arguments ...
+        // test one
+        $ea = array();
+        $this->_compare_arrays( 
+            $this->capture_call('lib_merge_arrays',0,array(&$ea,&$ea)),
+            array_merge( $ea, $ea ));
+
+        // test two
+        $a1 = $this->_generate_array( array( 'one','two','three' ) );
+        $a2 = $this->_generate_array( array( 'four','five','six' ) );
+        $this->_compare_arrays( 
+            $this->capture_call('lib_merge_arrays',0,array(&$a1,&$a2)),
+            array_merge( $a1, $a2 ));
+        $this->assertEquals( 6, count( array_merge( $a1, $a2 ) ) );
+
+        // test three
+        $a1 = array( '_0_'=> 'zero', '_2_' => 'two',   '_3_' => 'three' );
+        $a2 = array( '_1_'=> 'one',  '_2_' => 'three', '_5_' => 'five' );
+        $this->_compare_arrays( 
+            $this->capture_call('lib_merge_arrays',0,array(&$a1,&$a2)),
+            array_merge( $a1, $a2 ));
+        $this->assertEquals( 5, count( array_merge( $a1, $a2 ) ) );
+
+        // test four
+        reset( $a1 );
+        $this->_compare_arrays( 
+            $this->capture_call('lib_merge_arrays',0,array(&$a1,&$ea)), $a1 );
+
+        // test five
+        reset( $a1 );
+        $this->_compare_arrays( 
+            $this->capture_call('lib_merge_arrays',0,array(&$ea,&$a1)), $a1 );
     }
 
     function testLib_show_more() {
-        $this->_test_to_be_completed();
+        /** corresponding function is never used and can be removed **/
     }
 
-    function testLicense() {
-        $this->_test_to_be_completed();
+    function testLib_previous_comment() {
+        $m='lib_previous_comment';
+        $args=$this->_generate_array(array('proid', 'type','number','ref',
+                                           'text'));
+        $this->capture_call( $m, 121, $args );
+        $this->_testFor_html_link( 'comments.php3', 
+                                   array('proid'  => $args['proid'], 
+                                         'type'   => $args['type'], 
+                                         'number' => $args['number'], 
+                                         'ref'    => $args['ref']),
+                                   $args['text']);
     }
 
     function testSelect_from_config() {
-        $this->_test_to_be_completed();
+        include( 'config.inc' );
+
+        $args = array( 'name'=>'', 'array_name'=>'', 'selected'=>'' );
+
+        $v=array( 'project_types' 
+                     => array($project_types,'Expansion',302 ),
+                  'project_volume' 
+                     => array($project_volume,'< 1 Man Month', 379),
+                  'platform_array' 
+                     => array($platform_array,'Linux',559),
+                  'architecture_array' 
+                     => array($architecture_array,'x86',361 ),
+                  'environment_array'
+                     => array($environment_array,'Distributed',240),
+                  'milestone_product_array' 
+                     => array($milestone_product_array, 'Beta', 362) );
+        $counter=0;
+        while ( list( $key, $val ) = each( $v ) ) {
+            $this->push_msg( "Test: $key" );
+            list ( , $ary ) = each( $val );
+            list ( , $selected ) = each( $val );
+            list ( , $string_length ) = each( $val );
+            $args['selected'] = $selected;
+            $args['name'] = "This is the $key";
+            $args['array_name'] = $key;
+            $this->set_text($this->capture_call('select_from_config',0,$args));
+            $this->_testFor_string_length( $string_length );
+            $this->_testFor_html_select( $args['name'] );
+            $this->_testFor_html_select_end();
+            while ( list( , $opt ) = each( $ary ) ) {
+                $counter++;
+                $this->_testFor_html_select_option($opt, ($selected == $opt),
+                                                                $opt);
+            }
+            reset( $ary );
+            $this->pop_msg();
+        }
+        // paranoia check!!
+        $this->assertEquals( 38, $counter, ("Change to the number of items "
+                                            ."in the configuration arrays") );
     }
 
     function testShow_project_milestones() {
-        $this->_test_to_be_completed();
+        $db_config = new mock_db_configure( 3 );
+        $qs=array( 0=>( "SELECT devid FROM developing WHERE proid='%s' "
+                        ."AND status='A'" ),
+                   1=>( "SELECT * FROM sponsoring WHERE proid='%s' "
+                        . "AND sponsor='%s'" ),
+                   2=>( "SELECT developer FROM developing WHERE proid='%s' "
+                        ."AND devid='%s'" ),
+                   3=>( "SELECT * FROM milestones WHERE proid='%s' "
+                        ."AND status='A' AND devid='%s' ORDER BY number" ));
+        $proid = 'this si the proid';
+        $d = array( 'devid' => 'this is the dived' );
+        $d2 = array( 'developer' => 'this ios the developer' );
+
+        $db_config->add_query( sprintf( $qs[0], $proid ), 0 );
+        $db_config->add_record( $d, 0 );
+        $db_config->add_query( sprintf( $qs[1], $proid, '' ), 1 );
+        $db_config->add_num_row( 0, 1 );
+        $db_config->add_query( sprintf( $qs[2], $proid, $d['devid'] ), 1 );
+        $db_config->add_record( $d2, 1 );
+        $db_config->add_query( sprintf( $qs[3], $proid, $d['devid'] ), 2 );
+        $db_config->add_num_row( 0, 2 );
+
+        $this->capture_call( 'show_project_milestones', 0, array( $proid ) );
+        $this->_check_db( $db_config );
     }
 
     function testShow_project_participants() {
         $this->_test_to_be_completed();
-    }
-
-    function testStart_content() {
-        capture_reset_and_start();
-        start_content();
-        $this->assertEquals( "\n\n<!-- content -->\n\n", 
-                             capture_stop_and_get() );
     }
 
     function testStep_information() {
@@ -635,6 +916,9 @@ extends UnitTest
         $this->_test_to_be_completed();
     }
 
+    function testFollowup() {
+        $this->_test_to_be_completed();
+    }
 }
 
 define_test_suite( __FILE__ );

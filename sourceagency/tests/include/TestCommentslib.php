@@ -5,23 +5,24 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestCommentslib.php,v 1.8 2002/06/04 10:57:52 riessen Exp $
+// $Id: TestCommentslib.php,v 1.9 2002/06/14 09:14:12 riessen Exp $
 
 include_once( "../constants.php" );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-    include_once( 'lib.inc' );
+include_once( 'lib.inc' );
+include_once( 'html.inc' );
+include_once( 'commentslib.inc' );
 
+if ( !defined("BEING_INCLUDED" ) ) {
     // required for the $sess global variable
     include_once( "session.inc" );
-    $sess = new Session;
+    $GLOBALS[ 'sess' ] = new Session;
     
     // global translation object
     include_once( "translation.inc" );
-    $t = new translation("English");
+    $GLOBALS[ 't' ] = new translation("English");
 }
 
-include_once( 'commentslib.inc' );
 
 class UnitTestCommentslib
 extends UnitTest
@@ -52,9 +53,8 @@ extends UnitTest
         $type = " this is the type:";
 
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        comments_form( $proid );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( 'comments_form', 2500 + strlen($sess->self_url()),
+                             array( &$proid ));
 
         $this->_checkFor_a_box( 'Your Comment' );
         $this->_checkFor_a_form( 'PHP_SELF', array('proid' => $proid) );
@@ -71,7 +71,6 @@ extends UnitTest
   
         $this->_checkFor_submit_preview_buttons();
 
-        $this->_testFor_string_length( 2500 + strlen( $sess->self_url() ));
     }
 
     function testComments_preview() {
@@ -89,6 +88,7 @@ extends UnitTest
         capture_reset_and_start();
         comments_preview( '' );
         $this->set_text( capture_stop_and_get() );
+        $this->_testFor_string_length( 983 + strlen( timestr( time() ) ));
 
         $this->_checkFor_a_box('Comment','%s '.stripslashes($subject));
         $this->_checkFor_a_box('PREVIEW','<center><b>%s</b></center>');
@@ -97,7 +97,6 @@ extends UnitTest
                    1=>$this->_to_regexp("<p>".stripslashes($text)."\n"));
         $this->_testFor_patterns( $ps, 2 );
         $this->_check_db( $db_config );
-        $this->_testFor_string_length( 983 + strlen( timestr( time() ) ));
     }
     function testComments_insert() {
         $this->_test_to_be_completed();

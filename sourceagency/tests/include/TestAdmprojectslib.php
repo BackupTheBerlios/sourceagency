@@ -5,19 +5,19 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestAdmprojectslib.php,v 1.4 2002/06/13 09:56:14 riessen Exp $
+// $Id: TestAdmprojectslib.php,v 1.5 2002/06/14 09:14:12 riessen Exp $
 
 include_once( "../constants.php" );
 
+include_once( 'lib.inc');
+include_once( 'html.inc' );
+include_once( 'box.inc' );
+include_once( 'admprojectslib.inc' );
+
 if ( !defined("BEING_INCLUDED" ) ) {
-    include_once( 'box.inc' );
     include_once( "translation.inc" );
     $GLOBALS['t'] = new translation("English");
-    include_once( 'lib.inc');
-    include_once( 'html.inc' );
 }
-
-include_once( 'admprojectslib.inc' );
 
 class UnitTestAdmprojectslib
 extends UnitTest

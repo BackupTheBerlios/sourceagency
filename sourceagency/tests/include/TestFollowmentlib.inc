@@ -16,24 +16,21 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowmentlib.inc,v 1.9 2002/06/04 10:57:52 riessen Exp $
+# $Id: TestFollowmentlib.inc,v 1.10 2002/06/14 09:14:12 riessen Exp $
 #
 ######################################################################
 
 include_once( "../constants.php" );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-    include_once( 'box.inc' );
-    $bx = new box;
-    // global translation object
-    include_once( "translation.inc" );
-    $t = new translation("English");
-} 
-
 include_once( 'lib.inc' );
 include_once( 'box.inc' );
 include_once( 'html.inc' );
 include_once( 'followmentlib.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    include_once( "translation.inc" );
+    $GLOBALS['t'] = new translation("English");
+} 
 
 class UnitTestFollowmentlib
 extends UnitTest
@@ -65,29 +62,20 @@ extends UnitTest
         $db_config->add_query( sprintf( $db_q[0], $proid[1]["proid"] ),1);
         $db_config->add_query( sprintf( $db_q[0], $proid[2]["proid"] ),2);
 
-        $db_config->add_num_row( 0, 0 );
-        $db_config->add_num_row( 0, 0 );
-        $db_config->add_num_row( 1, 1 );
-        $db_config->add_num_row( 1, 1 );
-        $db_config->add_num_row( 3, 2 );
-        $db_config->add_num_row( 3, 2 );
-        
         $db_config->add_record( false, 1 );
         for ( $idx = 0; $idx < 3; $idx++ ) {
+            $db_config->add_num_row( ($idx > 1 ? 3 : $idx), $idx );
+            $db_config->add_num_row( ($idx > 1 ? 3 : $idx), $idx );
             $row[$idx]["number"] = $idx;
+            $db_config->add_record( $row[$idx], 2 );
         }
-        $db_config->add_record( $row[0], 2 );
-        $db_config->add_record( $row[1], 2 );
-        $db_config->add_record( $row[2], 2 );
 
         // first call, num_row == 0, next_record == false
         $db = new DB_SourceAgency;
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        show_followment($proid[0]["proid"]);
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call('show_followment',73,array(&$proid[0]["proid"]));
+
         $this->set_msg( "Test 1" );
-        $this->_testFor_string_length( 73 );
 
         $p = $this->_to_regexp( $t->translate( "There have not been "
                                                ."posted any milestones "
@@ -98,11 +86,8 @@ extends UnitTest
         // second call, num_row == 1, next_record == false
         $db = new DB_SourceAgency;
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        show_followment($proid[1]["proid"]);
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call('show_followment',956,array( &$proid[1]["proid"]));
         $this->set_msg( "Test 2" );
-        $this->_testFor_string_length( 956 );
 
         $this->_checkFor_a_box( 'Milestones' );
         
@@ -117,11 +102,8 @@ extends UnitTest
         // third call, num_row == 3, next_record == rows:0,1,2
         $db = new DB_SourceAgency;
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        show_followment($proid[2]["proid"]);
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call('show_followment',1469,array(&$proid[2]["proid"]));
         $this->set_msg( "Test 3" );
-        $this->_testFor_string_length( 1469 );
 
         $this->_checkFor_a_box( 'Milestones' );
 

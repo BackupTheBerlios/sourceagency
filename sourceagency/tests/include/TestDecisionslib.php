@@ -5,14 +5,17 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDecisionslib.php,v 1.4 2002/06/06 10:32:52 riessen Exp $
+// $Id: TestDecisionslib.php,v 1.5 2002/06/14 09:14:12 riessen Exp $
 
 include_once( '../constants.php' );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-}
-
+include_once( 'html.inc' );
 include_once( 'decisionslib.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    include_once( "translation.inc" );
+    $GLOBALS[ 't' ] = new translation("English");
+}
 
 class UnitTestDecisionslib
 extends UnitTest
@@ -52,9 +55,11 @@ extends UnitTest
         global $bx, $t, $sess;
         $proid = 'this is the proid';
         $bx = $this->_create_default_box();
+
         capture_reset_and_start();
         are_you_sure_message( $proid );
         $this->set_text( capture_stop_and_get() );
+        $this->_testFor_string_length( 1500 + strlen( $sess->self_url() ));
 
         $this->_checkFor_a_box( 'Warning! The next step has been reached' );
         $this->_checkFor_a_form( 'PHP_SELF', array('proid'=>$proid) );
@@ -66,7 +71,6 @@ extends UnitTest
         $this->_checkFor_column_values( array( $str ) );
         $this->_testFor_html_form_submit($t->translate('Yes'),'Yes');
         $this->_testFor_html_form_submit($t->translate('No'),'No');
-        $this->_testFor_string_length( 1500 + strlen( $sess->self_url() ));
     }
     function testAre_you_sure_message_step5() {
         $this->_test_to_be_completed();
@@ -114,10 +118,7 @@ extends UnitTest
                        $d[0]['creation'], $d[0]['release'], $args[0]['proid'], 
                        $args[0]['devid'], $args[0]['number']), 0 );
 
-        capture_reset_and_start();
-        call_user_func_array( 'decisions_milestone_into_db', $args[0] );
-        $this->set_text( capture_stop_and_get() );
-        $this->_testFor_string_length( 0 );
+        $this->capture_call( 'decisions_milestone_into_db', 0, $args[0] );
         $this->_check_db( $db_config );
     }
 
@@ -143,7 +144,8 @@ extends UnitTest
         
         $db = new DB_SourceAgency;
         
-        $this->assertEquals( $dat[0]['SUM(budget)'], project_budget( $proid ));
+        $this->assertEquals( $dat[0]['SUM(budget)'], 
+                   $this->capture_call( 'project_budget', 0, array(&$proid)));
         
         $this->_check_db( $db_config );
     }
@@ -249,11 +251,7 @@ extends UnitTest
         $db_config->add_record( $d2[1], 1 );
 
         $db = new DB_SourceAgency;
-        capture_reset_and_start();
-        your_quota( $proid );
-        $this->set_text( capture_stop_and_get() );
-
-        $this->_testFor_string_length( 79 );
+        $this->capture_call( 'your_quota', 79, array( &$proid ) );
         
         $str = ( "<p>Your quota: <b>".$d[0]['budget']."</b> euros (<b>"
                  .(round(($d[0]['budget']/$d2[0]['SUM(budget)'])*10000)/100)
@@ -262,27 +260,26 @@ extends UnitTest
 
         $db = new DB_SourceAgency;
         capture_reset_and_start();
-        your_quota( $proid );
+        call_user_func_array( 'your_quota', array( &$proid ) );
         $this->set_text( capture_stop_and_get() );
 
+        // the line break symbols in the warning messages went from <br>
+        // in versions less than 4.1.X(??) to being <br /> and since there
+        // are two in a warning message, there are four extra characters
+        // hence this if statement
         $search=array( "/.* in <b>/s", "/<\/b> on .*/s" );
         $replace=array( "", "" );
         $file = preg_replace( $search, $replace, $this->get_text() );
+        $sleng = ( $this->v_gt( "4.1.0", phpversion()) ? 147 + strlen( $file )
+                                                      : 151 + strlen( $file ));
+        $this->_testFor_string_length( $sleng );
+
 
         $ps = array( 0 => '<b>Warning<\/b>:  Division by zero in <b>',
                      1 => ( '<p>Your quota: <b>'.$d[1]['budget']
                             .'<\/b> euros [(]<b>0%<\/b> of the total' ) );
 
         $this->_testFor_patterns( $ps, 2 );
-        // the line break symbols in the warning messages went from <br>
-        // in versions less than 4.1.X(??) to being <br /> and since there
-        // are two in a warning message, there are four extra characters
-        // hence this if statement
-        if ( $this->v_gt( "4.1.0", phpversion() )) {
-            $this->_testFor_string_length( 147 + strlen( $file ));
-        } else {
-            $this->_testFor_string_length( 151 + strlen( $file ));
-        }
 
         $this->_check_db( $db_config );
     }

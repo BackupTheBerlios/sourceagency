@@ -5,14 +5,17 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestFaqlib.php,v 1.3 2002/06/06 09:31:37 riessen Exp $
+// $Id: TestFaqlib.php,v 1.4 2002/06/14 09:14:12 riessen Exp $
 
 include_once( '../constants.php' );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-}
-
+include_once( 'html.inc' );
 include_once( 'faqlib.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    include_once( "translation.inc" );
+    $GLOBALS[ 't' ] = new translation("English");
+}
 
 class UnitTestFaqlib
 extends UnitTest
@@ -36,9 +39,7 @@ extends UnitTest
         $answer = 'this is he absewe';
 
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        faqform();
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( 'faqform', 2315 + strlen( $sess->self_url() ) ); 
         
         $this->_checkFor_a_box( 'New Frequently Asked Question' );
         $this->_checkFor_a_form( 'PHP_SELF' );
@@ -57,7 +58,6 @@ extends UnitTest
         }
         $this->_testFor_html_form_hidden( 'create', 2 );
         $this->_testFor_html_form_submit( $t->translate( 'Create' ) );
-        $this->_testFor_string_length( 2315 + strlen( $sess->self_url() ));
     }
 
     function testFaqmod() {
@@ -73,9 +73,8 @@ extends UnitTest
         $db->next_record();
         $bx = $this->_create_default_box();
         
-        capture_reset_and_start();
-        faqmod( $db );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( 'faqmod', 2356 + strlen( $sess->self_url() ),
+                             array( &$db ) );
 
         $this->_checkFor_a_box( 'Modify a Frequently Asked Question' );
         $this->_checkFor_a_form( 'PHP_SELF' );
@@ -98,7 +97,6 @@ extends UnitTest
         $this->_testFor_html_form_hidden( 'modify', 2 );
         $this->_testFor_html_form_hidden( 'faqid', $d[0]['faqid'] );
         $this->_testFor_html_form_submit( $t->translate( 'Modify' ) );
-        $this->_testFor_string_length( 2356 + strlen( $sess->self_url() ));
         $this->_check_db( $db_config );
     }
 
@@ -115,14 +113,11 @@ extends UnitTest
         $db->next_record();
         $bx = $this->_create_default_box();
 
-        capture_reset_and_start();
-        faqshow( $db );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( 'faqshow', 778, array( &$db ) );
 
         $this->_checkFor_box_full( $t->translate('Question').'</B>: '
                              .$d[0]['question'],'<b>'.$t->translate('Answer')
                              .'</b>: '.$d[0]['answer']);
-        $this->_testFor_string_length( 778 );
         $this->_check_db( $db_config );
     }
 

@@ -5,14 +5,17 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDocolib.php,v 1.3 2002/06/06 09:31:37 riessen Exp $
+// $Id: TestDocolib.php,v 1.4 2002/06/14 09:14:12 riessen Exp $
 
 include_once( '../constants.php' );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-}
-
+include_once( 'html.inc' );
 include_once( 'docolib.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    include_once( "translation.inc" );
+    $GLOBALS[ 't' ] = new translation("English");
+}
 
 class UnitTestDocolib
 extends UnitTest
@@ -35,9 +38,7 @@ extends UnitTest
         $header = "this is the harda";
         $doco = 'thsi is the doco';
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        doco_form();
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( 'doco_form', 2786 + strlen( $sess->self_url() ));
 
         $this->_checkFor_a_form( 'PHP_SELF' );
         $this->_checkFor_a_box( 'New Page Documentation Entry' );
@@ -56,7 +57,6 @@ extends UnitTest
             $this->pop_msg();
         }
         $this->_testFor_html_form_submit( $t->translate( 'Create' ) );
-        $this->_testFor_string_length( 2786 + strlen( $sess->self_url() ));
     }
 
     function testDoco_mod() {
@@ -71,9 +71,8 @@ extends UnitTest
         $db->query( 'fubar' );
         $db->next_record();
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        doco_mod( $db );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( 'doco_mod', 2811 + strlen( $sess->self_url() ),
+                             array( &$db ) );
         
         $v=array( 'Page (without extension)' =>
                   html_input_text('page', 40, 64, $d[0]['page']),
@@ -91,7 +90,6 @@ extends UnitTest
         $this->_testFor_html_form_hidden( 'modify', 2 );
         $this->_testFor_html_form_submit( $t->translate( 'Modify' ) );
 
-        $this->_testFor_string_length( 2811 + strlen( $sess->self_url() ));
         $this->_check_db( $db_config );
     }
 
@@ -107,12 +105,10 @@ extends UnitTest
         $db->query( 'fubar' );
         $db->next_record();
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        doco_show( $db );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( 'doco_show', 753, array( &$db ) );
+
         $this->_checkFor_box_full( $d[0]['page'].': '.$d[0]['header'],
                                                                 $d[0]['doco']);
-        $this->_testFor_string_length( 753 );
         $this->_check_db( $db_config );
     }
 

@@ -16,26 +16,24 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowuplib.inc,v 1.14 2002/06/04 10:57:52 riessen Exp $
+# $Id: TestFollowuplib.inc,v 1.15 2002/06/14 09:14:12 riessen Exp $
 #
 ######################################################################\
 
 include_once( "../constants.php" );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-    include_once( "session.inc" );
-    $sess = new Session;
-    include_once( 'box.inc' );
-    $bx = new box;
-    // global translation object
-    include_once( "translation.inc" );
-    $t = new translation("English");
-} 
-
 include_once( 'lib.inc' );
 include_once( 'box.inc' );
 include_once( 'html.inc' );
 include_once( 'followuplib.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    include_once( "session.inc" );
+    $GLOBALS[ 'sess' ] = new Session;
+    // global translation object
+    include_once( "translation.inc" );
+    $GLOBALS[ 't' ] = new translation("English");
+} 
 
 class UnitTestFollowuplib
 extends UnitTest
@@ -54,8 +52,8 @@ extends UnitTest
     function testFollowup_devel_preview() {
         global $db, $milestone_number, $location, $count, $auth, $bx;
         
+        $func_name = 'followup_devel_preview';
         $db_config = new mock_db_configure( 2 );
-
         $db_q = array( 0 => ("SELECT * FROM milestones WHERE proid='%s' "
                              ."AND number='%s'") );
 
@@ -83,10 +81,8 @@ extends UnitTest
         $count = "this is the count";
         $db = new DB_SourceAgency;
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        followup_devel_preview($proid[0]["proid"]);
-        $this->set_text( capture_stop_and_get() );
-        $this->_testFor_string_length( 3849 + strlen(timestr(time())) );
+        $this->capture_call( $func_name, 3849 + strlen(timestr(time())),
+                             array( &$proid[0]["proid"] ) );
         
         $this->_testFor_common_patterns( 'Milestone Delivery' ); 
 
@@ -97,11 +93,8 @@ extends UnitTest
         $location = "this is the location";
         $count = "this is the count";
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        followup_devel_preview($proid[1]["proid"]);
-        $this->set_text( capture_stop_and_get() );
-        $this->_testFor_string_length(3874+strlen(timestr(time())));
- 
+        $this->capture_call( $func_name, 3874+strlen(timestr(time())),
+                                               array(&$proid[1]["proid"]));
         $rows = array( ' ', $row['goals'],
                        timestr_middle(mktimestamp($row["release"])),
                        $row['product'], $row['payment'] );
@@ -114,6 +107,7 @@ extends UnitTest
     function testFollowup_referee_preview() {
         global $db, $milestone_number, $location, $count, $auth, $decision,$bx;
         
+        $func_name = 'followup_referee_preview';
         $db_config = new mock_db_configure( 2 );
 
         $db_q = array( 0 => ("SELECT * FROM milestones WHERE proid='%s' "
@@ -144,12 +138,9 @@ extends UnitTest
         $decision = "this is the decision";
         $db = new DB_SourceAgency;
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        followup_referee_preview($proid[0]["proid"]);
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( $func_name, 4273+strlen(timestr(time())),
+                                               array( &$proid[0]["proid"] ) );
         $this->set_msg( "Test 1" );
-        $this->_testFor_string_length(4273+strlen(timestr(time())));
-        
         $rows = array( ' ', $decision );
         $cols = array( 'Decision' );
         $this->_testFor_common_patterns( "Milestone Delivery"
@@ -163,11 +154,9 @@ extends UnitTest
         $count = "this is the count";
         $decision = "this is the decision";
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        followup_referee_preview($proid[1]["proid"]);
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( $func_name, 4298+strlen(timestr(time())),
+                                             array( &$proid[1]["proid"] ) );
         $this->set_msg( "Test 2" );
-        $this->_testFor_string_length(4298+strlen(timestr(time())));
 
         $rows = array( ' ', $decision, $row['goals'],
                        timestr_middle(mktimestamp($row["release"])),
@@ -183,6 +172,7 @@ extends UnitTest
     function testFollowup_current_milestone() {
         $db_config = new mock_db_configure( 4 );
 
+        $func_name = 'followup_current_milestone';
         $db_q = array( 0 => ("SELECT * FROM follow_up WHERE proid='%s' "
                              ."ORDER BY milestone_number DESC"),
                        1 => ("SELECT MAX(number) FROM milestones WHERE "
@@ -204,14 +194,14 @@ extends UnitTest
 
         // first call, no records, return value 1
         $db_config->add_num_row( 0, 0 );
-        $this->assertEquals( 1,followup_current_milestone($proid[0]["proid"]));
+        $this->assertEquals( 1,$this->capture_call( $func_name, 0,$proid[0])); 
 
         // second call, iteration == 0
         $db_config->add_num_row( 1, 1 );
         $row[0]["iteration"] = 1;
         $db_config->add_record( $row[0], 1 );
         $this->assertEquals( $row[0]["milestone_number"],
-                             followup_current_milestone($proid[1]["proid"]));
+                               $this->capture_call( $func_name, 0, $proid[1]));
 
         // third call, iteration == 1, MAX(number) is > than $temp
         $db_config->add_num_row( 1, 2 );
@@ -221,7 +211,7 @@ extends UnitTest
         $db_config->add_record( $row[1], 2 );
         $db_config->add_record( $row_q2[0], 2 );
         $this->assertEquals( $row[1]["milestone_number"],
-                             followup_current_milestone($proid[2]["proid"]));
+                               $this->capture_call( $func_name, 0, $proid[2]));
 
         // fourth call, iteration == 1, MAX(number) is < than $temp
         $db_config->add_num_row( 1, 3 );
@@ -230,7 +220,7 @@ extends UnitTest
         $row_q2[1]["MAX(number)"] = 3;
         $db_config->add_record( $row[2], 3 );
         $db_config->add_record( $row_q2[1], 3 );
-        $this->assertEquals(-1,followup_current_milestone($proid[3]["proid"]));
+        $this->assertEquals(-1, $this->capture_call($func_name,0,$proid[3]));
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -239,6 +229,7 @@ extends UnitTest
     function testFollowup_current_count() {
         $db_config = new mock_db_configure( 2 );
 
+        $func_name = 'followup_current_count';
         $db_q = array( 0 => ("SELECT count FROM follow_up WHERE "
                              ."milestone_number='%s' AND proid='%s'"));
 
@@ -253,15 +244,13 @@ extends UnitTest
 
         // first call, no records, return value 1
         $db_config->add_num_row( 0, 0 );
-        $this->assertEquals( 1, followup_current_count( $q_dat[0]["proid"],
-                                                        $q_dat[0]["ms_num"]));
+        $this->assertEquals(1,$this->capture_call( $func_name,0,&$q_dat[0]));
         
         // second call, 1 record
         $db_config->add_num_row( 1, 1 );
         $db_config->add_record( $row[0], 1 );
         $this->assertEquals( $row[0]["count"], 
-                             followup_current_count( $q_dat[1]["proid"],
-                                                     $q_dat[1]["ms_num"]));
+                            $this->capture_call( $func_name, 0, &$q_dat[1] ));
         
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -270,12 +259,11 @@ extends UnitTest
     function testFollowup_location() {
         $db_config = new mock_db_configure( 2 );
 
+        $func_name = 'followup_location';
         $db_q = array( 0 => ("SELECT location FROM follow_up WHERE "
                              ."milestone_number='%s' AND count='%s' "
                              ."AND proid='%s'"));
-
-        $q_dat = $this->_generate_records( array( "ms_num", "count", "proid"),
-                                           2 );
+        $q_dat = $this->_generate_records(array("proid","ms_num","count"),2);
 
         $db_config->add_query( sprintf( $db_q[0], $q_dat[0]["ms_num"],
                                         $q_dat[0]["count"], 
@@ -290,15 +278,10 @@ extends UnitTest
         $db_config->add_num_row( 1, 1 );
         $db_config->add_record( $row[0], 1 );
 
-        $this->assertEquals( 0,
-                             followup_location( $q_dat[0]["proid"],
-                                                $q_dat[0]["ms_num"],
-                                                $q_dat[0]["count"]));
+        $this->assertEquals( 0, $this->capture_call( $func_name,0,$q_dat[0]));
 
         $this->assertEquals( $row[0]["location"],
-                             followup_location( $q_dat[1]["proid"],
-                                                $q_dat[1]["ms_num"],
-                                                $q_dat[1]["count"]));
+                             $this->capture_call( $func_name, 0, $q_dat[1]));
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -307,6 +290,7 @@ extends UnitTest
     function testFollowup_insert() {
         global $db;
 
+        $func_name = 'followup_insert';
         $db_config = new mock_db_configure( 1 );
         $db = new DB_SourceAgency;
 
@@ -316,8 +300,8 @@ extends UnitTest
                           ."'%s', count='%s' WHERE proid='%s' AND "
                           ."milestone_number='%s'"));
 
-        $q_dat = $this->_generate_records( array("proid","ms_num","count",
-                                                 "iteration", "location"), 4);
+        $q_dat = $this->_generate_records( array("proid","ms_num","iteration",
+                                                 "location","count"), 4);
 
         // first call, iteration == 0 
         $q_dat[0]["ms_num"] = 10;
@@ -325,9 +309,7 @@ extends UnitTest
         $db_config->add_query( sprintf( $db_q[0], $q_dat[0]["proid"], 
                                $q_dat[0]["ms_num"], $q_dat[0]["iteration"],
                                $q_dat[0]["location"], $q_dat[0]["count"]), 0 );
-        followup_insert( $q_dat[0]["proid"], $q_dat[0]["ms_num"],
-                         $q_dat[0]["iteration"], $q_dat[0]["location"],
-                         $q_dat[0]["count"]);
+        $this->capture_call( $func_name, 0, &$q_dat[0] );
 
         // second call, milestone_number and iteration equal 1
         $q_dat[1]["ms_num"] = 1;
@@ -335,9 +317,7 @@ extends UnitTest
         $db_config->add_query( sprintf( $db_q[0], $q_dat[1]["proid"], 
                                $q_dat[1]["ms_num"], $q_dat[1]["iteration"],
                                $q_dat[1]["location"], $q_dat[1]["count"]), 0 );
-        followup_insert( $q_dat[1]["proid"], $q_dat[1]["ms_num"],
-                         $q_dat[1]["iteration"], $q_dat[1]["location"],
-                         $q_dat[1]["count"]);
+        $this->capture_call( $func_name, 0, &$q_dat[1] );
 
         // third call
         $q_dat[2]["ms_num"] = 1;
@@ -345,9 +325,7 @@ extends UnitTest
         $db_config->add_query( sprintf( $db_q[1], $q_dat[2]["iteration"], 
                                $q_dat[2]["location"], $q_dat[2]["count"],
                                $q_dat[2]["proid"], $q_dat[2]["ms_num"]), 0 );
-        followup_insert( $q_dat[2]["proid"], $q_dat[2]["ms_num"],
-                         $q_dat[2]["iteration"], $q_dat[2]["location"],
-                         $q_dat[2]["count"]);
+        $this->capture_call( $func_name, 0, &$q_dat[2] );
 
         // fourth call
         $q_dat[3]["ms_num"] = 2;
@@ -355,40 +333,38 @@ extends UnitTest
         $db_config->add_query( sprintf( $db_q[1], $q_dat[3]["iteration"], 
                                $q_dat[3]["location"], $q_dat[3]["count"],
                                $q_dat[3]["proid"], $q_dat[3]["ms_num"]), 0 );
-        followup_insert( $q_dat[3]["proid"], $q_dat[3]["ms_num"],
-                         $q_dat[3]["iteration"], $q_dat[3]["location"],
-                         $q_dat[3]["count"]);
+        $this->capture_call( $func_name, 0, &$q_dat[3] );
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
     }
 
     function testFollowup_referee_decision() {
-        $dat = $this->_generate_records( array( "input" ), 10 );
         $exp[0] = "<select name=\"decision\">";
         $exp[1] = "<option value=\"accept\">accept";
         $exp[2] = "<option value=\"minor\">minor";
         $exp[3] = "<option value=\"severe\">severe";
         $exp[4] = "</select>";
-        
+
+        $func_name = 'followup_referee_decision';
         $this->assertEquals( implode("\n",$exp)+"\n", 
-                             followup_referee_decision("fubar"));
+                             $this->capture_call($func_name,0,array('fubar')));
         $this->assertEquals( implode("\n",$exp)+"\n", 
-                             followup_referee_decision(""));
+                             $this->capture_call($func_name,0,array('')));
 
         $o = $exp[1]; $exp[1] = "<option selected value=\"accept\">accept";
-        $this->assertEquals( implode("\n",$exp)+"\n", 
-                             followup_referee_decision("accept" ));
+        $this->assertEquals(implode("\n",$exp)+"\n", 
+                            $this->capture_call($func_name,0,array('accept')));
         $exp[1] = $o;
 
         $o = $exp[2]; $exp[2] = "<option selected value=\"minor\">minor";
         $this->assertEquals( implode("\n",$exp)+"\n", 
-                             followup_referee_decision("minor" ));
+                             $this->capture_call($func_name,0,array('minor')));
         $exp[2] = $o;
 
         $o = $exp[3]; $exp[3] = "<option selected value=\"severe\">severe";
-        $this->assertEquals( implode("\n",$exp)+"\n", 
-                             followup_referee_decision("severe"));
+        $this->assertEquals(implode("\n",$exp)+"\n", 
+                            $this->capture_call($func_name,0,array('severe')));
         $exp[3] = $o;
     }
 

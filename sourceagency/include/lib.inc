@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.42 2002/06/11 12:59:55 riessen Exp $
+# $Id: lib.inc,v 1.43 2002/06/14 09:14:11 riessen Exp $
 #
 ######################################################################
 
@@ -277,13 +277,14 @@ function licensep($selected)
  * @access  public
  * @see PHP4 function array_merge() should do the same
  */
-function lib_merge_arrays($array1, $array2)
+function lib_merge_arrays( $array1, $array2)
 {
-    while (list(, $value) = each($array1)) {
-	$merged[] = $value;
+    $merged = array();
+    while (list($key, $value) = each($array1)) {
+	$merged[$key] = $value;
     }
-    while (list(, $value) = each($array2)) {
-	$merged[] = $value;
+    while (list($key, $value) = each($array2)) {
+	$merged[$key] = $value;
     }
     return $merged;
 }
@@ -296,6 +297,7 @@ function lib_merge_arrays($array1, $array2)
  * @param   int        $end           Gives the end point of the iteraction
  * @access  private
  * @see lib_show_more
+ * FIXME: can be removed is not used 
  */
 function _lib_show_more_links($start, $end)
 {
@@ -316,6 +318,8 @@ function _lib_show_more_links($start, $end)
  * @global  object    $sess          PHPLib session object
  *
  * @access public
+ *
+ * FIXME: this is never used, it can be removed along with _lib_show_more_links
  */
 function lib_show_more($current, $total, $query = '', $link='PHP_SELF')
 {
@@ -353,7 +357,7 @@ function lib_count_total($table, $where='')
     $db_local = new DB_SourceAgency;
     $db_local->query("SELECT COUNT(*) FROM $table $where");
     $db_local->next_record();
-    return($db->f('COUNT(*)'));
+    return($db_local->f('COUNT(*)'));
 }
 
 /**
@@ -1037,9 +1041,6 @@ function select_from_config($name, $array_name, $selected)
     case 'milestone_product_array':
         $array = $milestone_product_array; 
         break;
-    case 'comments_type_array':
-        $array = $comments_type_array; 
-        break;
     default:
         lib_die('Error in function select_from_config() in '
                 .'lib.inc. Specified type has no array');
@@ -1087,10 +1088,14 @@ function followup($proid)
     
     lib_show_description($query);
     
-    include('contentlib.inc');
+    if ( !function_exists( 'show_selected_content' ) ) {
+        include('contentlib.inc');
+    }
     show_selected_content($proid);
     
-    include('developinglib.inc');
+    if ( !function_exists( 'show_selected_developing' ) ) {
+        include('developinglib.inc');
+    }
     show_selected_developing($proid);
     
     $bx->box_column_finish();
@@ -1258,7 +1263,9 @@ function show_project_milestones($proid)
                      ."AND status='A'");
     $db_local->next_record(); 
 
-    include('milestoneslib.inc');
+    if ( !function_exists( 'show_milestones' ) ) {
+        include('milestoneslib.inc');
+    }
     show_milestones($proid,$db_local->f('devid'),'');
 }
 
@@ -1275,7 +1282,7 @@ function show_project_milestones($proid)
  */
 function lib_insertion_information()
 {
-    global $bx, $auth, $t;
+    global $bx, $t;
 
     if (is_sponsor()) {
         $bx->box_full( $t->translate('Project Insertion process'), 
@@ -1366,9 +1373,6 @@ function is_not_set_or_empty(&$val)
 
 /**
  * Sees if a value has been set and is not empty
- * This is not the same as !is_not_set_or_empty($val) because
- * a value can be set and empty, and is_not_set_or_empty would
- * return false
  *
  * @param  foo          $val     Value that has to be checked
  *
@@ -1378,7 +1382,7 @@ function is_not_set_or_empty(&$val)
  */
 function is_set_and_not_empty(&$val)
 {
-    return ( isset( $val ) && !empty( $val ) );
+    return !is_not_set_or_empty( $val );
 }
 
 /**

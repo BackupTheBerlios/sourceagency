@@ -5,23 +5,23 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConfigurelib.php,v 1.5 2002/06/04 10:57:52 riessen Exp $
+// $Id: TestConfigurelib.php,v 1.6 2002/06/14 09:14:12 riessen Exp $
 
 include_once( "../constants.php" );
+
+include_once( 'html.inc' );
+include_once( 'configurelib.inc' );
 
 if ( !defined("BEING_INCLUDED" ) ) {
     // required for the $sess global variable
     include_once( "session.inc" );
-    $sess = new Session;
+    $GLOBALS[ 'sess' ] = new Session;
     
     // global translation object
     include_once( "translation.inc" );
-    $t = new translation("English");
+    $GLOBALS[ 't' ] = new translation("English");
 
-    include_once( 'html.inc' );
 }
-
-include_once( 'configurelib.inc' );
 
 class UnitTestConfigurelib
 extends UnitTest

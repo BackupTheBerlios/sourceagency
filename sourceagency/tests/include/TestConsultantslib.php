@@ -5,31 +5,24 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConsultantslib.php,v 1.9 2002/06/04 10:57:52 riessen Exp $
+// $Id: TestConsultantslib.php,v 1.10 2002/06/14 09:14:12 riessen Exp $
 
 include_once( "../constants.php" );
 
+include_once( 'lib.inc' );
+include_once( 'html.inc');
+include_once( "box.inc" );
+include_once( 'consultantslib.inc' );
+
 if ( !defined("BEING_INCLUDED" ) ) {
-    // required for lib_nick(...)
-    include_once( 'lib.inc' );
-
-    // required for the html functions
-    include_once( 'html.inc');
-
     // required for the $sess global variable
     include_once( "session.inc" );
-    $sess = new Session;
+    $GLOBALS[ 'sess' ] = new Session;
     
     // global translation object
     include_once( "translation.inc" );
-    $t = new translation("English");
-
-    // required for the $bx global variable
-    include_once( "box.inc" );
-    $bx = new box;
+    $GLOBALS[ 't' ] = new translation("English");
 }
-
-include_once( 'consultantslib.inc' );
 
 class UnitTestConsultantslib
 extends UnitTest

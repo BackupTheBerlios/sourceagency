@@ -5,24 +5,19 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestViewslib.php,v 1.10 2002/06/04 10:57:52 riessen Exp $
+// $Id: TestViewslib.php,v 1.11 2002/06/14 09:14:12 riessen Exp $
 
 include_once( '../constants.php' );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-    // required for the html functions
-    include_once( 'html.inc');
+include_once( 'lib.inc' );
+include_once( 'html.inc');
+include_once( 'viewslib.inc' );
 
+if ( !defined("BEING_INCLUDED" ) ) {
     // global translation object
     include_once( "translation.inc" );
-    $t = new translation("English");
-
-    // required for the $bx global variable
-    include_once( "box.inc" );
-    $bx = new box;
+    $GLOBALS[ 't' ] = new translation("English");
 }
-
-include_once( 'viewslib.inc' );
 
 class UnitTestViewslib
 extends UnitTest
@@ -60,11 +55,8 @@ extends UnitTest
         
         $db_config = new mock_db_configure( 0 );
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        views_form( $proid );
-        $this->set_text( capture_stop_and_get() );
-        
-        $this->_testFor_string_length( 9555 + strlen( $sess->self_url() ) );
+        $this->capture_call( 'views_form',9555 + strlen( $sess->self_url() ),
+                             array( $proid ) );
 
         $this->_checkFor_a_box( "Configure Information Access in this "
                                  ."Project");
@@ -149,11 +141,8 @@ extends UnitTest
         // ensures no data is printed by views_show
         $db_config->add_record( false, 0 );
 
-        capture_reset_and_start();
         $db = new DB_SourceAgency;
-        call_user_func_array( 'views_modify', $args[0] );
-        $this->set_text( capture_stop_and_get() );
-        $this->_testFor_string_length( 0 );
+        $this->capture_call( 'views_modify', 0, $args[0] );
         $this->_check_db( $db_config );
     }
 
@@ -182,10 +171,8 @@ extends UnitTest
         $db_config->add_num_row( 0, 0 );
         $bx = $this->_create_default_box();
 
-        capture_reset_and_start();
-        views_preview( $proid );
-        $this->set_text( capture_stop_and_get() );
-        $this->_testFor_string_length( 5020 + strlen(timestr(time())));
+        $this->capture_call( 'views_preview', 5020 + strlen(timestr(time())),
+                             array( &$proid ) );
 
         $this->_checkFor_a_box('PREVIEW',"<center><b>%s</b></center>");
         $this->_checkFor_a_box('Project Information Access' );

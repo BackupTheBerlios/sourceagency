@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.25 2002/06/11 13:01:00 riessen Exp $
+# $Id: unit_test.php,v 1.26 2002/06/14 09:14:11 riessen Exp $
 #
 ######################################################################
 
@@ -74,6 +74,14 @@ extends TestCase
         $rval = call_user_func_array( $func_name, &$args );
         $this->set_text( capture_stop_and_get() );
         $this->_testFor_string_length( $exp_length );
+
+        // this is a paranoia check: make sure that no PHP warnings were
+        // generated, if so, then print a warning and the entire text
+        if ( preg_match( '/Warning/', $this->get_text() ) ) {
+            print ( "<b>CaptureCall: Warning: text contained a warning "
+                    ."message?</b>\n" );
+            $this->print_text_as_html();
+        }
         return $rval;
     }
 
@@ -206,6 +214,43 @@ extends TestCase
         }
         return $rVal;
     }
+    function &_copy_array( &$a ) {
+        $b = array( );
+        while ( list( $key, $val ) = each ( $a ) ) {
+            $b[$key] = $val;
+        }
+        reset( $a );
+        return $b;
+    }
+
+    function _compare_arrays( &$exp, &$act ) {
+        // FIXME: does not support the reverse_next_test setting ...
+        $this->assertEquals( count($exp),count($act), "Array Size Mismatch" );
+        
+        // first compare the keys, then the values
+        $_act = array();
+        $_exp = array();
+        while ( list( $key, $val ) = each( $exp ) ) {
+            $_exp[] = array( 0 => $key, 1 => $val );
+        }
+        while ( list( $key, $val ) = each( $act ) ) {
+            $_act[] = array( 0 => $key, 1 => $val );
+        }
+            
+        for ($idx = 0; $idx < min( count( $_act ), count( $_exp ) ); $idx++){
+            $_exp_key = $_exp[$idx][0];
+            $_exp_val = $_exp[$idx][1];
+            $_act_key = $_act[$idx][0];
+            $_act_val = $_act[$idx][1];
+
+            $this->assertEquals( $_exp_key, $_act_key, 
+                "Key mismatch (Idx=$idx) (Exp='$_exp_key') (Act='$_act_key')");
+            $this->assertEquals( $_exp_val, $_act_val, 
+                "Val mismatch (Idx=$idx) (Exp='$_exp_val') (Act='$_act_val')");
+        }
+        reset( $exp );
+        reset( $act );
+    }
 
     // because version_compare is only available after version 4.1.0,
     // define our own! This only returns true if v1 is greater than v2
@@ -269,6 +314,7 @@ extends TestCase
     //              "title_align", "body_bgcolor", "body_font_color",
     //              "body_align" );
     function &_create_default_box() {
+        require_once( 'box.inc');
         return new box( "box_width", "frame_color", "frame_width",
                         "title_bgcolor", "title_font_color", 
                         "title_align", "body_bgcolor", "body_font_color",

@@ -5,14 +5,16 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestStatslib.php,v 1.3 2002/05/31 12:41:50 riessen Exp $
+// $Id: TestStatslib.php,v 1.4 2002/06/14 09:14:12 riessen Exp $
 
 include_once( '../constants.php' );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-}
-
 include_once( 'statslib.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    include_once( "translation.inc" );
+    $GLOBALS['t'] = new translation("English");
+}
 
 class UnitTestStatslib
 extends UnitTest
@@ -35,15 +37,12 @@ extends UnitTest
     }
 
     function testStats_end() {
-        capture_reset_and_start();
-        stats_end();
-        $this->set_text( capture_stop_and_get() );
         $a=array( "</table>\n",
                   "</TD></TR></TABLE>\n",
                   "</TD></TR></TABLE></CENTER>\n",
                   "<BR>\n" );
+        $this->capture_call( 'stats_end', strlen(implode( '', $a ) ) );
         $this->assertEquals( implode( '', $a ), $this->get_text() );
-        $this->_testFor_string_length( strlen(implode( '', $a ) ) );
     }
 
     function testStatslib_top() {
@@ -52,29 +51,23 @@ extends UnitTest
 
     function testStats_subtitle() {
         $msg = 'thsi is the message';
+        include_once( 'config.inc' );
         $color = $GLOBALS['th_box_title_bgcolor'];
-
-        capture_reset_and_start();
-        stats_subtitle($msg);
-        $this->set_text( capture_stop_and_get() );
-
         $a=array( "<tr><td bgcolor=\"".$color."\"><B>".$msg."</B></td>\n",
                   "<td bgcolor=\"".$color."\">&nbsp;</td>",
                   "<td bgcolor=\"".$color."\">&nbsp;</td>",
                   "<td bgcolor=\"".$color."\">&nbsp;</td>",
                   "<td bgcolor=\"".$color."\">&nbsp;</td></tr>" );
+        $this->capture_call( 'stats_subtitle', strlen(implode( '', $a ) ) ,
+                             array( &$msg ) );
         $this->assertEquals( implode( '', $a ), $this->get_text() );
-        $this->_testFor_string_length( strlen(implode( '', $a ) ) );
     }
 
     function testStats_title() {
         global $t;
         $msg = 'this is the message';
 
-        capture_reset_and_start();
-        stats_title($msg);
-        $this->set_text( capture_stop_and_get() );
-
+        include_once( 'config.inc' );
         $a=array( "<center>\n",
                   "<table width=600 border=0 cellspacing=0 cellpadding=0 "
                   ."bgcolor=\"".$GLOBALS["th_box_frame_color"]
@@ -88,8 +81,9 @@ extends UnitTest
                   "</tr><tr bgcolor=\"".$GLOBALS["th_box_body_bgcolor"]
                   ."\"><td>\n",
                   "<table border=0 width=100% cellspacing=0>\n");
+        $this->capture_call( 'stats_title', strlen(implode( '', $a ) ),
+                             array( &$msg ) );
         $this->assertEquals( implode( '', $a ), $this->get_text() );
-        $this->_testFor_string_length( strlen(implode( '', $a ) ) );
     }
 }
 

@@ -5,14 +5,18 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestCooperationlib.php,v 1.3 2002/06/06 09:31:37 riessen Exp $
+// $Id: TestCooperationlib.php,v 1.4 2002/06/14 09:14:12 riessen Exp $
 
 include_once( '../constants.php' );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-}
-
+include_once( 'lib.inc' );
+include_once( 'html.inc' );
 include_once( 'cooperationlib.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    include_once( "translation.inc" );
+    $GLOBALS[ 't' ] = new translation("English");
+}
 
 class UnitTestCooperationlib
 extends UnitTest
@@ -35,9 +39,8 @@ extends UnitTest
         $cost = 'this is the cost';
 
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        call_user_func_array( 'cooperation_form', $args[0] );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( 'cooperation_form', 
+                             1827 + strlen( $sess->self_url() ), $args[0] );
 
         $this->_checkFor_a_box( 'Cooperation' );
         $this->_checkFor_columns( 2 );
@@ -47,7 +50,6 @@ extends UnitTest
         $this->_checkFor_column_values( array( html_input_text('cost',7,
                                                                7,$cost)));
         $this->_checkFor_submit_preview_buttons();
-        $this->_testFor_string_length( 1827 + strlen( $sess->self_url() ) );
     }
 
     function testCooperation_insert() {
@@ -65,16 +67,14 @@ extends UnitTest
         $args=$this->_generate_records( array( 'proid', 'devid' ), 2 );
         $cost = 'this is the cost';
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        call_user_func_array( 'cooperation_preview', $args[0] );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( 'cooperation_preview', 
+                             966 + strlen(timestr(time())), $args[0] );
         
         $this->_checkFor_a_box( 'PREVIEW', '<center><b>%s</b></center>' );
         $this->_checkFor_a_box( 'Cooperation' );
         $this->_testFor_pattern( $this->_to_regexp( "<p><b>Cost</b>: $cost "
                                                     ."euro\n"));
         $this->_testFor_lib_nick( $auth->auth['uname'] );
-        $this->_testFor_string_length( 966 + strlen( timestr( time() ) ) );
     }
 
     function testCooperation_show() {

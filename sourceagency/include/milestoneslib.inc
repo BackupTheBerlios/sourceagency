@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.17 2002/05/06 13:09:40 riessen Exp $
+# $Id: milestoneslib.inc,v 1.18 2002/06/14 09:14:11 riessen Exp $
 #
 ######################################################################
 
@@ -75,6 +75,7 @@ function show_milestones($proid, $devid, $who_wants_to_see)
                . "AND sponsor='$who_wants_to_see'" );
 
     $db->query($query);
+    // FIXME: this if is useless as status is reset down below!!!
     if ($db->num_rows() > 0) {
         $status='';
     }

@@ -5,14 +5,18 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestRefereeslib.php,v 1.2 2002/06/06 14:27:33 riessen Exp $
+// $Id: TestRefereeslib.php,v 1.3 2002/06/14 09:14:12 riessen Exp $
 
 include_once( '../constants.php' );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-}
-
+include_once( 'lib.inc');
+include_once( 'html.inc' );
 include_once( 'refereeslib.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    include_once( "translation.inc" );
+    $GLOBALS['t'] = new translation("English");
+}
 
 class UnitTestRefereeslib
 extends UnitTest

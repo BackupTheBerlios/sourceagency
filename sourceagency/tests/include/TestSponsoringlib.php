@@ -16,29 +16,24 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSponsoringlib.php,v 1.16 2002/06/04 10:57:52 riessen Exp $
+# $Id: TestSponsoringlib.php,v 1.17 2002/06/14 09:14:12 riessen Exp $
 #
 ######################################################################
 
 include_once( "../constants.php" );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-    global $lang;
-    // need to define a global session
-    include_once( "session.inc" );
-    $sess = new Session;
-
-    include_once( "translation.inc" );
-    $t = new translation("English");
-
-    include_once( "box.inc" );
-    $bx = new box;
-}
-
 include_once( 'lib.inc' );
 include_once( 'html.inc' );
 include_once( 'security.inc' );
 include_once( 'sponsoringlib.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    // need to define a global session
+    include_once( "session.inc" );
+    $GLOBALS[ 'sess'] = new Session;
+    include_once( "translation.inc" );
+    $GLOBALS['t'] = new translation("English");
+}
 
 class UnitTestSponsoringlib
 extends UnitTest
@@ -71,11 +66,9 @@ extends UnitTest
 
         $proid = 'proid';
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        sponsoring_form( $proid );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( 'sponsoring_form', 
+                             8389 + strlen( $sess->self_url()),array(&$proid));
         $this->set_msg( 'test 1' );
-        $this->_testFor_string_length( 8389 + strlen( $sess->self_url()));
 
         $this->_checkFor_a_box( 'Sponsoring involvement' );
 
@@ -104,6 +97,7 @@ extends UnitTest
     function testShow_sponsorings() {
         global $db, $auth, $bx, $t;
 
+        $func_name = 'show_sponsorings';
         $auth->set_uname("this is the username");
         $auth->set_perm("this is the permission");
 
@@ -164,11 +158,8 @@ extends UnitTest
         // first call, no records
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        capture_reset_and_start();
-        show_sponsorings( $db_d[0]["proid"] );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( $func_name, 84, $db_d[0] );
         $this->set_msg( 'test 1' );
-        $this->_testFor_string_length( 84 );
         $this->_testFor_pattern( "<p>There have not been posted any"
                                  ." sponsoring involvement wishes "
                                  ."to this project.<p>");
@@ -177,11 +168,8 @@ extends UnitTest
         // i.e. status is not 'P'
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        capture_reset_and_start();
-        show_sponsorings( $db_d[1]["proid"] );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( $func_name, 1090, $db_d[1] );
         $this->set_msg( 'test 2' );
-        $this->_testFor_string_length( 1090 );
         
         $this->_checkFor_a_box( 'Sponsor Involvement' );
         $this->_testFor_lib_nick( $rows[0]['username'] );
@@ -208,11 +196,8 @@ extends UnitTest
         // third call, is_accepted_sponsor returns true after being called
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        capture_reset_and_start();
-        show_sponsorings( $db_d[2]["proid"] );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( $func_name, 1426, $db_d[2] );
         $this->set_msg( 'test 3' );
-        $this->_testFor_string_length( 1426 );
 
         $this->_checkFor_a_box( 'Sponsor Involvement' );
         $this->_testFor_lib_nick( $rows[1]['username']);
@@ -244,11 +229,8 @@ extends UnitTest
         // fourth call, is_accepted_sponsor is called and returns false
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        capture_reset_and_start();
-        show_sponsorings( $db_d[3]["proid"] );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( $func_name, 1125, $db_d[3] );
         $this->set_msg( 'test 4' );
-        $this->_testFor_string_length( 1125 );
 
         $this->_checkFor_a_box( 'Sponsor Involvement' );
         $this->_testFor_lib_nick( $rows[2]['username']);
@@ -290,11 +272,8 @@ extends UnitTest
         $valid_year = 2001; $begin_year = 2002; $finish_year = 2003;
 
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        sponsoring_preview( "dasdsa" );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call('sponsoring_preview',1196+strlen(timestr(time())));
         $this->set_msg( 'test 1' );
-        $this->_testFor_string_length( 1196 + strlen( timestr( time() ) ));
 
         $this->_checkFor_a_box( 'PREVIEW','<center><b>%s</b></center>' );
         $this->_checkFor_a_box( 'Sponsor Involvement' );
@@ -496,36 +475,16 @@ extends UnitTest
         // ********************************************************************
         // first call
         $db = new DB_SourceAgency;
-        capture_reset_and_start();
-        sponsoring_insert( $args[0]["proid"], $args[0]["user"],
-                           $args[0]["s_text"], $args[0]["budget"], 
-                           $args[0]["v_day"], $args[0]["v_month"],
-                           $args[0]["v_year"],
-                           $args[0]["b_day"], $args[0]["b_month"],
-                           $args[0]["b_year"],
-                           $args[0]["f_day"], $args[0]["f_month"],
-                           $args[0]["f_year"] );
-        $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
-        $this->_testFor_string_length( 442 );
+        $this->capture_call( 'sponsoring_insert', 442, $args[0] );
         $this->_testFor_pattern( "<a href=\"personal[.]php3[?]username="
                                   ."this[+]is[+]the[+]username\" class="
                                   ."\"\">Personal Page<\/a>");
     
         // second call, status = A and is not project initiator
         $db = new DB_SourceAgency;
-        capture_reset_and_start();
-        sponsoring_insert( $args[1]["proid"], $args[1]["user"],
-                           $args[1]["s_text"], $args[1]["budget"], 
-                           $args[1]["v_day"], $args[1]["v_month"],
-                           $args[1]["v_year"],
-                           $args[1]["b_day"], $args[1]["b_month"],
-                           $args[1]["b_year"],
-                           $args[1]["f_day"], $args[1]["f_month"],
-                           $args[1]["f_year"] );
-        $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 2' );
-        $this->_testFor_string_length( 141 );
+        $this->capture_call( 'sponsoring_insert', 141, $args[1] );
         $this->_testFor_pattern( "<p><b>Congratulations<\/b>. You are the "
                                   ."first sponsor. You can <a href=\""
                                   ."configure_edit.php3[?]proid=proid_1\" "
@@ -535,31 +494,13 @@ extends UnitTest
         // third call: user has already contributed and wishes to make
         // a change to that contribution
         $db = new DB_SourceAgency;
-        capture_reset_and_start();
-        sponsoring_insert( $args[2]["proid"], $args[2]["user"],
-                           $args[2]["s_text"], $args[2]["budget"], 
-                           $args[2]["v_day"], $args[2]["v_month"],
-                           $args[2]["v_year"],
-                           $args[2]["b_day"], $args[2]["b_month"],
-                           $args[2]["b_year"],
-                           $args[2]["f_day"], $args[2]["f_month"],
-                           $args[2]["f_year"] );
-        $this->assert( strlen( capture_stop_and_get() ) == 0, 'test 3' );
+        $this->set_msg( 'test 3' );
+        $this->capture_call( 'sponsoring_insert', 0, $args[2] );
 
         // fourth call: user has made too many contributions
         $db = new DB_SourceAgency;
-        capture_reset_and_start();
-        sponsoring_insert( $args[3]["proid"], $args[3]["user"],
-                           $args[3]["s_text"], $args[3]["budget"], 
-                           $args[3]["v_day"], $args[3]["v_month"],
-                           $args[3]["v_year"],
-                           $args[3]["b_day"], $args[3]["b_month"],
-                           $args[3]["b_year"],
-                           $args[3]["f_day"], $args[3]["f_month"],
-                           $args[3]["f_year"] );
-        $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 4' );
-        $this->_testFor_string_length( 137 );
+        $this->capture_call( 'sponsoring_insert', 137, $args[3] );
         $this->_testFor_pattern( "<p><b>Database Failure:<\/b> it seems you "
                                  ."have more than one sponsorship! Please "
                                  ."advice the administrator and have the "

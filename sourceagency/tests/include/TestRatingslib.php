@@ -5,14 +5,19 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestRatingslib.php,v 1.4 2002/06/04 10:57:52 riessen Exp $
+// $Id: TestRatingslib.php,v 1.5 2002/06/14 09:14:12 riessen Exp $
 
 include_once( '../constants.php' );
 
-if ( !defined("BEING_INCLUDED" ) ) {
-}
-
+include_once( 'html.inc' );
 include_once( 'ratingslib.inc' );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    include_once( 'session.inc' );
+    $GLOBALS['sess'] = new session;
+    include_once( "translation.inc" );
+    $GLOBALS['t'] = new translation("English");
+}
 
 class UnitTestRatingslib
 extends UnitTest
@@ -38,17 +43,13 @@ extends UnitTest
         global $sess, $t;
 
         $proid = "this is the proid";
-        capture_reset_and_start();
-        ratings_form_finish( $proid );
-        $this->set_text( capture_stop_and_get() );
-
+        $this->capture_call( 'ratings_form_finish', 
+                             233 + strlen( $sess->self_url() ),array( $proid));
         $this->_checkFor_a_form( 'PHP_SELF', array('proid' => $proid) );
         $this->_testFor_html_form_hidden( 'dev_or_spo', '' );
         $this->_testFor_html_form_hidden( 'id_number', '' );
         $this->_testFor_html_form_submit( $t->translate('Rating finished'),
                                                                    'finished');
-        $this->_testFor_string_length( 233 + strlen( $sess->self_url() ) );
-        
     }
 
     function testRatings_form_full() {
@@ -88,8 +89,8 @@ extends UnitTest
                         $args[$idx]['to_whom'],$args[$idx]['by_whom']), $idx );
             $db_config->add_num_row( $idx-1, $idx );
             $r = ( $idx > 1 || $idx < 1 ? 1 : 0 ); 
-            $this->assertEquals( $r, call_user_func_array('ratings_rated_yet',
-                                                          $args[$idx]));
+            $this->assertEquals( $r,$this->capture_call( 'ratings_rated_yet', 
+                                                         0, $args[$idx] ));
         }
 
         $this->_check_db( $db_config );

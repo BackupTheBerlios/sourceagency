@@ -16,20 +16,20 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.26 2002/06/04 10:57:52 riessen Exp $
+# $Id: TestHtml.php,v 1.27 2002/06/14 09:14:12 riessen Exp $
 #
 ######################################################################
 
 // unit test for testing the html.inc file.
 include_once( "../constants.php" );
 
+include_once("html.inc");
+
 if ( !defined("BEING_INCLUDED" ) ) {
     // need to define a global session
     include_once( "session.inc" );
-    $sess = new Session;
+    $GLOBALS[ 'sess' ] = new Session;
 }
-
-include_once("html.inc");
 
 class UnitTestHtml
 extends UnitTest
