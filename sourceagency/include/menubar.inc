@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: menubar.inc,v 1.5 2001/11/26 13:57:54 riessen Exp $
+# $Id: menubar.inc,v 1.6 2002/04/15 15:54:17 riessen Exp $
 #
 ######################################################################
 
@@ -34,6 +34,7 @@
 <tr ALIGN=RIGHT BGCOLOR="<?php echo $th_nav_bgcolor;?>">
 <td><a href="<?php $sess->purl("index.php3") ?>" class="menus"><?php echo $t->translate("Index"); ?></a>
 <br><a href="<?php $sess->purl("faq.php3") ?>" class="menus"><?php echo $t->translate("Q&amp;A"); ?></a>
+<br><a href="<?php print $sess->url("doco.php3") . $sess->add_query(array("page" => $PHP_SELF)) ?>" class="menus"><?php echo $t->translate("What is this?"); ?></a>
 
 <br><br>
 
