@@ -1,11 +1,12 @@
 <?php
-
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ===============================================================
 #
 # Copyright (c) 2001 by
-#                Gregorio Robles (grex@scouts-es.org) and
+#                Gregorio Robles (grex@scouts-es.org),
+#                Gerrit Riesen (riesen@open-source-consultants.de) and
 #                Lutz Henckel (lutz.henckel@fokus.gmd.de)
 #
 # BerliOS SourceAgency: http://sourceagency.berlios.de
@@ -17,25 +18,25 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: header.inc,v 1.8 2002/05/07 17:33:15 grex Exp $
+# $Id: header.inc,v 1.9 2002/05/07 19:14:29 grex Exp $
 #
 ######################################################################
 
 // Disabling cache
-header("Cache-Control: no-cache, must-revalidate");     // HTTP/1.1
-header("Pragma: no-cache"); 				// HTTP/1.0
+header('Cache-Control: no-cache, must-revalidate');     // HTTP/1.1
+header('Pragma: no-cache'); 				// HTTP/1.0
 
-require("logger.inc");
+require('logger.inc');
 $l = new Logger;
 $l->open();
 
-require("config.inc");
-require("lib.inc");
-require("security.inc");
-require("translation.inc");
-require("lang.inc");
-require("box.inc");
-require("html.inc");
+require('config.inc');
+require('lib.inc');
+require('security.inc');
+require('translation.inc');
+require('lang.inc');
+require('box.inc');
+require('html.inc');
 $t = new translation($la);
 
 // As the database connection is used on almost any page,
@@ -59,15 +60,15 @@ $db = new DB_SourceAgency;
 leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
 
 <?php
-require("top_strip.inc");
-require("top_title.inc");
+require('top_strip.inc');
+require('top_title.inc');
 ?>
 
 <table BORDER=0 CELLSPACING=0 CELLPADDING=0 WIDTH="100%" >
 <tr VALIGN=TOP BGCOLOR="<?php echo $th_body_bgcolor;?>">
 <td BGCOLOR="<?php echo $th_nav_bgcolor;?>">
 <?php
-require("menubar.inc");
+require('menubar.inc');
 ?>
 </td>
 
