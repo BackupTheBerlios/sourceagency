@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: constants.php,v 1.21 2002/04/02 15:04:22 riessen Exp $
+# $Id: constants.php,v 1.22 2002/04/15 15:31:11 riessen Exp $
 #
 ######################################################################
 
@@ -66,10 +66,8 @@ function _filename_to_classname( $filename ) {
   // needed to add this for PHP4.1.0 -- __FILE__ includes the
   // absolute path
   $basename = basename( $filename );
-  // .php3, .php, .php4 are all removed
-  $basename = preg_replace( "/[.]php.?$/", "", $basename );
-  // remove .inc extension
-  $basename = preg_replace( "/[.]inc$/", "", $basename );
+  // .php3, .php, .php4, .inc are all removed
+  $basename = preg_replace( "/[.](inc|php).?$/", "", $basename );
   
   return ( "Unit" . $basename );
 }
