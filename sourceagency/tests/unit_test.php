@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.29 2002/07/04 13:02:59 riessen Exp $
+# $Id: unit_test.php,v 1.30 2002/07/22 12:07:08 riessen Exp $
 #
 ######################################################################
 
@@ -73,6 +73,7 @@ extends TestCase
         }
         $rval = call_user_func_array( $func_name, &$args );
         $this->set_text( capture_stop_and_get() );
+        capture_reset_text();
         $this->_testFor_string_length( $exp_length );
 
         // this is a paranoia check: make sure that no PHP warnings were
