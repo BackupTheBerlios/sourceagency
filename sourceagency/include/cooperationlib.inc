@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: cooperationlib.inc,v 1.4 2002/04/10 20:03:18 grex Exp $
+# $Id: cooperationlib.inc,v 1.5 2002/06/06 08:13:31 riessen Exp $
 #
 ######################################################################
 
@@ -73,7 +73,9 @@ function cooperation_form($proid, $devid)
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('right','30%','','&nbsp;');
-    $bx->box_column ('left','70%','',html_form_submit('Preview','preview').html_form_submit('Submit','submit'));
+    $bx->box_column ('left','70%','',
+                     html_form_submit($t->translate('Preview'),'preview')
+                     .html_form_submit($t->translate('Submit'),'submit'));
     htmlp_form_end();
     $bx->box_columns_end();
 
