@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.5 2001/11/08 16:17:41 riessen Exp $
+# $Id: security.inc,v 1.6 2001/11/09 20:21:19 riessen Exp $
 #
 ######################################################################
 
@@ -133,21 +133,34 @@ function check_proid ($proid) {
 function check_permission($proid,$page) {
   global $perm, $auth;
 
-  if (isset($perm) && ($perm->have_perm("editor") || $perm->have_perm("editor"))) return 1;
+  if (isset($perm) && ($perm->have_perm("editor") 
+       || $perm->have_perm("editor"))) {
+      return 1;
+  }
 
   $db_check = new DB_SourceAgency;
 
   $db_check->query("SELECT * FROM description WHERE proid='$proid'"); 
+  if ( $db_check->num_rows() == 0 ) {
+      return invalid_project_id($proid,$page);    
+  }
+
   $db_check->next_record();
 
   $project_initiator = $db_check->f("description_user");
   $current_step = $db_check->f("status");
 
-  if ($db_check->num_rows() == 0 || empty($proid) || (($db_check->f("status") == 0 || $db_check->f("status") == "-1") && !is_project_initiator($proid))) {
-	if (isset($auth) && !strcmp($db_check->f("description_user"),$auth->auth["uname"])) {
-		// FIXME - FIXME - FIXME
+  if ($db_check->num_rows() == 0 || empty($proid) 
+      || (($db_check->f("status") == 0 || $db_check->f("status") == "-1") 
+          && !is_project_initiator($proid))) {
+      if (isset($auth) && !strcmp($db_check->f("description_user"),
+                                  $auth->auth["uname"])) {
+		// FIXME - FIXME - FIXME what? fix what?
 		require("config.inc");
-		$be = new box("",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
+		$be = new box("80%",$th_box_frame_color,$th_box_frame_width,
+                              $th_box_title_bgcolor,$th_box_title_font_color,
+                              $th_box_title_align,$th_box_body_bgcolor,
+                              $th_box_error_font_color,$th_box_body_align);
 		$be->box_full("Error", "No project id or project pending");
 		return 0;
 	}
@@ -314,48 +327,86 @@ function check_permission($proid,$page) {
   }
 }
 
-function permission_denied($proid,$page) {
-
+function invalid_project_id($proid,$page) {
+  global $t;
   top_bar($proid,$page);
 
   require("config.inc");
-  $be = new box("",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
+  $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
+                $th_box_title_bgcolor,$th_box_title_font_color,
+                $th_box_title_align,$th_box_body_bgcolor,
+                $th_box_error_font_color,$th_box_body_align);
 
-  $be->box_full("Permission denied", "You do not have rights to enter this page.");
+  $be->box_full($t->translate("Permission denied"),
+                $t->translate("Project does not exist"));
+  return 0;	
+}
+
+function permission_denied($proid,$page) {
+  global $t;
+  top_bar($proid,$page);
+
+  require("config.inc");
+  $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
+                $th_box_title_bgcolor,$th_box_title_font_color,
+                $th_box_title_align,$th_box_body_bgcolor,
+                $th_box_error_font_color,$th_box_body_align);
+
+  $be->box_full($t->translate("Permission denied"),
+                $t->translate("You do not have rights to enter this page."));
   return 0;	
 }
 
 function step_not_open($proid,$page) {
+  global $t;
 
   top_bar($proid,$page);
 
   require("config.inc");
 
-  $be = new box("",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
+  $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
+                $th_box_title_bgcolor,$th_box_title_font_color,
+                $th_box_title_align,$th_box_body_bgcolor,
+                $th_box_error_font_color,$th_box_body_align);
 
-  $be->box_full("Permission denied", "This action can not be made at this time.");
+  $be->box_full($t->translate("Permission denied"),
+                $t->translate("This action can not be made at this time."));
   return 0;
 }
 
 function projects_only_by_project_initiator($proid,$page) {
+  global $t;
   top_bar($proid,$page);
 
   require("config.inc");
 
-  $be = new box("",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
+  $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
+                $th_box_title_bgcolor,$th_box_title_font_color,
+                $th_box_title_align,$th_box_body_bgcolor,
+                $th_box_error_font_color,$th_box_body_align);
 
-  $be->box_full("Permission denied", "The project has been configured so that only the project initiator can post one specification.");
+  $be->box_full($t->translate("Permission denied"), 
+                $t->translate("The project has been configured so that "
+                              . "only the project initiator can post one "
+                              ."specification."));
   return 0;
 }
 
 function proposals_only_by_project_initiator($proid,$page) {
+  global $t;
   top_bar($proid,$page);
 
   require("config.inc");
 
-  $be = new box("",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
+  $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
+                $th_box_title_bgcolor,$th_box_title_font_color,
+                $th_box_title_align,$th_box_body_bgcolor,
+                $th_box_error_font_color,$th_box_body_align);
 
-  $be->box_full("Permission denied", "The project has been configured so that only the project initiator can post one developing proposal.");
+  $be->box_full($t->translate( "Permission denied" ), 
+                $t->translate("The project has been configured so that "
+                              ."only the project initiator can post one "
+                              ."developing proposal."));
   return 0;
 }
 
@@ -365,7 +416,8 @@ function is_project_initiator($proid) {
   $db_local = new DB_SourceAgency;
 
   if (isset($auth) && !empty($auth->auth["perm"])) { 
-	$db_local->query("SELECT * FROM description WHERE proid='$proid' AND description_user='".$auth->auth["uname"]."'");
+	$db_local->query("SELECT * FROM description WHERE proid='$proid' "
+                         ."AND description_user='".$auth->auth["uname"]."'");
 	if ($db_local->num_rows() > 0) return 1;
   }
   return 0;
@@ -377,7 +429,8 @@ function is_sponsor() {
   $db_local = new DB_SourceAgency;
 
   if (isset($auth) && !empty($auth->auth["perm"])) { 
-	$db_local->query("SELECT * FROM auth_user WHERE perms='sponsor' AND username='".$auth->auth["uname"]."'");
+	$db_local->query("SELECT * FROM auth_user WHERE perms='sponsor' "
+                         ."AND username='".$auth->auth["uname"]."'");
 	if ($db_local->num_rows() > 0) return 1;
   }
   return 0;
@@ -389,7 +442,9 @@ function is_accepted_sponsor($proid) {
   $db_local = new DB_SourceAgency;
 
   if (isset($auth) && !empty($auth->auth["perm"])) { 
-	$db_local->query("SELECT * FROM sponsoring WHERE proid='$proid' AND status='A' AND sponsor='".$auth->auth["uname"]."'");
+	$db_local->query("SELECT * FROM sponsoring WHERE proid='$proid' "
+                         . "AND status='A' AND sponsor='"
+                         . $auth->auth["uname"]."'");
 	if ($db_local->num_rows() > 0) return 1;
   }
   return 0;
@@ -401,7 +456,9 @@ function is_accepted_referee($proid) {
   $db_local = new DB_SourceAgency;
 
   if (isset($auth) && !empty($auth->auth["perm"])) { 
-	$db_local->query("SELECT * FROM referees WHERE proid='$proid' AND status='A' AND referee='".$auth->auth["uname"]."'");
+	$db_local->query("SELECT * FROM referees WHERE proid='$proid' "
+                         ."AND status='A' AND referee='"
+                         .$auth->auth["uname"]."'");
 	if ($db_local->num_rows() > 0) return 1;
   }
   return 0;
@@ -413,7 +470,8 @@ function is_developer() {
   $db_local = new DB_SourceAgency;
 
   if (isset($auth) && !empty($auth->auth["perm"])) { 
-	$db_local->query("SELECT * FROM auth_user WHERE perms='devel' AND username='".$auth->auth["uname"]."'");
+	$db_local->query("SELECT * FROM auth_user WHERE perms='devel' "
+                         ."AND username='".$auth->auth["uname"]."'");
 	if ($db_local->num_rows() > 0) return 1;
   }
   return 0;
@@ -425,7 +483,8 @@ function is_involved_developer($proid) {
   $db_local = new DB_SourceAgency;
 
   if (isset($auth) && !empty($auth->auth["perm"])) { 
-	$db_local->query("SELECT * FROM developing WHERE proid='$proid' AND developer='".$auth->auth["uname"]."'");
+	$db_local->query("SELECT * FROM developing WHERE proid='$proid' "
+                         ."AND developer='".$auth->auth["uname"]."'");
 	if ($db_local->num_rows() > 0) return 1;
   }
   return 0;
@@ -437,7 +496,8 @@ function is_referee($proid) {
   $db_local = new DB_SourceAgency;
 
   if (isset($auth) && !empty($auth->auth["perm"])) { 
-	$db_local->query("SELECT * FROM referees WHERE proid='$proid' AND referee='".$auth->auth["uname"]."'");
+	$db_local->query("SELECT * FROM referees WHERE proid='$proid' "
+                         ."AND referee='".$auth->auth["uname"]."'");
 	if ($db_local->num_rows() > 0) return 1;
   }
   return 0;
@@ -449,7 +509,9 @@ function is_accepted_developer($proid) {
   $db_local = new DB_SourceAgency;
 
   if (isset($auth) && !empty($auth->auth["perm"])) { 
-	$db_local->query("SELECT * FROM developing WHERE proid='$proid' AND status='A' AND developer='".$auth->auth["uname"]."'");
+	$db_local->query("SELECT * FROM developing WHERE proid='$proid' "
+                         ."AND status='A' AND developer='"
+                         .$auth->auth["uname"]."'");
 	if ($db_local->num_rows() > 0) return 1;
   }
   return 0;
@@ -458,10 +520,13 @@ function is_accepted_developer($proid) {
 function is_main_developer($proid) {
   global $auth;
 
-  if (isset($auth) && !empty($auth->auth["perm"]) && is_accepted_developer($proid)) {
+  if (isset($auth) && !empty($auth->auth["perm"]) 
+      && is_accepted_developer($proid)) {
 	$db_local = new DB_SourceAgency;
         // FIXME: proid='..' appears _twice_ in the following query
-	$db_local->query("SELECT * FROM configure WHERE proid='$proid' AND proid='$proid' AND developer='".$auth->auth["uname"]."'");
+	$db_local->query("SELECT * FROM configure WHERE proid='$proid' "
+                         ."AND proid='$proid' AND developer='"
+                         .$auth->auth["uname"]."'");
 	if ($db_local->num_rows() > 0) return 1;
   }
   return 0;
@@ -470,14 +535,19 @@ function is_main_developer($proid) {
 function already_involved_in_this_step($proid,$page,$username) {
 
   switch ($page) {
-	case "sponsoring_edit": 	$table = "sponsoring"; $who = "sponsor"; break;
-	case "step1_edit": 		$table = "consultants"; $who = "consultant"; break;
-	case "developing_edit": 	$table = "developing"; $who = "developer"; break;
-	case "step4_edit": 		$table = "referees"; $who = "referee"; break;
+	case "sponsoring_edit":	$table = "sponsoring"; $who = "sponsor"; 
+          break;
+	case "step1_edit": 	$table = "consultants"; $who = "consultant"; 
+          break;
+	case "developing_edit": $table = "developing"; $who = "developer"; 
+          break;
+	case "step4_edit": 	$table = "referees"; $who = "referee"; 
+          break;
   }
 
   $db_local = new DB_SourceAgency;
-  $db_local->query("SELECT * FROM $table WHERE proid='$proid' AND $who='$username'");
+  $db_local->query("SELECT * FROM $table WHERE proid='$proid' AND "
+                   ."$who='$username'");
   if ($db_local->num_rows() > 0) return 1;
   else return 0;
 }
@@ -485,19 +555,26 @@ function already_involved_in_this_step($proid,$page,$username) {
 function already_involved_in_this_content($proid,$page,$username,$content_id) {
 
   	$db_local = new DB_SourceAgency;
-  	$db_local->query("SELECT * FROM developing WHERE proid='$proid' AND developer='$username' AND content_id='$content_id'");
+  	$db_local->query("SELECT * FROM developing WHERE proid='$proid' AND "
+                         ."developer='$username' AND "
+                         ."content_id='$content_id'");
   	if ($db_local->num_rows() > 0) return 1;
   	else return 0;
 }
 
 function already_involved_message($proid,$page) {
-
+  global $t;
   top_bar($proid,$page);
   require("config.inc");
 
-  $be = new box("",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
+  $be = new box("",$th_box_frame_color,$th_box_frame_width,
+                $th_box_title_bgcolor,$th_box_title_font_color,
+                $th_box_title_align,$th_box_body_bgcolor,
+                $th_box_error_font_color,$th_box_body_align);
 
-  $be->box_full("Permission denied", "You are not allowed to make this action more than one time.");
+  $be->box_full($t->translate("Permission denied"),
+                $t->translate("You are not allowed to make this action "
+                              ."more than one time."));
   return 0;
 }
 
@@ -516,7 +593,12 @@ function security_accept_by_view($proid,$page) {
 	case "Everybody":
 		return 1; break;
 	case "Registered":
-		if (isset ($auth) && isset($auth->auth["uname"]) && !empty($auth->auth["uname"]) && $auth->auth["perm"]!="devel_pending" && $auth->auth["perm"]!="sponsor_pending") return 1;
+		if (isset ($auth) && isset($auth->auth["uname"]) 
+                    && !empty($auth->auth["uname"]) 
+                    && $auth->auth["perm"]!="devel_pending" 
+                    && $auth->auth["perm"]!="sponsor_pending") {
+                    return 1;
+                }
 	case "Developers":
 		if (is_developer() || is_accepted_sponsor($proid)) return 1;
 		else return 0;
@@ -524,8 +606,13 @@ function security_accept_by_view($proid,$page) {
 		if (is_sponsor() || is_involved_developer($proid)) return 1;
 		else return 0;
 	case "Project Participants": 
- 		if (is_involved_developer($proid) || is_accepted_sponsor($proid) || is_project_initiator($proid)) return 1;
-		else return 0;
+ 		if (is_involved_developer($proid) 
+                    || is_accepted_sponsor($proid) 
+                    || is_project_initiator($proid)) {
+                    return 1;
+                } else {
+                    return 0;
+                }
 	case "Project Developers":
 		if (is_involved_developer($proid)) return 1;
 		else return 0;
