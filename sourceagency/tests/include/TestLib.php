@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.22 2002/05/28 08:58:28 riessen Exp $
+# $Id: TestLib.php,v 1.23 2002/05/29 14:57:54 riessen Exp $
 #
 ######################################################################
 
@@ -481,10 +481,12 @@ extends UnitTest
                  array('proid'=>$dat[1]["proid"], 'type'=>$dat[1]["cmt_type"],
                        'number'=>$dat[1]["num"], 'ref'=>$dat[1]["cmt_id"] ),
                  $rw['subject_cmt'], '' );
+
             $str = ' by <b>' . $rw['user_cmt'].'</b> on <b>'
                  . timestr_comment( mktimestamp( $rw['creation_cmt']))
                  . "</b>\n";
             $this->_testFor_pattern( $text, $this->_to_regexp( $str ) );
+
             // to ensure that the link and the user occur on the same line
             $str = $rw['subject_cmt']."</a> by <b>".$rw['user_cmt'];
             $this->_testFor_pattern( $text, $this->_to_regexp( $str ) );
@@ -494,10 +496,12 @@ extends UnitTest
                  array('proid'=>$dat[1]["proid"], 'type'=>$dat[1]["cmt_type"],
                        'number'=>$dat[1]["num"], 'ref'=>$row[0]["id"] ),
                  $rw['subject_cmt'], '' );
+
             $str = ' by <b>' . $rw['user_cmt'].'</b> on <b>'
                  . timestr_comment( mktimestamp( $rw['creation_cmt']))
                  . "</b>\n";
             $this->_testFor_pattern( $text, $this->_to_regexp( $str ) );
+
             // to ensure that the link and the user occur on the same line
             $str = $rw['subject_cmt']."</a> by <b>".$rw['user_cmt'];
             $this->_testFor_pattern( $text, $this->_to_regexp( $str ) );
