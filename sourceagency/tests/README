@@ -1,0 +1,104 @@
+
+Writing Unit Tests for the SourceAgency Portal
+==============================================
+
+
+0. Requirements
+---------------
+PhpUnit is required: the file phpunit.php should be in the
+directory defined by the environmental variable PHP_LIB_DIR. This
+variable is used to set the include_path in the constants.php,
+therefore set this to your php lib directory, see: constants.php.
+
+
+1. Defining a New Unit Test Class
+---------------------------------
+It is important that all unit tests have the following structure, else
+they will not be executed automatically by the RunAllTests.php
+script. The following example would be defined in the file 'TestXXXXX.php':
+
+---------
+<?php
+ 
+include_once( "../constants.php" );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+  // define things that would normally be defined by
+  // RunAllTests but which aren't present if Unit Test
+  // is run directly
+}
+
+include_once( 'files_that_are_being_tested' );
+
+class UnitTestXXXXX
+extends UnitTest
+{
+
+   function UnitTestXXXXX( $name ) {
+      $this->UnitTest( $name );
+   }
+
+   function setup() {
+      // method called before each test method
+   }
+
+   function tearDown() {
+      // method called after each test method
+   }
+
+   //
+   // Start of the Test methods, normally each method tests exactly
+   // one function/method of the corresponding file/class which is
+   // being tested
+   //
+
+   function testFunctionOne() {
+   }
+  
+   function testFunctionTwo() {
+   }  
+}
+
+define_test_suite( __FILE__ );
+
+?>
+---------
+
+Notes
+-----
+1. Naming convention: file name must correspond to the unit test being
+   defined in the file, i.e. file 'TestZZZZZ.php' defines the unit
+   test class 'UnitTestZZZZZ'. Each file name must begin with 'Test'
+   and have either a '.php' or '.inc' extension.
+2. Each unit test class must being with 'UnitTest' and extend the
+   UnitTest class. (The UnitTest class is defined in unit_test.php)
+3. The constants.php file needs to be included at the beginning of
+   each unit test. This in turn includes utility classes such as
+   mock_database and the UnitTest class.
+4. define_test_suite( __FILE__ ) is required at the end of the class 
+   definition to ensure that unit test becomes a member of the overall 
+   unit test suite when executed through the RunAllTests or that it
+   can be executed directly. (it's defined in constants.php)
+5. PhpUnit naming conventions requires that test methods (i.e. those
+   methods that test functions and methods) must begin with the string
+   'test' and be no argument methods (i.e. the methods are not passed
+   any arguments at execution time).
+6. The constructor (i.e. the function UnitTestXXXXX) must call the
+   UnitTest constructor with the argument it was passed.
+7. The named constant 'BEING_INCLUDED' is defined by RunAllTests.php
+   to indicate that the unit test is not being executed directly,
+   rather as a collection of unit tests.
+8. Php Version 4 or greater is required to execute the unit tests.
+
+
+2. Writing Test Methods
+-----------------------
+
+
+3. Utilities
+------------
+
+--
+Gerrit Riessen, Gerrit.Riessen@open-source-consultants.de
+Copyright (C) 2002 Gerrit Riessen
+$Id: README,v 1.1 2002/02/07 13:06:00 riessen Exp $
