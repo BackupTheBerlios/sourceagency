@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: insdoco.php3,v 1.6 2002/04/20 13:07:50 grex Exp $
+# $Id: insdoco.php3,v 1.7 2002/04/24 15:58:40 riessen Exp $
 #
 ######################################################################  
 
@@ -103,7 +103,7 @@ if (($config_perm_admdoco != 'all')
                 $be->box_full($t->translate('Error'), $t->translate('Database Error'));
             } else {
                 // We show what we just have inserted
-                $bx->box_full($t->translate('Online Documentatino Administration'),
+                $bx->box_full($t->translate('Online Documentation Administration'),
                 $t->translate('The following documentation has been modified'));
                 $db->query("SELECT * FROM doco WHERE docoid='$docoid'");
                 $db->next_record();
