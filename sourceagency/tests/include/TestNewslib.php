@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestNewslib.php,v 1.7 2002/02/01 08:40:52 riessen Exp $
+# $Id: TestNewslib.php,v 1.8 2002/02/25 16:01:36 riessen Exp $
 #
 ######################################################################
 
@@ -54,53 +54,43 @@ extends UnitTest
     }
 
     function testNewsform() {
-        global $text, $subject;
+        global $text, $subject, $sess;
         $text = "this is the text";
         $subject = "this is the subject";
         
         capture_start();
         newsform( "proid" ); 
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1811 );
+        $this->_testFor_length( 1811 + strlen( $sess->self_url() ));
 
-        $this->_testFor_pattern( $text, ("<font color=\"#000000\"><b>"
-                                         ."Editing News<\/b><\/font>"));
+        $ps=array( 0=> "<font color=\"#000000\"><b>Editing News<\/b><\/font>",
+                   1=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF\">"
+                       ."<b>Subject<\/b> [(]128[)]: <\/td>\n<!-- Column "
+                       ."finishes -->\n<!-- New Column starts -->\n<td "
+                       ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
+                       ."<input type=\"text\" name=\"subject\" size=\"40\" "
+                       ."maxlength=\"128\" value=\"this is the subject"
+                       ."\">\n<\/td>\n"),
+                   2=>("<form action=\""
+                       . ereg_replace( "/", "\/", $sess->self_url() )
+                       ."[?]proid=proid\" method=\"POST\">"),
+                   3=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
+                       ."\"><b>Body<\/b> [(][*][)]: <\/td>\n<!-- Column "
+                       ."finishes -->\n<!-- New Column starts -->\n<td align"
+                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
+                       ."<textarea cols=\"40\" rows=\"7\" name=\"text\" wrap"
+                       ."=\"virtual\" maxlength=\"255\">this is the text<\/"
+                       ."textarea>\n<\/td>\n"),
+                   4=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
+                       ."\"><input type=\"submit\" value=\"Preview\" "
+                       ."name=\"preview\">\n<input type=\"submit\" value="
+                       ."\"Submit\" name=\"submit\">\n<\/td>\n"));
+        $this->_testFor_patterns( $text, $ps, 5 );
 
-        $this->_testFor_pattern( $text, ("<td align=\"right\" width=\"30%\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Subject<\/b>"
-                                         ." [(]128[)]: <\/td>\n<!-- Column "
-                                         ."finishes -->\n<!-- New Column "
-                                         ."starts -->\n<td align=\"left\" "
-                                         ."width=\"70%\" bgcolor=\"#FFFFFF\">"
-                                         ."<input type=\"text\" name=\""
-                                         ."subject\" size=\"40\" maxlength="
-                                         ."\"128\" value=\"this is the "
-                                         ."subject\">\n<\/td>\n"));
-
-        $this->_testFor_pattern( $text, ("<td align=\"right\" width=\"30%\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Body<\/b> "
-                                         ."[(][*][)]: <\/td>\n<!-- Column "
-                                         ."finishes -->\n<!-- New Column "
-                                         ."starts -->\n<td align=\"left\" "
-                                         ."width=\"70%\" bgcolor=\"#FFFFFF\">"
-                                         ."<textarea cols=\"40\" rows=\"7\" "
-                                         ."name=\"text\" wrap=\"virtual\" "
-                                         ."maxlength=\"255\">this is the "
-                                         ."text<\/textarea>\n<\/td>\n"));
-
-        $this->_testFor_pattern( $text, ("<td align=\"left\" width=\"70%\" "
-                                         ."bgcolor=\"#FFFFFF\"><input type="
-                                         ."\"submit\" value=\"Preview\" "
-                                         ."name=\"preview\">\n<input type="
-                                         ."\"submit\" value=\"Submit\" name="
-                                         ."\"submit\">\n<\/td>\n"));
-
-        $this->_testFor_pattern( $text, ("<form action=\"[?]proid=proid\" "
-                                         ."method=\"POST\">"));
     }
 
     function testNews_modify_form() {
-        global $text, $subject, $creation;
+        global $text, $subject, $creation, $sess;
         $text = "this is the text";
         $subject = "this is the subject";
         $creation = "asdasd";
@@ -108,48 +98,37 @@ extends UnitTest
         capture_start();
         news_modify_form( "proid" ); 
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1865 );
+        $this->_testFor_length( 1865 + strlen( $sess->self_url() ));
 
-        $this->_testFor_pattern( $text, ("<font color=\"#000000\"><b>Modifying"
-                                         ." News<\/b><\/font>"));
-
-        $this->_testFor_pattern( $text, ("<form action=\"[?]proid=proid\" "
-                                         ."method=\"POST\"><input type=\""
-                                         ."hidden\" name=\"creation\" "
-                                         ."value=\"asdasd\">"));
-
-        $this->_testFor_pattern( $text, ("<td align=\"right\" width=\"30%\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Subject<\/b>"
-                                         ." [(]128[)]: <\/td>\n<!-- Column "
-                                         ."finishes -->\n<!-- New Column "
-                                         ."starts -->\n<td align=\"left\" "
-                                         ."width=\"70%\" bgcolor=\"#FFFFFF\">"
-                                         ."<input type=\"text\" name=\""
-                                         ."subject\" size=\"40\" maxlength="
-                                         ."\"128\" value=\"this is the "
-                                         ."subject\">\n<\/td>\n"));
-
-        $this->_testFor_pattern( $text, ("<td align=\"right\" width=\"30%\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Body<\/b> "
-                                         ."[(][*][)]: <\/td>\n<!-- Column "
-                                         ."finishes -->\n<!-- New Column "
-                                         ."starts -->\n<td align=\"left\" "
-                                         ."width=\"70%\" bgcolor=\"#FFFFFF\">"
-                                         ."<textarea cols=\"40\" rows=\"7\" "
-                                         ."name=\"text\" wrap=\"virtual\" "
-                                         ."maxlength=\"255\">this is the "
-                                         ."text<\/textarea>\n<\/td>\n"));
-        
-        $this->_testFor_pattern( $text, ("<td align=\"left\" width=\"70%\" "
-                                         ."bgcolor=\"#FFFFFF\"><input type="
-                                         ."\"submit\" value=\"Preview\" name="
-                                         ."\"preview\">\n<input type=\""
-                                         ."submit\" value=\"Submit\" name="
-                                         ."\"submit\">\n<\/td>\n"));
+        $ps=array( 0=>("<font color=\"#000000\"><b>Modifying News<\/b>"
+                       ."<\/font>"),
+                   1=>("<form action=\""
+                       .ereg_replace( "/", "\/", $sess->self_url() )
+                       ."[?]proid=proid\" method=\"POST\"><input type=\""
+                       ."hidden\" name=\"creation\" value=\"asdasd\">"),
+                   2=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
+                       ."\"><b>Subject<\/b> [(]128[)]: <\/td>\n<!-- Column "
+                       ."finishes -->\n<!-- New Column starts -->\n<td align"
+                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
+                       ."<input type=\"text\" name=\"subject\" size=\"40\" "
+                       ."maxlength=\"128\" value=\"this is the subject\">\n"
+                       ."<\/td>\n"),
+                   3=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
+                       ."\"><b>Body<\/b> [(][*][)]: <\/td>\n<!-- Column "
+                       ."finishes -->\n<!-- New Column starts -->\n<td align"
+                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
+                       ."<textarea cols=\"40\" rows=\"7\" name=\"text\" wrap"
+                       ."=\"virtual\" maxlength=\"255\">this is the "
+                       ."text<\/textarea>\n<\/td>\n"),
+                   4=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\""
+                       ."><input type=\"submit\" value=\"Preview\" name="
+                       ."\"preview\">\n<input type=\"submit\" value=\"Submit"
+                       ."\" name=\"submit\">\n<\/td>\n"));
+        $this->_testFor_patterns( $text, $ps, 5 );
     }
 
     function testNews_preview() {
-        global $subject, $text, $auth;
+        global $subject, $text, $auth, $sess;
         
         $db_config = new mock_db_configure( 1 );
 
@@ -164,68 +143,47 @@ extends UnitTest
         capture_start();
         news_preview( "fubar" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 2578 + strlen(timestr(time())));
-        
-        $this->_testFor_pattern( $text, ("<font color=\"#000000\"><b><center>"
-                                         ."<b>PREVIEW<\/b><\/center><\/b>"
-                                         ."<\/font>"));
+        $this->_testFor_length( 2578 + strlen(timestr(time()))
+                                + strlen( $sess->self_url() ) );
+        $ps=array( 0=>("<font color=\"#000000\"><b><center><b>PREVIEW<\/b>"
+                       ."<\/center><\/b><\/font>"),
+                   1=>("<tr bgcolor=\"#CCCCCC\"><td align=\"\">\n<font color="
+                       ."\"#000000\"><b>News: this is the subject<\/b><\/"
+                       ."font>\n<\/td><\/tr>\n"),
+                   2=>("<tr bgcolor=\"#FFFFFF\"><td align=\"\"><font color="
+                       ."\"#000000\">\n<b><b>by username<\/b> -"),
+                   3=>("<tr bgcolor=\"#CCCCCC\"><td align=\"\">\n<font color"
+                       ."=\"#000000\"><b>Modifying News<\/b><\/font>\n"
+                       ."<\/td><\/tr>\n"),
+                   4=>("<tr bgcolor=\"#FFFFFF\"><td align=\"\"><font color="
+                       ."\"#000000\">\n<form action=\""
+                       .ereg_replace( "/", "\/", $sess->self_url() )
+                       ."[?]proid=proid\" method=\"POST\"><input type=\""
+                       ."hidden\" name=\"creation\" value=\"asdasd\"><!-- "
+                       ."table with 2 columns -->\n<table border=\"0\" "
+                       ."cellspacing=\"0\" cellpadding=\"3\" align=\"center"
+                       ."\" width=\"100%\" valign=\"top\">\n<tr colspan=\"2\""
+                       .">\n"),
+                   5=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
+                       ."\"><b>Subject<\/b> [(]128[)]: <\/td>\n<!-- Column "
+                       ."finishes -->\n<!-- New Column starts -->\n<td align"
+                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
+                       ."<input type=\"text\" name=\"subject\" size=\"40\" "
+                       ."maxlength=\"128\" value=\"this is the subject\">\n"
+                       ."<\/td>\n"),
+                   6=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
+                       ."\"><b>Body<\/b> [(][*][)]: <\/td>\n<!-- Column "
+                       ."finishes -->\n<!-- New Column starts -->\n<td align"
+                       ."=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
+                       ."<textarea cols=\"40\" rows=\"7\" name=\"text\" wrap"
+                       ."=\"virtual\" maxlength=\"255\">this is the text<\/"
+                       ."textarea>\n<\/td>\n"),
+                   7=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
+                       ."<input type=\"submit\" value=\"Preview\" name"
+                       ."=\"preview\">\n<input type=\"submit\" value=\"Submit"
+                       ."\" name=\"submit\">\n<\/td>\n"));
 
-        $this->_testFor_pattern( $text, ("<tr bgcolor=\"#CCCCCC\"><td "
-                                         ."align=\"\">\n<font color="
-                                         ."\"#000000\"><b>News: this is the "
-                                         ."subject<\/b><\/font>\n<\/td>"
-                                         ."<\/tr>\n"));
-
-        $this->_testFor_pattern( $text, ("<tr bgcolor=\"#FFFFFF\"><td align="
-                                         ."\"\"><font color=\"#000000\">\n"
-                                         ."<b><b>by username<\/b> -"));
-
-        $this->_testFor_pattern( $text, ("<tr bgcolor=\"#CCCCCC\"><td align="
-                                         ."\"\">\n<font color=\"#000000\">"
-                                         ."<b>Modifying News<\/b><\/font>\n"
-                                         ."<\/td><\/tr>\n"));
-
-        $this->_testFor_pattern( $text, ("<tr bgcolor=\"#FFFFFF\"><td align="
-                                         ."\"\"><font color=\"#000000\">\n"
-                                         ."<form action=\"[?]proid=proid\" "
-                                         ."method=\"POST\"><input type=\""
-                                         ."hidden\" name=\"creation\" value"
-                                         ."=\"asdasd\"><!-- table with 2 "
-                                         ."columns -->\n<table border=\"0\" "
-                                         ."cellspacing=\"0\" cellpadding=\"3\""
-                                         ." align=\"center\" width=\"100%\" "
-                                         ."valign=\"top\">\n<tr colspan=\"2\""
-                                         .">\n"));
-
-        $this->_testFor_pattern( $text, ("<td align=\"right\" width=\"30%\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Subject<\/b>"
-                                         ." [(]128[)]: <\/td>\n<!-- Column "
-                                         ."finishes -->\n<!-- New Column "
-                                         ."starts -->\n<td align=\"left\" "
-                                         ."width=\"70%\" bgcolor=\"#FFFFFF\">"
-                                         ."<input type=\"text\" name=\""
-                                         ."subject\" size=\"40\" maxlength="
-                                         ."\"128\" value=\"this is the "
-                                         ."subject\">\n<\/td>\n"));
-
-        $this->_testFor_pattern( $text, ("<td align=\"right\" width=\"30%\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Body<\/b> "
-                                         ."[(][*][)]: <\/td>\n<!-- Column "
-                                         ."finishes -->\n<!-- New Column "
-                                         ."starts -->\n<td align=\"left\" "
-                                         ."width=\"70%\" bgcolor=\"#FFFFFF\">"
-                                         ."<textarea cols=\"40\" rows=\"7\" "
-                                         ."name=\"text\" wrap=\"virtual\" "
-                                         ."maxlength=\"255\">this is the "
-                                         ."text<\/textarea>\n<\/td>\n"));
-
-        $this->_testFor_pattern( $text, ("<td align=\"left\" width=\"70%\" "
-                                         ."bgcolor=\"#FFFFFF\"><input type="
-                                         ."\"submit\" value=\"Preview\" name"
-                                         ."=\"preview\">\n<input type=\""
-                                         ."submit\" value=\"Submit\" name="
-                                         ."\"submit\">\n<\/td>\n"));
-
+        $this->_testFor_patterns( $text, $ps, 8 );
         // check that the database component did not fail
         $this->_check_db( $db_config );
     }
