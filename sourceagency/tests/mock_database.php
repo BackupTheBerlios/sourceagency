@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: mock_database.php,v 1.18 2002/05/15 09:00:12 riessen Exp $
+# $Id: mock_database.php,v 1.19 2002/05/16 15:01:41 riessen Exp $
 #
 ######################################################################
 
@@ -340,6 +340,17 @@ extends Assert
     function query( $query_string ) {
         global $g_mkdb_queries, $g_mkdb_cur_query_call;
         
+        if ( $this->_check_for( MKDB_QUERY_EXISTS )) {
+            $this->assert(count($g_mkdb_cur_query_call)>$this->instance_number,
+                          "`Current query call` array to small for instance: "
+                          . $this->instance_number 
+                          . " query [" . $query_string . "]");
+            $this->assert(count($g_mkdb_queries)>$this->instance_number,
+                          "`Query list` array to small for instance: "
+                          .$this->instance_number
+                          . " query [" . $query_string . "]");
+        }
+
         $cur_query_call = $g_mkdb_cur_query_call[$this->instance_number];
         $queries = $g_mkdb_queries[$this->instance_number];
 
