@@ -20,8 +20,7 @@ CREATE TABLE active_sessions (
 # Dumping data for table 'active_sessions'
 #
 
-INSERT INTO active_sessions VALUES ('bafebd52ea75238dc162c58cca05469a','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20011109211056');
-INSERT INTO active_sessions VALUES ('b8f4162adff7d1e0045dd50b2893f4ed','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydzJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0VuZ2xpc2gnOyAkR0xPQkFMU1sncyddID0gJzEnOyA=','20011109152043');
+INSERT INTO active_sessions VALUES ('bb1d03fdd49947b0b473368cd3d6d634','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ1Vua25vd24nOyAkR0xPQkFMU1snYXV0aCddID0gbmV3IFNvdXJjZUFnZW5jeV9BdXRoOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoID0gYXJyYXkoKTsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsndWlkJ10gPSAnZjRjNzU2ZGZjOGU1NWExMzFkMmE3ZDRiZTllM2UxMWInOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydwZXJtJ10gPSAnZGV2ZWwsYWRtaW4sZWRpdG9yJzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsnZXhwJ10gPSAnMTAwNTg1Mzc5NSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3JlZnJlc2gnXSA9ICcxMDA1ODQ0NTkwJzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsndW5hbWUnXSA9ICdyaWVzc2VuJzsg','20011115181955');
 
 #
 # Table structure for table 'auth_user'
@@ -46,7 +45,7 @@ CREATE TABLE auth_user (
 INSERT INTO auth_user VALUES ('c8a174e0bdda2011ff798b20f219adc5','admin','admin','admin','grex@scouts-es.org',20010419103000,20010419103000,'editor,admin');
 INSERT INTO auth_user VALUES ('42b3cdc7658ed6b3e07b9441c7679b28','devel','devel','devel','devel@scouts-es.org',20010426182520,20010426182520,'devel');
 INSERT INTO auth_user VALUES ('740156f449ebc5950546517021fda49d','sponsor','sponsor','sponsor','sponsor@scouts-es.org',20010426182533,20010426182533,'sponsor');
-INSERT INTO auth_user VALUES ('f4c756dfc8e55a131d2a7d4be9e3e11b','riessen','fu23bar','Gerrit Riessen','gerrit.riessen@web.de',20011004151153,20011004150815,'devel');
+INSERT INTO auth_user VALUES ('f4c756dfc8e55a131d2a7d4be9e3e11b','riessen','fu23bar','Gerrit Riessen','gerrit.riessen@web.de',20011114161340,20011004150815,'devel,admin,editor');
 INSERT INTO auth_user VALUES ('35b3db48944dba7a4e272926fd0d2839','helix','helix%sa','Lutz Henckel','lutz.henckel@fokus.gmd.de',20011005122316,20011005111603,'devel');
 INSERT INTO auth_user VALUES ('48db7ac02e974648e3454c02021b632a','nilix','nilix%sa','Lutz Henckel','lutz.henckel@fokus.gmd.de',20011005180845,20011005180845,'sponsor');
 
@@ -112,6 +111,7 @@ INSERT INTO configure VALUES (4,70,'No','No','No','sponsor','devel');
 INSERT INTO configure VALUES (3,60,'No','No','No','nilix','helix');
 INSERT INTO configure VALUES (5,60,'Yes','Yes','Yes','nilix','helix');
 INSERT INTO configure VALUES (6,80,'No','No','Yes','sponsor','devel');
+INSERT INTO configure VALUES (7,NULL,'No','Yes','Yes',NULL,'riessen');
 
 #
 # Table structure for table 'consultants'
@@ -165,6 +165,7 @@ INSERT INTO counter VALUES (3,0,0);
 INSERT INTO counter VALUES (4,0,0);
 INSERT INTO counter VALUES (5,0,0);
 INSERT INTO counter VALUES (6,0,0);
+INSERT INTO counter VALUES (7,0,0);
 
 #
 # Table structure for table 'counter_check'
@@ -275,6 +276,7 @@ INSERT INTO description VALUES (3,'OS Machine','Development','A Machine to devel
 INSERT INTO description VALUES (4,'Aaaaaaaaaaaaaah','Adaption','Aaaaaaaaaaaaaah','devel','Very Small',3,20011009193816);
 INSERT INTO description VALUES (5,'Thinking Machine','Expansion','Enhance the existing thinking machine.','nilix','Big',4,20011009142343);
 INSERT INTO description VALUES (6,'Lets hack on step 5','Expansion','This is a project for hacking specifically on step 5.','sponsor','Very Small',5,20011010182504);
+INSERT INTO description VALUES (7,'Open Source Moon Lander','Expansion','We, at NASA, require an Open Source Moon lander.','riessen','< 1 Man Month',2,20011114152650);
 
 #
 # Table structure for table 'developing'
@@ -386,6 +388,15 @@ INSERT INTO history VALUES (6,'Project Owners','decision','Project is now in pha
 INSERT INTO history VALUES (6,'Project Owners','decision','Project is now in phase 3',20011010183253);
 INSERT INTO history VALUES (6,'Project Owners','decision','Project is now in phase 4',20011010184537);
 INSERT INTO history VALUES (6,'Project Owners','decision','Project is now in phase 5',20011010184634);
+INSERT INTO history VALUES (7,'riessen','Configure','Project configuration',20011114141649);
+INSERT INTO history VALUES (7,'riessen','Configure','Project configuration modified',20011114141822);
+INSERT INTO history VALUES (7,'riessen','Configure','Project configuration modified',20011114142703);
+INSERT INTO history VALUES (7,'riessen','Configure','Project configuration modified',20011114143007);
+INSERT INTO history VALUES (7,'riessen','Configure','Project configuration modified',20011114144136);
+INSERT INTO history VALUES (7,'riessen','Configure','Project configuration modified',20011114144514);
+INSERT INTO history VALUES (7,'riessen','Configure','Project configuration modified',20011114144655);
+INSERT INTO history VALUES (7,'riessen','Configure','Project configuration modified',20011114144902);
+INSERT INTO history VALUES (7,'BerliOS editor','Review','Project reviewed by a SourceAgency Editor',20011114152650);
 
 #
 # Table structure for table 'involved'
@@ -617,4 +628,5 @@ INSERT INTO views VALUES (3,'Project Participants','Project Participants','Proje
 INSERT INTO views VALUES (4,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20011009131534);
 INSERT INTO views VALUES (5,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20011009141820);
 INSERT INTO views VALUES (6,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20011010182400);
+INSERT INTO views VALUES (7,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20011114141636);
 
