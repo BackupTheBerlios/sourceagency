@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.12 2001/11/19 17:05:40 riessen Exp $
+# $Id: lib.inc,v 1.13 2001/11/19 17:06:59 riessen Exp $
 #
 ######################################################################
 
@@ -104,7 +104,7 @@ function license($selected) {
 // 
 
 function licensep($selected) {
-    return license( $selected );
+    print license( $selected );
 //      htmlp_select("license");
 //      $db_local = new DB_SourceAgency;
 //      $db_local->query("SELECT * FROM licenses ORDER BY license ASC");
