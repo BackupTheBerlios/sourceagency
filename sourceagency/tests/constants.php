@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: constants.php,v 1.23 2002/05/13 10:29:42 riessen Exp $
+# $Id: constants.php,v 1.24 2002/05/16 15:02:51 riessen Exp $
 #
 ######################################################################
 
@@ -25,6 +25,24 @@ if ( ! $env_php_lib_dir || $env_php_lib_dir == "" ) {
   $PHP_LIB_DIR = "/www/development/lib/php";
 } else {
   $PHP_LIB_DIR = $env_php_lib_dir;
+}
+
+// extension to the in_array function which takes regular expressions
+function in_array_regexp( $rexp, &$array ) {
+    while ( list ($key, $val) = each ($array)) {
+        if ( ereg( $rexp, $val ) ) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+// if brief was given as an option, then supress the printing of
+// "requiring file ..." statements, and explicitly displaying failures
+// if a test is to be completed.
+// To check whether this is set, check the global define variable OPT_BE_BRIEF
+if ( in_array_regexp( "[[:<:]]brief[[:>:]]", $argv ) ) {
+    define( "OPT_BE_BRIEF", "yes" );
 }
 
 // this is were the phpunit class should be located, filename: phpunit.php
