@@ -1,8 +1,8 @@
 <?php
 
 ######################################################################
-# The HTML Table Library
-# ===================================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #		 Lutz Henckel (lutz.henckel@fokus.gmd.de) and
@@ -15,6 +15,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: box.inc,v 1.4 2001/11/07 18:48:52 riessen Exp $
+#
 ######################################################################
 
 class box {

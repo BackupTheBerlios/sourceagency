@@ -1,12 +1,13 @@
 <?php
 
 ######################################################################
-# SourceAgency: 
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
 #                Gregorio Robles (grex@scouts-es.org)
+#                Gerrit Riessen (riessen@open-source-consultants.de)
 #
 # BerliOS SourceWell: http://sourcewell.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
@@ -16,6 +17,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: top_title.inc,v 1.4 2001/11/07 18:48:53 riessen Exp $
+#
 ######################################################################
 
 ?>
@@ -48,9 +52,10 @@ ALT="<?php echo $sys_logo_alt;?>"></a>
 <td align="center" valign="middle">
 <center>
 <font font="times" size="+10" color="red">BETA BETA BETA</font><br>
-This site is being beta tested, please send any and all 
+<?php echo $t->translate("This site is being beta tested"); ?>, 
+<?php echo $t->translate("please send any and all"); ?>
 <a href="mailto:riessen@berlios.de?subject=SourceAgency Feedback&cc=grex@scouts-es.org&cc=lutz.henckel@fokus.fhg.de"
->feedback</a>!
+><?php echo $t->translate("feedback"); ?></a>!
 </center>
 </td>
 

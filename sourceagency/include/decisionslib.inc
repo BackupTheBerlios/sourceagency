@@ -3,8 +3,8 @@
 /* FIXME: the colors have to be changed into a configurable colors */
 
 ######################################################################
-# SourceAgency
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #                Gregorio Robles (grex@scouts-es.org)
@@ -12,11 +12,14 @@
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
-#
+# TODO: Description is missing 
 #
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: decisionslib.inc,v 1.3 2001/11/07 18:48:52 riessen Exp $
+#
 ######################################################################
 
 #####

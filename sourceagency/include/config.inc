@@ -1,8 +1,8 @@
 <?php
 
 ######################################################################
-# SourceAgency
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ================================================================
 #
 # Copyright (c) 2001 by
 #                Gregorio Robles (grex@scouts-es.org) and
@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.4 2001/11/06 19:32:08 riessen Exp $
+# $Id: config.inc,v 1.5 2001/11/07 18:48:52 riessen Exp $
 #
 ######################################################################
 
@@ -97,7 +97,7 @@ $ts_array = array (
 ######################################################################
 
 $la_array[] = "English";
-# $la_array[] = "German";
+$la_array[] = "German";
 # $la_array[] = "Spanish";
 
 ######################################################################

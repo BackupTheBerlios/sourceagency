@@ -1,8 +1,8 @@
 <?php
 
 ######################################################################
-# The HTML Library por PHP3 and PHPLib
-# ===================================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #                Gregorio Robles (grex@scouts-es.org)
@@ -15,6 +15,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: html.inc,v 1.2 2001/11/07 18:48:52 riessen Exp $
+#
 ######################################################################
 
 // falta mirar si es local o global !!!
@@ -130,87 +133,6 @@ function html_form_end() {
 
 	return($output);
 }
-
-##########################################################
-#
-# Examples for html.inc - The PHP and PHPlib HTML library
-#
-# by Gregorio Robles <grex@scouts-es.org>
-#
-######
-#
-# function html_link($address, $query, $text)
-# 
-# <a href=\"".$sess->url("updapp.php3").$sess->add_query(array("id" => $db->f("proid")))."\">Some string</a>
-#
-# html_link("updapp.php3",array("id"=> $db->f("proid")), "some string");
-#
-######
-#
-# function html_image($file, $border, $width, $height, $alternate)
-#
-# <img src=\"images/recycled.png\" border=\"0\" width=\"\" heigth=\"\" alt=\"".$t->translate("Update")."\">
-#
-# html_mage("recycled.png",0,"","",$t->translate("Update"));
-#
-#####
-#
-# function html_form_action($file, $type)
-#
-# <form action=\"".$sess->url("update.php3")."\" method=\"POST\">
-#
-# html_form_action("update.php3","POST")
-#
-#####
-#
-# function html_form_hidden($name, $value)
-#
-# <input type=\"hidden\" name=\"type\" value\"".$db->f("type")."\">
-#
-# html_form_hidden("type",$db->f("type"));
-#
-####
-#
-# function html_select($name)
-#
-# <select name=\"seccat\">
-#
-# html_select("seccat");
-#
-####
-#
-# function html_select_option($value,$selected,$text)
-#
-# <option selected value=\"\">some string
-#
-# html_select_option("",1,"some string");
-#
-####
-# 
-# function html_select_end()
-#
-# </select>
-#
-# html_select_end();
-#
-####
-#
-# function html_input_text($name, $size, $maxlength, $value)
-#
-# <input type=\"text\" name=\"homepage\" size=\"40\" maxlength=\"255\" value=\"".$db->f("homepage")."\">
-# 
-# html_input_text("homepage",40,255,$db->f("homepage"));
-#
-####
-#
-# function html_form_submit($value,$name)
-#
-# <input type=\"submit\" value=\"".$t->translate("Update")."\" name=\"\">
-#
-# html_input_submit($t->translate("Update"),"");
-#
-##########################################################
-
 
 function htmlp_link($address, $query, $text) {
 	global $sess;

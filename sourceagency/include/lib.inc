@@ -1,13 +1,7 @@
 <?php
-#
-# lib.inc
-#
-# $Id: lib.inc,v 1.7 2001/10/31 12:23:50 riessen Exp $
-#
-
 ######################################################################
-# SourceAgency:
-# ===================================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #                Gregorio Robles (grex@scouts-es.org) and
@@ -23,6 +17,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: lib.inc,v 1.8 2001/11/07 18:48:53 riessen Exp $
+#
 ######################################################################
 
 #

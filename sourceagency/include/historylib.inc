@@ -1,8 +1,8 @@
 <?php
 
 ######################################################################
-# SourceAgency:
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #                Gregorio Robles (grex@scouts-es.org)
@@ -15,6 +15,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: historylib.inc,v 1.2 2001/11/07 18:48:52 riessen Exp $
+#
 ######################################################################
 
 function history_extract_table($table_name,$table_creation,$table_user,$table_subject) {

@@ -1,3 +1,29 @@
+<?php
+
+######################################################################
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
+#
+# Copyright (c) 2001 by
+#                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
+#                Gregorio Robles (grex@scouts-es.org)
+#                Gerrit Riessen (riessen@open-source-consultants.de)
+#
+# BerliOS SourceWell: http://sourcewell.berlios.de
+# BerliOS - The OpenSource Mediator: http://www.berlios.de
+#
+# TODO: description missing
+#
+# This program is free software. You can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: menubar.inc,v 1.2 2001/11/07 18:48:53 riessen Exp $
+#
+######################################################################
+
+?>
+
 <!-- BerliOS menu -->
 <table BORDER=0 CELLSPACING=0 CELLPADDING=3 WIDTH="100%">
 <tr BGCOLOR="<?php echo $th_navstrip_bgcolor;?>">

@@ -38,9 +38,8 @@ translation information.
 <A NAME="normal_outputs">
 <P><H3>1. Main outputs</H3>
 
-<P>Download the <a href="http://cvs.berlios.de/cgi-bin/cvsweb.cgi/sourceagency/include/English-lang.inc?rev=1.1&content-type=text/x-cvsweb-markup&cvsroot=sourceagency"
->English-lang.inc</A> file (<i>Note:</i> it does not exactly match the
-following description!!) (it also comes in SourceAgency's
+<P>Download the <a href="http://cvs.berlios.de/cgi-bin/cvsweb.cgi/sourceagency/include/German-lang.inc?rev=1.1&content-type=text/x-cvsweb-markup&cvsroot=sourceagency"
+>German-lang.inc</A> file (it also comes in SourceAgency's
 tarball). If you look at it, you'll find lines
 like this:
 
