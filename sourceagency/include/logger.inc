@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: logger.inc,v 1.7 2002/05/07 17:16:12 grex Exp $
+# $Id: logger.inc,v 1.8 2002/05/08 11:49:17 riessen Exp $
 #
 ######################################################################
 
@@ -46,7 +46,6 @@ class Logger {
 
     /**
      * Constructor
-     * WISH: can be merged with the open() function of this class
      *
      * @access public
      */
@@ -62,6 +61,8 @@ class Logger {
      */
     function setLogFile($logFile) {
         $this->logFile = $logFile;
+        // don't want to reset the logfile and log to the old log file!
+        $this->close();
     }
 
     /**
@@ -77,7 +78,7 @@ class Logger {
     /**
      * Opens the log file - Should be called in the header
      *
-     * @global  string   $g_logger_file_pointer   file descriptor to the logging file
+     * @global  file_pointer   $g_logger_file_pointer   file descriptor to the logging file
      * 
      * @access public
      */
@@ -91,7 +92,7 @@ class Logger {
      * Prints a log message into the log file
      *
      * @param   string   $msg                     Message to be logged
-     * @global  string   $g_logger_file_pointer   file descriptor to the logging file
+     * @global  file_pointer   $g_logger_file_pointer   file descriptor to the logging file
      * 
      * @access public
      */
@@ -106,7 +107,7 @@ class Logger {
     /**
      * Closes the LogFile - Should be called in the footer
      *
-     * @global  string   $g_logger_file_pointer   file descriptor to the logging file
+     * @global  file_pointer   $g_logger_file_pointer   file descriptor to the logging file
      * @access public
      */
     function close() {
@@ -114,6 +115,7 @@ class Logger {
         if ($g_logger_file_pointer > -1) {
             fclose($g_logger_file_pointer);
         }
+        $g_logger_file_pointer = -1;
     }
 }
 ?>
