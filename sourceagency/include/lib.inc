@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.35 2002/04/24 16:04:39 riessen Exp $
+# $Id: lib.inc,v 1.36 2002/04/24 22:05:21 grex Exp $
 #
 ######################################################################
 
@@ -268,107 +268,92 @@ function licensep($selected)
 }
 
 /**
- * shows 10 apps of the current iteraction $iter
- * until it reaches the maximum number of iteractions $maxiter
+ * Merges two arrays in one
+ * (not tested yet)
  *
- * REFACTOR: this function requires heavy refactoring
+ * @param   array      $array1        
+ * @param   array      $array2
+ * @return  array                     Merged array
+ * @access  public
+ * @see PHP4 function array_merge() should do the same
+ */
+function lib_merge_arrays($array1, $array2)
+{
+    while (list(, $value) = each($array1)) {
+	$merged[] = $value;
+    }
+    while (list(, $value) = each($array2)) {
+	$merged[] = $value;
+    }
+    return $merged;
+}
+
+/**
+ * HTML links for the lib_show_more function
+ * (not tested yet)
  *
- * @param   int       $iter          Current iteration
- * @param   int       $maxiter       Maximal number of iterations
- *                                   (given by the total number of itmes)
- * @param   string    $url           Name of the page (*.php3)
- * @param   array     $urlquery      PHPLib session array
+ * @param   int        $start         Gives the starting point of the iteraction
+ * @param   int        $end           Gives the end point of the iteraction
+ * @access  private
+ * @see lib_show_more
+ */
+function _lib_show_more_links($start, $end)
+{
+    while ($i=$start; $i<$end; $i++) {
+        print html_link($link, lib_merge_arrays($query, array('current' => $i*10)), ($i-1).'1-'.($i*10)).' ';
+    }
+}
+
+/**
+ * Shows items in steps of 10
+ * (not tested yet)
+ *
+ * @param   int       $current       (first) Current item we're showing
+ * @param   int       $total         Maximal number of items
+ * @param   array     $query         PHPLib session array
+ * @param   string    $link          Name of the page (*.php3)
  *
  * @global  object    $sess          PHPLib session object
  *
  * @access public
  */
-function show_more($iter, $maxiter, $url, $urlquery)
+function lib_show_more($current, $total, $query = '', $link='PHP_SELF')
 {
-    global $sess;
+    if ($total < 50) {
+        _lib_show_more_links(1, $total/10);
+    } elseif ($current < 31) {
+        _lib_show_more_links(1, 5);
+        htmlp($link, lib_merge_arrays($query, array('current' => $total+30)), '>');
+    } elseif ($current > $total - 30) {
+        htmlp($link, lib_merge_arrays($query, array('current' => $total-30)), '<');
+        _lib_show_more_links(($total/10)-4, $total/10);
+    } else {
+        htmlp($link, lib_merge_arrays($query, array('current' => floor($current/10)-3)), '<'). ' ';
+	_lib_show_more_links(floor($current/10)-2, floor($current/10)+2);
+        htmlp($link, lib_merge_arrays($query, array('current' => floor($current/10)+3)), '>');
+    }
+}
 
-    $iter /=10;
-    echo '<table border=0 width=600><tr>';
-    echo "<td>&nbsp;</td>\n";
-    echo '<td align=right>';
-
-    $maxiter= Floor($maxiter);
-
-    if ($iter > 3) {
-        echo "<a href=\"" . $sess->url($url) . $sess->add_query($urlquery)
-            . $sess->add_query(array("iter" => 0)) . "\">&lt;&lt;</a>\n";
+/**
+ * Given a table and optionally the SQL WHERE parameter,
+ * it counts the amount of items
+ * (not tested yet)
+ *
+ * @param   string    $table       SQL table
+ * @param   string    $where       SQL WHERE
+ * @return  int                    Number of items (COUNT(*))
+ * @access public
+ */
+function lib_count_total($table, $where='')
+{
+    if($where) {
+        $where = "WHERE $where";
     }
 
-    $number = $iter - 3;
-    if ($number < 0) {
-        $number = 0;
-    }
-    if ($iter > 2) {
-        echo "<a href=\"" . $sess->url($url) . $sess->add_query($urlquery)
-            . $sess->add_query(array("iter" => $number)) . "\">&lt;</a>\n";
-    }
-
-    switch ($iter) {
-    case 0:
-        $bias=0; 
-        break;
-    case 1:
-        $bias=1; 
-        break;
-    case ($maxiter-1):
-        if ($iter>3) {
-            $bias=3;
-        } else {
-            $bias=2;
-        } 
-        break;
-    case ($maxiter):
-        if ($iter>4) {
-            $bias=4;
-        } else {
-            $bias=2;
-        } 
-        break;
-    default:
-        $bias=2; 
-        break;
-    }
-
-    for($i=$iter-$bias;$i<$maxiter+1 && $i<($iter+5-$bias);$i++) {
-        $number1 = $i*10 +1;
-        $number2 = $number1 + 9;
-        $number = strval($number1) . '-' . strval($number2);
-        if ($i != $iter) {
-            echo "<a href=\"" . $sess->url($url) . $sess->add_query($urlquery)
-                . $sess->add_query(array("iter" => $i)) 
-                . "\">&nbsp;$number</a>\n";
-        }
-        else {
-            echo "<B>&nbsp;$number</B>\n"; 
-        }
-    }
-
-    $number = $iter + 5 - $bias;
-    if ($number > $maxiter+$bias) {
-        $number = $maxiter + $bias;
-    }
-    if ($iter < $maxiter-4+$bias) {
-        echo "<a href=\"" . $sess->url($url) . $sess->add_query($urlquery) 
-            . $sess->add_query(array("iter" => $number)) . "\"> &gt;</a>\n";
-    }
-
-    $number = $iter + 10 - $bias;
-    if ($number > $maxiter) {
-        $number = $maxiter;
-    }
-    if ($iter < $maxiter-5 +$bias) {
-        echo "<a href=\"" . $sess->url($url) . $sess->add_query($urlquery)
-            . $sess->add_query(array("iter" => $number)) 
-            . "\"> &gt;&gt;</a>\n";
-    }
-
-    echo "</td>\n";
-    echo '</tr></table><BR>';
+    $db_local = new DB_SourceAgency;
+    $db_local->query("SELECT COUNT(*) FROM $table $where");
+    $db_local->next_record();
+    return($db->f('COUNT(*)'));
 }
 
 /**
