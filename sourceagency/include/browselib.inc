@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.10 2002/04/17 10:59:57 grex Exp $
+# $Id: browselib.inc,v 1.11 2002/04/20 13:07:50 grex Exp $
 #
 ######################################################################
 
@@ -568,7 +568,7 @@ function browse_list($by, $what)
         $query = "SELECT * FROM description WHERE ='$what'";
         break;
     default:
-        die('Error in browselib.inc function browse_list. $by not specified');  
+        lib_die('Error in browselib.inc function browse_list. $by not specified');  
     }
     _browse_output($query);
 }

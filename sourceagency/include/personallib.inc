@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: personallib.inc,v 1.14 2002/04/10 11:09:28 grex Exp $
+# $Id: personallib.inc,v 1.15 2002/04/20 13:07:50 grex Exp $
 #
 ######################################################################
 
@@ -142,7 +142,7 @@ function personal_related_projects($username, $status)
         $user_type = 'developer';
         $table = 'developing';
     } else {
-        die('error in personallib.inc in function personal_related_projects(): User is whether editor or sponsor. Users cannot have multiple permissions');
+        lib_die('error in personallib.inc in function personal_related_projects(): User is whether editor or sponsor. Users cannot have multiple permissions');
     }
 
     $db_local->query("SELECT * FROM $table,description WHERE "

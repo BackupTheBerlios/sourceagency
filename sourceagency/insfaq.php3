@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: insfaq.php3,v 1.5 2002/04/18 14:30:28 grex Exp $
+# $Id: insfaq.php3,v 1.6 2002/04/20 13:07:50 grex Exp $
 #
 ######################################################################  
 
@@ -122,7 +122,7 @@ if (($config_perm_admfaq != 'all')
             $tables = 'faq';
             $insert = "question='$question',answer='$answer',language='$la'";
             if (!$db->query("INSERT $tables SET $insert")) {
-	        die('Error in insfaq.php3: Database insertion not completed');
+	        lib_die('Error in insfaq.php3: Database insertion not completed');
             }
             // We show what we've inserted
             $bx->box_full($t->translate('Frequently Asked Questions '

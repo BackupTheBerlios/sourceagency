@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: insdoco.php3,v 1.5 2002/04/20 00:03:31 grex Exp $
+# $Id: insdoco.php3,v 1.6 2002/04/20 13:07:50 grex Exp $
 #
 ######################################################################  
 
@@ -120,7 +120,7 @@ if (($config_perm_admdoco != 'all')
             $tables = 'doco';
             $insert = "page='$page',header='$header',doco='$doco',language='$la'";
             if (!$db->query("INSERT $tables SET $insert")) {
-	        die('Error in insdoco.php3: Database insertion not completed');
+	        lib_die('Error in insdoco.php3: Database insertion not completed');
             }
             // We show what we've inserted
             $bx->box_full($t->translate('Page Documentation Administration'),

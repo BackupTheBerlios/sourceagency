@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisions.php3,v 1.6 2002/04/10 13:02:48 grex Exp $
+# $Id: decisions.php3,v 1.7 2002/04/20 13:07:50 grex Exp $
 #
 ######################################################################  
 
@@ -77,7 +77,7 @@ if (check_permission($proid, $page)) {
                 $table = 'referees';
                 break;
             default:
-	        die('Error in decisions.php3: No decision can be put into database');
+	        lib_die('Error in decisions.php3: No decision can be put into database');
             }
             put_decision_into_database($proid,$project_status,$your_vote,
                                        $what,$table);
@@ -120,7 +120,7 @@ if (check_permission($proid, $page)) {
                        'Decision on step 6 ('.$g_step_text[6].')'); 
             break;
         default:
-           die('Error in decisions.php3: given project status is not possible');
+           lib_die('Error in decisions.php3: given project status is not possible');
 	}
     }
 
@@ -146,7 +146,7 @@ if (check_permission($proid, $page)) {
                 $table = 'referees';
                 break;
             default:
-                die('Error in decisions.php3: No next step possible');
+                lib_die('Error in decisions.php3: No next step possible');
             }
             if (decisions_decision_met($proid)) {
                 put_into_next_step($proid,$project_status,$what,$table);

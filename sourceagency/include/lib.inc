@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.31 2002/04/20 12:11:28 grex Exp $
+# $Id: lib.inc,v 1.32 2002/04/20 13:07:50 grex Exp $
 #
 ######################################################################
 
@@ -248,7 +248,7 @@ function license($selected)
     $db_local = new DB_SourceAgency;
     $db_local->query('SELECT * FROM licenses ORDER BY license ASC');
     if ($db_local->num_rows() == 0) {
-        die('Error in function license() in lib.inc: There is no license in database');
+        lib_die('Error in function license() in lib.inc: There is no license in database');
     } else {
         $return = html_select('license');
         while ($db_local->next_record()) {
@@ -1055,7 +1055,7 @@ function select_from_config($name, $array_name, $selected)
         $array = $comments_type_array; 
         break;
     default:
-        die('Error in function select_from_config() in lib.inc. Specified type has no array');
+        lib_die('Error in function select_from_config() in lib.inc. Specified type has no array');
     }
     
     $output = html_select($name)."\n";
@@ -1190,7 +1190,7 @@ function show_project_participants($proid, $participant_type)
         $table = 'referees'; 
         break;
     default:
-        die('Error in function show_project_participants() in lib.inc: No correct project participant passed');  
+        lib_die('Error in function show_project_participants() in lib.inc: No correct project participant passed');  
     }
     
     $query = ( "SELECT $participant_type FROM $table WHERE "
@@ -1405,7 +1405,7 @@ function lib_get_project_step( $proid )
     $db_local->query("SELECT status FROM description WHERE proid='$proid'");
 
     if ($db_local->num_rows() == 0) {
-        die('Error in lib.inc in function lib_in_step: no step '
+        lib_die('Error in lib.inc in function lib_in_step: no step '
             .'for the given project');
         return 0;
     } else {
@@ -1491,5 +1491,19 @@ function lib_show_comments_on_it($proid, $type_cmt, $number, $cmt_id)
   	echo "</ul>\n";
     }
     echo "<p>\n";
+}
+
+/**
+ * Our 'die' function
+ * Should be called when something anomalous happens
+ *
+ * @param   string    $error_message    Error message
+ * @access public
+ */
+function lib_die($error_message)
+{
+    /* REFACTOR: it should contain a legible error message for the visitor */
+    /* REFACTOR: and an e-mail message to the administrators */
+    die($error_message);
 }
 ?>

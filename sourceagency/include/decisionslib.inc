@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisionslib.inc,v 1.9 2002/04/18 13:40:24 grex Exp $
+# $Id: decisionslib.inc,v 1.10 2002/04/20 13:07:50 grex Exp $
 #
 ######################################################################
 
@@ -127,7 +127,7 @@ function show_decision_consultants($proid)
     } elseif ($db->num_rows() == 0) {
 	print "<p><b>No decision possible as there are no offerings.</b><p>\n";
     } else {
-        die('Error in decisionslib.inc function show_decision_consultants()');
+        lib_die('Error in decisionslib.inc function show_decision_consultants()');
     }
     return $return_value;
 }
