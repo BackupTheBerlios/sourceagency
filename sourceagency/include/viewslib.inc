@@ -16,16 +16,18 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: viewslib.inc,v 1.3 2001/11/29 15:38:58 grex Exp $
+# $Id: viewslib.inc,v 1.4 2002/05/16 15:00:31 riessen Exp $
 #
 ######################################################################
 
 function views_form($proid) {
   global $bx, $t, $sess, $db, $preview, $configure, $news, $comments, $history, $step3, $step4, $step5, $cooperation, $views;
 
+  // FIXME: the following can be removed, the results of the query
+  // FIXME: are never used
   if(!isset($preview)) {
-	$db->query("SELECT * FROM views WHERE proid='$proid'");
-	$db->next_record();
+      $db->query("SELECT * FROM views WHERE proid='$proid'");
+      $db->next_record();
   }
 
   $bx->box_begin();
