@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: German-lang.inc,v 1.21 2002/05/07 19:29:55 grex Exp $
+# $Id: German-lang.inc,v 1.22 2002/09/05 08:14:47 helix Exp $
 #
 ######################################################################
 
@@ -32,6 +32,7 @@ function translate_real($phrase) {
     case 'Action': $tmp = 'Aktion'; break;
     case 'Actions by involved users': $tmp = 'Actions by involved users'; break;
     case 'AdmDoco': $tmp = 'Dokumentationverwaltung'; break;
+    case 'Adaption': $tmp = 'Anpassung'; break;
     case 'Administration': $tmp = 'Administration'; break;
     case 'All': $tmp = 'Alle'; break;
     case 'All Comments by': $tmp = 'Alle Kommentare von'; break;
@@ -41,8 +42,8 @@ function translate_real($phrase) {
     case 'Architecture': $tmp = 'Architektur'; break;
     case 'Backend': $tmp = 'Backend'; break;
     case 'Be informed': $tmp = 'Wird informiert'; break;
-    case 'Brief description': $tmp = 'Kurze beschreibung'; break;
-    case 'Browse': $tmp = 'Blätter'; break;
+    case 'Brief description': $tmp = 'Kurze Beschreibung'; break;
+    case 'Browse': $tmp = 'Blättern'; break;
     case 'Categories': $tmp = 'Kategorien'; break;
     case 'Change User Info': $tmp = 'Benutzer Info. ändern'; break;
     case 'Change User Parameters': $tmp = 'Benutzer Parameter ändern'; break;
@@ -66,14 +67,18 @@ function translate_real($phrase) {
     case 'Developer Cooperation Wanted': $tmp = 'Entwickler gesucht'; break;
     case 'Developers Wanted': $tmp = 'Entwickler gesucht'; break;
     case 'Developers': $tmp = 'Entwickler'; break;
+    case 'Developer': $tmp = 'Entwickler'; break;
     case 'Developing': $tmp = 'In Entwicklung'; break;
     case 'Developing Cooperation': $tmp = 'Entwicklungskooperation'; break;
+    case 'Development': $tmp = 'Entwicklung'; break;
+    case 'Documentation': $tmp = 'Dokumentation'; break;
     case 'E-Mail': $tmp = 'E-Mail'; break;
     case 'Either your Username or Password are invalid': $tmp = 'Entweder haben Sie den falschen Benutzernamen oder Passwort eingegeben'; break;
     case 'Enter a New Frequently Asked Question': $tmp = 'Neue Frage eingeben'; break;
     case 'Enter a new documentation entry for a page': $tmp = 'Neue Dokumentation für eine Seite'; break;
     case 'Environment': $tmp = 'Umgebung'; break;
     case 'Error': $tmp = 'Fehler'; break;
+    case 'Expansion': $tmp = 'Erweiterung'; break;
     case 'Expires': $tmp = 'Läuft ab'; break;
     case 'Finished projects': $tmp = 'Abgeschlossene Projekte'; break;
     case 'Forgot Password': $tmp = 'Passwort vergessen'; break;
@@ -112,7 +117,7 @@ function translate_real($phrase) {
     case 'Monitored Projects': $tmp = 'Überwachte Projekte'; break;
     case 'My Projects': $tmp = 'Meine Projekte'; break;
     case 'New Frequently Asked Question': $tmp = 'Neue Häufig gestellte Frage'; break;
-    case 'New License Name': $tmp = 'Neuen Lizenzname'; break;
+    case 'New License Name': $tmp = 'Neuer Lizenzname'; break;
     case 'New License URL': $tmp = 'Neue Lizenz URL'; break;
     case 'New License': $tmp = 'Neue Lizenz'; break;
     case 'New Project': $tmp = 'Neues Projekt'; break;
@@ -131,15 +136,16 @@ function translate_real($phrase) {
     case 'Not Logged in': $tmp = 'Nicht eingeloggt'; break;
     case 'Not rated yet': $tmp = 'Noch nicht bewertet'; break;
     case 'Not related to any project with': $tmp = 'Keine Relation mit Projekten mit'; break;
-    case 'Open Source Project Mediation & Management': $tmp = 'Open Source Projekt Vermittlung & Leitung'; break;
+    case 'Open Source Project Mediation & Management': $tmp = 'Open Source Projekt Vermittlung & Management'; break;
     case 'Open Source Software Projects': $tmp = 'Open-Source-Software-Projekte'; break;
+    case 'Other': $tmp = 'Anderes'; break;
     case 'Our apologies. Documentation only available in English.': $tmp = 'Die Dokumentation ist leider nicht in Deutsch verfügbar.'; break;
     case 'Page Documentation Administration': $tmp = 'Seiten Dokumentation Verwaltung'; break;
     case 'Partners': $tmp = 'PartnerInnen'; break;
     case 'Password': $tmp = 'Passwort'; break;
     case 'Pending Proj.': $tmp = 'Anstehend Projekt'; break;
     case 'Permission denied': $tmp = 'Zugriff verweigert'; break;
-    case 'Permission': $tmp = 'Zugriff'; break;
+    case 'Permission': $tmp = 'Rechte'; break;
     case 'Personal Page': $tmp = 'Persönliche Seite'; break;
     case 'Platform': $tmp = 'Plattform'; break;
     case 'Please try again': $tmp = 'Bitte versuchen Sie es nochmal'; break;
@@ -161,11 +167,11 @@ function translate_real($phrase) {
     case 'Question': $tmp = 'Frage'; break;
     case 'Rated': $tmp = 'Bewerted'; break;
     case 'Rating': $tmp = 'Bewertung'; break;
-    case 'Realname': $tmp = 'Namen'; break;
+    case 'Realname': $tmp = 'Name'; break;
     case 'Receive an email update when something happens in this project': $tmp = 'Schick mir eine Mail wenn sich das Projekt ändert'; break;
     case 'Referees Wanted': $tmp = 'Sachverständige gesucht'; break;
     case 'Referees': $tmp = 'Sachverständige'; break;
-    case 'Register as a new User': $tmp = 'Neuer Benutzeranmeldung'; break;
+    case 'Register as a new User': $tmp = 'Registrierung als neuer Benutzer'; break;
     case 'Register': $tmp = 'Anmelden'; break;
     case 'Remind me': $tmp = 'Erinnern'; break;
     case 'Rename a License': $tmp = 'Lizenz umbenennen'; break;
@@ -173,7 +179,7 @@ function translate_real($phrase) {
     case 'Search': $tmp = 'Suche'; break;
     case 'See all the comments': $tmp = 'Alle Kommentare sehen'; break;
     case 'See complete ratings...': $tmp = 'Alle Bewertungen sehen'; break;
-    case 'SourceAgency Login': $tmp = 'Einloggen zu SourceAgency'; break;
+    case 'SourceAgency Login': $tmp = 'Einloggen bei SourceAgency'; break;
     case 'SourceAgency': $tmp = 'SourceAgency'; break;
     case 'Sponsor Collaboration': $tmp = 'Sponsor Zusammenarbeit'; break;
     case 'Sponsor Involvement': $tmp = 'Finanzelle Beteiligung'; break;
@@ -199,10 +205,10 @@ function translate_real($phrase) {
     case 'Type': $tmp = 'Typ'; break;
     case 'Unknown': $tmp = 'Unbekannt'; break;
     case 'User Administration': $tmp = 'Benutzer Administration'; break;
-    case 'Username': $tmp = 'Benutzer'; break;
+    case 'Username': $tmp = 'Benutzername'; break;
     case 'Users': $tmp = 'Benutzer'; break;
     case 'Volume': $tmp = 'Umfang'; break;
-    case 'Welcome to SourceAgency': $tmp = 'Willkommen zu SourceAgency'; break;
+    case 'Welcome to SourceAgency': $tmp = 'Willkommen bei SourceAgency'; break;
     case 'What is this?': $tmp = 'Was ist das?'; break;
     case 'You are logged in as': $tmp = 'Sie sind einloggt als'; break;
     case 'You have been logged in as': $tmp = 'Sie waren eingeloggt als'; break;
