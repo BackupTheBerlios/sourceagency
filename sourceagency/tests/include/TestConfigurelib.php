@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConfigurelib.php,v 1.1 2002/05/08 09:47:19 riessen Exp $
+// $Id: TestConfigurelib.php,v 1.2 2002/05/15 13:23:58 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -120,6 +120,26 @@ extends UnitTest
 
         $this->_check_db( $db_config );
     }
+
+    function testConfigure_form() {
+        $this->_test_to_be_completed();
+    }
+    function testConfigure_insert() {
+        $this->_test_to_be_completed();
+    }
+    function testConfigure_modify() {
+        $this->_test_to_be_completed();
+    }
+    function testConfigure_modify_form() {
+        $this->_test_to_be_completed();
+    }
+    function testConfigure_preview() {
+        $this->_test_to_be_completed();
+    }
+    function testConfigure_show() {
+        $this->_test_to_be_completed();
+    }
+    
 }
 
 define_test_suite( __FILE__ );

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestPersonallib.php,v 1.25 2002/05/08 11:42:49 riessen Exp $
+# $Id: TestPersonallib.php,v 1.26 2002/05/15 13:23:58 riessen Exp $
 #
 ######################################################################
 
@@ -1107,6 +1107,15 @@ extends UnitTest
         // if using a database, then ensure that it didn't fail
         $this->_check_db( $db_config );
     }
+
+    function testPersonal_ratings_long() {
+        $this->_test_to_be_completed();
+    }
+
+    function testPersonal_ratings_short() {
+        $this->_test_to_be_completed();
+    }
+    
 }
 
 define_test_suite( __FILE__ );

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestInsertlib.inc,v 1.6 2002/05/08 11:42:49 riessen Exp $
+# $Id: TestInsertlib.inc,v 1.7 2002/05/15 13:23:58 riessen Exp $
 #
 ######################################################################
 
@@ -209,8 +209,14 @@ extends UnitTest
         $this->_check_db( $db_config );
     }
 
-    // TODO: need to implement the affected rows method of mock_database
-    // TODO: in order to implement the test method for insert_into_database
+    function testEverything_filled() {
+        $this->_test_to_be_completed();
+    }
+    function testInsert_into_database() {
+        // TODO: need to implement the affected rows method of mock_database
+        // TODO: in order to implement the test method for insert_into_database
+        $this->_test_to_be_completed();
+    }
 }
 
 define_test_suite( __FILE__ );

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMonitorlib.php,v 1.8 2002/05/08 11:42:49 riessen Exp $
+# $Id: TestMonitorlib.php,v 1.9 2002/05/15 13:23:58 riessen Exp $
 #
 ######################################################################
 
@@ -310,6 +310,28 @@ extends UnitTest
                         ."method=\"POST\">"));
         $this->_testFor_patterns( $text, $ps, 2, "test 3" );
     }
+
+    function testMailuser() {
+        $this->_test_to_be_completed();
+    }
+
+    function testMonitor_insert() {
+        $this->_test_to_be_completed();
+    }
+
+    function testMonitor_modify() {
+        $this->_test_to_be_completed();
+    }
+
+    function testSelect_importance() {
+        $this->_test_to_be_completed();
+    }
+
+    function testSelect_importence() {
+        $this->_test_to_be_completed();
+    }
+
+
 }
 
 define_test_suite( __FILE__ );

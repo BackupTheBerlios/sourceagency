@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.20 2002/05/08 11:42:49 riessen Exp $
+# $Id: TestLib.php,v 1.21 2002/05/15 13:23:58 riessen Exp $
 #
 ######################################################################
 
@@ -508,6 +508,122 @@ extends UnitTest
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
     }
+
+    function testEnd_content() {
+        $this->_test_to_be_completed();
+    }
+    function testFollowup() {
+        $this->_test_to_be_completed();
+    }
+
+    function testIs_not_set_or_empty() {
+        $this->_test_to_be_completed();
+    }
+
+    function testIs_set_and_not_empty() {
+        $this->_test_to_be_completed();
+    }
+
+    function testLib_comment_it() {
+        $this->_test_to_be_completed();
+    }
+
+    function testLib_count_total() {
+        $this->_test_to_be_completed();
+    }
+
+    function testLib_die() {
+        $this->_test_to_be_completed();
+    }
+
+    function testLib_get_project_step() {
+        $this->_test_to_be_completed();
+    }
+
+    function testLib_insertion_finished() {
+        $this->_test_to_be_completed();
+    }
+
+    function testLib_insertion_information() {
+        $this->_test_to_be_completed();
+    }
+
+    function testLib_in_step() {
+        $this->_test_to_be_completed();
+    }
+
+    function testLib_merge_arrays() {
+        $this->_test_to_be_completed();
+    }
+
+    function testLib_past_step() {
+        $this->_test_to_be_completed();
+    }
+
+    function testLib_pnick() {
+        $this->_test_to_be_completed();
+    }
+
+    function testLib_previous_comment() {
+        $this->_test_to_be_completed();
+    }
+
+    function testLib_show_more() {
+        $this->_test_to_be_completed();
+    }
+
+    function testLicense() {
+        $this->_test_to_be_completed();
+    }
+
+    function testSelect_from_config() {
+        $this->_test_to_be_completed();
+    }
+
+    function testShow_project_milestones() {
+        $this->_test_to_be_completed();
+    }
+
+    function testShow_project_participants() {
+        $this->_test_to_be_completed();
+    }
+
+    function testStart_content() {
+        $this->_test_to_be_completed();
+    }
+
+    function testStep_information() {
+        $this->_test_to_be_completed();
+    }
+
+    function testSummary() {
+        $this->_test_to_be_completed();
+    }
+
+    function testSummary_news() {
+        $this->_test_to_be_completed();
+    }
+
+    function testTimestr_comment() {
+        $this->_test_to_be_completed();
+    }
+
+    function testTimestr_middle() {
+        $this->_test_to_be_completed();
+    }
+
+    function testTimestr_short() {
+        $this->_test_to_be_completed();
+    }
+
+    function testTimestr_shortest() {
+        $this->_test_to_be_completed();
+    }
+
+    function testTop_bar() {
+        $this->_test_to_be_completed();
+    }
+
 }
 
 define_test_suite( __FILE__ );

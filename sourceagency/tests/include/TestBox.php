@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestBox.php,v 1.14 2002/05/08 11:42:49 riessen Exp $
+# $Id: TestBox.php,v 1.15 2002/05/15 13:23:58 riessen Exp $
 #
 ######################################################################
 
@@ -284,6 +284,10 @@ extends UnitTest
         $this->_testFor_captured_length( 307 );
         $this->_testFor_box_colspan( $text, $nr_cols, $align, $bgcolor, 
                                      $insert_text);
+    }
+
+    function testBox_set_body_valign() {
+        $this->_test_to_be_completed();
     }
 }
 

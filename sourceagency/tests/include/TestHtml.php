@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.17 2002/04/24 16:10:56 riessen Exp $
+# $Id: TestHtml.php,v 1.18 2002/05/15 13:23:58 riessen Exp $
 #
 ######################################################################
 
@@ -417,6 +417,19 @@ extends UnitTest
         $this->_testFor_captured_length( 8, "test 1" );
         $this->_testFor_pattern( $text, $expect, "p2" );
     }
+
+    function testHtml_form_image() {
+        $this->_test_to_be_completed();
+    }
+
+    function testHtml_form_reset() {
+        $this->_test_to_be_completed();
+    }
+      
+    function testHtml_input_password() {
+        $this->_test_to_be_completed();
+    }
+
 }
 
 define_test_suite( __FILE__ );

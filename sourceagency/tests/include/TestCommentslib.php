@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestCommentslib.php,v 1.1 2002/05/08 09:46:47 riessen Exp $
+// $Id: TestCommentslib.php,v 1.2 2002/05/15 13:23:58 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -34,6 +34,25 @@ extends UnitTest
     }
 
     function tearDown() {
+    }
+
+    function testComments_form() {
+        $this->_test_to_be_completed();
+    }
+    function testComments_preview() {
+        $this->_test_to_be_completed();
+    }
+    function testComments_insert() {
+        $this->_test_to_be_completed();
+    }
+    function testComments_modify() {
+        $this->_test_to_be_completed();
+    }
+    function testComments_modify_form() {
+        $this->_test_to_be_completed();
+    }
+    function testComments_missing_parameters() {
+        $this->_test_to_be_completed();
     }
 
     function testComments_show() {

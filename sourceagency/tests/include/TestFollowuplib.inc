@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowuplib.inc,v 1.9 2002/05/08 11:42:49 riessen Exp $
+# $Id: TestFollowuplib.inc,v 1.10 2002/05/15 13:23:58 riessen Exp $
 #
 ######################################################################\
 
@@ -299,11 +299,6 @@ extends UnitTest
         $this->_check_db( $db_config );
     }
 
-//      function testFollowup_devel_form() {
-//      }
-//      function testFollowup_referee_form() {
-//      }
-
     function testFollowup_current_milestone() {
         $db_config = new mock_db_configure( 4 );
 
@@ -518,8 +513,15 @@ extends UnitTest
         $exp[3] = $o;
     }
 
-//      function testFollowup_milestone_schedule() {
-//      }
+    function testFollowup_milestone_schedule() {
+        $this->_test_to_be_completed();
+    }
+    function testFollowup_devel_form() {
+        $this->_test_to_be_completed();
+    }
+    function testFollowup_referee_form() {
+        $this->_test_to_be_completed();
+    }
 }
 
 define_test_suite( __FILE__ );

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMilestoneslib.inc,v 1.18 2002/05/08 11:42:49 riessen Exp $
+# $Id: TestMilestoneslib.inc,v 1.19 2002/05/15 13:23:58 riessen Exp $
 #
 ######################################################################
 
@@ -458,6 +458,24 @@ extends UnitTest
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
     }
+
+    function testForm_milestones() {
+        $this->_test_to_be_completed();
+    }
+
+    function testMilestones_modify() {
+        $this->_test_to_be_completed();
+    }
+
+    function testMilestones_modify_form() {
+        $this->_test_to_be_completed();
+    }
+
+    function testMilestones_preview() {
+        $this->_test_to_be_completed();
+    }
+
+    
 }
 
 define_test_suite( __FILE__ );

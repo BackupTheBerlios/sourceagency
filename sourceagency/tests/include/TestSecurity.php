@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.19 2002/05/15 09:32:20 riessen Exp $
+# $Id: TestSecurity.php,v 1.20 2002/05/15 13:23:58 riessen Exp $
 #
 ######################################################################
 
@@ -1330,6 +1330,14 @@ extends UnitTest
         $this->assertEquals( 0, is_first_sponsor_or_dev( $args[3]["proid"]));
 
         $this->_check_db( $db_config );
+    }
+
+    function testGenerate_failed_box() {
+        $this->_test_to_be_completed();
+    }
+
+    function testGenerate_permission_denied_box() {
+        $this->_test_to_be_completed();
     }
 }
 
