@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: contentlib.inc,v 1.5 2002/03/28 00:53:44 grex Exp $
+# $Id: contentlib.inc,v 1.6 2002/06/06 08:13:09 riessen Exp $
 #
 ######################################################################
 
@@ -153,15 +153,18 @@ function content_preview($proid)
     echo '<b>';
     lib_pnick($auth->auth['uname']);
     echo ' - '.timestr($timestamp)."</b><p>\n";
-    echo "<br><b>Needed Skills:</b> $skills\n";
-    echo "<br><b>Plattform:</b> $platform\n";
-    echo "<br><b>Architecture:</b> $architecture\n";
-    echo "<br><b>Environment:</b> $environment\n";
+    echo '<br><b>'.$t->translate('Needed Skills').":</b> $skills\n";
+    echo '<br><b>'.$t->translate('Plattform').":</b> $platform\n";
+    echo '<br><b>'.$t->translate('Architecture').":</b> $architecture\n";
+    echo '<br><b>'.$t->translate('Environment').":</b> $environment\n";
     if ($docs) {
-        echo '<br><b>Documentation:</b> '.html_link($docs,array(),$docs)."\n";
+        echo '<br><b>'.$t->translate('Documentation').':</b> '
+          .html_link($docs,array(),$docs)."\n";
     }   
-    echo '<br><b>Status:</b> Proposed\n';
-    echo "<p><b>Technical Specification:</b> $specification\n";
+    echo '<br><b>'.$t->translate('Status').':</b> '
+                                         .$t->translate('Proposed')."\n";
+    echo "<p><b>".$t->translate('Technical Specification')
+                                          .":</b> $specification\n";
     echo "<br>&nbsp;\n";
     $bx->box_body_end();
 
@@ -184,7 +187,7 @@ function content_preview($proid)
  */
 function content_box_footer($proid, $content_id, $which_proposals)
 {
-    global $bx, $db, $sess;
+    global $bx, $db, $sess, $t;
  
     $db_number = new DB_SourceAgency;
     $db_number->query("SELECT COUNT(*) FROM developing WHERE proid='$proid' AND content_id='$content_id'");
@@ -193,12 +196,13 @@ function content_box_footer($proid, $content_id, $which_proposals)
     $bx->box_title_begin();
 
     $bx->box_columns_begin(3);
+    include( 'config.inc' );
     $bx->box_column_start('left','50%',$th_box_title_bgcolor); 
 
     if (!strcmp($db->f('content_id'),$which_proposals)) {
-        htmlp_link('step2.php3',array(proid => $proid),'Proposals');
+        htmlp_link('step2.php3',array('proid' => $proid),'Proposals');
     } else {
-        htmlp_link('step2.php3',array(proid => $proid, show_proposals => 'yes', which_proposals => $db->f('content_id')),'Proposals');
+        htmlp_link('step2.php3',array('proid' => $proid, 'show_proposals' => 'yes', 'which_proposals' => $db->f('content_id')),'Proposals');
     }
     echo ' ['.$db_number->f("COUNT(*)").'] &nbsp;|&nbsp; ';
 
@@ -209,7 +213,7 @@ function content_box_footer($proid, $content_id, $which_proposals)
  	htmlp_link('comments.php3',array('proid' => $proid, 'type' => 'Specifications', 'number' => $content_id),'Comments');
  	echo ' ['.$db_number->f("COUNT(*)").']\n';
     } else {
-	print "No Comments\n";
+	print $t->translate('No Comments')."\n";
     }
 
     $bx->box_column_finish();
