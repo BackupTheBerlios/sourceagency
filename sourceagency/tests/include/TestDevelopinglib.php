@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDevelopinglib.php,v 1.8 2002/07/23 14:09:40 riessen Exp $
+// $Id: TestDevelopinglib.php,v 1.9 2002/07/23 14:32:22 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -354,10 +354,7 @@ extends UnitTest
         capture_reset_and_start();
         call_user_func_array( $fname, $args );
         $this->set_text( capture_stop_and_get() );
-        $slen = ( strlen( $GLOBALS['err_file'] ) 
-                  + strlen( $GLOBALS['err_line'] ) ) * 2;
-        $slen += strlen($sess->self_url()) + 4085;
-        $this->_testFor_string_length( $slen );
+        $this->_testFor_string_length( 4217 + strlen( $sess->self_url()) );
         $this->assertRegexp( '/Undefined variable:  start/', 
                              $GLOBALS['err_msg'] );
         

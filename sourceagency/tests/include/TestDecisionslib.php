@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDecisionslib.php,v 1.14 2002/07/23 14:09:40 riessen Exp $
+// $Id: TestDecisionslib.php,v 1.15 2002/07/23 14:32:22 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -622,13 +622,7 @@ extends UnitTest
         call_user_func_array( 'your_quota', array( &$proid ) );
         $this->set_text( capture_stop_and_get() );
 
-        // the line break symbols in the warning messages went from <br>
-        // in versions less than 4.1.X(??) to being <br /> and since there
-        // are two breaks to a warning message, there are four extra characters
-        // hence this if statement
-        $sleng = strlen($GLOBALS['err_file'])+strlen($GLOBALS['err_line'])+9;
-        $this->_testFor_string_length( $sleng );
-
+        $this->_testFor_string_length( 74 );
         $this->assertRegexp( '/Division by zero/', $GLOBALS['err_msg']);
         $ps = array( 0 => ( '<p>Your quota: <b>'.$d[1]['budget']
                             .'<\/b> euros [(]<b>0%<\/b> of the total' ) );
