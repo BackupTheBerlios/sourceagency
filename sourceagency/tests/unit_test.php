@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.16 2002/05/28 08:58:28 riessen Exp $
+# $Id: unit_test.php,v 1.17 2002/05/29 14:57:01 riessen Exp $
 #
 ######################################################################
 
@@ -25,23 +25,100 @@
 class UnitTest
 extends TestCase
 {
+    // REFACTOR: the $text and $msg arguments to the _testFor_... and
+    // REFACTOR: _checkFor_... methods could be removed and replaced
+    // REFACTOR: by object variables! But this would require modiying 
+    // REFACTOR: every single test method :-(
+
     var $p_regexp_html_comment = "<!--[^->]*-->";
+
+    // this is set to indicate that the meaning of a test should be
+    // reversed, e.g. _testFor_pattern will check that the pattern 
+    // doesn't appear in the given text. 
+    // Only methods that begin with _testFor_... (or testFor_...) can
+    // be reversed. This is because a _checkFor_... method is an aggregation
+    // of _testFor_ methods and to test whether a checkFor would fail,
+    // you only need to call one of the testFor methods.
+    var $reverse_test = false;
+    
+    // this is the text and message variables containing the string on 
+    // which all tests and the message to be printed in case of failure
+    // will be performed. At this stage only those methods that do not
+    // begin with an underscore '_', use this variable
+    var $test_text = '';
+    var $test_msg = '';
 
     function UnitTest( $name = "" ) {
         $this->TestCase( $name );
     }
 
-    // could actually be defined in phpunit ....
+    function set_text( &$text ) {
+        $this->test_text = $text;
+    }
+    function set_msg( &$msg ) {
+        $this->test_msg = $msg;
+    }
+    function reverse_next_test() {
+        // reverse the meaning of the next test, the test will automatically
+        // reset the flag which indicates that a test has been reversed
+        $this->reverse_test = true;
+    }
+
+    // The following two could be defined in phpunit.php
     function assertNotRegexp( $regexp, $actual, 
                               $message="assert not regexp failed" ) {
         if ( preg_match( $regexp, $actual ) ) {
             $this->failNotEquals( $regexp, $actual, "*NOT* pattern",$message );
         }
     }
-
-    function _check_length( $exp, $act, $msg = '' ) {
-        $this->assertEquals( $exp, $act, $msg . ' (Length Mismatch)' );
+    function assertNotEquals( $expected, $actual, $message=0 ) {
+        if ( $expected == $actual ) {
+            $this->failNotEquals($expected, $actual, "*NOT* equal", $message);
+        }
     }
+    
+    // These are the base test functions on which all other test functions
+    // should build on
+    function _check_length( $exp, $act, $msg = '' ) {
+        if ( $this->reverse_test ) {
+            $this->assertNotEquals( $exp, $act, $msg . ' (*Length Match*)' );
+        } else {
+            $this->assertEquals( $exp, $act, $msg . ' (Length Mismatch)' );
+        }
+        $this->reverse_test = false;
+    }
+    function _testFor_pattern( $text, $pattern, $msg = '' ) {
+        if ( $this->reverse_test ) {
+            $this->assertNotRegexp( "/" . $pattern . "/", $text, 
+                                    $msg . ' (*Pattern Found*)');
+        } else {
+            $this->assertRegexp( "/" . $pattern . "/", $text, 
+                                 $msg . ' (Pattern not Found)');
+        }
+        $this->reverse_test = false;
+    }
+    function _testFor_patterns( $text, $pattern_array, $check_size = -1, 
+                                $msg = '' ) {
+        $orig_rev_val = $this->reverse_test;
+
+        reset( $pattern_array );
+        if ( $check_size > 0 ) {
+            if ( $orig_rev_val ) {
+                $this->assertNotEquals( $check_size, count( $pattern_array ), 
+                                          $msg . ' (pattern count mismatch)' );
+            } else {
+                $this->assertEquals( $check_size, count( $pattern_array ), 
+                                       $msg . ' (pattern count mismatch)' );
+            }
+        }
+
+        while ( list( $key, $val ) = each( $pattern_array ) ) {
+            $this->reverse_test = $orig_rev_val;
+            $this->_testFor_pattern( $text, $val, $msg.(' (Key "'.$key.'")'));
+        }
+        $this->reverse_test = false;
+    }
+
     function _testFor_string_length( $str, $len, $msg = '' ) {
         $this->_check_length( $len, strlen( $str ), $msg . ' (string)');
     }
@@ -51,22 +128,6 @@ extends TestCase
     }
     function _testFor_line( $text, $line, $msg = '' ) {
         $this->_testFor_pattern( $text, $line . "\n", $msg );
-    }
-    // test for a specific regular expression in a given text
-    function _testFor_pattern( $text, $pattern, $msg = '' ) {
-        $this->assertRegexp( "/" . $pattern . "/", $text, 
-                                                $msg . ' (Pattern not Found)');
-    }
-    function _testFor_patterns( $text, $pattern_array, $check_size = -1, 
-                                $msg = '' ) {
-        reset( $pattern_array );
-        if ( $check_size > 0 ) {
-            $this->assertEquals( $check_size, count( $pattern_array ), 
-                                 $msg . ' (pattern count mismatch)' );
-        }
-        while ( list( $key, $val ) = each( $pattern_array ) ) {
-            $this->_testFor_pattern( $text, $val, $msg.(' (Key "'.$key.'")'));
-        }
     }
 
     // function that can be called if a test is to be completed but
@@ -395,11 +456,14 @@ extends TestCase
                                  $title_bgcolor = 'title_bgcolor',
                                  $title_align = 'title_align',
                                  $msg = '' ) {
+        $orig_rev = $this->reverse_test;
         $this->_testFor_box_title_begin( $text,$title_bgcolor,
                                                       $title_align,$msg);
+        $this->reverse_test = $orig_rev;
         $str="      <font color=\"$title_font_color\"><b>$title</b></font>\n";
         $this->_testFor_pattern( $text, $this->_to_regexp( $str ),
                                                   "$msg (_testFor_box_title)");
+        $this->reverse_test = $orig_rev;
         $this->_testFor_box_title_end( $text, $msg );
     }
     function _testFor_box_body_begin( $text, $bgcolor ='body_bgcolor', 
@@ -465,8 +529,13 @@ extends TestCase
         // FIXME: start and the text actually match up! To fix this,
         // FIXME: need to take the code of _testFor_box_column_start and
         // FIXME: add it this method but that breaks the write once principle!
+        $orig_rev = $this->reverse_test;
         $this->_testFor_box_column_start($text,$align,$width,$bgcolor,$msg);
+
+        $this->reverse_test = $orig_rev;
         $this->_testFor_box_column_finish( $text, $msg );
+
+        $this->reverse_test = $orig_rev;
         $this->_testFor_pattern( $text, "[ ]+".$this->_to_regexp($txt),
                                                  "$msg (_testFor_box_column)");
     }
@@ -498,8 +567,10 @@ extends TestCase
     }
     function _testFor_lib_comment_it( $text, $proid, $type, $number, $ref,
                                       $subject, $link_text, $msg = '' ) {
+        $orig_rev = $this->reverse_test;
         $this->_testFor_pattern( $text, "<FONT SIZE=-1>[[].*[]]<\/FONT>\n");
 
+        $this->reverse_test = $orig_rev;
         $this->_testFor_html_link( $text, 'comments_edit.php3',
                   array( 'proid'=>$proid,'type'=>$type,'number'=>$number,
                          'ref'=>$ref,'subject'=>$subject),$link_text);
