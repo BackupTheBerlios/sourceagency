@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: box.inc,v 1.10 2002/05/02 11:23:41 riessen Exp $
+# $Id: box.inc,v 1.11 2002/05/06 07:58:55 riessen Exp $
 #
 ######################################################################
 
@@ -143,7 +143,7 @@ class box {
 	$this->box_body_bgcolor = $body_bgcolor;
 	$this->box_body_font_color = $body_font_color;
 	$this->box_body_align = $body_align;
-        $this->box_body_valign = $body_align;
+        $this->box_body_valign = $body_valign;
     }
    
     /**
