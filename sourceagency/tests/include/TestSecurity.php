@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.11 2002/03/19 17:08:03 riessen Exp $
+# $Id: TestSecurity.php,v 1.12 2002/03/27 12:20:57 riessen Exp $
 #
 ######################################################################
 
@@ -297,10 +297,7 @@ extends UnitTest
                     "u2"=>"user3","r2"=>"proid3","p2"=>"",  "e2"=>0);
         $proid4 = "proid";
 
-        // REFACTOR: need four instances instead of 2 because the
-        // REFACTOR: instantiation of the database class happens before
-        // REFACTOR: the if in is_accepted_sponsor
-        $db_config = new mock_db_configure( 4 );
+        $db_config = new mock_db_configure( 2 );
         $db_q = array( // Arg: 1=proid, 2=sponsor name
                        0 => $this->query["is_accepted_sponsor"]);
 
@@ -334,10 +331,7 @@ extends UnitTest
                     "u2"=>"user3","r2"=>"proid3","p2"=>"",  "e2"=>0);
         $proid4 = "proid";
 
-        // REFACTOR: need four instances instead of 2 because the
-        // REFACTOR: instantiation of the database class happens before
-        // REFACTOR: the if in is_accepted_referee
-        $db_config = new mock_db_configure( 4 );
+        $db_config = new mock_db_configure( 2 );
         $db_q = array( // Arg: 1=proid, 2=sponsor name
                        0 => $this->query["is_accepted_referee"]);
 
@@ -371,9 +365,7 @@ extends UnitTest
                     "u2"=>"user3","r2"=>"proid3","p2"=>"",  "e2"=>0);
         $proid4 = "proid";
 
-        // REFACTOR: 4 DB instances instead of 2 -- should move the creation
-        // REFACTOR: of the DB in is_accepted_developer inside the if statement
-        $db_config = new mock_db_configure( 4 );
+        $db_config = new mock_db_configure( 2 );
         $db_q = array( // Arg: 1=proid, 2=developer name
                        0 => ($this->query["is_accepted_developer"]));
         
