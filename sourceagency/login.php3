@@ -45,12 +45,9 @@ if ($perm->have_perm('user_pending')) {
            .'<br>'.$t->translate('Your authentication is valid until')
            .' <b>'.timestr($auth->auth['exp']).'</b>';
     $bx->box_full($t->translate('Welcome to ').$sys_name, $msg);
-
-    htmlp_link('personal.php3', array('username' => $auth->auth['uname']),
-               'Personal page for '.$auth->auth['uname']);
 }
 
 end_content();
 require('footer.inc');
-page_close();
+@page_close();
 ?>
