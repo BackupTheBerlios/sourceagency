@@ -7,6 +7,7 @@
 # Copyright (c) 2001 by
 #                Gregorio Robles (grex@scouts-es.org) and
 #                Lutz Henckel (lutz.henckel@fokus.gmd.de)
+#                Gerrit Riessen (riessen@open-source-consultants.de)
 #
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
@@ -17,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.6 2001/11/09 20:21:19 riessen Exp $
+# $Id: security.inc,v 1.7 2001/11/14 12:26:40 riessen Exp $
 #
 ######################################################################
 
@@ -26,12 +27,18 @@
 		// in the summary page
 
 function allowed_actions ($project_status, $action_number, $proid) {
+    global $g_step_text, $t;
 
   $db_allowed = new DB_SourceAgency;
 
+    // FIXME: this is a potential bug when action_number > 6 or < 1
+    $text = $t->translate( $g_step_text[ $action_number ] );
+
+    // NOI18N: all the text here should be i18n
+    // TODO: the descriptions for steps should be stored in the database
+    // TODO: or the config file but not hardcored here ....
   switch($action_number) {
 	case 1: 	$link = "step1.php3?proid=".$proid;
-			$text = "Consultancy";
 			$db_allowed->query("SELECT consultants FROM configure WHERE proid='$proid'");
 			$db_allowed->next_record();
 			if($db_allowed->f("consultants") == "Yes") {		
@@ -45,7 +52,6 @@ function allowed_actions ($project_status, $action_number, $proid) {
 			}
 			break;
 	case 2: 	$link = "step2.php3?proid=".$proid;
-			$text = "Technical Specifications";
 					// Sponsor Involvement
 			$db_allowed->query("SELECT COUNT(*) FROM tech_content WHERE proid='$proid'");
 			$db_allowed->next_record();
@@ -56,7 +62,6 @@ function allowed_actions ($project_status, $action_number, $proid) {
 			$explanation = "This project may have different specifications. Developers can make their developing proposals to that specifications.";
 			break;
 	case 3:	 	$link = "step3.php3?proid=".$proid;
-			$text = "Milestones";
 			$db_allowed->query("SELECT COUNT(*) FROM milestones WHERE proid='$proid'");
 			$db_allowed->next_record();
 			$statistics = "( <B>".$db_allowed->f("COUNT(*)")."</B> suggested milestones )";
@@ -64,38 +69,40 @@ function allowed_actions ($project_status, $action_number, $proid) {
 			$explanation = "Project milestones proposed by developers.";
 			break;
 	case 4: 	$link = "step4.php3?proid=".$proid;
-			$text = "Referees";
 			$db_allowed->query("SELECT COUNT(*) FROM referees WHERE proid='$proid'");
 			$db_allowed->next_record();
 			$statistics = "( <B>".$db_allowed->f("COUNT(*)")."</B> referees offered )";
 			$explanation = "Developers can propose themselves as referees. Sponsors and developers will elect one of them.";
 			break;
 	case 5: 	$link = "step5.php3?proid=".$proid;
-			$text = "Project Follow-up";
 			$statistics = "( <B>x</B> milestones of <b>x</b> total milestones fulfilled )";
 			$explanation = "Milestone delivery and other tasks related to the project follow-up.";
 			break;
 	case 6: 	$link = "step6.php3?proid=".$proid;
-			$text = "Rating";
 			$statistics = "";
 			$explanation = "Final rating between sponsors and developers.";
 			break;
+        /** FIXME: this case has no default case **/
   }
 
-
-  if ($action_number > 1) print "<hr>\n";
-  if ($project_status >= $action_number) print "<a href=\"$link\">";
-  else print "<font color=\"#CCCCCC\">";
+  if ($action_number > 1) {
+      print "<hr>\n";
+  }
+  print ( $project_status >= $action_number ? "<a href=\"$link\">" 
+                                               : "<font color=\"#CCCCCC\">");
   print "<IMG src=\"images/ic/".$action_number;
-  if ($project_status < $action_number) print "grey";
-  print ".png\" border=0 width=\"48\" height=\"48\" alt=\"1\">";
-  print "&nbsp;".$text;
-  if ($project_status >= $action_number) print "</a>";
-  else print "</font>";
-  if ($project_status >= $action_number) print " ".$statistics;
-  print "<br>";
-  print "<i>".$explanation."</i>";
-  print "\n";
+  if ($project_status < $action_number) {
+      print "grey";
+  }
+
+  // FIXME: should height and width be hardcoded here?
+  print ".png\" border=0 width=\"48\" height=\"48\" alt=\"1\">&nbsp;"
+      . $text . ( $project_status >= $action_number ? "</a>" : "</font>" );
+
+  if ($project_status >= $action_number) {
+      print " ".$statistics;
+  }
+  print "<br><i>".$explanation."</i>\n";
 }
 
 function check_proid ($proid) {
