@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: German-lang.inc,v 1.14 2002/05/03 10:45:43 riessen Exp $
+# $Id: German-lang.inc,v 1.15 2002/05/03 11:06:29 riessen Exp $
 #
 ######################################################################
 
@@ -127,11 +127,13 @@ function translate_real($phrase) {
         case 'No consultant proposal with this status': $tmp = $phrase; break;
         case 'No consultants wanted': $tmp = 'Keine Berater erwünscht'; break;
         case 'No developing cooperation proposal with this status': $tmp = $phrase; break;
+        case 'No monitored projects': $tmp = $phrase; break;
         case 'No personal projects': $tmp = $phrase; break;
         case 'No rating yet': $tmp = 'Noch keine Bewertung'; break;
         case 'No': $tmp = 'Nein'; break;
         case 'No.': $tmp = 'Nr.'; break;
         case 'Not Logged in': $tmp = 'Nicht eingeloggt'; break;
+        case 'Not rated yet': $tmp = 'Noch nicht bewertet'; break;
         case 'Not related to any project with': $tmp = $phrase; break;
         case 'Open Source Project Mediation & Management': $tmp = 'Open Source Projekt Vermittlung & Leitung'; break;
         case 'Open Source Software Projects': $tmp = 'Open-Source-Software-Projekte'; break;
