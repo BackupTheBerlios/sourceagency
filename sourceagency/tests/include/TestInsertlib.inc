@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestInsertlib.inc,v 1.10 2002/05/31 12:41:50 riessen Exp $
+# $Id: TestInsertlib.inc,v 1.11 2002/06/04 10:57:52 riessen Exp $
 #
 ######################################################################
 
@@ -67,15 +67,15 @@ extends UnitTest
         insert_form();
         $this->set_text( capture_stop_and_get() );
 
-        $this->__checkFor_a_box( 'New Project' );
-        $this->__checkFor_a_form( 'insert.php3', array() );
+        $this->_checkFor_a_box( 'New Project' );
+        $this->_checkFor_a_form( 'insert.php3', array() );
 
-        $this->__checkFor_columns( 2 );
+        $this->_checkFor_columns( 2 );
 
-        $this->__checkFor_column_titles( array( 'Project Title', 'Type', 
+        $this->_checkFor_column_titles( array( 'Project Title', 'Type', 
                                                 'Brief description',
                                                 'Project Volume' ));
-        $this->__checkFor_column_values( 
+        $this->_checkFor_column_values( 
             array( html_input_text('project_title', 40, 128, 
                                    $project_title),
                    select_from_config('type',  'project_types', $type),
@@ -83,7 +83,7 @@ extends UnitTest
                                  255, $description),
                    select_from_config('volume', 'project_volume', 
                                       $volume)));
-        $this->__testFor_html_form_submit( $t->translate('Submit'), 'Submit');
+        $this->_testFor_html_form_submit( $t->translate('Submit'), 'Submit');
         $this->_testFor_string_length( 3690 );
     }
 
@@ -110,16 +110,16 @@ extends UnitTest
                               'volume' => $volume), 
                         $t->translate('New Projects'));
 
-        $this->__testFor_box_begin( $th_box_frame_color,
+        $this->_testFor_box_begin( $th_box_frame_color,
                                     '', $th_box_frame_width );
-        $this->__testFor_box_title( $t->translate('Error'),
+        $this->_testFor_box_title( $t->translate('Error'),
                             $th_box_title_font_color, $th_box_title_bgcolor,
                             $th_box_title_align);
-        $this->__testFor_box_body_begin( $th_box_body_bgcolor,
+        $this->_testFor_box_body_begin( $th_box_body_bgcolor,
                             $th_box_body_align,'top',$th_box_error_font_color);
-        $this->__testFor_box_body( $body_text, $th_box_error_font_color );
-        $this->__testFor_box_body_end( );
-        $this->__testFor_box_end( );
+        $this->_testFor_box_body( $body_text, $th_box_error_font_color );
+        $this->_testFor_box_body_end( );
+        $this->_testFor_box_end( );
     }
 
     function testDescription_not_set() {
@@ -144,15 +144,15 @@ extends UnitTest
                                    'type' => $type, 'volume' => $volume), 
                              $t->translate('New Projects'));
 
-        $this->__testFor_box_begin($th_box_frame_color,'',$th_box_frame_width);
-        $this->__testFor_box_title( $t->translate('Error'),
+        $this->_testFor_box_begin($th_box_frame_color,'',$th_box_frame_width);
+        $this->_testFor_box_title( $t->translate('Error'),
                             $th_box_title_font_color, $th_box_title_bgcolor,
                             $th_box_title_align);
-        $this->__testFor_box_body_begin( $th_box_body_bgcolor,
+        $this->_testFor_box_body_begin( $th_box_body_bgcolor,
                             $th_box_body_align,'top',$th_box_error_font_color);
-        $this->__testFor_box_body( $body_text,$th_box_error_font_color );
-        $this->__testFor_box_body_end();
-        $this->__testFor_box_end();
+        $this->_testFor_box_body( $body_text,$th_box_error_font_color );
+        $this->_testFor_box_body_end();
+        $this->_testFor_box_end();
     }
 
     function testNo_other_project_with_same_title() {
@@ -202,16 +202,16 @@ extends UnitTest
                       .html_link('insform.php3', array(), 
                                  $t->translate('New Projects'));
 
-        $this->__testFor_box_begin( $th_box_frame_color,
+        $this->_testFor_box_begin( $th_box_frame_color,
                                     '', $th_box_frame_width );
-        $this->__testFor_box_title( $t->translate('Error'),
+        $this->_testFor_box_title( $t->translate('Error'),
                             $th_box_title_font_color, $th_box_title_bgcolor,
                             $th_box_title_align);
-        $this->__testFor_box_body_begin( $th_box_body_bgcolor,
+        $this->_testFor_box_body_begin( $th_box_body_bgcolor,
                             $th_box_body_align,'top',$th_box_error_font_color);
-        $this->__testFor_box_body( $body_text,$th_box_error_font_color );
-        $this->__testFor_box_body_end();
-        $this->__testFor_box_end();
+        $this->_testFor_box_body( $body_text,$th_box_error_font_color );
+        $this->_testFor_box_body_end();
+        $this->_testFor_box_end();
 
         //
         // third call, num_row == 2

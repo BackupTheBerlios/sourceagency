@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestPersonallib.php,v 1.28 2002/05/31 12:41:50 riessen Exp $
+# $Id: TestPersonallib.php,v 1.29 2002/06/04 10:57:52 riessen Exp $
 #
 ######################################################################
 
@@ -70,30 +70,30 @@ extends UnitTest
     }
 
     function _testFor_project_link( $proid, $ptitle, $status ) {
-        $this->__testFor_pattern( sprintf( $this->p_line_template,
+        $this->_testFor_pattern( sprintf( $this->p_line_template,
                                            $proid, $ptitle, $status ));
     }             
     function _testFor_cooperation_project_link( $proid, $ptitle, $devid ) {
-        $this->__testFor_pattern(sprintf( $this->p_cooperation_line_template,
+        $this->_testFor_pattern(sprintf( $this->p_cooperation_line_template,
                                           $proid, $ptitle, $proid,$devid ));
     }             
     function _testFor_referee_project_link( $proid, $ptitle, $status ) {
-        $this->__testFor_pattern(sprintf( $this->p_referee_line_template,
+        $this->_testFor_pattern(sprintf( $this->p_referee_line_template,
                                           $proid, $ptitle, $status ));
     }
     function _testFor_consultant_project_link( $proid,$ptitle,$status ) {
-        $this->__testFor_pattern(sprintf( $this->p_consultant_line_template,
+        $this->_testFor_pattern(sprintf( $this->p_consultant_line_template,
                                           $proid, $ptitle, $status ));
     }
     function _testFor_news_link($proid,$sub,$count,$refpid,$refptitle) {
-        $this->__testFor_pattern(sprintf( $this->p_news_long_template,
+        $this->_testFor_pattern(sprintf( $this->p_news_long_template,
                                           $proid, $sub, $count, $refpid,
                                           $refptitle));
     }
     function _testFor_comment_line($type, $proid, $number, $ref, 
                                    $sub_cmt, $count_star, $desc_proid, 
                                    $p_title ) {
-        $this->__testFor_pattern(sprintf( $this->p_comment_line_template,
+        $this->_testFor_pattern(sprintf( $this->p_comment_line_template,
                                           $type, $proid, $type, $number,$ref, 
                                           $sub_cmt, $count_star, $desc_proid, 
                                           $p_title ));
@@ -171,12 +171,12 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 732 );
-        $this->__testFor_pattern( "<b>Involved Projects [(]"
+        $this->_testFor_pattern( "<b>Involved Projects [(]"
                                   .show_status($status1) ."[)]<\/b>" );
-        $this->__testFor_pattern( "Not related to any project with "
+        $this->_testFor_pattern( "Not related to any project with "
                                   . show_status($status1)." status\n");
         $this->reverse_next_test();
-        $this->__testFor_pattern( 'summary.php3' );
+        $this->_testFor_pattern( 'summary.php3' );
 
         // 
         // snafu
@@ -189,12 +189,12 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 2' );
         $this->_testFor_string_length( 730 );
-        $this->__testFor_pattern( "<b>Involved Projects [(]"
+        $this->_testFor_pattern( "<b>Involved Projects [(]"
                                   .show_status($status2)."[)]<\/b>" );
-        $this->__testFor_pattern( "Not related to any project with "
+        $this->_testFor_pattern( "Not related to any project with "
                                   . show_status($status2)." status\n");
         $this->reverse_next_test();
-        $this->__testFor_pattern( 'summary.php3' );
+        $this->_testFor_pattern( 'summary.php3' );
 
         // TODO: this test requires another test for fritz where projects
         // TODO: actually exist in the database
@@ -290,10 +290,10 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 727 );
-        $this->__testFor_pattern( "Last 10 Comments by " . $user1 );
-        $this->__testFor_pattern( "no comments posted\n" );
+        $this->_testFor_pattern( "Last 10 Comments by " . $user1 );
+        $this->_testFor_pattern( "no comments posted\n" );
         $this->reverse_next_test();
-        $this->__testFor_pattern( 'See all the comments...' );
+        $this->_testFor_pattern( 'See all the comments...' );
 
         //
         // snafu query
@@ -306,11 +306,11 @@ extends UnitTest
         $this->set_msg( 'test 2' );
         $this->_testFor_string_length( 1302 );
 
-        $this->__testFor_pattern( "Last 10 Comments by " . $user2 );
+        $this->_testFor_pattern( "Last 10 Comments by " . $user2 );
         $this->reverse_next_test();
-        $this->__testFor_pattern( 'no comments posted' );
+        $this->_testFor_pattern( 'no comments posted' );
         $this->reverse_next_test();
-        $this->__testFor_pattern( 'See all the comments...' );
+        $this->_testFor_pattern( 'See all the comments...' );
 
         $this->_testFor_comment_line( $row1['type'], $row1['proid'],
                                       $row1['number'],
@@ -393,10 +393,10 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 723 );
-        $this->__testFor_pattern( "All Comments by " . $user1 );
-        $this->__testFor_pattern( "no comments posted\n" );
+        $this->_testFor_pattern( "All Comments by " . $user1 );
+        $this->_testFor_pattern( "no comments posted\n" );
         $this->reverse_next_test();
-        $this->__testFor_pattern( 'See all the comments...' );
+        $this->_testFor_pattern( 'See all the comments...' );
 
         //
         // snafu query
@@ -409,11 +409,11 @@ extends UnitTest
         $this->set_msg( 'test 2' );
         $this->_testFor_string_length( 1298);
 
-        $this->__testFor_pattern( "All Comments by " . $user2 );
+        $this->_testFor_pattern( "All Comments by " . $user2 );
         $this->reverse_next_test();
-        $this->__testFor_pattern( 'no comments posted' );
+        $this->_testFor_pattern( 'no comments posted' );
         $this->reverse_next_test();
-        $this->__testFor_pattern( 'See all the comments...' );
+        $this->_testFor_pattern( 'See all the comments...' );
 
         $this->_testFor_comment_line( $row1['type'], $row1['proid'],
                                       $row1['number'],
@@ -573,10 +573,10 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 718);
-        $this->__testFor_pattern( "Last 5 News by " . $user1 );
-        $this->__testFor_pattern( "no news posted\n" );
+        $this->_testFor_pattern( "Last 5 News by " . $user1 );
+        $this->_testFor_pattern( "no news posted\n" );
         $this->reverse_next_test();
-        $this->__testFor_pattern( 'See all the comments...' );
+        $this->_testFor_pattern( 'See all the comments...' );
 
         //
         // snafu query
@@ -588,11 +588,11 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 2' );
         $this->_testFor_string_length( 1195 );
-        $this->__testFor_pattern( "Last 5 News by " . $user2 );
+        $this->_testFor_pattern( "Last 5 News by " . $user2 );
         $this->reverse_next_test();
-        $this->__testFor_pattern( 'no news posted' );
+        $this->_testFor_pattern( 'no news posted' );
         $this->reverse_next_test();
-        $this->__testFor_pattern( 'See all the comments...' );
+        $this->_testFor_pattern( 'See all the comments...' );
 
         $this->_testFor_news_link( $row1['proid'],$row1['subject_news'],
                                    $row3['COUNT(*)'],$row4['proid'],
@@ -610,10 +610,10 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 3' );
         $this->_testFor_string_length( 2032 );
-        $this->__testFor_pattern( "Last 5 News by " . $user3 );
+        $this->_testFor_pattern( "Last 5 News by " . $user3 );
         $this->reverse_next_test();
-        $this->__testFor_pattern( 'no news posted' );
-        $this->__testFor_pattern( "See all the comments..." );
+        $this->_testFor_pattern( 'no news posted' );
+        $this->_testFor_pattern( "See all the comments..." );
 
         $this->_testFor_news_link( $row7['proid'],$row7['subject_news'],
         /* entry one */            $row14['COUNT(*)'],$row15['proid'],
@@ -634,12 +634,12 @@ extends UnitTest
                                    $row23['project_title']);
 
         $this->reverse_next_test();
-        $this->__testFor_pattern( sprintf( $this->p_news_long_template,
+        $this->_testFor_pattern( sprintf( $this->p_news_long_template,
                                      $row12['proid'], $row12['subject_news'], 
                                      $row26['COUNT(*)'], $row27['proid'],
                                      $row27['project_title']) );
 
-        $this->__testFor_pattern( "See all the comments..." );
+        $this->_testFor_pattern( "See all the comments..." );
 
         // if using a database, then ensure that it didn't fail
         $this->_check_db( $db_config );
@@ -706,8 +706,8 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 715 );
-        $this->__testFor_pattern( "All news by " . $user1 );
-        $this->__testFor_pattern( "no news posted\n" );
+        $this->_testFor_pattern( "All news by " . $user1 );
+        $this->_testFor_pattern( "no news posted\n" );
 
         //
         // snafu query
@@ -719,7 +719,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 2' );
         $this->_testFor_string_length( 1208 );
-        $this->__testFor_pattern( "All news by " . $user2 );
+        $this->_testFor_pattern( "All news by " . $user2 );
 
         $this->_testFor_news_link( $row1['proid'],$row1['subject_news'],
                                    $row3['COUNT(*)'],$row4['proid'],
@@ -775,9 +775,9 @@ extends UnitTest
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 716 );
         // check title string
-        $this->__testFor_pattern( "Consultant [(]"
+        $this->_testFor_pattern( "Consultant [(]"
                                   .show_status( $status1 )."[)]" ); 
-        $this->__testFor_pattern( "No consultant proposal with this "
+        $this->_testFor_pattern( "No consultant proposal with this "
                                   ."status\n");
         //
         // snafu query
@@ -790,7 +790,7 @@ extends UnitTest
         $this->set_msg( 'test 2' );
         $this->_testFor_string_length( 777 );
         // check title string
-        $this->__testFor_pattern( "Consultant [(]"
+        $this->_testFor_pattern( "Consultant [(]"
                                   .show_status( $status2 )."[)]" );
         $this->_testFor_consultant_project_link($row1['proid'],
                                                 $row1['project_title'],
@@ -806,7 +806,7 @@ extends UnitTest
         $this->set_msg( 'test 3' );
         $this->_testFor_string_length( 877 );
         // check title string
-        $this->__testFor_pattern( "Consultant [(]"
+        $this->_testFor_pattern( "Consultant [(]"
                                   .show_status( $status3 )."[)]" );
         $this->_testFor_consultant_project_link($row2['proid'],
                                                 $row2['project_title'],
@@ -861,8 +861,8 @@ extends UnitTest
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 710 );
         // check title string
-        $this->__testFor_pattern("Referee [(]".show_status( $status1 )."[)]"); 
-        $this->__testFor_pattern("No referee proposal with this status\n");
+        $this->_testFor_pattern("Referee [(]".show_status( $status1 )."[)]"); 
+        $this->_testFor_pattern("No referee proposal with this status\n");
 
         //
         // snafu query
@@ -875,7 +875,7 @@ extends UnitTest
         $this->set_msg( 'test 2' );
         $this->_testFor_string_length( 774 );
         // check title string
-        $this->__testFor_pattern( "Referee [(]".show_status( $status2 )."[)]");
+        $this->_testFor_pattern( "Referee [(]".show_status( $status2 )."[)]");
         $this->_testFor_referee_project_link($row1['proid'],
                                              $row1['project_title'],
                                              $row1['status']);
@@ -890,7 +890,7 @@ extends UnitTest
         $this->set_msg( 'test 3' );
         $this->_testFor_string_length( 874 );
         // check title string
-        $this->__testFor_pattern("Referee [(]".show_status( $status3 )."[)]");
+        $this->_testFor_pattern("Referee [(]".show_status( $status3 )."[)]");
         $this->_testFor_referee_project_link($row2['proid'],
                                              $row2['project_title'],
                                              $row2['status']);
@@ -945,9 +945,9 @@ extends UnitTest
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 740 );
         // check title string
-        $this->__testFor_pattern( "Developing Cooperation [(]"
+        $this->_testFor_pattern( "Developing Cooperation [(]"
                                   .show_status( $status1 )."[)]");
-        $this->__testFor_pattern( "No developing cooperation proposal "
+        $this->_testFor_pattern( "No developing cooperation proposal "
                                   ."with this status\n");
 
         // test two
@@ -958,7 +958,7 @@ extends UnitTest
         $this->set_msg( 'test 2' );
         $this->_testFor_string_length( 879 );
         // check the title string
-        $this->__testFor_pattern( "Developing Cooperation [(]"
+        $this->_testFor_pattern( "Developing Cooperation [(]"
                                   .show_status( $status2 )."[)]");
 
         $this->_testFor_cooperation_project_link($row1['proid'],
@@ -972,7 +972,7 @@ extends UnitTest
         $this->set_msg( 'test 3' );
         $this->_testFor_string_length( 1069 );
         // check the title string
-        $this->__testFor_pattern( "Developing Cooperation [(]"
+        $this->_testFor_pattern( "Developing Cooperation [(]"
                                  .show_status( $status3 )."[)]");
 
         $this->_testFor_cooperation_project_link($row2['proid'],
@@ -1024,8 +1024,8 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 688 );
-        $this->__testFor_pattern( "My Projects" ); // title
-        $this->__testFor_pattern( "No personal projects\n" );
+        $this->_testFor_pattern( "My Projects" ); // title
+        $this->_testFor_pattern( "No personal projects\n" );
         
         // test two
         $bx = $this->_create_default_box();
@@ -1035,7 +1035,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 2' );
         $this->_testFor_string_length( 769 );
-        $this->__testFor_pattern( "My Projects" ); // title
+        $this->_testFor_pattern( "My Projects" ); // title
         $this->_testFor_project_link($row1['proid'],$row1['project_title'], 
                                      $row1['status']);
 
@@ -1047,7 +1047,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 3' );
         $this->_testFor_string_length( 871);
-        $this->__testFor_pattern( "My Projects" ); // title
+        $this->_testFor_pattern( "My Projects" ); // title
         $this->_testFor_project_link($row2['proid'],
                                      $row2['project_title'],$row2['status']);
         $this->_testFor_project_link($row3['proid'],
@@ -1097,8 +1097,8 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 696 );
-        $this->__testFor_pattern( "Monitored Projects" ); // title
-        $this->__testFor_pattern( "No monitored projects\n" );
+        $this->_testFor_pattern( "Monitored Projects" ); // title
+        $this->_testFor_pattern( "No monitored projects\n" );
 
         // test two
         $bx = $this->_create_default_box();
@@ -1108,7 +1108,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 2' );
         $this->_testFor_string_length( 776 );
-        $this->__testFor_pattern( "Monitored Projects" ); // title
+        $this->_testFor_pattern( "Monitored Projects" ); // title
         $this->_testFor_project_link($row1['proid'],
                                      $row1['project_title'], $row1['status']);
 
@@ -1120,7 +1120,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 3' );
         $this->_testFor_string_length( 878 );
-        $this->__testFor_pattern( "Monitored Projects" ); // title
+        $this->_testFor_pattern( "Monitored Projects" ); // title
         $this->_testFor_project_link($row2['proid'],
                                      $row2['project_title'], $row2['status']);
         $this->_testFor_project_link($row3['proid'],

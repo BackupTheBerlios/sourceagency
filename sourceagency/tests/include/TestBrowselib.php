@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestBrowselib.php,v 1.3 2002/05/31 12:41:50 riessen Exp $
+// $Id: TestBrowselib.php,v 1.4 2002/06/04 10:57:52 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -51,29 +51,29 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
 
         // check the contents of the output
-        $this->__checkFor_columns( 3 );
-        $this->__checkFor_a_box( $list_title );
-        $this->__checkFor_column_titles(array('No.'),'right','6%','');
-        $this->__checkFor_column_titles(array($list_title),'left','70%','');
-        $this->__testFor_box_column( 'center','20%','','<b>#&nbsp;'
+        $this->_checkFor_columns( 3 );
+        $this->_checkFor_a_box( $list_title );
+        $this->_checkFor_column_titles(array('No.'),'right','6%','');
+        $this->_checkFor_column_titles(array($list_title),'left','70%','');
+        $this->_testFor_box_column( 'center','20%','','<b>#&nbsp;'
                                           .$t->translate('Projects').'</b>');
         
         $colors = array( 0 => 'gold', 1 => '#FFFFFF' );
         for ( $idx = 0; $idx < $cnt; $idx++ ) {
             $bgc = $colors[ $idx % 2 ];
             $num = sprintf('[%03d]',$row[$idx]['COUNT(*)']);
-            $this->__testFor_box_column( 'right', '', $bgc, $idx+1);
+            $this->_testFor_box_column( 'right', '', $bgc, $idx+1);
             if ( $num != "[000]" ) {
-                $this->__testFor_box_column('center','',$bgc,
+                $this->_testFor_box_column('center','',$bgc,
                                              html_link('browse.php3',
                                                        array('through' => 
                                                          $list_type, 
                                                          $list_type => 
                                                          $ary[$idx]),$num));
             } else {
-                $this->__testFor_box_column('center','',$bgc,$num);
+                $this->_testFor_box_column('center','',$bgc,$num);
             }
-            $this->__testFor_box_column( 'left', '', $bgc, $ary[$idx]);
+            $this->_testFor_box_column( 'left', '', $bgc, $ary[$idx]);
         }
 
         $this->_testFor_string_length( $captured_length );
@@ -123,7 +123,7 @@ extends UnitTest
         capture_reset_and_start();
         _browse_not_yet();
         $this->set_text( capture_stop_and_get() );
-        $this->__checkFor_a_box( 'Not yet available' );
+        $this->_checkFor_a_box( 'Not yet available' );
     }
     function testBrowse_licenses() {
         $this->_test_to_be_completed();

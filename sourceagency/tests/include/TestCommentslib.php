@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestCommentslib.php,v 1.7 2002/05/31 12:41:50 riessen Exp $
+// $Id: TestCommentslib.php,v 1.8 2002/06/04 10:57:52 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -56,20 +56,20 @@ extends UnitTest
         comments_form( $proid );
         $this->set_text( capture_stop_and_get() );
 
-        $this->__checkFor_a_box( 'Your Comment' );
-        $this->__checkFor_a_form( 'PHP_SELF', array('proid' => $proid) );
-        $this->__testFor_html_form_hidden( 'type', $type);
-        $this->__testFor_html_form_hidden( 'number', $number );
-        $this->__testFor_html_form_hidden( 'ref', $ref);
-        $this->__checkFor_columns( 2 );
+        $this->_checkFor_a_box( 'Your Comment' );
+        $this->_checkFor_a_form( 'PHP_SELF', array('proid' => $proid) );
+        $this->_testFor_html_form_hidden( 'type', $type);
+        $this->_testFor_html_form_hidden( 'number', $number );
+        $this->_testFor_html_form_hidden( 'ref', $ref);
+        $this->_checkFor_columns( 2 );
 
-        $this->__checkFor_column_titles( array("Subject","Body") );
+        $this->_checkFor_column_titles( array("Subject","Body") );
         $v=array( html_input_text('subject', 40, 128, stripslashes($subject)),
                   html_textarea('text',40, 7,'virtual',255,
                                 stripslashes($text)));
-        $this->__checkFor_column_values( $v );
+        $this->_checkFor_column_values( $v );
   
-        $this->__checkFor_submit_preview_buttons();
+        $this->_checkFor_submit_preview_buttons();
 
         $this->_testFor_string_length( 2500 + strlen( $sess->self_url() ));
     }
@@ -90,12 +90,12 @@ extends UnitTest
         comments_preview( '' );
         $this->set_text( capture_stop_and_get() );
 
-        $this->__checkFor_a_box('Comment','%s '.stripslashes($subject));
-        $this->__checkFor_a_box('PREVIEW','<center><b>%s</b></center>');
+        $this->_checkFor_a_box('Comment','%s '.stripslashes($subject));
+        $this->_checkFor_a_box('PREVIEW','<center><b>%s</b></center>');
 
         $ps=array( 0=>$this->_to_regexp( lib_nick( $auth->auth['uname'])),
                    1=>$this->_to_regexp("<p>".stripslashes($text)."\n"));
-        $this->__testFor_patterns( $ps, 2 );
+        $this->_testFor_patterns( $ps, 2 );
         $this->_check_db( $db_config );
         $this->_testFor_string_length( 983 + strlen( timestr( time() ) ));
     }

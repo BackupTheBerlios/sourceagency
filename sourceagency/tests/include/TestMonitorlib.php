@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMonitorlib.php,v 1.12 2002/05/31 12:41:50 riessen Exp $
+# $Id: TestMonitorlib.php,v 1.13 2002/06/04 10:57:52 riessen Exp $
 #
 ######################################################################
 
@@ -130,7 +130,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 41 );
-        $this->__testFor_pattern( "<p>"
+        $this->_testFor_pattern( "<p>"
                                   .$t->translate("Nobody is monitoring this "
                                                  ."project")."[.]<p>\n");
         // 
@@ -146,29 +146,29 @@ extends UnitTest
         
         $color = array( 0 => "gold", 1 => "#FFFFFF" );
 
-        $this->__checkFor_a_box( 'All these users are monitor this project');
-        $this->__checkFor_columns( 5 );
+        $this->_checkFor_a_box( 'All these users are monitor this project');
+        $this->_checkFor_columns( 5 );
     
         $w=array( 'Number'=>'10%','Username'=>'20%','Type'=>'20%',
                   'Importance filter'=>'20%','Creation'=>'30%');
         while ( list( $key, $val ) = each( $w ) ) {
-            $this->__checkFor_column_titles( array( $key ),'center', $val, '');
+            $this->_checkFor_column_titles( array( $key ),'center', $val, '');
         }
         for ( $idx = 0; $idx < 4; $idx++ ) {
             $this->set_msg( 'test '. $idx );
-            $this->__testFor_box_column( 'center','',$color[$idx%2],
+            $this->_testFor_box_column( 'center','',$color[$idx%2],
                                           '<b>'.($idx+1).'</b>');
-            $this->__testFor_box_column( 'center','',$color[$idx%2],
+            $this->_testFor_box_column( 'center','',$color[$idx%2],
                                         '<b>'.lib_nick($row[$idx]['username'])
                                         .'</b>');
-            $this->__testFor_box_column( 'center','',$color[$idx%2],
+            $this->_testFor_box_column( 'center','',$color[$idx%2],
                                         '<b>'.$row[$idx]['perms']
                                         .'</b>');
-            $this->__testFor_box_column( 'center','',$color[$idx%2],
+            $this->_testFor_box_column( 'center','',$color[$idx%2],
                                         '<b>'.$row[$idx]['importance']
                                         .'</b>');
             $str = timestr_middle(mktimestamp($row[$idx]['creation']));
-            $this->__testFor_box_column( 'center','',$color[$idx%2],
+            $this->_testFor_box_column( 'center','',$color[$idx%2],
                                         '<b>'.$str.'</b>');
             
         }
@@ -191,7 +191,7 @@ extends UnitTest
         monitor_preview( $row[0]["proid"] );
         $this->set_text( capture_stop_and_get() );
         $this->_testFor_string_length( 1021 + strlen( timestr( time() )) );
-        $this->__testFor_pattern( "<b>by uname_0<\/b>" );
+        $this->_testFor_pattern( "<b>by uname_0<\/b>" );
     }
     
     function testMonitor_form() {
@@ -205,11 +205,11 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->_testFor_string_length( 1897 + strlen( $sess->self_url()));
 
-        $this->__checkFor_a_box( 'Monitor this project' );
-        $this->__checkFor_a_form( 'PHP_SELF', array('proid' => $proid) );
-        $this->__checkFor_columns( 2 );
-        $this->__checkFor_column_titles( array( 'Importance' ));
-        $this->__checkFor_submit_preview_buttons( );
+        $this->_checkFor_a_box( 'Monitor this project' );
+        $this->_checkFor_a_form( 'PHP_SELF', array('proid' => $proid) );
+        $this->_checkFor_columns( 2 );
+        $this->_checkFor_column_titles( array( 'Importance' ));
+        $this->_checkFor_submit_preview_buttons( );
     }
 
     function testMailuser() {
@@ -228,13 +228,13 @@ extends UnitTest
         foreach( array( 'fubar','low','medium','high', 'snafu' ) as $val ) {
             $this->set_text( select_importance( $val ) );
             $this->set_msg( 'Test '. $val );
-            $this->__testFor_html_select( 'importance' );
+            $this->_testFor_html_select( 'importance' );
             $sed = false; // set if something was selected
             foreach( array( 'low','medium','high') as $imp ) {
-                $this->__testFor_html_select_option($imp, $imp==$val, $imp);
+                $this->_testFor_html_select_option($imp, $imp==$val, $imp);
                 $sed = $sed || ( $imp == $val );
             }
-            $this->__testFor_html_select_end();
+            $this->_testFor_html_select_end();
             $this->_testFor_string_length( ($sed ? 164 : 155) );
         }
     }

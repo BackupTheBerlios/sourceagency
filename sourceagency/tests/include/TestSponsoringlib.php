@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSponsoringlib.php,v 1.15 2002/05/31 12:41:50 riessen Exp $
+# $Id: TestSponsoringlib.php,v 1.16 2002/06/04 10:57:52 riessen Exp $
 #
 ######################################################################
 
@@ -77,12 +77,12 @@ extends UnitTest
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 8389 + strlen( $sess->self_url()));
 
-        $this->__checkFor_a_box( 'Sponsoring involvement' );
+        $this->_checkFor_a_box( 'Sponsoring involvement' );
 
-        $this->__checkFor_a_form('PHP_SELF',array('proid'=>$proid));
-        $this->__checkFor_columns( 2 );
+        $this->_checkFor_a_form('PHP_SELF',array('proid'=>$proid));
+        $this->_checkFor_columns( 2 );
 
-        $this->__checkFor_column_titles( array("Valid until","Begin","Finish",
+        $this->_checkFor_column_titles( array("Valid until","Begin","Finish",
                                                "Budget (in euro)",
                                                "Sponsoring Comment"));
         foreach ( array(select_date('valid',$valid_day,$valid_month,
@@ -97,7 +97,7 @@ extends UnitTest
                         html_form_submit($t->translate('Preview'),'preview')
                         .html_form_submit($t->translate('Submit'),'submit')) 
                   as $val ) {
-          $this->__testFor_box_column('left','70%','',$val);
+          $this->_testFor_box_column('left','70%','',$val);
         }
     }
 
@@ -169,7 +169,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 84 );
-        $this->__testFor_pattern( "<p>There have not been posted any"
+        $this->_testFor_pattern( "<p>There have not been posted any"
                                  ." sponsoring involvement wishes "
                                  ."to this project.<p>");
 
@@ -183,8 +183,8 @@ extends UnitTest
         $this->set_msg( 'test 2' );
         $this->_testFor_string_length( 1090 );
         
-        $this->__checkFor_a_box( 'Sponsor Involvement' );
-        $this->__testFor_lib_nick( $rows[0]['username'] );
+        $this->_checkFor_a_box( 'Sponsor Involvement' );
+        $this->_testFor_lib_nick( $rows[0]['username'] );
 
         $v=array( 'Status'=>show_status($rows[0]['status']),
                   'Validity'=>timestr_middle(mktimestamp($rows[0]['valid'])),
@@ -196,12 +196,12 @@ extends UnitTest
                   'Comments to the involvement'=>$rows[0]['sponsoring_text']);
 
         while ( list( $key, $val ) = each( $v ) ) {
-            $this->__testFor_pattern( $this->_to_regexp('<b>'
+            $this->_testFor_pattern( $this->_to_regexp('<b>'
                                                         .$t->translate($key)
                                                         .':</b> '.$val));
         }
 
-        $this->__testFor_lib_comment_it( $db_d[1]["proid"], 'Sponsoring',
+        $this->_testFor_lib_comment_it( $db_d[1]["proid"], 'Sponsoring',
                     $rows[0]['spoid'],'0','Comment on Sponsor Involvement #'
                     .$rows[0]['spoid'],$t->translate('Comment it!'));
 
@@ -214,8 +214,8 @@ extends UnitTest
         $this->set_msg( 'test 3' );
         $this->_testFor_string_length( 1426 );
 
-        $this->__checkFor_a_box( 'Sponsor Involvement' );
-        $this->__testFor_lib_nick( $rows[1]['username']);
+        $this->_checkFor_a_box( 'Sponsor Involvement' );
+        $this->_testFor_lib_nick( $rows[1]['username']);
 
         $v=array( 'Status'=>show_status($rows[1]['status']),
                   'Validity'=>timestr_middle(mktimestamp($rows[1]['valid'])),
@@ -226,7 +226,7 @@ extends UnitTest
                   'Max. sum of money'=>$rows[1]['budget']." euros",
                   'Comments to the involvement'=>$rows[1]['sponsoring_text']);
         while( list($key, $val) = each( $v ) ) {
-            $this->__testFor_pattern( 
+            $this->_testFor_pattern( 
                             $this->_to_regexp('<b>'.$t->translate($key)
                                               .':</b> '.$val));
         }
@@ -235,9 +235,9 @@ extends UnitTest
                       ."proid_2&sponsor=username_1\" class=\"\">"
                       .$t->translate("Accept this sponsor involvement")
                       ."<\/a>"));
-        $this->__testFor_patterns( $ps, 1 );
+        $this->_testFor_patterns( $ps, 1 );
 
-        $this->__testFor_lib_comment_it( $db_d[2]["proid"], 'Sponsoring',
+        $this->_testFor_lib_comment_it( $db_d[2]["proid"], 'Sponsoring',
                     $rows[1]['spoid'],'0','Comment on Sponsor Involvement #'
                     .$rows[1]['spoid'],$t->translate('Comment it!'));
 
@@ -250,8 +250,8 @@ extends UnitTest
         $this->set_msg( 'test 4' );
         $this->_testFor_string_length( 1125 );
 
-        $this->__checkFor_a_box( 'Sponsor Involvement' );
-        $this->__testFor_lib_nick( $rows[2]['username']);
+        $this->_checkFor_a_box( 'Sponsor Involvement' );
+        $this->_testFor_lib_nick( $rows[2]['username']);
 
         $v=array( 'Status'=>show_status($rows[2]['status']),
                   'Validity'=>timestr_middle(mktimestamp($rows[2]['valid'])),
@@ -263,12 +263,12 @@ extends UnitTest
                   'Comments to the involvement'=>$rows[2]['sponsoring_text']);
 
         while ( list( $key, $val ) = each( $v ) ) {
-            $this->__testFor_pattern(  
+            $this->_testFor_pattern(  
                             $this->_to_regexp('<b>'.$t->translate($key)
                                               .':</b> '.$val));
         }
         
-        $this->__testFor_lib_comment_it( $db_d[3]["proid"], 'Sponsoring',
+        $this->_testFor_lib_comment_it( $db_d[3]["proid"], 'Sponsoring',
                     $rows[2]['spoid'],'0','Comment on Sponsor Involvement #'
                     .$rows[2]['spoid'],$t->translate('Comment it!'));
 
@@ -296,9 +296,9 @@ extends UnitTest
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 1196 + strlen( timestr( time() ) ));
 
-        $this->__checkFor_a_box( 'PREVIEW','<center><b>%s</b></center>' );
-        $this->__checkFor_a_box( 'Sponsor Involvement' );
-        $this->__testFor_lib_nick( $auth->auth['uname']);
+        $this->_checkFor_a_box( 'PREVIEW','<center><b>%s</b></center>' );
+        $this->_checkFor_a_box( 'Sponsor Involvement' );
+        $this->_testFor_lib_nick( $auth->auth['uname']);
 
         $v=array( 'Status'=>'Proposed',
                   'Validity'=>timestr_middle(
@@ -314,7 +314,7 @@ extends UnitTest
                   'Comments to the involvement'=>"$sponsoring_text");
 
         while ( list( $key, $val ) = each( $v ) ) {
-            $this->__testFor_pattern( 
+            $this->_testFor_pattern( 
                           $this->_to_regexp('<b>'.$t->translate($key)
                                             .':</b> '.$val));
         }
@@ -508,7 +508,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 442 );
-        $this->__testFor_pattern( "<a href=\"personal[.]php3[?]username="
+        $this->_testFor_pattern( "<a href=\"personal[.]php3[?]username="
                                   ."this[+]is[+]the[+]username\" class="
                                   ."\"\">Personal Page<\/a>");
     
@@ -526,7 +526,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 2' );
         $this->_testFor_string_length( 141 );
-        $this->__testFor_pattern( "<p><b>Congratulations<\/b>. You are the "
+        $this->_testFor_pattern( "<p><b>Congratulations<\/b>. You are the "
                                   ."first sponsor. You can <a href=\""
                                   ."configure_edit.php3[?]proid=proid_1\" "
                                   ."class=\"\">configure this project<\/a>");
@@ -560,7 +560,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 4' );
         $this->_testFor_string_length( 137 );
-        $this->__testFor_pattern( "<p><b>Database Failure:<\/b> it seems you "
+        $this->_testFor_pattern( "<p><b>Database Failure:<\/b> it seems you "
                                  ."have more than one sponsorship! Please "
                                  ."advice the administrator and have the "
                                  ."database corrected.");

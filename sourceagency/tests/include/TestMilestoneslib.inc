@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMilestoneslib.inc,v 1.22 2002/05/31 12:41:50 riessen Exp $
+# $Id: TestMilestoneslib.inc,v 1.23 2002/06/04 10:57:52 riessen Exp $
 #
 ######################################################################
 
@@ -69,12 +69,12 @@ extends UnitTest
         milestones_propose_milestone( $proid );
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
-        $this->__testFor_html_link( 'step3_edit.php3',
+        $this->_testFor_html_link( 'step3_edit.php3',
                                    array( 'proid'=>$proid, 'a'=>'1' ),'<b>'
                                    .$t->translate("Propose Milestones")
                                    .'</b>');
         $this->_testFor_string_length( 98);
-        $this->__testFor_patterns( $pats, 2 );
+        $this->_testFor_patterns( $pats, 2 );
         
         //
         // test 2 proid is defined
@@ -85,12 +85,12 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 2' );
 
-        $this->__testFor_html_link( 'step3_edit.php3',
+        $this->_testFor_html_link( 'step3_edit.php3',
                                    array( 'proid'=>$proid, 'a'=>'1' ),'<b>'
                                    .$t->translate("Propose Milestones")
                                    .'</b>');
         $this->_testFor_string_length( 115);
-        $this->__testFor_patterns( $pats, 2 );
+        $this->_testFor_patterns( $pats, 2 );
     }
 
     function testShow_milestones() {
@@ -190,17 +190,17 @@ extends UnitTest
         $this->set_msg( 'test 3' );
         $this->_testFor_string_length( 4782 );
         
-        $this->__testFor_box_column('center','7%','','<b>'
+        $this->_testFor_box_column('center','7%','','<b>'
                                         .$t->translate('Number').'</b>');
-        $this->__testFor_box_column('','53%','','<b>'
+        $this->_testFor_box_column('','53%','','<b>'
                                         .$t->translate('Goals').'</b>');
-        $this->__testFor_box_column('center','16%','','<b>'
+        $this->_testFor_box_column('center','16%','','<b>'
                                         .$t->translate('Release Date').'</b>');
-        $this->__testFor_box_column('center','12%','','<b>'
+        $this->_testFor_box_column('center','12%','','<b>'
                                         .$t->translate('Product').'</b>');
-        $this->__testFor_box_column('center','8%','','<b>'
+        $this->_testFor_box_column('center','8%','','<b>'
                                         .$t->translate('Payment').'</b>');
-        $this->__testFor_box_column('center','14%','','<b>'
+        $this->_testFor_box_column('center','14%','','<b>'
                                         .$t->translate('Status').'</b>');
         
         // FIXME: need to check the rest of the table
@@ -251,7 +251,7 @@ extends UnitTest
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 103 );
         $pats = array( 0 => (sprintf( $ln, $dat[0]["pid"])));
-        $this->__testFor_patterns( $pats, 1 );
+        $this->_testFor_patterns( $pats, 1 );
 
         //
         // test 2 -- goals is not set and therefore no database insert happens
@@ -273,7 +273,7 @@ extends UnitTest
         $pats = array( 0 => (sprintf( $ln, $dat[1]["pid"])),
                        1 => $t->translate("Insert Failed" ),
                        2 => $t->translate("No Goals defined."));
-        $this->__testFor_patterns( $pats, 3 );
+        $this->_testFor_patterns( $pats, 3 );
 
         //
         // test 3 -- number used is already taken
@@ -294,7 +294,7 @@ extends UnitTest
         $pats = array( 0 => (sprintf( $ln, $dat[2]["pid"])),
                        1 => $t->translate("Insert Failed" ),
                        2 => $t->translate("Number parameter already in use."));
-        $this->__testFor_patterns( $pats, 3 );
+        $this->_testFor_patterns( $pats, 3 );
 
         //
         // test 4 -- number parameter is not set, no queries
@@ -312,7 +312,7 @@ extends UnitTest
         $pats = array( 0 => (sprintf( $ln, $dat[3]["pid"])),
                        1 => $t->translate("Insert Failed" ),
                        2 => $t->translate("Number parameter was not set."));
-        $this->__testFor_patterns( $pats, 3 );
+        $this->_testFor_patterns( $pats, 3 );
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -352,7 +352,7 @@ extends UnitTest
         $this->_testFor_string_length( 212 );
         for ( $idx = 4; $idx < 10; $idx++ ) {
             $this->set_msg( 'test 1: idx='.$idx );
-            $this->__testFor_pattern(("<option value=\"".$idx."\">".$idx));
+            $this->_testFor_pattern(("<option value=\"".$idx."\">".$idx));
         }
 
         //
@@ -364,7 +364,7 @@ extends UnitTest
         $this->_testFor_string_length( 185 );
         for ( $idx = 1; $idx < 6; $idx++ ) {
             $this->set_msg( 'test 2: idx = '.$idx );
-            $this->__testFor_pattern("<option value=\"".$idx."\">".$idx);
+            $this->_testFor_pattern("<option value=\"".$idx."\">".$idx);
         }
 
         //
@@ -374,10 +374,10 @@ extends UnitTest
                                                       $dat[2]["devid"],5));
         $this->set_msg( 'test 3' );
         $this->_testFor_string_length( 194 );
-        $this->__testFor_pattern( "<option selected value=\"5\">5" );
+        $this->_testFor_pattern( "<option selected value=\"5\">5" );
         for ( $idx = 1; $idx < 5; $idx++ ) {
             $this->set_msg( 'test 3: idx = '.$idx );
-            $this->__testFor_pattern("<option value=\"".$idx."\">".$idx);
+            $this->_testFor_pattern("<option value=\"".$idx."\">".$idx);
         }
 
         // finally check that everything went smoothly with the DB
@@ -436,9 +436,9 @@ extends UnitTest
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 116 );
         for ( $i = 2; $i < 4; $i+=2 ) {
-            $this->__testFor_pattern("option value=\"" . $i . "\">". $i ."%");
+            $this->_testFor_pattern("option value=\"" . $i . "\">". $i ."%");
         }
-        $this->__testFor_pattern( "option selected value=\"4\">4%" );
+        $this->_testFor_pattern( "option selected value=\"4\">4%" );
 
         // test 2
         $args[1]["selected"] = 50;
@@ -447,9 +447,9 @@ extends UnitTest
         $this->set_msg( 'test 2' );
         $this->_testFor_string_length( 802 );
         for ( $i = 2; $i < 50; $i+=2 ) {
-            $this->__testFor_pattern("option value=\"" . $i ."\">". $i . "%");
+            $this->_testFor_pattern("option value=\"" . $i ."\">". $i . "%");
         }
-        $this->__testFor_pattern( "option selected value=\"50\">50%" );
+        $this->_testFor_pattern( "option selected value=\"50\">50%" );
 
         // test 3
         $args[2]["selected"] = 100;
@@ -457,9 +457,9 @@ extends UnitTest
                                               $args[2]));
         $this->_testFor_string_length( 1554 );
         for ( $i = 2; $i < 100; $i+=2 ) {
-            $this->__testFor_pattern("option value=\"" . $i . "\">". $i . "%");
+            $this->_testFor_pattern("option value=\"" . $i . "\">". $i . "%");
         }
-        $this->__testFor_pattern( "option selected value=\"100\">100%" );
+        $this->_testFor_pattern( "option selected value=\"100\">100%" );
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );

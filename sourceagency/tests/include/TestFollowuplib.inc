@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowuplib.inc,v 1.13 2002/05/31 12:41:50 riessen Exp $
+# $Id: TestFollowuplib.inc,v 1.14 2002/06/04 10:57:52 riessen Exp $
 #
 ######################################################################\
 
@@ -406,21 +406,21 @@ extends UnitTest
         global $t, $auth;
         global $milestone_number, $location, $count;
 
-        $this->__checkFor_a_box( $title );
-        $this->__checkFor_a_box('PREVIEW',"<center><b>%s</b></center>");
-        $this->__testFor_pattern( 
+        $this->_checkFor_a_box( $title );
+        $this->_checkFor_a_box('PREVIEW',"<center><b>%s</b></center>");
+        $this->_testFor_pattern( 
                      $this->_to_regexp(lib_nick($auth->auth["uname"])));
-        $this->__checkFor_columns( 2 );
+        $this->_checkFor_columns( 2 );
 
         foreach ( array_merge( $col, array( 'Milestone number', 'Goals', 
                                             'Release Date','Product',
                                             'Payment', 'Location', 'Count'))
                   as $val ) {
-            $this->__testFor_box_column("right","30%","","<b>"
+            $this->_testFor_box_column("right","30%","","<b>"
                                                  .$t->translate($val).":</b>");
         }
 
-        $this->__checkFor_column_values(  
+        $this->_checkFor_column_values(  
                       array_merge( $row, array( $milestone_number, $count,
                       html_link( $location, array(), $location ))));
     }

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.21 2002/05/31 12:41:50 riessen Exp $
+# $Id: TestSecurity.php,v 1.22 2002/06/04 10:57:52 riessen Exp $
 #
 ######################################################################
 
@@ -153,7 +153,7 @@ extends UnitTest
                        1 => ("<font color=\"#FF2020\">[ \n]+"
                              .$t->translate($body_text)."[ \n]+<\/font>") );
 
-        $this->__testFor_patterns( $pats, 2 );
+        $this->_testFor_patterns( $pats, 2 );
     }
 
     function testInvalid_project_id() {
@@ -322,7 +322,7 @@ extends UnitTest
                   1=>$p_f_g,
                   2=>eval( sprintf( $p_exp, "1" ) ),
                   3=>eval( sprintf( $p_text, "1" )));
-        $this->__testFor_patterns( $ps, 4 );
+        $this->_testFor_patterns( $ps, 4 );
         $text_0_0 = $this->get_text();
 
         // test two: project status = -1, action number = 0, no consultants
@@ -365,7 +365,7 @@ extends UnitTest
         $ps[1] = sprintf( $p_l, "1" );
         $ps[4] = $t->translate('this project is configured to have '
                                .'<b>no<\/b> consultants');
-        $this->__testFor_patterns( $ps, 5 );
+        $this->_testFor_patterns( $ps, 5 );
         $text_1_1 = $this->get_text();
 
         // test six: project status = 2, action num = 1, no consultants
@@ -389,7 +389,7 @@ extends UnitTest
         $this->set_msg( 'test 7' );
         $ps[4] = ( '<B>COUNT[(][*][)]_0<\/B> '
                    .$t->translate('consultant offerings') );
-        $this->__testFor_patterns( $ps, 5 );
+        $this->_testFor_patterns( $ps, 5 );
         $this->_testFor_string_length( 231 );
         $text_1_1_yes = $this->get_text();
 
@@ -432,7 +432,7 @@ extends UnitTest
                   1=>$p_f_g,
                   2=>eval( sprintf( $p_exp, "2" ) ),
                   3=>eval( sprintf( $p_text, "2" )));
-        $this->__testFor_patterns( $ps, 4 );
+        $this->_testFor_patterns( $ps, 4 );
         $this->_testFor_string_length( 265 );
 
         // test 11: project status 2, action number 2
@@ -451,7 +451,7 @@ extends UnitTest
                    .$t->translate('suggested project contents').', '
                    .'<B>COUNT[(][*][)]_1<\/B> '
                    .$t->translate('developing proposals') );
-        $this->__testFor_patterns( $ps, 5 );
+        $this->_testFor_patterns( $ps, 5 );
         $this->_testFor_string_length( 358 );
         $text_2_2 = $this->get_text();
 
@@ -480,7 +480,7 @@ extends UnitTest
                   1=>$p_f_g,
                   2=>eval( sprintf( $p_exp, "3" ) ),
                   3=>eval( sprintf( $p_text, "3" )));
-        $this->__testFor_patterns( $ps, 4 );
+        $this->_testFor_patterns( $ps, 4 );
         $this->_testFor_string_length( 175 );
 
         // test 14: project status 3, action number 3
@@ -495,7 +495,7 @@ extends UnitTest
         $ps[1] = sprintf( $p_l, '3' );
         $ps[4] = "<B>COUNT[(][*][)]_0<\/B> "
            .$t->translate("suggested milestones");
-        $this->__testFor_patterns( $ps, 5 );
+        $this->_testFor_patterns( $ps, 5 );
         $this->_testFor_string_length( 222 );
         $text_3_3 = $this->get_text();
 
@@ -522,7 +522,7 @@ extends UnitTest
                   1=>$p_f_g,
                   2=>eval( sprintf( $p_exp, "4" ) ),
                   3=>eval( sprintf( $p_text, "4" )));
-        $this->__testFor_patterns( $ps, 4 );
+        $this->_testFor_patterns( $ps, 4 );
         $this->_testFor_string_length( 225 );
 
         // test 17: project status 4, action number 4
@@ -535,7 +535,7 @@ extends UnitTest
         $ps[0] = sprintf( $p_i, "4" );
         $ps[1] = sprintf( $p_l, "4" );
         $ps[4] = "<B>COUNT[(][*][)]_0<\/B> ".$t->translate("referees offered");
-        $this->__testFor_patterns( $ps, 5 );
+        $this->_testFor_patterns( $ps, 5 );
         $this->_testFor_string_length( 268 );
         $text_4_4 = $this->get_text();
 
@@ -559,7 +559,7 @@ extends UnitTest
                   1=>$p_f_g,
                   2=>eval( sprintf( $p_exp, "5" ) ),
                   3=>eval( sprintf( $p_text, "5" )));
-        $this->__testFor_patterns( $ps, 4 );
+        $this->_testFor_patterns( $ps, 4 );
         $this->_testFor_string_length( 208 );
 
         // test 20: project status 5, action number 5
@@ -571,7 +571,7 @@ extends UnitTest
         $ps[1] = sprintf( $p_l, "5" );
         $ps[4] = ( "<B>x<\/B> ".$t->translate("milestones of")
                    ." <b>x<\/b> ".$t->translate("total milestones fulfilled"));
-        $this->__testFor_patterns( $ps, 5 );
+        $this->_testFor_patterns( $ps, 5 );
         $this->_testFor_string_length( 275 );
         $text_5_5 = $this->get_text();
 
@@ -592,7 +592,7 @@ extends UnitTest
                   1=>$p_f_g,
                   2=>eval( sprintf( $p_exp, "6" ) ),
                   3=>eval( sprintf( $p_text, "6" )));
-        $this->__testFor_patterns( $ps, 4 );
+        $this->_testFor_patterns( $ps, 4 );
         $this->_testFor_string_length( 174 );
 
         // test 23: project status 6, action number 6
@@ -604,7 +604,7 @@ extends UnitTest
         $ps[1] = sprintf( $p_l, "6" );
         $ps[4] = ( "<br>" );
         $this->_testFor_string_length( 179 );
-        $this->__testFor_patterns( $ps, 5 );
+        $this->_testFor_patterns( $ps, 5 );
         $text_6_6 = $this->get_text();
 
         // test 24: project status 7, action number 6
@@ -984,7 +984,7 @@ extends UnitTest
         $this->set_msg( 'test 1' );
         $ps[1] = sprintf( $p, $t->translate("The milestone has not "
                                             ."been posted by the developer"));
-        $this->__testFor_patterns( $ps, 2 );
+        $this->_testFor_patterns( $ps, 2 );
         $this->_testFor_string_length( 2978 );
 
         // step5_iteration(..) returns 1
@@ -996,7 +996,7 @@ extends UnitTest
         $ps[1] = sprintf( $p, $t->translate('The milestone has been posted. '
                                             .'Sponsors are studying whether '
                                             .'to accept it or not.'));
-        $this->__testFor_patterns( $ps, 2 );
+        $this->_testFor_patterns( $ps, 2 );
         $this->_testFor_string_length( 3009 );
 
         // step5_iteration(..) returns 2
@@ -1008,7 +1008,7 @@ extends UnitTest
         $ps[1] = sprintf( $p, $t->translate('Sponsors have rejected the '
                                             .'current milestone. The referee '
                                             .'is studying it.'));
-        $this->__testFor_patterns( $ps, 2 );
+        $this->_testFor_patterns( $ps, 2 );
         $this->_testFor_string_length( 3001 );
 
         // step5_iteration(..) returns 3
@@ -1023,7 +1023,7 @@ extends UnitTest
                                             .'the promised goals. Sponsors '
                                             .'are deciding what is going to '
                                             .'happen to the project'));
-        $this->__testFor_patterns( $ps, 2 );
+        $this->_testFor_patterns( $ps, 2 );
         $this->_testFor_string_length( 3092 );
 
         // step5_iteration(..) returns 4
@@ -1033,7 +1033,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 5' );
         $ps[1] = sprintf( $p, $t->translate('Unknown iteration'));
-        $this->__testFor_patterns( $ps, 2);
+        $this->_testFor_patterns( $ps, 2);
         $this->_testFor_string_length( 2945 );
 
         // step5_iteration(..) returns 5
@@ -1044,7 +1044,7 @@ extends UnitTest
         $this->set_msg( 'test 6' );
         $ps[1] = sprintf( $p, $t->translate('The follow_up process is '
                                             .'finished'));
-        $this->__testFor_patterns( $ps, 2 );
+        $this->_testFor_patterns( $ps, 2 );
         $this->_testFor_string_length( 2961 );
 
         // step5_iteration(..) returns 6
@@ -1054,7 +1054,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 7' );
         $ps[1] = sprintf( $p, $t->translate('Unknown iteration'));
-        $this->__testFor_patterns( $ps, 2 );
+        $this->_testFor_patterns( $ps, 2 );
         $this->_testFor_string_length( 2945 );
         
         $this->_check_db( $db_config );
@@ -1115,7 +1115,7 @@ extends UnitTest
                                    .'You should modify your existing '
                                    .'milestones before creating a new one.'));
 
-        $this->__testFor_patterns( $ps, 2 );
+        $this->_testFor_patterns( $ps, 2 );
         $this->_testFor_string_length( 3245 );
         $this->_check_db( $db_config );
     }

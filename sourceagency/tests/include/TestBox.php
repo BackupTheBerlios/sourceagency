@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestBox.php,v 1.20 2002/05/31 12:41:50 riessen Exp $
+# $Id: TestBox.php,v 1.21 2002/06/04 10:57:52 riessen Exp $
 #
 ######################################################################
 
@@ -52,7 +52,7 @@ extends UnitTest
         $this->_call_method( $name, $args, &$this->box );
         $this->set_text( capture_stop_and_get() );
         $this->_testFor_string_length( $exp_length );
-        $this->_call_method( '__testFor_'.$name, $args );
+        $this->_call_method( '_testFor_'.$name, $args );
     }
 
     function _test_no_arg_method( $name, $exp_length ) {
@@ -86,9 +86,9 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->_testFor_string_length( 198 );
 
-        $this->__testFor_box_title_begin( );
-        $this->__testFor_box_title( $title );
-        $this->__testFor_box_title_end( );
+        $this->_testFor_box_title_begin( );
+        $this->_testFor_box_title( $title );
+        $this->_testFor_box_title_end( );
     }
 
     function testBox_body_begin() {
@@ -106,9 +106,9 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->_testFor_string_length( 282 );
 
-        $this->__testFor_box_body_begin();
-        $this->__testFor_box_body($body);
-        $this->__testFor_box_body_end();
+        $this->_testFor_box_body_begin();
+        $this->_testFor_box_body($body);
+        $this->_testFor_box_body_end();
     }
 
     function testBox_full() {
@@ -119,10 +119,10 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->_testFor_string_length( 764 );
 
-        $this->__testFor_box_begin();
-        $this->__testFor_box_title($title );
-        $this->__testFor_box_body($body );
-        $this->__testFor_box_end();
+        $this->_testFor_box_begin();
+        $this->_testFor_box_title($title );
+        $this->_testFor_box_body($body );
+        $this->_testFor_box_end();
     }
 
     function testBox_strip() {
@@ -132,9 +132,9 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
 
         $this->_testFor_string_length( 479 );
-        $this->__testFor_box_begin();
-        $this->__testFor_box_title($title);
-        $this->__testFor_box_end();
+        $this->_testFor_box_begin();
+        $this->_testFor_box_title($title);
+        $this->_testFor_box_end();
     }
 
     function testBox_columns_begin() {

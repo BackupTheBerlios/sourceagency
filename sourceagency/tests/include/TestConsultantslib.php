@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConsultantslib.php,v 1.8 2002/05/31 12:41:50 riessen Exp $
+// $Id: TestConsultantslib.php,v 1.9 2002/06/04 10:57:52 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -81,7 +81,7 @@ extends UnitTest
         $this->set_msg( "test 1" );
 
         $this->_testFor_string_length( 64 );
-        $this->__testFor_pattern( "No developers have offered "
+        $this->_testFor_pattern( "No developers have offered "
                                   ."themselves as consultants yet" );
 
         // second test: three pieces of data
@@ -91,17 +91,17 @@ extends UnitTest
         show_consultants( $dat[1]["proid"] );
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 2' );
-        $this->__checkFor_a_box( 'Consultants' );
-        $this->__checkFor_columns( 4 );
-        $this->__checkFor_column_titles(array("Number","Username",
+        $this->_checkFor_a_box( 'Consultants' );
+        $this->_checkFor_columns( 4 );
+        $this->_checkFor_column_titles(array("Number","Username",
                                               "Status","Creation"), '','','' );
 
         $colors = array( 1 => 'gold', 0 => '#FFFFFF' );
         for ( $idx = 1; $idx < 4; $idx++ ) {
             $row = $rows[ $idx - 1 ];
             $this->set_msg( "Test $idx" );
-            $this->__testFor_box_next_row_of_columns();
-            $this->__checkFor_column_values(  
+            $this->_testFor_box_next_row_of_columns();
+            $this->_checkFor_column_values(  
                          array( '<b>'.$idx.'</b>',
                                 '<b>'.lib_nick($row['username']),
                                 '<b>'.show_status($row["status"]).'</b>',
@@ -126,19 +126,19 @@ extends UnitTest
         consultants_form( $proid );
         $this->set_text( capture_stop_and_get() );
 
-        $this->__checkFor_a_box( 'Offer yourself as project consultant' );
+        $this->_checkFor_a_box( 'Offer yourself as project consultant' );
 
-        $this->__checkFor_a_form( 'PHP_SELF', array('proid'=>$proid));
-        $this->__checkFor_columns( 2 );
+        $this->_checkFor_a_form( 'PHP_SELF', array('proid'=>$proid));
+        $this->_checkFor_columns( 2 );
 
-        $this->__checkFor_column_titles( array("Your username","Check if you "
+        $this->_checkFor_column_titles( array("Your username","Check if you "
                                                ."want to be a consultant"),
                                          'right', '45%', '' );
-        $this->__checkFor_column_values( array( $uname, 
+        $this->_checkFor_column_values( array( $uname, 
                          html_checkbox('check','check',''),
                          html_form_submit($t->translate('Submit'),'submit')),
                          'left', '55%', '' );
-        $this->__testFor_box_next_row_of_columns();
+        $this->_testFor_box_next_row_of_columns();
         $this->_testFor_string_length( 2184 + strlen( $sess->self_url() ));
     }
 
@@ -173,11 +173,11 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
 
         include( 'config.inc' ); // for th_box_{error|title}_font_color
-        $this->__testFor_box_title($t->translate('No consultants wanted'),
+        $this->_testFor_box_title($t->translate('No consultants wanted'),
                                     $th_box_title_font_color,
                                     $th_box_title_bgcolor,
                                     $th_box_title_align );
-        $this->__testFor_box_body( $t->translate("This project does "
+        $this->_testFor_box_body( $t->translate("This project does "
                                                  ."not require "
                                                  ."any consultants"), 
                                    $th_box_error_font_color );
@@ -213,8 +213,8 @@ extends UnitTest
         
         // the basics for show_consultants(...), assume that the rest
         // is also present
-        $this->__checkFor_a_box( 'Consultants' );
-        $this->__checkFor_columns( 4 );
+        $this->_checkFor_a_box( 'Consultants' );
+        $this->_checkFor_columns( 4 );
 
         $this->_testFor_string_length( 1494 );
         $this->_check_db( $db_config );

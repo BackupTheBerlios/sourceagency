@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestNewslib.php,v 1.19 2002/05/31 12:41:50 riessen Exp $
+# $Id: TestNewslib.php,v 1.20 2002/06/04 10:57:52 riessen Exp $
 #
 ######################################################################
 
@@ -67,16 +67,16 @@ extends UnitTest
         newsform( $proid ); 
         $this->set_text( capture_stop_and_get() );
 
-        $this->__checkFor_a_box( 'Editing News' );
-        $this->__checkFor_a_form('PHP_SELF',array('proid'=>$proid));
-        $this->__checkFor_columns( 2 );
+        $this->_checkFor_a_box( 'Editing News' );
+        $this->_checkFor_a_form('PHP_SELF',array('proid'=>$proid));
+        $this->_checkFor_columns( 2 );
 
-        $this->__checkFor_column_titles( array( 'Body', 'Subject' ));
-        $this->__checkFor_column_values(
+        $this->_checkFor_column_titles( array( 'Body', 'Subject' ));
+        $this->_checkFor_column_values(
             array( html_input_text('subject',40,128,$subject),
                    html_textarea('text',40,7,'virtual',255,$text )));
 
-        $this->__checkFor_submit_preview_buttons();
+        $this->_checkFor_submit_preview_buttons();
         $this->_testFor_string_length( 2307 + strlen( $sess->self_url() ) );
     }
 
@@ -93,16 +93,16 @@ extends UnitTest
         news_modify_form( $proid ); 
         $this->set_text( capture_stop_and_get() );
 
-        $this->__checkFor_a_box( 'Modifying News' );
-        $this->__checkFor_a_form('PHP_SELF',array('proid'=>$proid));
-        $this->__testFor_html_form_hidden( 'creation', $creation );
-        $this->__checkFor_columns( 2 );
-        $this->__checkFor_column_titles( array( 'Subject', 'Body' ) );
-        $this->__checkFor_column_values(  
+        $this->_checkFor_a_box( 'Modifying News' );
+        $this->_checkFor_a_form('PHP_SELF',array('proid'=>$proid));
+        $this->_testFor_html_form_hidden( 'creation', $creation );
+        $this->_checkFor_columns( 2 );
+        $this->_checkFor_column_titles( array( 'Subject', 'Body' ) );
+        $this->_checkFor_column_values(  
                  array(html_textarea('text',40,7,'virtual',255,$text),
                        html_input_text('subject',40,128,$subject)));
         
-        $this->__checkFor_submit_preview_buttons();
+        $this->_checkFor_submit_preview_buttons();
         $this->_testFor_string_length( 2366 + strlen( $sess->self_url() ));
     }
 
@@ -119,10 +119,10 @@ extends UnitTest
         news_preview( $proid );
         $this->set_text( capture_stop_and_get() );
 
-        $this->__checkFor_a_box('PREVIEW','<center><b>%s</b></center>');
-        $this->__checkFor_a_box('News','%s: '.$subject);
+        $this->_checkFor_a_box('PREVIEW','<center><b>%s</b></center>');
+        $this->_checkFor_a_box('News','%s: '.$subject);
         
-        $this->__testFor_lib_nick( $auth->auth['uname'] );
+        $this->_testFor_lib_nick( $auth->auth['uname'] );
 
         $this->_testFor_string_length( 947 + strlen(timestr(time())));
     }
@@ -192,7 +192,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 67 );
-        $this->__testFor_pattern( "<p>There have not been posted any "
+        $this->_testFor_pattern( "<p>There have not been posted any "
                                   ."news by the project owner[(]s[)].<p>" );
         
         //
@@ -206,11 +206,11 @@ extends UnitTest
         $this->set_msg( "test 2" );
         $this->_testFor_string_length(894);
 
-        $this->__checkFor_a_box('News','%s: '.$row[0]['subject_news']);
+        $this->_checkFor_a_box('News','%s: '.$row[0]['subject_news']);
 
-        $this->__testFor_lib_nick( $row[0]['user_news']);
+        $this->_testFor_lib_nick( $row[0]['user_news']);
         
-        $this->__testFor_lib_comment_it( $proid[1],'News',
+        $this->_testFor_lib_comment_it( $proid[1],'News',
                                         $row[0]['creation_news'],'0',
                                         'Re:'.$row[0]['subject_news'], 
                                         $t->translate('Comment This News!'));
@@ -226,13 +226,13 @@ extends UnitTest
         $this->set_msg( 'test 3' );
         $this->_testFor_string_length( 1943 );
 
-        $this->__checkFor_a_box('News','%s: '.$row[1]['subject_news']);
-        $this->__checkFor_a_box('News','%s: '.$row[2]['subject_news']);
+        $this->_checkFor_a_box('News','%s: '.$row[1]['subject_news']);
+        $this->_checkFor_a_box('News','%s: '.$row[2]['subject_news']);
 
-        $this->__testFor_lib_nick( $row[1]['user_news']);
-        $this->__testFor_lib_nick( $row[2]['user_news']);
+        $this->_testFor_lib_nick( $row[1]['user_news']);
+        $this->_testFor_lib_nick( $row[2]['user_news']);
 
-        $this->__testFor_lib_comment_it( $proid[2],'News',
+        $this->_testFor_lib_comment_it( $proid[2],'News',
                                          $row[2]['creation_news'],'0',
                                          'Re:'.$row[2]['subject_news'], 
                                          $t->translate( 'Comment This News!'));
@@ -278,7 +278,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 67 );
-        $this->__testFor_pattern("<p>There have not been posted any news "
+        $this->_testFor_pattern("<p>There have not been posted any news "
                                  ."by the project owner[(]s[)][.]<p>\n");
 
         // check that the database component did not fail
@@ -324,7 +324,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 67 );
-        $this->__testFor_pattern("<p>There have not been posted any news "
+        $this->_testFor_pattern("<p>There have not been posted any news "
                                 ."by the project owner[(]s[)][.]<p>\n");
 
         // check that the database component did not fail

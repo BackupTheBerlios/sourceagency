@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.24 2002/05/31 12:41:50 riessen Exp $
+# $Id: TestLib.php,v 1.25 2002/06/04 10:57:52 riessen Exp $
 #
 ######################################################################
 
@@ -114,20 +114,20 @@ extends UnitTest
         $expect[1] = "[ \n]+<option value=\"Yes\">Yes";
         $expect[2] = "[ \n]+<option selected value=\"No\">No";
         $expect[3] =  "[ \n]+<\/select>[ \n]+";
-        $this->__testFor_pattern( implode('', $expect) );
+        $this->_testFor_pattern( implode('', $expect) );
         $this->_testFor_string_length( 118 );
 
         $this->set_text( lib_select_yes_or_no( "fubar", "Yes" ) );
         $this->set_msg( 'test 2' );
         $expect[1] = "[ \n]+<option selected value=\"Yes\">Yes";
         $expect[2] = "[ \n]+<option value=\"No\">No";
-        $this->__testFor_pattern( implode('', $expect) );
+        $this->_testFor_pattern( implode('', $expect) );
         $this->_testFor_string_length( 118 );
 
         $this->set_text( lib_select_yes_or_no( "fubar", "" ) );
         $this->set_msg( 'test 3' );
         $expect[1] = "[ \n]+<option value=\"Yes\">Yes";
-        $this->__testFor_pattern( implode('', $expect) );
+        $this->_testFor_pattern( implode('', $expect) );
         $this->_testFor_string_length( 109 );
     }
 
@@ -136,7 +136,7 @@ extends UnitTest
         $this->set_text( lib_nick( $uname ) );
         $this->set_msg( 'test 1' );
         $this->assertEquals("<b>by $uname</b>",
-                            $this->__testFor_lib_nick($uname));
+                            $this->_testFor_lib_nick($uname));
         $this->_testFor_string_length( 15 );
 
         $uname = 'SNAFU';
@@ -144,7 +144,7 @@ extends UnitTest
         lib_pnick( $uname );
         $this->set_text( capture_stop_and_get() );
         $this->assertEquals( "<b>by $uname</b>",  
-                             $this->__testFor_lib_nick($uname));
+                             $this->_testFor_lib_nick($uname));
         $this->_testFor_string_length( 15 );
     }
 
@@ -167,7 +167,7 @@ extends UnitTest
         $expect[] = "[ \n]+<\/select>[ \n]+";
         
         $this->set_text( select_date( "fubar", "-1", "-1", "-1" ) );
-        $this->__testFor_pattern( implode( "", $expect ) );
+        $this->_testFor_pattern( implode( "", $expect ) );
         $this->_testFor_string_length( 1597 );
     }
 
@@ -289,11 +289,11 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
 
-        $this->__checkFor_columns( 2 );
+        $this->_checkFor_columns( 2 );
 
         $titles=array("Project Owner(s)","Project Type","Project Nature",
                       "Project Volume","Current project budget","Creation");
-        $this->__checkFor_column_titles( $titles, 'left', '55%',
+        $this->_checkFor_column_titles( $titles, 'left', '55%',
                                                             '', '<b>%s:</b>' );
 
         $tStamp = mktimestamp($row1['description_creation']);
@@ -306,7 +306,7 @@ extends UnitTest
                        '&nbsp;'.$row1['volume'],
                        "$budget euro",
                        '&nbsp;'.timestr_middle($tStamp));
-        $this->__checkFor_column_values( $values, 'left', '', '');
+        $this->_checkFor_column_values( $values, 'left', '', '');
 
         $this->_testFor_string_length( 3287 );
 
@@ -318,12 +318,12 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 2' );
 
-        $this->__checkFor_columns( 2 );
+        $this->_checkFor_columns( 2 );
 
         $this->_testFor_string_length( 3293 );
         $titles=array("Project Owner(s)","Project Type","Project Nature",
                       "Project Volume","Current project budget","Creation");
-        $this->__checkFor_column_titles( $titles, 'left', '55%',
+        $this->_checkFor_column_titles( $titles, 'left', '55%',
                                                             '', '<b>%s:</b>' );
 
         $tStamp = mktimestamp($row3['description_creation']);
@@ -336,7 +336,7 @@ extends UnitTest
                          '&nbsp;'.$row3['volume'],
                          "$budget euro",
                          '&nbsp;'.timestr_middle($tStamp));
-        $this->__checkFor_column_values( $values, 'left','','');
+        $this->_checkFor_column_values( $values, 'left','','');
 
         // check that the database component did not fail
         $this->_check_db( $db_config );
@@ -366,12 +366,12 @@ extends UnitTest
         $this->set_msg( 'test 1' );
         $this->_testFor_string_length( 198 );
 
-        $this->__testFor_pattern( "selected value=\"".$row[0]["license"]
+        $this->_testFor_pattern( "selected value=\"".$row[0]["license"]
                                         ."\">".$row[0]["license"]."" );
 
         for ( $idx = 1; $idx < count( $row ); $idx++ ) {
             $this->set_msg( "row: " . $idx . " missing");
-            $this->__testFor_pattern( "value=\"" . $row[$idx]["license"]
+            $this->_testFor_pattern( "value=\"" . $row[$idx]["license"]
                                       . "\">" . $row[$idx]["license"] );
         }
 
@@ -406,7 +406,7 @@ extends UnitTest
                            ."proid_0\" class=\"\">project_title_0<\/a>" ),
                        2=>("<b>Description<\/b>: description_0"),
                        3=>("<b>Volume<\/b>: volume_0" ));
-        $this->__testFor_patterns($pats, 4 );
+        $this->_testFor_patterns($pats, 4 );
         $this->_testFor_string_length( 828 );
 
         $bx = $this->_create_default_box();
@@ -487,7 +487,7 @@ extends UnitTest
         $this->_testFor_string_length( 463 );
 
         foreach ( array( &$row[0], &$row[1] ) as $rw ) {
-            $this->__testFor_html_link( 'comments.php3', 
+            $this->_testFor_html_link( 'comments.php3', 
                  array('proid'=>$dat[1]["proid"], 'type'=>$dat[1]["cmt_type"],
                        'number'=>$dat[1]["num"], 'ref'=>$dat[1]["cmt_id"] ),
                  $rw['subject_cmt'] );
@@ -495,14 +495,14 @@ extends UnitTest
             $str = ' by <b>' . $rw['user_cmt'].'</b> on <b>'
                  . timestr_comment( mktimestamp( $rw['creation_cmt']))
                  . "</b>\n";
-            $this->__testFor_pattern( $this->_to_regexp( $str ) );
+            $this->_testFor_pattern( $this->_to_regexp( $str ) );
 
             // to ensure that the link and the user occur on the same line
             $str = $rw['subject_cmt']."</a> by <b>".$rw['user_cmt'];
-            $this->__testFor_pattern( $this->_to_regexp( $str ) );
+            $this->_testFor_pattern( $this->_to_regexp( $str ) );
         }
         foreach ( array( &$row[2] ) as $rw ) {
-            $this->__testFor_html_link( 'comments.php3', 
+            $this->_testFor_html_link( 'comments.php3', 
                  array('proid'=>$dat[1]["proid"], 'type'=>$dat[1]["cmt_type"],
                        'number'=>$dat[1]["num"], 'ref'=>$row[0]["id"] ),
                  $rw['subject_cmt'] );
@@ -510,11 +510,11 @@ extends UnitTest
             $str = ' by <b>' . $rw['user_cmt'].'</b> on <b>'
                  . timestr_comment( mktimestamp( $rw['creation_cmt']))
                  . "</b>\n";
-            $this->__testFor_pattern( $this->_to_regexp( $str ) );
+            $this->_testFor_pattern( $this->_to_regexp( $str ) );
 
             // to ensure that the link and the user occur on the same line
             $str = $rw['subject_cmt']."</a> by <b>".$rw['user_cmt'];
-            $this->__testFor_pattern( $this->_to_regexp( $str ) );
+            $this->_testFor_pattern( $this->_to_regexp( $str ) );
         }
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -545,7 +545,7 @@ extends UnitTest
         call_user_func_array( 'lib_comment_it', $dat[0] );
         $this->set_text( capture_stop_and_get() );
         $this->_testFor_string_length( 144 );
-        $this->_call_method( '__testFor_lib_comment_it', $dat[0]);
+        $this->_call_method( '_testFor_lib_comment_it', $dat[0]);
     }
 
     function testLib_count_total() {

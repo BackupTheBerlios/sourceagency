@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConfigurelib.php,v 1.4 2002/05/31 12:41:50 riessen Exp $
+// $Id: TestConfigurelib.php,v 1.5 2002/06/04 10:57:52 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -45,11 +45,11 @@ extends UnitTest
         for ( $idx = -10; $idx < 120; $idx += 5 ) {
             $this->set_text( select_quorum( $idx ) );
             $this->set_msg( "Test $idx" );
-            $this->__testFor_html_select( "quorum", 0, 0 );
+            $this->_testFor_html_select( "quorum", 0, 0 );
             for ( $jdx = 55; $jdx < 100; $jdx += 5 ) {
-              $this->__testFor_html_select_option( $jdx, $jdx==$idx, $jdx.'%');
+              $this->_testFor_html_select_option( $jdx, $jdx==$idx, $jdx.'%');
             }
-            $this->__testFor_html_select_end();
+            $this->_testFor_html_select_end();
             // length various by 9 according to whether something was selected
             // or not. For values under 55 or over 95 nothing will be selected.
             $this->_testFor_string_length( ( $idx < 55 || $idx > 95 

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowmentlib.inc,v 1.8 2002/05/31 12:41:50 riessen Exp $
+# $Id: TestFollowmentlib.inc,v 1.9 2002/06/04 10:57:52 riessen Exp $
 #
 ######################################################################
 
@@ -93,7 +93,7 @@ extends UnitTest
                                                ."posted any milestones "
                                                ."by the project main "
                                                ."developer"). ".\n");
-        $this->__testFor_pattern( $p );
+        $this->_testFor_pattern( $p );
 
         // second call, num_row == 1, next_record == false
         $db = new DB_SourceAgency;
@@ -104,14 +104,14 @@ extends UnitTest
         $this->set_msg( "Test 2" );
         $this->_testFor_string_length( 956 );
 
-        $this->__checkFor_a_box( 'Milestones' );
+        $this->_checkFor_a_box( 'Milestones' );
         
         foreach ( array( "Number","Goals","Release Date","Product",
                          "Payment", "Status", "Creation" ) as $val ) {
             $p=$this->_to_regexp(  "<td align=center><b>"
                                          .$t->translate($val)."</b></td>");
             $this->set_msg( "Test $val" );
-            $this->__testFor_pattern( $p );
+            $this->_testFor_pattern( $p );
         }
 
         // third call, num_row == 3, next_record == rows:0,1,2
@@ -123,21 +123,21 @@ extends UnitTest
         $this->set_msg( "Test 3" );
         $this->_testFor_string_length( 1469 );
 
-        $this->__checkFor_a_box( 'Milestones' );
+        $this->_checkFor_a_box( 'Milestones' );
 
         foreach ( array( "Number","Goals","Release Date","Product",
                          "Payment", "Status", "Creation" ) as $val ) {
             $p=$this->_to_regexp(  "<td align=center><b>"
                                          .$t->translate($val)."</b></td>");
             $this->set_msg( "Test $val" );
-            $this->__testFor_pattern( $p );
+            $this->_testFor_pattern( $p );
         }
 
         $colors = array( 0 => "gold", 1 => "#FFFFFF" );
         for ( $idx = 0; $idx < 3; $idx++ ) {
             $bgc = $colors[ $idx % 2 ];
             $r = $row[$idx];
-            $this->__testFor_pattern( "bgcolor=$bgc" );
+            $this->_testFor_pattern( "bgcolor=$bgc" );
             foreach ( array( $r["number"],$r["goals"],$r["product"],
                              timestr_middle(mktimestamp($r["release"])),
                              show_status($r["status"]), $r["payment"],
@@ -145,7 +145,7 @@ extends UnitTest
                       as $val ) {
                 $p = $this->_to_regexp("<td><b>".$val."</b></td>");
                 $this->set_msg( "Test $val" );
-                $this->__testFor_pattern( $p );
+                $this->_testFor_pattern( $p );
             }
         }
         // finally check that everything went smoothly with the DB
