@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: personal.php3,v 1.3 2001/11/29 15:34:29 grex Exp $
+# $Id: personal.php3,v 1.4 2002/05/02 12:02:41 riessen Exp $
 #
 ######################################################################  
 
@@ -56,7 +56,7 @@ $page = "personal";
 
   $bx->box_begin();
   $bx->box_body_begin();
-  $bx->box_columns_begin(3);
+  $bx->box_columns_begin(3, 'top');
   $bx->box_column_start("center","34%","");
   personal_my_projects($auth->auth["uname"]);
   $bx->box_column_finish();
@@ -64,9 +64,11 @@ $page = "personal";
   personal_monitored_projects($auth->auth["uname"]);
   $bx->box_column_finish();
   $bx->box_column_start("center","33%","");
-#   WISH: It would be nice to have here a list of actions that may interest the user
-#   these actions correspond to actions in projects that he is related in or in projects he is monitoring
-#  print "(Possible actions)\n";
+# WISH: It would be nice to have here a list of actions that may 
+# WISH: interest the user
+# WISH:  these actions correspond to actions in projects that he 
+# WISH: is related in or in projects he is monitoring
+# WISH: print "(Possible actions)\n";
   $bx->box_column_finish();
   $bx->box_columns_end();
   $bx->box_body_end();
@@ -79,7 +81,7 @@ $page = "personal";
       && ($auth->auth["perm"]!="editor,admin")) {
     $bx->box_begin();
     $bx->box_body_begin();
-    $bx->box_columns_begin(3);
+    $bx->box_columns_begin(3, 'top');
     $bx->box_column_start("right","34%","");
     personal_related_projects($auth->auth["uname"],"A");
     $bx->box_column_finish();
@@ -101,7 +103,7 @@ $page = "personal";
       && ($auth->auth["perm"]!="editor,admin")) {
     $bx->box_begin();
     $bx->box_body_begin();
-    $bx->box_columns_begin(3);
+    $bx->box_columns_begin(3, 'top');
     $bx->box_column_start("right","34%","");
     personal_consultants($auth->auth["uname"],"A");
     $bx->box_column_finish();
@@ -117,7 +119,7 @@ $page = "personal";
     
     $bx->box_begin();
     $bx->box_body_begin();
-    $bx->box_columns_begin(3);
+    $bx->box_columns_begin(3, 'top');
     $bx->box_column_start("right","34%","");
     personal_referees($auth->auth["uname"],"A");
     $bx->box_column_finish();
