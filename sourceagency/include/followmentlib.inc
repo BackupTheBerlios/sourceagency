@@ -1,8 +1,8 @@
 <?php
 
 ######################################################################
-# SourceAgency: Software Announcement & Retrieval System
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
@@ -16,6 +16,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: followmentlib.inc,v 1.2 2001/11/06 19:15:46 riessen Exp $
+#
 ######################################################################
 
 function show_followment($proid) {

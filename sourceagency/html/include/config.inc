@@ -30,10 +30,10 @@
 # sys_logo_heigth	Heigth of the image of your site
 ######################################################################
 
-$sys_name = "The SourceAgency Project Page";
-$sys_title = "The GPL SourceXchange";
+$sys_name = "SourceAgency Project Page";
+$sys_title = "Open Source Software Projects";
 $sys_url_title = "http://www.berlios.de/";
-$sys_url = "http://sourceagency.berlios.de/";
+$sys_url = "http://sourceagency.berlios.de/beta/";
 $sys_logo_image = "../images/berlios.jpg";
 $sys_logo_alt = "BerliOS";
 $sys_logo_width = "238";
@@ -50,8 +50,8 @@ $sys_logo_heigth = "104";
 # org_logo_heigth  Height of the image of your Organisation
 ######################################################################
 
-$org_name = "GMD FOKUS";
-$org_url = "http://www.fokus.gmd.de/";
+$org_name = "FhG/GMD FOKUS";
+$org_url = "http://www.fokus.fhg.de/";
 $org_logo_image = "../images/logo_fokus.gif";
 $org_logo_alt = $org_name;
 $org_logo_width = "66";

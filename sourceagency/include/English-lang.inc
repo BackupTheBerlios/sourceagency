@@ -4,6 +4,11 @@
 // (es ist ja alles auf English bis jetzt!)
 
 switch($phrase) {
-     default: $tmp = "$phrase"; break;
+    
+    default: 
+        $tmp = "$phrase"; 
+        $l = new Logger;
+        $l->log( "translating '" . $phrase . "'" );
+        break;
 }
 ?>

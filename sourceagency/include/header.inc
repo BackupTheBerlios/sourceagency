@@ -22,6 +22,10 @@
 header("Cache-Control: no-cache, must-revalidate");     // HTTP/1.1
 header("Pragma: no-cache"); 				// HTTP/1.0
 
+require("logger.inc");
+$l = new Logger;
+$l->open();
+
 require("config.inc");
 require("lib.inc");
 require("security.inc");
@@ -30,6 +34,8 @@ require("lang.inc");
 require("box.inc");
 require("html.inc");
 $t = new translation($la);
+// FIXME: do we need to create an instance of the database class, it
+// FIXME: seems to be instantiated Just-In-Time-ly, i.e. when needed
 $db = new DB_SourceAgency;
 ?>
 
@@ -38,11 +44,13 @@ $db = new DB_SourceAgency;
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
    <meta http-equiv="expires" content="0">
-   <title><?php echo $sys_name;?> - <?php echo $t->translate($sys_title);?></title>
+   <title><?php echo $sys_name;?> - <?php echo $t->translate($sys_title);?>
+   </title>
 <link rel="stylesheet" type="text/css" href="berlios.css">
 <link rel="shortcut icon" href="berlios.ico">
 </head>
-<body bgcolor="<?php echo $th_body_bgcolor;?>" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<body bgcolor="<?php echo $th_body_bgcolor;?>" topmargin="0" bottommargin="0" 
+leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
 
 <?php
 require("top_strip.inc");

@@ -16,6 +16,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: config.inc,v 1.3 2001/11/06 19:15:46 riessen Exp $
+#
 ######################################################################
 
 ######################################################################
@@ -36,8 +39,8 @@
 $sys_name = "SourceAgency";
 $sys_title = "Open Source Software Projects";
 $sys_url_title = "http://www.berlios.de/";
-$sys_url = "http://bolian/sw/sourceagency/";
-# $sys_url = "http://sourceagency.berlios.de/";
+#$sys_url = "http://bolian/sw/sourceagency/";
+$sys_url = "http://sourceagency.berlios.de/beta/";
 $sys_logo_image = "images/berlios.jpg";
 $sys_logo_alt = "BerliOS";
 $sys_logo_width = "238";
@@ -55,7 +58,7 @@ $sys_logo_heigth = "104";
 ######################################################################
 
 $org_name = "GMD FOKUS";
-$org_url = "http://www.fokus.gmd.de/";
+$org_url = "http://www.fokus.fhg.de/";
 $org_logo_image = "images/logo_fokus.gif";
 $org_logo_alt = $org_name;
 $org_logo_width = "66";
