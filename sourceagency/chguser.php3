@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: chguser.php3,v 1.5 2002/05/10 11:49:00 grex Exp $
+# $Id: chguser.php3,v 1.6 2002/05/10 11:50:38 grex Exp $
 #
 ######################################################################
 
@@ -111,12 +111,12 @@ $bx->box_column(html_input_text('username', $db->f('username'), 20, 32), '50%', 
 $bx->box_next_row_of_columns();
 
 $bx->box_column('<b>'.$t->translate('Password').':</b>', '50%', '', 'right');
-$bx->box_column(html_form_PassWordField('password', 20, 32, $db->f('password')), '50%', '', 'left');
+$bx->box_column(html_input_password('password', 20, 32, $db->f('password')), '50%', '', 'left');
 
 $bx->box_next_row_of_columns();
 
 $bx->box_column('<b>'.$t->translate('Confirm Password').':</b>', '50%', '', 'right');
-$bx->box_column(html_form_PassWordField('cpassword', 20, 32, $db->f('password')), '50%', '', 'left');
+$bx->box_column(html_input_password('cpassword', 20, 32, $db->f('password')), '50%', '', 'left');
 
 $bx->box_next_row_of_columns();
 
