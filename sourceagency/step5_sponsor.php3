@@ -49,7 +49,7 @@ if (check_permission($proid,$page)) {
 	$decision_value = $db->f("quorum");
 
 	$milestone_number = followup_current_milestone($proid);
-	$time = followup_current_time($proid,$milestone_number);
+	$count = followup_current_count($proid,$milestone_number);
 	$location = followup_location($proid,$milestone_number);
 
 	if(isset($Yes) && !empty($Yes)) {
@@ -61,27 +61,38 @@ if (check_permission($proid,$page)) {
 		$voted_yet=0;
 
 		if (!strcmp($vote,"vote")) {
-			put_decision_step5_into_database($proid,$decision,$milestone_number,$time);
+			put_decision_step5_into_database($proid,$decision,$milestone_number,$count);
 		}
 
 		// If the sponsor has already voted, then we look for his vote
 
 			if(!isset($decision) || empty($decision)) {
-			$db->query("SELECT decision FROM decisions_step5 WHERE proid='$proid' AND decision_user='".$auth->auth["uname"]."' AND number='$milestone_number' AND time='$time'");
+			$db->query("SELECT decision FROM decisions_step5 WHERE proid='$proid' AND decision_user='".$auth->auth["uname"]."' AND number='$milestone_number' AND count='$count'");
 			$db->next_record();
 			$decision=$db->f("decision");
 			}
 
-		$quorum = show_decision_step5($proid,$milestone_number,$time);
+		$quorum = show_decision_step5($proid,$milestone_number,$count);
 	}
 	if ($quorum || (isset($Yes) && !empty($Yes))) {
 		if ($No || !isset($Yes) || empty($Yes)) are_you_sure_message_step5($proid);
-		else decisions_step5_sponsors($proid,$milestone_number,$time);
+		else decisions_step5_sponsors($proid,$milestone_number,$count);
 	}
+        $bx->box_full($t->translate("Information Box"),
+		      $t->translate("Sponsors can decide themselves for three different choices:")."<p><ul>".
+		      "<li>".$t->translate("<b>Accept</b>: This means that they are satisfied with the milestone the developer has posted.").
+		      "</li><li>".$t->translate("<b>Minor</b>: The posted milestone needs minor changes in order to achieve the requirements that the sponsor wants. The developer will have a delay in order to post this milestone another time.").
+		      "</li><li>".$t->translate("<b>Severe</b>: The sponsors is very unhappy with the results of the current milestone and rejects it. The project referee will be switched.").
+		      "</li></ul><p>");
   } else {
-
-	print "hola";
-
+      print "<b>FIXME</b> If you see this line... then developers are in trouble!\n";
+      print "<p>possible actions:\n";
+      print "<ul>\n";
+      print "<li>Delay all milestones x days</li>\n";
+      print "<li>stop proyect</li>\n";
+      print "<li>....</li>\n";
+      print "</ul>\n";
+      print "And everything has to be done in a democratic way!!!\n";
   }
 
 /*
