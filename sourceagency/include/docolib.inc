@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: docolib.inc,v 1.2 2002/04/19 10:26:14 grex Exp $
+# $Id: docolib.inc,v 1.3 2002/06/06 08:15:08 riessen Exp $
 #
 ######################################################################
 
@@ -55,7 +55,8 @@
 function doco_form()
 {
     global $sess, $bx, $t;
-
+    global $page, $header, $doco;
+    
     $bx->box_begin();
     $bx->box_title($t->translate('New Page Documentation Entry'));
     $bx->box_body_begin();
@@ -108,7 +109,7 @@ function doco_form()
  */
 function doco_show($db)
 {
-    global $t, $bx;
+    global $bx;
 
     $bx->box_full($db->f('page').': '.$db->f('header'), $db->f('doco'));
 }
