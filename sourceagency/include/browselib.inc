@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.19 2002/05/02 11:02:16 riessen Exp $
+# $Id: browselib.inc,v 1.20 2002/05/02 11:29:15 riessen Exp $
 #
 ######################################################################
 
@@ -44,8 +44,6 @@ function browse_through($through)
     global $bx, $t, $db;
 
     $bx->box_column_start('','50%','');
-    $bx->box_begin();
-    $bx->box_body_begin();
     switch ($through) {
     case 'license':
         browse_licenses();
@@ -84,8 +82,6 @@ function browse_through($through)
         _browse_project_name();
         break;
     }
-    $bx->box_body_end();
-    $bx->box_end();
     $bx->box_column_finish();
 }
 
