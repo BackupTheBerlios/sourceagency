@@ -4,12 +4,11 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestPersonallib.php,v 1.12 2001/10/30 14:49:25 riessen Exp $
+// $Id: TestPersonallib.php,v 1.13 2001/10/31 12:23:16 riessen Exp $
 
 include_once( "../constants.php" );
 
 if ( !defined("BEING_INCLUDED" ) ) {
-    ini_set('include_path', ini_get('include_path') . ':../../include' );
     include_once( 'box.inc' );
     $bx = new box;
     include_once( 'session.inc' );

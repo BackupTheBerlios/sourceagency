@@ -4,15 +4,12 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestHtml.php,v 1.2 2001/10/18 18:51:01 riessen Exp $
+// $Id: TestHtml.php,v 1.3 2001/10/31 12:23:16 riessen Exp $
 
 // unit test for testing the html.inc file.
 include_once( "../constants.php" );
 
 if ( !defined("BEING_INCLUDED" ) ) {
-    // LIB_ROOT is the base of my libraries and is defined in constants.php
-    ini_set('include_path', ini_get('include_path') . ':../../include' );
-
     // need to define a global session
     include_once( "session.inc" );
     $sess = new Session;

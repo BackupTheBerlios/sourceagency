@@ -4,13 +4,9 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestBox.php,v 1.3 2001/10/24 15:31:44 riessen Exp $
+// $Id: TestBox.php,v 1.4 2001/10/31 12:23:16 riessen Exp $
 
 include_once( "../constants.php" );
-
-if ( !defined("BEING_INCLUDED" ) ) {
-    ini_set('include_path', ini_get('include_path') . ':../../include' );
-} 
 
 include_once( "box.inc" );
 

@@ -4,14 +4,11 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestLib.php,v 1.4 2001/10/18 18:51:01 riessen Exp $
+// $Id: TestLib.php,v 1.5 2001/10/31 12:23:16 riessen Exp $
 
 include_once( "../constants.php" );
 
 if ( !defined("BEING_INCLUDED" ) ) {
-    // LIB_ROOT is the base of my libraries and is defined in constants.php
-    ini_set('include_path', ini_get('include_path') . ':../../include' );
-
     // required for the $sess global variable
     include_once( "session.inc" );
     $sess = new Session;
