@@ -55,7 +55,8 @@ class box {
 
 	function box_title_begin() {
 		echo "<!-- box title begin -->\n";
-		echo "<tr bgcolor=\"$this->box_title_bgcolor\"><td align=\"$this->box_title_align\">\n";
+		echo "<tr bgcolor=\"$this->box_title_bgcolor\">";
+                echo "<td align=\"$this->box_title_align\">\n";
 	}
 
 	function box_title_end() {
