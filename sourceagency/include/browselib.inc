@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.21 2002/05/28 08:53:34 riessen Exp $
+# $Id: browselib.inc,v 1.22 2002/06/11 13:00:38 riessen Exp $
 #
 ######################################################################
 
@@ -135,7 +135,7 @@ function browse_licenses()
             $bx->box_column('center','',$bgcolor,$num);
         }
   	$bx->box_column('left','',$bgcolor,html_link($db->f('url'),'',
-        $db->f('license')));
+                                                         $db->f('license')));
   	$bx->box_next_row_of_columns();
   	$i++;
     }
@@ -243,7 +243,7 @@ function _browse_steps()
         } else {
             $bx->box_column('center','',$bgcolor,$num);
         }
-  	$bx->box_column('left','',$bgcolor,'Step '.$i
+  	$bx->box_column('left','',$bgcolor,$t->translate('Step'). " $i"
                         .' ('.$t->translate($g_step_text[$i]).')');
   	$bx->box_next_row_of_columns();
     }
@@ -547,13 +547,13 @@ function browse_list($by, $what)
                   ."description.proid=tech_content.proid AND "
                   ."environment='$what'");
         break;
-    case 'audience':
+    case 'audience': // FIXME: broken query
         $query = "SELECT * FROM description WHERE ='$what'";
         break;
-    case 'os':
+    case 'os': // FIXME: broken query
         $query = "SELECT * FROM description WHERE ='$what'";
         break;
-    case 'language':
+    case 'language': // FIXME: broken query
         $query = "SELECT * FROM description WHERE ='$what'";
         break;
     case 'project_name':
@@ -579,7 +579,7 @@ function browse_list($by, $what)
  */
 function _browse_output($query)
 {
-    global $db, $bx;
+    global $db;
     
     $db->query($query);
     while($db->next_record()) {
@@ -599,7 +599,7 @@ function _browse_output($query)
  */
 function _browse_project_name()
 {
-    global $bx, $db, $t;
+    global $bx, $t;
 
     $alphabet = array ('A','B','C','D','E','F','G','H','I','J','K','L',
 	   	       'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
