@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: top_title.inc,v 1.9 2002/02/19 16:49:24 riessen Exp $
+# $Id: top_title.inc,v 1.10 2002/03/06 12:58:17 riessen Exp $
 #
 ######################################################################
 
@@ -30,11 +30,11 @@
 valign="center" >
 
 <tr VALIGN="TOP" BGCOLOR="<?php echo $th_nav_bgcolor;?>">
-<td>
+<td bgcolor="#FFFFFF">
 <a href="<?php echo $sys_url_title;?>">
 <img SRC="<?php echo $sys_logo_image;?>" BORDER="0" 
 height="<?php echo $sys_logo_height;?>" width="<?php echo $sys_logo_width;?>"
-ALT="<?php echo $sys_logo_alt;?>"></a>
+vspace="5" hspace="5" ALT="<?php echo $sys_logo_alt;?>"></a>
 </td>
 
 <td WIDTH="10">
