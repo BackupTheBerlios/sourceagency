@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: consultantslib.inc,v 1.6 2002/03/28 00:53:44 grex Exp $
+# $Id: consultantslib.inc,v 1.7 2002/05/13 10:22:09 riessen Exp $
 #
 ######################################################################
 
@@ -83,10 +83,10 @@ function show_consultants($proid)
         $bx->box_body_begin();
         $bx->box_columns_begin(4);
 
-        $bx->box_column('','','','<b>Number</b>');
-        $bx->box_column('','','','<b>Username</b>');
-        $bx->box_column('','','','<b>Status</b>');
-        $bx->box_column('','','','<b>Creation</b>');
+        $bx->box_column('','','','<b>'.$t->translate('Number').'</b>');
+        $bx->box_column('','','','<b>'.$t->translate('Username').'</b>');
+        $bx->box_column('','','','<b>'.$t->translate('Status').'</b>');
+        $bx->box_column('','','','<b>'.$t->translate('Creation').'</b>');
 
         $i =0;
         $colors = array( 1 => 'gold', 0 => '#FFFFFF' );
@@ -95,7 +95,7 @@ function show_consultants($proid)
 
             $bx->box_next_row_of_columns();
 
-            $bx->box_column('','',$bgcolor,'<b>$i</b>');
+            $bx->box_column('','',$bgcolor,'<b>'.$i.'</b>');
             $bx->box_column('','',$bgcolor,'<b>'
                             .lib_nick($db->f("username")).'</b>');
             $bx->box_column('','',$bgcolor,'<b>'
@@ -132,7 +132,7 @@ function consultants_form($proid)
     $bx->box_begin();
     $bx->box_title($t->translate('Offer yourself as project consultant'));
     $bx->box_body_begin();
-    print html_form_action('PHP_SELF',array('proid' => $proid),'POST');
+    htmlp_form_action('PHP_SELF',array('proid' => $proid),'POST');
 
     $bx->box_columns_begin(2);
 
@@ -151,7 +151,8 @@ function consultants_form($proid)
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('right','45%','','&nbsp;');
-    $bx->box_column ('left','55%','',html_form_submit('Submit','submit'));
+    $bx->box_column ('left','55%','',
+                     html_form_submit($t->translate('Submit'),'submit'));
     htmlp_form_end();
     $bx->box_columns_end();
 
@@ -173,17 +174,24 @@ function consultants_form($proid)
  */
 function consultants_insert($proid, $user)
 {
-    global $db;
+    global $db, $t;
 
     $db->query("INSERT consultants SET proid='$proid',consultant='$user',"
                ."status='P'");
 
     // WISH: config.inc should not be required another time,
     // as it is done at the beginning of every page.
-    include('config.inc');
-    include('monitorlib.inc');
+    if ( floor( phpversion() ) >= 4 ) {
+        include_once('config.inc');
+        include_once('monitorlib.inc');
+    } else {
+        include('config.inc');
+        include('monitorlib.inc');
+    }
+
     monitor_mail($proid,'consultant', 
-    'New consultant proposed for project $proid', 'Event has happened');
+                 $t->translate('New consultant proposed for project')
+                 ." $proid", $t->translate('Event has happened'));
 
     show_consultants($proid);
 }
@@ -218,7 +226,8 @@ function consultants_wanted($proid)
                       $th_box_error_font_color,$th_box_body_align);
 
         $be->box_full($t->translate('No consultants wanted'),
-        $t->translate('This project does not require any consultants'));
+                      $t->translate('This project does not require '
+                                    .'any consultants'));
         return 0;
     }
 }
