@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.9 2001/12/13 16:53:39 riessen Exp $
+# $Id: TestHtml.php,v 1.10 2002/01/09 16:22:19 riessen Exp $
 #
 ######################################################################
 
@@ -32,7 +32,7 @@ if ( !defined("BEING_INCLUDED" ) ) {
 include_once("html.inc");
 
 class UnitTestHtml
-extends TestCase
+extends UnitTest
 {
     function UnitTestHtml( $name ) {
         $this->TestCase( $name );
@@ -51,12 +51,8 @@ extends TestCase
         capture_reset_text();
         capture_start();
     }
-    function _testFor_length( $length ) {
-        $this->assertEquals( $length, capture_text_length(), 
-                             "Length mismatch" );
-    }
 
-    function test__html_link() {
+    function testhtml_link() {
         //
         // test 1
         //
@@ -109,7 +105,7 @@ extends TestCase
         $this->assertEquals( $expect, $text );
     }
 
-    function test__html_anchor() {
+    function testhtml_anchor() {
         $actual = html_anchor( "hello world" );
         $expect = "<a name=\"hello world\"></a>\n";
         $this->assertEquals( $expect, $actual );
@@ -121,7 +117,7 @@ extends TestCase
         $this->assertEquals( $expect, $text );
     }
 
-    function test__html_image() {
+    function testhtml_image() {
         $actual = html_image("file", "border", "width", "height", "alternate");
         $expect = ("<img src=\"images/file\" border=\"border\" width=\"width\""
                    . " height=\"height\" alt=\"alternate\">");
@@ -134,7 +130,7 @@ extends TestCase
         $this->assertEquals( $expect, $text );
     }
 
-    function test__html_form_action() {
+    function testhtml_form_action() {
         global $sess;
         //
         // test 1
@@ -144,7 +140,7 @@ extends TestCase
         $this->assertEquals( $expect, $actual );
         htmlp_form_action( "PHP_SELF", "query", "type" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 30 );
+        $this->_testFor_length( 30 +  strlen( $sess->self_url() ));
         $this->assertEquals( $expect, $text );
 
         // 
@@ -160,7 +156,7 @@ extends TestCase
         $this->assertEquals( $expect, $text );
     }
 
-    function test__html_form_hidden() {
+    function testhtml_form_hidden() {
         $actual = html_form_hidden( "name", "value" );
         $expect = "<input type=\"hidden\" name=\"name\" value=\"value\">";
         $this->assertEquals( $expect, $actual );
@@ -170,7 +166,7 @@ extends TestCase
         $this->assertEquals( $expect, $text );
     }
 
-    function test__html_select() {
+    function testhtml_select() {
         $actual = html_select( "name" );
         $expect = "<select name=\"name\">\n";
         $this->assertEquals( $expect, $actual );
@@ -180,7 +176,7 @@ extends TestCase
         $this->assertEquals( $expect, $text );
     }
 
-    function test__html_select_option() {
+    function testhtml_select_option() {
         //
         // test 1
         //
@@ -229,7 +225,7 @@ extends TestCase
         $this->assertEquals( $expect, $text );
     }
 
-    function test__html_select_end() {
+    function testhtml_select_end() {
         $actual = html_select_end();
         $expect = "</select>\n";
         $this->assertEquals( $expect, $actual );
@@ -239,7 +235,7 @@ extends TestCase
         $this->assertEquals( $expect, $text );
     }
 
-    function test__html_input_text() {
+    function testhtml_input_text() {
         $actual = html_input_text( "name", "size", "maxlength", "value" );
         $expect = ( "<input type=\"text\" name=\"name\" size=\"size\" "
                     ."maxlength=\"maxlength\" value=\"value\">\n" );
@@ -250,7 +246,7 @@ extends TestCase
         $this->assertEquals( $expect, $text );
     }
 
-    function test__html_form_submit() {
+    function testhtml_form_submit() {
         $actual = html_form_submit( "value", "name" );
         $expect = "<input type=\"submit\" value=\"value\" name=\"name\">\n";
         $this->assertEquals( $expect, $actual );
@@ -260,7 +256,7 @@ extends TestCase
         $this->assertEquals( $expect, $text );
     }
 
-    function test__html_checkbox() {
+    function testhtml_checkbox() {
         //
         // test 1
         //
@@ -311,7 +307,7 @@ extends TestCase
         $this->assertEquals( $expect, $text );
     }
 
-    function test__html_radio() {
+    function testhtml_radio() {
         //
         // test 1
         //
@@ -362,7 +358,7 @@ extends TestCase
         $this->assertEquals( $expect, $text );
     }
     
-    function test__html_textarea() {
+    function testhtml_textarea() {
         $actual = html_textarea( "name", "columns", "rows", "wrap", 
                                  "maxlength", "value" );
         $expect = ("<textarea cols=\"columns\" rows=\"rows\" name=\"name\" "
@@ -376,7 +372,7 @@ extends TestCase
         $this->assertEquals( $expect, $text );
     }
 
-    function test__html_form_end() {
+    function testhtml_form_end() {
         $actual = html_form_end( );
         $expect = "</form>\n";
         $this->assertEquals( $expect, $actual );
