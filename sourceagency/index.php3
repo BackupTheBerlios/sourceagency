@@ -39,7 +39,7 @@ $db_summary = new DB_SourceAgency;
 
 $bx->box_begin();
 $bx->box_body_begin();
-$bx->box_columns_begin(2);
+$bx->box_columns_begin(2, 'top');
 
 $bx->box_column_start('left','65%','');
 
