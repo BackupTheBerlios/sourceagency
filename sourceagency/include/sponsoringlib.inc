@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: sponsoringlib.inc,v 1.5 2002/03/27 17:04:41 grex Exp $
+# $Id: sponsoringlib.inc,v 1.6 2002/03/28 14:47:02 riessen Exp $
 #
 ######################################################################
 
@@ -145,33 +145,33 @@ function show_sponsorings($proid)
     $query = "SELECT * FROM sponsoring,auth_user WHERE proid='$proid' AND sponsor=username ORDER BY sponsoring.creation ASC";
     $db->query($query);
     while($db->next_record()) {
-	$bx->box_begin();
-	$bx->box_title($t->translate('Sponsor Involvement'));
-	$bx->box_body_begin();
-   	$timestamp = mktimestamp($db->f('creation'));
-	lib_pnick($db->f('username'));
+        $bx->box_begin();
+        $bx->box_title($t->translate('Sponsor Involvement'));
+        $bx->box_body_begin();
+        $timestamp = mktimestamp($db->f('creation'));
+        lib_pnick($db->f('username'));
         echo ' - '.timestr($timestamp)."</b>\n";
-    	echo '<p><b>Max. sum of money:</b> '.$db->f('budget')." euros\n";
-    	echo '<br><b>Status:</b> '.show_status($db->f('status'))."\n";
-    	echo '<br><b>Validity</b> '.timestr_middle(mktimestamp($db->f('valid')))."\n";
-    	echo '<br><b>Begin wished:</b> '.timestr_middle(mktimestamp($db->f('begin')))."\n";
-    	echo '<br><b>Finish before:</b> '.timestr_middle(mktimestamp($db->f('finish')))."\n";
-	if (($db->f('sponsoring_text'))) {
+        echo '<p><b>Max. sum of money:</b> '.$db->f('budget')." euros\n";
+        echo '<br><b>Status:</b> '.show_status($db->f('status'))."\n";
+        echo '<br><b>Validity</b> '.timestr_middle(mktimestamp($db->f('valid')))."\n";
+        echo '<br><b>Begin wished:</b> '.timestr_middle(mktimestamp($db->f('begin')))."\n";
+        echo '<br><b>Finish before:</b> '.timestr_middle(mktimestamp($db->f('finish')))."\n";
+        if (($db->f('sponsoring_text'))) {
             echo '<p><b>Comments to the involvement:</b> '.$db->f('sponsoring_text')."\n";
-	}
-	if($db->f('status') == 'P' && is_accepted_sponsor($proid)) {
-		$bx->box_title(html_link('sponsoring_accepted.php3',array('proid' => $proid, 'sponsor' => $db->f('username')),'Accept this sponsor involvement'));		
-	}
-    	$bx->box_body_end();
-    	$bx->box_end();
+        }
+        if($db->f('status') == 'P' && is_accepted_sponsor($proid)) {
+                $bx->box_title(html_link('sponsoring_accepted.php3',array('proid' => $proid, 'sponsor' => $db->f('username')),'Accept this sponsor involvement'));              
+        }
+        $bx->box_body_end();
+        $bx->box_end();
 
-	lib_comment_it($proid,'Sponsoring',$db->f('spoid'),'0','Comment on Sponsor Involvement #'.$db->f('spoid'),'Comment it!');
+        lib_comment_it($proid,'Sponsoring',$db->f('spoid'),'0','Comment on Sponsor Involvement #'.$db->f('spoid'),'Comment it!');
 
-	lib_show_comments_on_it($proid,'Sponsoring',$db->f('spoid'),'0');
+        lib_show_comments_on_it($proid,'Sponsoring',$db->f('spoid'),'0');
     }
 
     if ($db->num_rows() == 0) {
-	print "<p>There have not been posted any sponsoring involvement wishes to this project.<p>\n";
+        print "<p>There have not been posted any sponsoring involvement wishes to this project.<p>\n";
     }
 }
 
@@ -262,15 +262,32 @@ function sponsoring_insert($proid, $user, $sponsoring_text, $budget, $valid_day,
     } else {
         $status = 'A';
     }
+    
+    $db->query( "SELECT * FROM sponsoring WHERE proid='$proid' AND "
+                . "sponsor='$user'" );
+    
+    if ( $db->num_rows() == 1 ) {
+        $db->query("UPDATE sponsoring SET sponsoring_text='$sponsoring_text',"
+                   ."budget='$budget', status='$status', valid='$valid',"
+                   ."begin='$begin',finish='$finish' "
+                   ."WHERE proid='$proid' AND sponsor='$user'");
+    } else if ( $db->num_rows() == 0 ) {
+        $db->query("INSERT sponsoring SET proid='$proid',sponsor='$user',"
+                   ."sponsoring_text='$sponsoring_text',budget='$budget', "
+                   ."status='$status', valid='$valid',begin='$begin',"
+                   ."finish='$finish'");
+    } else {
+        echo "<p><b>Database Failure:</b> it seems you have more than one "
+            . "sponsorship! Please advice the administrator and have the "
+            . "database corrected.";
+    }
 
-    $db->query("INSERT sponsoring SET proid='$proid',sponsor='$user',sponsoring_text='$sponsoring_text',budget='$budget', status='$status', valid='$valid',begin='$begin',finish='$finish'");
-
-		// If first sponsor on a developing project
-		// That means if he is sponsor but not project initiator
+    // If first sponsor on a developing project
+    // That means if he is sponsor but not project initiator
     if ($status == 'A' && !is_project_initiator($proid)) {
         $db->query("UPDATE configure SET sponsor='".$auth->auth["uname"]."' WHERE proid='$proid'");
-	echo '<p><b>Congratulations</b>. You are the first sponsor. You can ';
-	htmlp_link('configure_edit.php3',array('proid' => $proid),'configure this project');
+        echo '<p><b>Congratulations</b>. You are the first sponsor. You can ';
+        htmlp_link('configure_edit.php3',array('proid' => $proid),'configure this project');
     }
 
     if ( floor( phpversion() ) >= 4 ) {
@@ -282,12 +299,13 @@ function sponsoring_insert($proid, $user, $sponsoring_text, $budget, $valid_day,
     // WISH: config.inc should not be required another time,
     // as it is done at the beginning of every page.
     include('config.inc');
-    monitor_mail($proid,'sponsoring', 'New Sponsor for project $proid', 'Event has happened');
+    monitor_mail($proid,'sponsoring', 'New Sponsor for project $proid', 
+                 'Event has happened');
 
     show_sponsorings($proid);
 
     if (is_project_initiator($proid)) {
-	lib_insertion_finished();
+        lib_insertion_finished();
     }
 }
 ?>

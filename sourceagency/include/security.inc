@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.18 2002/03/27 01:37:24 grex Exp $
+# $Id: security.inc,v 1.19 2002/03/28 14:47:02 riessen Exp $
 #
 ######################################################################
 
@@ -349,12 +349,14 @@ function check_permission($proid, $page)
             break;
         case "sponsoring_edit":
             if ( is_sponsor() || is_project_initiator($proid) ) {
-                if (!already_involved_in_this_step($proid,
-                               "sponsoring_edit",$auth->auth["uname"])) {
-                    return 1;
-                } else {
-                    return already_involved_message($proid,$page);
-                }
+              /* nothing to do */
+              return 1;
+//                  if (!already_involved_in_this_step($proid,
+//                                 "sponsoring_edit",$auth->auth["uname"])) {
+//                      return 1;
+//                  } else {
+//                      return already_involved_message($proid,$page);
+//                  }
             } else {
                 return permission_denied($proid,$page);
             }

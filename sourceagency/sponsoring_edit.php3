@@ -52,6 +52,17 @@ if (check_permission($proid,$page)) {
               print "<br><p>\n";
           }
       }
+
+      /* now check whether the user is already sponsoring */
+      if ( already_involved_in_this_step($proid,$page,$auth->auth["uname"]) ) {
+          $db->query("SELECT * FROM sponsoring WHERE proid='$proid' AND "
+                     ."sponsor='".$auth->auth["uname"]."'" );
+          $db->next_record();
+          global $budget, $sponsoring_text;
+          $budget = $db->f( "budget" );
+          $sponsoring_text = $db->f( "sponsoring_text" );
+          // TODO: retrieve the date information ....
+      }
       sponsoring_form($proid);
   } else {
       sponsoring_insert($proid,$auth->auth["uname"],$sponsoring_text,
