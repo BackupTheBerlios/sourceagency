@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.40 2002/05/29 14:57:28 riessen Exp $
+# $Id: lib.inc,v 1.41 2002/05/31 12:39:38 riessen Exp $
 #
 ######################################################################
 
@@ -403,24 +403,22 @@ function typestr($type)
     global $t;
 
     switch($type) {
-    case 'A':
-        $str = $t->translate('Adaption');
-        break;
-    case 'E': 
-        $str = $t->translate('Expansion');
-        break;
-    case 'C': 
-        $str = $t->translate('Documentation');
-        break;
-    case 'D':
-        $str = $t->translate('Development');
-        break;
-    case 'O':
-        $str = $t->translate('Other');
-        break;
-    default:
-        $str = $t->translate('Other');
-        break;
+        case 'A':
+            $str = $t->translate('Adaption');
+            break;
+        case 'E': 
+            $str = $t->translate('Expansion');
+            break;
+        case 'C': 
+            $str = $t->translate('Documentation');
+            break;
+        case 'D':
+            $str = $t->translate('Development');
+            break;
+        case 'O':
+        default:
+            $str = $t->translate('Other');
+            break;
     }
     return $str;
 }
