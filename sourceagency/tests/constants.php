@@ -4,8 +4,8 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: constants.php,v 1.1 2001/10/11 09:19:37 ger Exp $
-
+// $Id: constants.php,v 1.2 2001/10/11 09:58:39 ger Exp $
+//
 $LIB_ROOT = "/www/development/lib";
 
 ini_set('include_path', ini_get('include_path') . ':'.$LIB_ROOT.'/php' );
