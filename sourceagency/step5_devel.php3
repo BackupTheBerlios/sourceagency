@@ -43,13 +43,16 @@ if (check_permission($proid,$page)) {
   print "This is the page where developers can submit their milestones and follow the decisions made by referees and sponsors.\n";
 
   $milestone_number = followup_current_milestone($proid);
-  $time = followup_current_time($proid,$milestone_number);
+  $count = followup_current_count($proid,$milestone_number);
 
   if (!isset($submit) || empty($submit)) {
+        followup_milestone_schedule($proid,$milestone_number,$count);
 	if (isset($preview) && !empty($preview)) followup_devel_preview($proid);
 	followup_devel_form($proid);
   } else {
-	followup_insert($proid,$milestone_number,"1",$location,$time);
+	followup_insert($proid,$milestone_number,"1",$location,$count);
+	print "<p>The milestone location has been posted correctly.\n";
+	print "<p>You can keep on working on the next milestone while sponsors have a look at the one you have just submitted.\n";
   }
 
 }
