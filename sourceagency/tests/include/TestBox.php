@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestBox.php,v 1.11 2002/04/23 11:44:40 riessen Exp $
+# $Id: TestBox.php,v 1.12 2002/04/23 12:00:31 riessen Exp $
 #
 ######################################################################
 
@@ -66,30 +66,30 @@ extends UnitTest
     }
 
     function _testFor_box_title_begin( $text ) {
-        $this->assertRegexp("/<tr bgcolor=\"title_bgcolor\">[ \n]*<td align=\""
+        $this->assertRegexp("/<tr bgcolor=\"title_bgcolor\">[ \n]+<td align=\""
                             . "title_align\">\n/", $text,
                             "box title begin mismatch" );
     }
     function _testFor_box_title_end( $text ) {
-        $this->assertRegexp( "/<\/td>[ \n]*<\/tr>/", $text,
+        $this->assertRegexp( "/<\/td>[ \n]+<\/tr>/", $text,
                              "box title end mismatch");
     }
     function _testFor_box_title( $text, $title ) {
         $this->assertRegexp("/<b>".$title."<\/b>/",$text,"box title mismatch");
     }
     function _testFor_box_body_begin( $text ) {
-        $this->assertRegexp( "/<tr bgcolor=\"body_bgcolor\">[ \n]*<td align=\""
+        $this->assertRegexp( "/<tr bgcolor=\"body_bgcolor\">[ \n]+<td align=\""
                              . "body_align\"><font color="
                              . "\"body_font_color\">/",$text, 
                              "box body begin mismatch");
     }
     function _testFor_box_body_end( $text ) {
-        $this->assertRegexp( "/<\/font>[ \n]*<\/td>[ \n]*<\/tr>/", $text, 
+        $this->assertRegexp( "/<\/font>[ \n]+<\/td>[ \n]+<\/tr>/", $text, 
                              "box body end mismatch");
     }
     function _testFor_box_body( $text, $body ) {
-        $this->assertRegexp( "/<font color=\"body_font_color\">[ \n]*" . $body
-                             . "[ \n]*<\/font>/", $text, "box body mismatch");
+        $this->assertRegexp( "/<font color=\"body_font_color\">[ \n]+" . $body
+                             . "[ \n]+<\/font>/", $text, "box body mismatch");
     }
     function _testFor_box_columns_begin( $text, $nr_cols ) {
         $ps=array( 0=>"<!-- table with " . $nr_cols . " columns -->",
@@ -108,21 +108,22 @@ extends UnitTest
                            "box column finish mismatch");
     }
     function _testFor_box_columns_end( $text ) {
-        $this->assertRegexp( "/<\/tr>[ \n]*<\/table>[ \n]*/", $text,
+        $this->assertRegexp( "/<\/tr>[ \n]+<\/table>[ \n]+/", $text,
                              "box columns end mismatch" );
     }
     function _testFor_box_next_row_of_columns( $text ) {
-        $this->assertRegexp( "/<\/tr>[ \n]*<!--[^-]+-->[ \n]*<tr>[ \n]*/",
+        $this->assertRegexp( "/<\/tr>[ \n]+"
+                             .$this->p_regexp_html_comment
+                             ."[ \n]+<tr>[ \n]+/",
                              $text, "box next row of columns mismatch" );
     }
     function _testFor_box_colspan( $text, $nr_cols, $align, $bgcolor,
                                    $insert_text ) {
-        $this->assertRegexp( "/<!--[^-]+-->[ \n]*<td colspan=\"".$nr_cols."\" "
+        $this->assertRegexp( "/<!--[^-]+-->[ \n]+<td colspan=\"".$nr_cols."\" "
                              ."align=\"".$align."\" bgcolor=\""
-                             .$bgcolor."\">[ \n]*"
-                             .$insert_text
-                             ."[ \n]*<\/td>[ \n]*<!--[^-]+-->[ \n]*/",$text,
-                             "box colspan mismatch" );
+                             .$bgcolor."\">[ \n]+" .$insert_text
+                             ."[ \n]+<\/td>[ \n]+".$this->p_regexp_html_comment
+                             ."[ \n]+/",$text,"box colspan mismatch" );
     }
 
     // the following the individual test methods
