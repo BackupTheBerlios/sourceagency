@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.19 2002/03/06 12:58:00 riessen Exp $
+# $Id: config.inc,v 1.20 2002/03/18 16:51:30 riessen Exp $
 #
 ######################################################################
 
@@ -207,14 +207,14 @@ $architecture_array[] = "Architecture Independent";
 #
 ######################################################################
 
-$environment_array[] = "Web Environment";
-$environment_array[] = "Environment 2";
-$environment_array[] = "Environment 3";
-$environment_array[] = "Environment 4";
-$environment_array[] = "Environment 5";
-$environment_array[] = "Environment 6";
-$environment_array[] = "Environment 7";
-$environment_array[] = "Environment 8";
+$environment_array[] = "Web";
+$environment_array[] = "Server";
+$environment_array[] = "Client";
+$environment_array[] = "Distributed";
+#$environment_array[] = "";
+#$environment_array[] = "";
+#$environment_array[] = "";
+#$environment_array[] = "";
 
 ######################################################################
 # Monitoring Importance
