@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.34 2002/04/20 13:18:24 grex Exp $
+# $Id: lib.inc,v 1.35 2002/04/24 16:04:39 riessen Exp $
 #
 ######################################################################
 
@@ -113,7 +113,8 @@ function timestr_shortest($timestamp)
  * @param   int       $selected_month      Selected month as default
  * @param   int       $selected_year       Selected year as default
  *
- * @global  int       $config_first_year   First possible year to choose (from the config file)
+ * @global  int       $config_first_year   First possible year to choose 
+ *                                         (from the config file)
  * @global  int       $config_last_year    Last possible year to choose
  *
  * @return  string                         several HTML selection forms
@@ -402,8 +403,8 @@ function wrap($string, $width=75, $break=' ')
 }
 
 /**
- * This function prints the long form of the project type from its shorter form
- * (as it is stored in database)
+ * This function prints the long form of the project type from its 
+ * shorter form (as it is stored in database)
  *
  * @param   char      $type      Short form of the project type
  * @global  object    $t         Translation Object
@@ -470,7 +471,8 @@ function top_bar($proid, $page)
 /**
  * Draws the Project Top Bar
  * this bar enables to browse through the whole project
- * It depends on the current status of the project (future steps are not available)
+ * It depends on the current status of the project (future steps are 
+ * not available)
  *
  * @param   string    $project_title    Title of the project
  * @param   string    $page             Current page
@@ -568,7 +570,8 @@ function _draw_top_bar( $project_title, $page, $proid = '',
 }
 
 /**
- * The summary of the project contains the most important information of the project
+ * The summary of the project contains the most important information 
+ * of the project
  * as well as links to all possible actions
  *
  * @param   int       $proid        Project ID
@@ -951,7 +954,7 @@ function summary_news($proid)
                              'number' => $db_summ_news->f('creation_news'),
                              'ref'    => '0'), 
                        $t->translate('comments'));
-            print( $t->translate('on it')." ]</font>\n" );
+            print( $t->translate(' on it')." ]</font>\n" );
 	}
 	print "<p>\n";
     }
@@ -1055,7 +1058,8 @@ function select_from_config($name, $array_name, $selected)
         $array = $comments_type_array; 
         break;
     default:
-        lib_die('Error in function select_from_config() in lib.inc. Specified type has no array');
+        lib_die('Error in function select_from_config() in '
+                .'lib.inc. Specified type has no array');
     }
     
     $output = html_select($name)."\n";
@@ -1160,7 +1164,8 @@ function show_status($char)
 }
 
 /**
- * Shows the sponsors, developers and referees that participate in a given project
+ * Shows the sponsors, developers and referees that participate 
+ * in a given project
  *
  * @param   int       $proid               Project ID
  * @param   string    $participant_type    'sponsor', 'developer' or 'referee'
@@ -1190,7 +1195,8 @@ function show_project_participants($proid, $participant_type)
         $table = 'referees'; 
         break;
     default:
-        lib_die('Error in function show_project_participants() in lib.inc: No correct project participant passed');  
+        lib_die('Error in function show_project_participants() in '
+                .'lib.inc: No correct project participant passed');  
     }
     
     $query = ( "SELECT $participant_type FROM $table WHERE "
@@ -1312,7 +1318,8 @@ function lib_insertion_information()
 }
 
 /**
- * Displays a message when the insertion process has been successfully completed
+ * Displays a message when the insertion process has been 
+ * successfully completed
  * with information about the ongoing reviewing process
  *
  * @global   object     $auth     PHPLib Authentication objtect
@@ -1515,7 +1522,8 @@ function lib_die($error_message)
     $be->box_full($t->translate('An error has ocurred'),
 		  $error_message
 		  .'<p>'
-		  .$t->translate('This error is being mailed to the system administrators.'));
+		  .$t->translate('This error is being mailed to the '
+                                 .'system administrators.'));
 
     /* Mails the sys admins */
     include('monitorlib.inc');
