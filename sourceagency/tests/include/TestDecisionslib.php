@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDecisionslib.php,v 1.3 2002/06/06 09:31:37 riessen Exp $
+// $Id: TestDecisionslib.php,v 1.4 2002/06/06 10:32:52 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -274,7 +274,15 @@ extends UnitTest
                             .'<\/b> euros [(]<b>0%<\/b> of the total' ) );
 
         $this->_testFor_patterns( $ps, 2 );
-        $this->_testFor_string_length( 151 + strlen( $file ));
+        // the line break symbols in the warning messages went from <br>
+        // in versions less than 4.1.X(??) to being <br /> and since there
+        // are two in a warning message, there are four extra characters
+        // hence this if statement
+        if ( $this->v_gt( "4.1.0", phpversion() )) {
+            $this->_testFor_string_length( 147 + strlen( $file ));
+        } else {
+            $this->_testFor_string_length( 151 + strlen( $file ));
+        }
 
         $this->_check_db( $db_config );
     }
