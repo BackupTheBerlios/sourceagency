@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.27 2002/04/09 11:00:26 grex Exp $
+# $Id: lib.inc,v 1.28 2002/04/09 12:45:56 grex Exp $
 #
 ######################################################################
 
@@ -103,6 +103,135 @@ function timestr_comment($timestamp)
 function timestr_shortest($timestamp)
 {
     return strftime('%e. %b', $timestamp);
+}
+
+/**
+ * Forms to select day, month and year
+ *
+ * @param   int       $selection_name      Variable name
+ * @param   int       $selected_day        Selected day as default
+ * @param   int       $selected_month      Selected month as default
+ * @param   int       $selected_year       Selected year as default
+ *
+ * @global  int       $config_first_year   First possible year to choose (from the config file)
+ * @global  int       $config_last_year    Last possible year to choose
+ *
+ * @return  string                         several HTML selection forms
+ *
+ * @access public
+ */
+function select_date($selection_name, $selected_day='',
+                     $selected_month='', $selected_year='')
+{
+
+    global $config_first_year, $config_last_year;
+
+    $return = html_select($selection_name."_day");
+
+    for ($i=1; $i <= 31; $i++) {
+	$return .= html_select_option($i,($i == $selected_day),$i);
+    }
+
+    $return .= html_select_end();
+    $return .= html_select($selection_name."_month");
+
+    for ($i=1; $i <= 12; $i++) {
+        $return .= html_select_option($i,($i == $selected_month),month($i));
+    }
+
+    $return .= html_select_end();
+    $return .= html_select($selection_name."_year");
+
+    for ($i=$config_first_year; $i <= $config_last_year; $i++) {
+	$return .= html_select_option($i,($i == $selected_year),$i);
+    }
+    $return .= html_select_end();
+
+    return($return);
+}
+
+/**
+ * Given a number, returns the name of the month
+ *
+ * @param   int       $number          Month number (Gregorian calendar)
+ * @global  object    $t               Translation object
+ *
+ * @return  string                     Month name
+ *
+ * @access public
+ */
+function month($number)
+{
+    global $t;
+
+    switch ($number) {
+    case 1:
+ 	return($t->translate('January'));
+    case 2:
+        return($t->translate('February'));
+    case 3:
+        return($t->translate('March'));
+    case 4:
+	return($t->translate('April'));
+    case 5:
+	return($t->translate('May'));
+    case 6:
+	return($t->translate('June'));
+    case 7:
+	return($t->translate('July'));
+    case 8:
+	return($t->translate('August'));
+    case 9:
+	return($t->translate('September'));
+    case 10:
+        return($t->translate('October'));
+    case 11:
+        return($t->translate('November'));
+    case 12:
+	return($t->translate('December'));
+    }
+}
+
+/**
+ * Given a date, it returns a timestamp
+ * Actually it returns the given date at 12 AM
+ *
+ * @param   int       $day      Day
+ * @param   int       $month    Month
+ * @param   int       $year     Year
+ *
+ * @return  int                    Timestamp
+ *
+ * @access public
+ */
+function date_to_timestamp($day, $month, $year)
+{
+    if ($day < 10 && strlen($day) < 2 ) {
+        $day = '0' . $day;
+    }
+    if ($month < 10 && strlen($month) < 2) {
+        $month = '0' . $month;
+    }
+    return ($year . $month . $day . '120000');
+}
+
+/**
+ * Given a timestamp, it returns a date
+ * TODO: precondition ensuring that the timestamp is the right length
+ *
+ * @param   int       $timestamp   Timestamp
+ *
+ * @return  array                  items 'year', 'month' and 'day'
+ *
+ * @access public
+ */
+function timestamp_to_date($timestamp)
+{
+    $array['year']  = substr($timestamp,0,4);
+    $array['month'] = substr($timestamp,4,2);
+    $array['day']   = substr($timestamp,6,2);
+
+    return($array);
 }
 
 /**
@@ -662,7 +791,7 @@ function step_information($proid, $step)
 }
 
 /**
- * TODO
+ * Box with the project calendar
  * (this function is used in the summary page)
  *
  * @param   int       $proid        Project ID
@@ -880,38 +1009,49 @@ function lib_show_description($query) {
     }
 }
 
-function select_from_config($name,$array_name,$selected) {
-    $array_value="";
+/**
+ * Takes an array from config.inc and displays it as a HTML select form
+ *
+ * @param   int       $name         variable name
+ * @param   string    $array_name   array name as it is in config.inc
+ * @param   string    $selected     default value (selected one)
+ *
+ * @return  string                  HTML select form
+ *
+ * @access public
+ */
+function select_from_config($name, $array_name, $selected)
+{
+    $array_value='';
     
     // WISH: config.inc is included once again! This needs not to be 
     // WISH: done as it should have occured at the beginning of the page
-    include("config.inc");
+    include('config.inc');
 
     // WISH: It would be nice if the parameter $array_name could 
     // WISH: attack directly the array
     // WISH: then this switch would be obsolete
     // WISH: the problem is that I have not encountered how it works!
-
     switch ($array_name) {
-    case "project_types":
+    case 'project_types':
         $array = $project_types; 
         break;
-    case "project_volume":
+    case 'project_volume':
         $array = $project_volume; 
         break;
-    case "platform_array":
+    case 'platform_array':
         $array = $platform_array; 
         break;
-    case "architecture_array":
+    case 'architecture_array':
         $array = $architecture_array; 
         break;
-    case "environment_array":
+    case 'environment_array':
         $array = $environment_array; 
         break;
-    case "milestone_product_array":
+    case 'milestone_product_array':
         $array = $milestone_product_array; 
         break;
-    case "comments_type_array":
+    case 'comments_type_array':
         $array = $comments_type_array; 
         break;
     default:
@@ -929,6 +1069,18 @@ function select_from_config($name,$array_name,$selected) {
     return($output);
 }
 
+/**
+ * Summary for the followup page (step 5)
+ * Gives in a look how the project looks like (participants, milestones, etc.)
+ *
+ * @param   int       $proid        Project id
+ * @global  object    $bx           Box object
+ * @global  object    $sess         PHPLib session object
+ * @global  object    $t            Translation object
+ * @global  object    $auth         PHPLib authentication object
+ *
+ * @access public
+ */
 function followup($proid)
 {
     global $bx,$sess,$t,$auth;
@@ -939,7 +1091,7 @@ function followup($proid)
     $bx->box_body_begin();
     $bx->box_columns_begin(2);
     
-    $bx->box_column_start("right","65%","");
+    $bx->box_column_start('right','65%','');
     
     $query  = ( "SELECT * FROM description,auth_user WHERE "
                 . "description.proid='$proid' "
@@ -948,18 +1100,18 @@ function followup($proid)
     
     lib_show_description($query);
     
-    include("contentlib.inc");
+    include('contentlib.inc');
     show_selected_content($proid);
     
-    include("developinglib.inc");
+    include('developinglib.inc');
     show_selected_developing($proid);
     
     $bx->box_column_finish();
-    $bx->box_column_start("right","35%","");
+    $bx->box_column_start('right','35%','');
     
-    show_project_participants($proid,"sponsor");
-    show_project_participants($proid,"developer");
-    show_project_participants($proid,"referee");
+    show_project_participants($proid,'sponsor');
+    show_project_participants($proid,'developer');
+    show_project_participants($proid,'referee');
     
     $bx->box_column_finish();
     $bx->box_columns_end();
@@ -970,33 +1122,55 @@ function followup($proid)
     $bx->box_end();
 }
 
+/**
+ * Given a char returns the complete string for the status
+ *
+ * @param   char      $char         Status in a char
+ * @global  object    $t            Translation object
+ *
+ * @return  string                  Status in a string
+ *
+ * @access public
+ */
 function show_status($char)
 {
     switch ($char) {
     case 'P':
-        return "Proposed";
+        return 'Proposed';
         break;
     case 'N':
-        return "Negotiating";
+        return 'Negotiating';
         break;
     case 'A':
-        return "Accepted";
+        return 'Accepted';
         break;
     case 'R':
-        return "Rejected";
+        return 'Rejected';
         break;
     case 'D':
-        return "Deleted";
+        return 'Deleted';
         break;
     case 'M':
-        return "Modified";
+        return 'Modified';
         break;
     default:
-        return "Proposed";
+        return 'Proposed';
         break;
     }
 }
 
+/**
+ * Shows the sponsors, developers and referees that participate in a given project
+ *
+ * @param   int       $proid               Project ID
+ * @param   string    $participant_type    'sponsor', 'developer' or 'referee'
+ *
+ * @global  object    $t            Translation object
+ * @global  object    $bx           Box object
+ * @global  object    $db           PHPLib database object
+ *
+ * @access public
+ */
 function show_project_participants($proid, $participant_type)
 {
     global $t, $bx, $db;
@@ -1006,14 +1180,14 @@ function show_project_participants($proid, $participant_type)
     $bx->box_body_begin();
     
     switch ($participant_type) {
-    case "sponsor":
-        $table = "sponsoring"; 
+    case 'sponsor':
+        $table = 'sponsoring'; 
         break;
-    case "developer":
-        $table = "developing"; 
+    case 'developer':
+        $table = 'developing'; 
         break;
-    case "referee":
-        $table = "referees"; 
+    case 'referee':
+        $table = 'referees'; 
         break;
     default:
         die('Error in function show_project_participants() in lib.inc: No correct project participant passed');  
@@ -1023,7 +1197,7 @@ function show_project_participants($proid, $participant_type)
                . "proid='$proid' AND status='A'" );
     $db->query($query);
     while($db->next_record()) {
-        echo "<p><b>$participant_type:</b> " 
+        echo '<p><b>$participant_type:</b> ' 
             . $db->f($participant_type) . "\n";
     }
     
@@ -1032,150 +1206,18 @@ function show_project_participants($proid, $participant_type)
     $bx->box_end();
 }
 
-// REFACTOR: could be moved to html.inc ????
-function lib_comment_it($proid,$type,$number,$ref,$subject,$text)
-{
-    global $sess;
-    
-    print "<FONT SIZE=-1>[ ";
-    htmlp_link("comments_edit.php3", array("proid"   => $proid, 
-                                           "type"    => $type, 
-                                           "number"  => $number, 
-                                           "ref"     => $ref, 
-                                           "subject" => $subject), $text);
-    print " ]</FONT>\n";
-}
-
-// REFACTOR: could be moved to html.inc ????
-function lib_previous_comment($proid,$type,$number,$ref,$text)
-{
-    global $sess;
-    
-    print "<FONT SIZE=-1>[ ";
-    htmlp_link("comments.php3",array("proid"  => $proid, 
-                                     "type"   => $type, 
-                                     "number" => $number, 
-                                     "ref"    => $ref),$text);
-    print " ]</FONT>\n";
-}
-
-function lib_show_comments_on_it($proid, $type_cmt, $number, $cmt_id)
-{
-
-    if (isset($number) && !empty($number)) {
-        $number_selection = "AND number='$number'";
-    }
-    else {
-        $number_selection = "AND number='0'";
-    }
-
-    $db2 = new DB_SourceAgency;
-    $db2->query("SELECT * FROM comments,auth_user WHERE proid='$proid' AND "
-               ."type='" . $type_cmt . "' " . $number_selection
-               . " AND ref='$cmt_id' AND user_cmt=username "
-               . "ORDER BY creation_cmt ASC");
-
-    if ($db2->num_rows() > 0) {
-	echo "<ul>\n";
-  	while($db2->next_record()) {
-            echo "<li>". html_link("comments.php3",
-                                   array("proid"  => $proid, 
-                                         "type"   => $type_cmt, 
-                                         "number" => $number, 
-                                         "ref"    => $cmt_id),
-                                   $db2->f("subject_cmt"))
-                . " by <b>" . $db2->f("user_cmt")."</b> on <b>"
-                . timestr_comment( mktimestamp($db2->f("creation_cmt") ))
-                . "</b>\n";
-            lib_show_comments_on_it($proid,$type_cmt,$number,$db2->f("id"));
-  	}
-  	echo "</ul>\n";
-    }
-    echo "<p>\n";
-}
-
-function select_date($selection_name, $selected_day,
-                     $selected_month, $selected_year)
-{
-
-    global $config_first_year, $config_last_year;
-    $return = html_select($selection_name."_day");
-
-    for ($i=1; $i <= 31; $i++) {
-	$return .= html_select_option($i,($i == $selected_day),$i);
-    }
-
-    $return .= html_select_end();
-    $return .= html_select($selection_name."_month");
-
-    for ($i=1; $i <= 12; $i++) {
-        $return .= html_select_option($i,($i == $selected_month),month($i));
-    }
-
-    $return .= html_select_end();
-    $return .= html_select($selection_name."_year");
-
-    for ($i=$config_first_year; $i <= $config_last_year; $i++) {
-	$return .= html_select_option($i,($i == $selected_year),$i);
-    }
-    $return .= html_select_end();
-
-    return($return);
-}
-
-function month($number)
-{
-    global $t;
-
-    switch ($number) {
-    case 1:
- 	return($t->translate('January'));
-    case 2:
-        return($t->translate('February'));
-    case 3:
-        return($t->translate('March'));
-    case 4:
-	return($t->translate('April'));
-    case 5:
-	return($t->translate('May'));
-    case 6:
-	return($t->translate('June'));
-    case 7:
-	return($t->translate('July'));
-    case 8:
-	return($t->translate('August'));
-    case 9:
-	return($t->translate('September'));
-    case 10:
-        return($t->translate('October'));
-    case 11:
-        return($t->translate('November'));
-    case 12:
-	return($t->translate('December'));
-    }
-}
-
-function date_to_timestamp($day, $month, $year)
-{
-    if ($day < 10 && strlen($day) < 2 ) {
-        $day = '0' . $day;
-    }
-    if ($month < 10 && strlen($month) < 2) {
-        $month = '0' . $month;
-    }
-    return ($year . $month . $day . '120000');
-}
-
-function timestamp_to_date($timestamp)
-{
-    // TODO: precondition ensuring that the timestamp is the right length
-    $array['year']  = substr($timestamp,0,4);
-    $array['month'] = substr($timestamp,4,2);
-    $array['day']   = substr($timestamp,6,2);
-
-    return($array);
-}
-
+/**
+ * Yes/No select form
+ *
+ * @param    string     $name     Name of the variable
+ * @param    string     $selected Default value
+ *
+ * @global   object     $t        Translation object
+ *
+ * @return   string               HTML select box with 'yes' and 'no'
+ *
+ * @access public
+ */
 function lib_select_yes_or_no($name, $selected)
 {
     global $t;
@@ -1191,6 +1233,17 @@ function lib_select_yes_or_no($name, $selected)
     return($return);
 }
 
+/**
+ * Prints the nickname
+ *
+ * This function can be changed to display the user's email
+ * and/or its personal homepage
+ *
+ * @param    string     $nick     User nickname
+ * @global   object     $t        Translation object
+ * 
+ * @access public
+ */
 function lib_nick($nick)
 {
     global $t;     
@@ -1200,6 +1253,36 @@ function lib_pnick($nick) {
     print lib_nick($nick);
 }
 
+/**
+ * Shows the project milestones
+ *
+ * @param    int        $proid    Project ID
+ * 
+ * @access public
+ * @see show_milestones() in milestoneslib.inc
+ */
+function show_project_milestones($proid)
+{
+    $db_local = new DB_SourceAgency;
+    $db_local->query("SELECT devid FROM developing WHERE proid='$proid' "
+                     ."AND status='A'");
+    $db_local->next_record(); 
+
+    include('milestoneslib.inc');
+    show_milestones($proid,$db_local->f('devid'),'');
+}
+
+/**
+ * Displays information on the insertion process for a project
+ * the information to be shown depends on if the user is a developer or
+ * a sponsor
+ *
+ * @global   object     $bx       Box object
+ * @global   object     $auth     PHPLib Authentication objtect
+ * @global   object     $t        Translation object
+ * 
+ * @access public
+ */
 function lib_insertion_information()
 {
     global $bx, $auth, $t;
@@ -1228,17 +1311,14 @@ function lib_insertion_information()
     }
 }
 
-function show_project_milestones($proid)
-{
-    $db_local = new DB_SourceAgency;
-    $db_local->query("SELECT devid FROM developing WHERE proid='$proid' "
-                     ."AND status='A'");
-    $db_local->next_record(); 
-
-    include('milestoneslib.inc');
-    show_milestones($proid,$db_local->f('devid'),'');
-}
-
+/**
+ * Displays a message when the insertion process has been successfully completed
+ * with information about the ongoing reviewing process
+ *
+ * @global   object     $auth     PHPLib Authentication objtect
+ * 
+ * @access public
+ */
 function lib_insertion_finished()
 {
     global $auth;
@@ -1256,29 +1336,57 @@ function lib_insertion_finished()
         . "<br>When the project is reviewed this will also change.\n";
 }
 
+/**
+ * This is defined so that the pages don't have to drop out of php
+ * mode in order to write the html comment and also so that all pages
+ * write the same thing
+ *
+ * @access public
+ * @see end_content()
+ */
 function start_content() {
-    // this is defined so that the pages don't have to drop out of php
-    // mode in order to write the html comment and also so that all pages
-    // write the same thing
     print "\n\n<!-- content -->\n\n";
 }
 
+/**
+ * See comment for start_content
+ *
+ * @access public
+ * @see start_content()
+ */
 function end_content()
 {
-    // see comment for start_content
     print "\n\n<!-- end content -->\n\n";
 }
 
+/**
+ * Sees if a value is not set or is empty
+ *
+ * @param  foo          $val     Value that has to be checked
+ *
+ * @return boolean                 
+ * @access public
+ * @see is_set_and_not_empty(&$val)
+ */
 function is_not_set_or_empty(&$val)
 {
     return ( !isset( $val ) || empty( $val ) );
 }
 
+/**
+ * Sees if a value has been set and is not empty
+ * This is not the same as !is_not_set_or_empty($val) because
+ * a value can be set and empty, and is_not_set_or_empty would
+ * return false
+ *
+ * @param  foo          $val     Value that has to be checked
+ *
+ * @return boolean                 
+ * @access public
+ * @see is_not_set_or_empty(&$val)
+ */
 function is_set_and_not_empty(&$val)
 {
-    // this is not the same as !is_not_set_or_empty($val) because
-    // a value can be set and empty, and is_not_set_or_empty would
-    // return false
     return ( isset( $val ) && !empty( $val ) );
 }
 
@@ -1306,5 +1414,67 @@ function lib_in_step($proid, $step_num)
             return 0;
 	}
     }
+}
+
+// REFACTOR: could be moved to html.inc ????
+function lib_comment_it($proid, $type, $number, $ref, $subject, $text)
+{
+    global $sess;
+    
+    print '<FONT SIZE=-1>[ ';
+    htmlp_link('comments_edit.php3', array('proid'   => $proid, 
+                                           'type'    => $type, 
+                                           'number'  => $number, 
+                                           'ref'     => $ref, 
+                                           'subject' => $subject), $text);
+    print " ]</FONT>\n";
+}
+
+// REFACTOR: could be moved to html.inc ????
+function lib_previous_comment($proid, $type, $number, $ref, $text)
+{
+    global $sess;
+    
+    print '<FONT SIZE=-1>[ ';
+    htmlp_link('comments.php3',array('proid'  => $proid, 
+                                     'type'   => $type, 
+                                     'number' => $number, 
+                                     'ref'    => $ref),$text);
+    print " ]</FONT>\n";
+}
+
+function lib_show_comments_on_it($proid, $type_cmt, $number, $cmt_id)
+{
+
+    if (isset($number) && !empty($number)) {
+        $number_selection = "AND number='$number'";
+    }
+    else {
+        $number_selection = "AND number='0'";
+    }
+
+    $db2 = new DB_SourceAgency;
+    $db2->query("SELECT * FROM comments,auth_user WHERE proid='$proid' AND "
+               ."type='" . $type_cmt . "' " . $number_selection
+               . " AND ref='$cmt_id' AND user_cmt=username "
+               . "ORDER BY creation_cmt ASC");
+
+    if ($db2->num_rows() > 0) {
+	echo "<ul>\n";
+  	while($db2->next_record()) {
+            echo '<li>'. html_link('comments.php3',
+                                   array('proid'  => $proid, 
+                                         'type'   => $type_cmt, 
+                                         'number' => $number, 
+                                         'ref'    => $cmt_id),
+                                   $db2->f('subject_cmt'))
+                . ' by <b>' . $db2->f('user_cmt').'</b> on <b>'
+                . timestr_comment( mktimestamp($db2->f('creation_cmt') ))
+                . "</b>\n";
+            lib_show_comments_on_it($proid,$type_cmt,$number,$db2->f('id'));
+  	}
+  	echo "</ul>\n";
+    }
+    echo "<p>\n";
 }
 ?>
