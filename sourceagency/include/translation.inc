@@ -3,11 +3,11 @@
      var $tolang;
 
      function translation($lang = "English") {
-          $this->$tolang = $lang;
+          $this->tolang = $lang;
      }
    
      function translate($phrase) {
-	  include($this->$tolang."-lang.inc");
+	  include($this->tolang."-lang.inc");
 	  return($tmp);
      }
  }
