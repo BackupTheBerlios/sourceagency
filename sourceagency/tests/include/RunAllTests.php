@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: RunAllTests.php,v 1.2 2001/10/15 15:44:21 ger Exp $
+// $Id: RunAllTests.php,v 1.3 2001/10/18 18:20:02 ger Exp $
 
 require_once( "../constants.php" );
 
@@ -31,6 +31,11 @@ global $sess;
 require_once( "translation.inc" );
 $t = new translation( "English" );
 global $t;
+
+// define a box object
+require_once( "box.inc" );
+$bx = new box;
+global $bx;
 
 // define the global TestSuite
 $suite = new TestSuite;

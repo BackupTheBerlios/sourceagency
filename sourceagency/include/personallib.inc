@@ -2,7 +2,7 @@
 #
 # personallib.inc
 #
-# $Id: personallib.inc,v 1.3 2001/10/18 12:49:13 ger Exp $
+# $Id: personallib.inc,v 1.4 2001/10/18 18:20:02 ger Exp $
 #
 
 ######################################################################
@@ -121,9 +121,9 @@ function personal_related_projects($username,$status) {
 }
 
 /**
- * FIXME: personal_comments_short only differ in their use of the variable
- * FIXME: $i, there really should be refactored with a single function whether
- * FIXME: specifying whether long or short is required.
+ * REFACTOR: personal_comments_short only differ in their use of the variable
+ * REFACTOR: $i, there really should be refactored with a single function 
+ * REFACTOR: whether specifying whether long or short is required.
  */
 function personal_comments_short($username) {
  	global $bx, $sess;
@@ -179,7 +179,7 @@ function personal_comments_short($username) {
 }
 
 /**
- * FIXME: refactor and replace with a single common function, see fixme above
+ * REFACTOR: replace the followng and above with a single common function
  */
 function personal_comments_long($username) {
  	global $bx, $sess;
@@ -281,7 +281,9 @@ function personal_news_short($username) {
 	$bx->box_end();
 
 }
-
+/**
+ * REFACTOR: combine the above and below into one common function
+ */
 function personal_news_long($username) {
  	global $bx, $sess;
 
@@ -290,25 +292,42 @@ function personal_news_long($username) {
 	$bx->box_body_begin();
 
 	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT * FROM comments WHERE user_cmt='$username' AND comments.proid");
+	$db_local->query("SELECT * FROM comments WHERE user_cmt='$username' "
+                         ."AND comments.proid");
 	if ($db_local->num_rows() == 0) print "no comments posted\n";
 	$i=0;
 	print "<ul>\n";
 	while ($db_local->next_record()) {
 		print "<br><li>";
 		$db_count = new DB_SourceAgency;
-		$db_count->query("SELECT COUNT(*) FROM comments WHERE proid='".$db_local->f("proid")."' AND type='News' AND ref='".$db_local->f("id")."'");
+		$db_count->query("SELECT COUNT(*) FROM comments WHERE proid='"
+                                 .$db_local->f("proid")
+                                 ."' AND type='News' AND ref='"
+                                 .$db_local->f("id")."'");
 		$db_count->next_record();
-		print "News: <b>".html_link("news.php3",array("proid" => $db_local->f("proid")),$db_local->f("subject_news"))."</b> ".timestr_comment(mktimestamp($db_local->f("creation_news")))." (<b>".$db_count->f("COUNT(*)")."</b> comments on it)\n";
-		$db_count->query("SELECT * FROM description WHERE proid='".$db_local->f("proid")."'");
+		print ("News: <b>"
+                       .html_link("news.php3",
+                                  array("proid" => $db_local->f("proid")),
+                                  $db_local->f("subject_news"))
+                       ."</b> "
+                       .timestr_comment(mktimestamp($db_local->f("creation_news")))
+                       ." (<b>".$db_count->f("COUNT(*)")
+                       ."</b> comments on it)\n");
+		$db_count->query("SELECT * FROM description WHERE proid='"
+                                 .$db_local->f("proid")."'");
 		$db_count->next_record();
-		print "<br>&nbsp; &nbsp; &nbsp; posted to ".html_link("summary.php3",array("proid" => $db_count->f("proid")), $db_count->f("project_title"))."<br>\n";
+		print( "<br>&nbsp; &nbsp; &nbsp; posted to "
+                       .html_link("summary.php3",
+                                  array("proid" => $db_count->f("proid")), 
+                                  $db_count->f("project_title"))."<br>\n");
 	}
 	print"</ul>\n<p align=right>\n";
-	if ($i>10) htmlp_link("personal_news.php3",array("username" => $username),"See all the news...");
+	if ($i>10) {
+          htmlp_link("personal_news.php3",
+                     array("username" => $username),"See all the news...");
+        }
 	$bx->box_body_end();
 	$bx->box_end();
-
 }
 
 function personal_consultants($username,$status) {
@@ -318,18 +337,28 @@ function personal_consultants($username,$status) {
 	$bx->box_title("Consultant (".show_status($status).")");
 	$bx->box_body_begin();
 	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT * FROM consultants,description WHERE consultant='$username' AND consultants.status='$status' AND consultants.proid=description.proid");
-	if ($db_local->num_rows() == 0) print "No consultant proposal with this status\n";
+	$db_local->query("SELECT * FROM consultants,description WHERE "
+                         . "consultant='$username' AND consultants.status"
+                         . "='$status' AND consultants.proid="
+                         . "description.proid");
+	if ($db_local->num_rows() == 0) {
+          print "No consultant proposal with this status\n";
+        }
 	else {
 		while($db_local->next_record()) {
-		print "Project: ".html_link("step1.php3",array("proid" => $db_local->f("proid")), $db_local->f("project_title"))." (step <b>".$db_local->f("status")."</b>)<br>\n";			
-		}
+                  print ("Project: "
+                         .html_link("step1.php3",
+                                    array("proid" => $db_local->f("proid")), 
+                                    $db_local->f("project_title"))
+                         ." (step <b>".$db_local->f("status")."</b>)<br>\n");
+                }
 	}
 	$bx->box_body_end();
 	$bx->box_end();
-
 }
-
+/**
+ * REFACTOR: above and below into a common function
+ */
 function personal_referees($username,$status) {
  	global $bx, $sess;
 
@@ -337,16 +366,23 @@ function personal_referees($username,$status) {
 	$bx->box_title("Referee (".show_status($status).")");
 	$bx->box_body_begin();
 	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT * FROM referees,description WHERE referee='$username' AND referees.status='$status' AND referees.proid=description.proid");
-	if ($db_local->num_rows() == 0) print "No referee proposal with this status\n";
+	$db_local->query("SELECT * FROM referees,description WHERE "
+                         . "referee='$username' AND referees.status='$status'"
+                         . " AND referees.proid=description.proid");
+	if ($db_local->num_rows() == 0) {
+          print "No referee proposal with this status\n";
+        }
 	else {
 		while($db_local->next_record()) {
-		print "Project: ".html_link("step4.php3",array("proid" => $db_local->f("proid")), $db_local->f("project_title"))." (step <b>".$db_local->f("status")."</b>)<br>\n";			
-		}
+                  print( "Project: "
+                         .html_link("step4.php3",
+                                    array("proid" => $db_local->f("proid")), 
+                                    $db_local->f("project_title"))
+                         ." (step <b>".$db_local->f("status")."</b>)<br>\n");
+                }
 	}
 	$bx->box_body_end();
 	$bx->box_end();
-
 }
 
 function personal_cooperation($username,$status) {
@@ -356,16 +392,31 @@ function personal_cooperation($username,$status) {
 	$bx->box_title("Developing Cooperation (".show_status($status).")");
 	$bx->box_body_begin();
 	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT * FROM cooperation,description,developing WHERE cooperation.developer='$username' AND cooperation.status='$status' AND cooperation.devid = developing.devid AND developing.proid=description.proid");
-	if ($db_local->num_rows() == 0) print "No developing cooperation proposal with this status\n";
+	$db_local->query("SELECT * FROM cooperation,description,developing "
+                         . "WHERE cooperation.developer='$username' AND "
+                         . "cooperation.status='$status' AND "
+                         . "cooperation.devid = developing.devid AND "
+                         . "developing.proid=description.proid");
+	if ($db_local->num_rows() == 0) {
+          print "No developing cooperation proposal with this status\n";
+        }
 	else {
 		while($db_local->next_record()) {
-		print "Project: ".html_link("step2.php3",array("proid" => $db_local->f("proid")), $db_local->f("project_title"))." (to this ".html_link("step2.php3",array("proid" => $db_local->f("proid"), "show_proposals" => "yes", "which_proposals" => $db_local->f("devid")),"development").")<br>\n";	
+                  print ( "Project: "
+                          .html_link("step2.php3",
+                                     array("proid" => $db_local->f("proid")), 
+                                     $db_local->f("project_title"))
+                          ." (to this "
+                          .html_link("step2.php3",
+                                     array("proid" => $db_local->f("proid"), 
+                                           "show_proposals" => "yes", 
+                                           "which_proposals" 
+                                           => $db_local->f("devid")),
+                                     "development").")<br>\n");
 		}
 	}
 	$bx->box_body_end();
 	$bx->box_end();
-
 }
 
 function personal_my_projects($username) {
@@ -375,11 +426,19 @@ function personal_my_projects($username) {
 	$bx->box_title("My Projects");
 	$bx->box_body_begin();
 	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT * FROM description WHERE description_user='$username' ORDER BY description_creation DESC");
-	if ($db_local->num_rows() == 0) print "No personal projects\n";
+	$db_local->query("SELECT * FROM description WHERE "
+                         . "description_user='$username' ORDER BY "
+                         . "description_creation DESC");
+	if ($db_local->num_rows() == 0) {
+          print "No personal projects\n";
+        }
 	else {
 		while($db_local->next_record()) {
-		print "Project: ".html_link("summary.php3",array("proid" => $db_local->f("proid")), $db_local->f("project_title"))." (step <b>".$db_local->f("status")."</b>)<br>\n";			
+                  print( "Project: "
+                         .html_link("summary.php3",
+                                    array("proid" => $db_local->f("proid")), 
+                                    $db_local->f("project_title"))
+                         ." (step <b>".$db_local->f("status")."</b>)<br>\n");
 		}
 	}
 	$bx->box_body_end();
@@ -395,16 +454,24 @@ function personal_monitored_projects($username) {
 	$bx->box_title("Monitored Projects");
 	$bx->box_body_begin();
 	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT * FROM monitor,description WHERE monitor.proid=description.proid AND monitor.username='$username' ORDER BY creation DESC");
-	if ($db_local->num_rows() == 0) print "No monitored projects\n";
+	$db_local->query("SELECT * FROM monitor,description WHERE "
+                         . "monitor.proid=description.proid AND "
+                         . "monitor.username='$username' ORDER BY "
+                         . "creation DESC");
+	if ($db_local->num_rows() == 0) {
+          print "No monitored projects\n";
+        }
 	else {
 		while($db_local->next_record()) {
-		print "Project: ".html_link("summary.php3",array("proid" => $db_local->f("proid")), $db_local->f("project_title"))." (step <b>".$db_local->f("status")."</b>)<br>\n";			
+		print( "Project: "
+                       .html_link("summary.php3",
+                                  array("proid" => $db_local->f("proid")), 
+                                  $db_local->f("project_title"))
+                       ." (step <b>".$db_local->f("status")."</b>)<br>\n");
 		}
 	}
 	$bx->box_body_end();
 	$bx->box_end();
-
 }
 
 ?>
