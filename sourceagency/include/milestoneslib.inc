@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.13 2002/04/11 00:20:43 grex Exp $
+# $Id: milestoneslib.inc,v 1.14 2002/04/12 12:52:04 riessen Exp $
 #
 ######################################################################
 
@@ -188,7 +188,7 @@ function milestones_preview($proid, $devid)
 
 function form_milestones($proid, $devid)
 {
-    global $auth,$bx,$t,$sess
+    global $auth,$bx,$t,$sess;
     global $number, $goals, $release_day, $release_month,
            $release_year, $product, $payment;
 
