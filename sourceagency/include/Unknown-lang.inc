@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: Unknown-lang.inc,v 1.1 2001/11/14 15:11:04 riessen Exp $
+# $Id: Unknown-lang.inc,v 1.2 2001/11/15 17:18:52 riessen Exp $
 #
 ######################################################################
 
@@ -37,7 +37,7 @@ switch($phrase) {
     default:   
         // we mark the phrase as being translated by wrapping
         // it with brackets
-        $tmp = "$phrase";  
+        $tmp = "<b>[</b>". $phrase . "<b>]</b>";  
         break;
 }
 ?>
