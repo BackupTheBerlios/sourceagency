@@ -42,11 +42,11 @@ if (check_permission($proid,$page)) {
   print "Sponsors can modify their sponsoring wish using this form.\n";
   print "<br><p>\n";
 
-  if (!isset($submit) || empty($submit)) {
-      if (isset($preview) && !empty($preview)) {
-          sponsoring_preview($proid);
+  if ( is_not_set_or_empty( $submit ) ) {
+      if ( is_set_and_not_empty( $preview ) ) {
+          sponsoring_preview( $proid );
       }	else {
-          if (!is_project_initiator($proid)) {
+          if (!is_project_initiator( $proid )) {
               require("configurelib.inc");
               configure_show($proid);
               print "<br><p>\n";

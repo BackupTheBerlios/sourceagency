@@ -50,13 +50,12 @@ if (check_proid($proid)) {
   if ($db->affected_rows()) {
 	print ( "Sponsoring involvement by <b>$sponsor</b> has "
                 ."been accepted.<p>\n" );
-	htmlp_link("sponsoring.php3",array("proid" => $proid),
-                   "Back to the Sponsoring Involvement Page");
   } else {
 	print "There has been a database error.<p>\n";
-	htmlp_link("sponsoring.php3",array("proid" => $proid),
-                   "Back to the Sponsoring Involvement Page");
   }
+
+  htmlp_link("sponsoring.php3",array("proid" => $proid),
+             "Back to the Sponsoring Involvement Page");
 
   // Send mail to the ones that monitor this project
   include("monitorlib.inc");

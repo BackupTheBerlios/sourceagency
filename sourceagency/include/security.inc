@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.14 2002/03/19 17:08:03 riessen Exp $
+# $Id: security.inc,v 1.15 2002/03/26 13:07:35 riessen Exp $
 #
 ######################################################################
 
@@ -209,8 +209,10 @@ function check_permission($proid,$page) {
        || (($db_check->f("status") == 0 || $db_check->f("status") == "-1") 
        && !is_project_initiator($proid))) {
       if (isset($auth) && !strcmp($db_check->f("description_user"),
-                                  $auth->auth["uname"])) {
-		// WISH: config.inc should be not required another time as it should have been done at the beginning of every page
+                              $auth->auth["uname"])) {
+          // WISH: config.inc should be not required another 
+          // WISH: time as it should have been done at the 
+          // WISH: beginning of every page
           require("config.inc");
           $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
                         $th_box_title_bgcolor,$th_box_title_font_color,
@@ -288,9 +290,9 @@ function check_permission($proid,$page) {
           case "sponsoring":
               break;
           case "sponsoring_edit":
-              if (is_sponsor()) {
+              if ( is_sponsor() || is_project_initiator($proid) ) {
                   if (!already_involved_in_this_step($proid,
-                  "sponsoring_edit",$auth->auth["uname"])) {
+                                 "sponsoring_edit",$auth->auth["uname"])) {
                       return 1;
                   } else {
                       return already_involved_message($proid,$page);
@@ -716,6 +718,8 @@ function security_accept_by_view($proid,$page) {
   if ($page=="news_edit" || $page=="news_mod") $page="news";
   if ($page=="comments_edit") $page="comments";
 
+  // FIXME: will cause a parse error or database error if the
+  // FIXME: page variable isn't a column defined in the table 'views'
   $db_local = new DB_SourceAgency;
   $db_local->query("SELECT $page FROM views WHERE proid='$proid'");
   $db_local->next_record();

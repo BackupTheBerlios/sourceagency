@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowuplib.inc,v 1.2 2002/02/07 12:24:17 riessen Exp $
+# $Id: TestFollowuplib.inc,v 1.3 2002/03/26 13:07:35 riessen Exp $
 #
 ######################################################################\
 
@@ -352,26 +352,37 @@ extends UnitTest
     }
 
     function testFollowup_location() {
-        $db_config = new mock_db_configure( 1 );
+        $db_config = new mock_db_configure( 2 );
 
         $db_q = array( 0 => ("SELECT location FROM follow_up WHERE "
-                             ."milestone_number='%s' AND count='%s'"));
+                             ."milestone_number='%s' AND count='%s' "
+                             ."AND proid='%s'"));
 
-        $q_dat = $this->_generate_records( array( "ms_num", "count" ), 1 );
+        $q_dat = $this->_generate_records( array( "ms_num", "count", "proid"),
+                                           2 );
 
         $db_config->add_query( sprintf( $db_q[0], $q_dat[0]["ms_num"],
-                                        $q_dat[0]["count"]), 0 );
+                                        $q_dat[0]["count"], 
+                                        $q_dat[0]["proid"]), 0 );
+        $db_config->add_query( sprintf( $db_q[0], $q_dat[1]["ms_num"],
+                                        $q_dat[1]["count"], 
+                                        $q_dat[1]["proid"]), 1 );
 
         $row = $this->_generate_records(array("location"),1);
 
-        $db_config->add_record( $row[0], 0 );
+        $db_config->add_num_row( 0, 0 );
+        $db_config->add_num_row( 1, 1 );
+        $db_config->add_record( $row[0], 1 );
 
-        // only one call, although we should also test what is returned
-        // when no record exists
-        $this->assertEquals( $row[0]["location"],
-                             followup_location( "does get used", 
+        $this->assertEquals( 0,
+                             followup_location( $q_dat[0]["proid"],
                                                 $q_dat[0]["ms_num"],
                                                 $q_dat[0]["count"]));
+
+        $this->assertEquals( $row[0]["location"],
+                             followup_location( $q_dat[1]["proid"],
+                                                $q_dat[1]["ms_num"],
+                                                $q_dat[1]["count"]));
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
