@@ -1,10 +1,10 @@
 <?php
-
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 ######################################################################
-# SourceAgency: Software Announcement & Retrieval System
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
-# Copyright (c) 2001 by
+# Copyright (c) 2001-2 by
 #                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
 #                Gregorio Robles (grex@scouts-es.org)
 #
@@ -18,40 +18,40 @@
 # the Free Software Foundation; either version 2 or later of the GPL.
 ######################################################################  
 
-
-page_open(array("sess" => "SourceAgency_Session"));
-if (isset($auth) && !empty($auth->auth["perm"])) {
+page_open(array('sess' => 'SourceAgency_Session'));
+if (isset($auth) && !empty($auth->auth['perm'])) {
   page_close();
-  page_open(array("sess" => "SourceAgency_Session",
-                  "auth" => "SourceAgency_Auth",
-                  "perm" => "SourceAgency_Perm"));
+  page_open(array('sess' => 'SourceAgency_Session',
+                  'auth' => 'SourceAgency_Auth',
+                  'perm' => 'SourceAgency_Perm'));
 }
 
-require("header.inc");
+require('header.inc');
 
-$bx = new box("80%",$th_box_frame_color,$th_box_frame_width,
+$bx = new box('80%',$th_box_frame_color,$th_box_frame_width,
               $th_box_title_bgcolor,$th_box_title_font_color,
               $th_box_title_align,$th_box_body_bgcolor,
               $th_box_body_font_color,$th_box_body_align);
 
 start_content();
-$db->query("SELECT * FROM faq");
+
+$db->query('SELECT * FROM faq');
 $i=1;
 
 while($db->next_record()) {
-  $msg .= "<li><a href=#".$i++.">".$db->f("question")."</a>";
+    $msg .= '<li><a href=#'.$i++.'>'.$db->f('question').'</a>';
 }
 
-$bx->box_full($t->translate("Frequently Asked Questions"), $msg);
+$bx->box_full($t->translate('Frequently Asked Questions'), $msg);
 $db->seek(0);
 
 while($db->next_record()) {
-  echo "<a name=".$i++.">\n";
-  $bx->box_full($t->translate("Question").": ".$db->f("question"), 
-                "<b>".$t->translate("Answer").":</b> ".$db->f("answer"));
+    echo '<a name='.$i++.">\n";
+    $bx->box_full($t->translate('Question').': '.$db->f('question'), 
+                  '<b>'.$t->translate('Answer').':</b> '.$db->f('answer'));
 }
 
 end_content();
-require("footer.inc");
+require('footer.inc');
 page_close();
 ?>
