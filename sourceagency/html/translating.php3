@@ -27,40 +27,48 @@ require("header.inc");
 <A NAME="international">
 <P><H2>International support</H2>
 
-<P>SourceAgency can be easily translated into different
-languages. If you see that SourceAgency does not have support in your
+<P>SourceAgency can be translated into different
+languages. If you notice that SourceAgency does not support your
 language, you're gladly invited to help us with the
-internationalization of SourceAgency by sending us your translation.
+internationalization of SourceAgency by providing us your translation.
 
-<P>You don't need to have any computer or programming experience to do a
-translation. Keep on reading and you'll find out how easy it is.
+<P>You don't need to have any programming experience to do provide
+translation information. 
 
 <A NAME="normal_outputs">
 <P><H3>1. Main outputs</H3>
 
-<P>Download the <A HREF="../include/lang-translate.inc">lang-translate.inc</A> file (it also comes in SourceAgency's
-1.0 tarball) . If you edit it, you'll find lines
+<P>Download the <a href="http://cvs.berlios.de/cgi-bin/cvsweb.cgi/sourceagency/include/English-lang.inc?rev=1.1&content-type=text/x-cvsweb-markup&cvsroot=sourceagency"
+>English-lang.inc</A> file (<i>Note:</i> it does not exactly match the
+following description!!) (it also comes in SourceAgency's
+tarball). If you look at it, you'll find lines
 like this:
 
 <PRE>
      case "Home": $tmp = ""; break;
 </PRE>
 
-<P>We will explain it briefly: after the <I>case</I> you will see the English text to translate writen in
+<P>We will explain it briefly: after the <I>case</I> statement you will 
+see the English text to translate written in
 quotes (in our example, the English text is "Home"). Then you'll find a
-sort of equation. The content of your translation from English into your language should
-be placed in between these second quotes. For example, in the case you were making a translation into German, this would be the result for this line:
-
+sort of equation. The content of your translation from English into your 
+language should
+be placed in between these second quotes. For example, in the case you were 
+making a translation into German, this would be the result for this line:
+<?php
+// TODO: explain how umlauts, i.e. international, characters can be added
+?>
 <PRE>
      case "Home": $tmp = "Heim"; break;
 </PRE>
 
 <P>Ok, now that you're an expert, you'll notice that "Home" is translated
-into German as "Heim" ;-). The procedure just explained should be repeated with
-all the lines in this file. 
+into German as "Heim" ;-). The procedure just explained should be repeated 
+with all the lines in this file. 
 
-<P>Once you're finished, save it as <I>YourLanguage-lang.inc</I> and please send it to the authors. We will include
-it in the next releases so that everybody can benefit of your work.
+<P>Once you're finished, save it as <I>YourLanguage-lang.inc</I> and please 
+send it to the <a href="authors.php3">authors</a>. We will include
+it in the future releases so that everybody can benefit of your work.
 
 <A NAME="contributors">
 <P><H3>2. Contributors</H3>
@@ -68,16 +76,18 @@ it in the next releases so that everybody can benefit of your work.
 <P>Here's a list of all the people that have contributed to the
 translation of SourceAgency.
 
-<P>Main files:
-<BR>&nbsp;
-
 <CENTER>
 <TABLE width=95%>
-<TR><TD>Language</TD><TD>Translator</TD><TD>Version</TD><TD>Last Modified</TD></TR>
+<TR><TH align="left">Language</TH><TH align="left">Translator</TH></TR>
 <TR><TD>German</TD><TD>Lutz Henckel &lt;<A
-HREF="mailto:lutz.henckel@fokus.gmd.de">lutz.henckel@fokus.gmd.de</A>&gt;</TD><TD>x.x</TD><TD>xx xxxx 2001</TD></TR>
+HREF="mailto:lutz.henckel@fokus.gmd.de">lutz.henckel@fokus.gmd.de</A>&gt;
+</TD></TR>
 <TR><TD>Spanish</TD><TD>Gregorio Robles &lt;<A
-HREF="mailto:grex@scouts-es.org">grex@scouts-es.org</A>&gt;</TD><TD>x.x</TD><TD>xx xxxx 2001</TD></TR>
+HREF="mailto:grex@scouts-es.org">grex@scouts-es.org</A>&gt;</TD></TR>
+<TR><TD>English (non-translation)</TD><TD>Gerrit Riessen &lt;<A
+HREF="mailto:riessen@open-source-consultants.de"
+>riessen@open-source-consultants.de</A>&gt;</TD></TR>
+
 </TABLE></CENTER>
 
 
