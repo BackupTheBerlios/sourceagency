@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: viewslib.inc,v 1.2 2001/11/08 16:17:41 riessen Exp $
+# $Id: viewslib.inc,v 1.3 2001/11/29 15:38:58 grex Exp $
 #
 ######################################################################
 
@@ -135,7 +135,7 @@ function views_preview($proid) {
 
   lib_comment_it($proid,"Views","","0","","Comments on the views?");
 
-  lib_show_comments_on_it($proid,"Views",$db->f("FIXME"),"0");
+  lib_show_comments_on_it($proid,"Views", 0, 0);
 }
 
 function views_show($proid) {
@@ -196,7 +196,7 @@ function views_show($proid) {
 
 	lib_comment_it($proid,"Views","","0","","Comments on the views?");
 
-	lib_show_comments_on_it($proid,"Views",$db->f("FIXME"),"0");
+	lib_show_comments_on_it($proid,"Views", 0, 0);
   }
 
   if ($db->num_rows() == 0) {
@@ -228,7 +228,7 @@ function views_select_view($proid,$on_what,$selected) {
 	$selected = $db_local->f($on_what);
   }
 
-  /* FIXME FIXME FIXME */
+  // WISH: config.inc should be not required another time as it has already been done at the beginning of the page
   include("config.inc");
 
   while (list(, $value) = each($views_array)) {
