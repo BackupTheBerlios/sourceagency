@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: insdoco.php3,v 1.1 2002/04/19 10:20:59 grex Exp $
+# $Id: insdoco.php3,v 1.2 2002/04/19 10:25:15 grex Exp $
 #
 ######################################################################  
 
@@ -57,7 +57,7 @@ if (($config_perm_admdoco != 'all')
             $bx->box_title($t->translate('Do you really want to delete this Page '
                                    .'Documentation entry? There is no way for undeletion.'));
             $bx->box_body_begin();
-            print '<b>Page: '.$db->f('page')': '.$db->f('header').'</b>';
+            print '<b>Page: '.$db->f('page').': '.$db->f('header').'</b>';
             $bx->box_columns_begin(2);
             $bx->box_column('left', '76%', '', $db->f('doco'));
             $bx->box_column('right', '12%', '', html_form_action('PHP_SELF')
@@ -98,15 +98,14 @@ if (($config_perm_admdoco != 'all')
     
         if ($modify == 2) {
             // We insert it into the DB
-            $db->query("UPDATE doco SET question='$question',answer='$answer' "
+            $db->query("UPDATE doco SET page='$page',header='$header',doco='$doco' "
                        ."WHERE docoid='$docoid'");
             if ($db->affected_rows() < 1) {
                 $be->box_full($t->translate('Error'), $t->translate('Database Error'));
             } else {
                 // We show what we just have inserted
-                $bx->box_full($t->translate('Frequently Asked Questions '
-                                            .'Administration'),
-                $t->translate('The following DOCO has been modified'));
+                $bx->box_full($t->translate('Online Documentatino Administration'),
+                $t->translate('The following documentation has been modified'));
                 $db->query("SELECT * FROM doco WHERE docoid='$docoid'");
                 $db->next_record();
                 doco_show($db);
@@ -120,15 +119,14 @@ if (($config_perm_admdoco != 'all')
         if ($create == 2) {
             // We insert it into the DB
             $tables = 'doco';
-            $insert = "question='$question',answer='$answer',language='$la'";
+            $insert = "page='$page',header='$header',doco='$doco',language='$la'";
             if (!$db->query("INSERT $tables SET $insert")) {
 	        die('Error in insdoco.php3: Database insertion not completed');
             }
             // We show what we've inserted
             $bx->box_full($t->translate('Page Documentation Administration'),
                           $t->translate('The following Page Documentation has been inserted'));
-            $bx->box_full($t->translate('Question').': '.$question,'<b>'
-                          .$t->translate('Answer').':</b> '.$answer);
+            $bx->box_full($page.': '.$header, $doco);
         }
     }
 }
