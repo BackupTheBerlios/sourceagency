@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.21 2002/04/08 21:32:47 grex Exp $
+# $Id: config.inc,v 1.22 2002/04/17 12:33:01 riessen Exp $
 #
 ######################################################################
 
@@ -132,6 +132,17 @@ $g_step_explanation[5] = "step_5_explanation";
 $g_step_explanation[6] = "step_6_explanation";
 
 $g_step_count = 6;
+
+######################################################################
+# Developer Counter Url 
+#
+# This is the url to user profile page in devcounter.
+#
+# It should contain a single %s which is replaced with the username
+# of the user of interest.
+######################################################################
+$g_dev_counter_url = ( "http://devcounter.berlios.de/devcounter"
+                       . "/showprofile.php3?devname=%s" );
 
 ######################################################################
 # Project Types
