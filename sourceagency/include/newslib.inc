@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: newslib.inc,v 1.6 2002/04/10 00:07:51 grex Exp $
+# $Id: newslib.inc,v 1.7 2002/05/28 08:56:47 riessen Exp $
 #
 ######################################################################
 
@@ -142,10 +142,10 @@ function news_modify_form($proid)
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('right','30%','','&nbsp;');
-    // NOI18N in html_form_submit calls
+    
     $bx->box_column ('left','70%','',
-                     html_form_submit('Preview','preview')
-                     .html_form_submit('Submit','submit'));
+                     html_form_submit($t->translate('Preview'),'preview')
+                     .html_form_submit($t->translate('Submit'),'submit'));
     htmlp_form_end();
     $bx->box_columns_end();
 
@@ -181,8 +181,7 @@ function news_preview($proid='')
     $bx->box_body_begin();
     lib_pnick($auth->auth['uname']);
     $timestamp = time();
-    echo ' - '.timestr($timestamp)."</b>\n";
-    echo "<p>$text\n";
+    echo ' - '.timestr($timestamp)."</b>\n<p>".$text."\n";
     $bx->box_body_end();
     $bx->box_end();
 }
@@ -219,14 +218,14 @@ function newsshow($proid)
     	$bx->box_end();
 
 	lib_comment_it( $proid,'News',$db->f('creation_news'),'0',
-        'Re:' . $db->f('subject_news'), 'Comment This News!');
+        'Re:' . $db->f('subject_news'), $t->translate('Comment This News!'));
 
 	lib_show_comments_on_it($proid,'News',$db->f('creation_news'),'0');
     }
 
     if ($db->num_rows() == 0) {
-	print ( '<p>There have not been posted any news by the '
-                . "project owner(s).<p>\n" );
+        print ( '<p>'.$t->translate('There have not been posted any news '
+                                    .'by the project owner(s)').".<p>\n");
     }
 }
 
