@@ -18,10 +18,11 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lang.inc,v 1.5 2001/11/07 18:48:52 riessen Exp $
+# $Id: lang.inc,v 1.6 2001/11/15 18:07:44 riessen Exp $
 #
 ######################################################################
 
+$l->log( "Language: $lang" );
 if ($sess->is_registered("la")) {
    if (isset($lang)) {
       $la = $lang;

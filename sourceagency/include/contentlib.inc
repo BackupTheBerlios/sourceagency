@@ -16,45 +16,57 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: contentlib.inc,v 1.3 2001/11/08 16:17:41 riessen Exp $
+# $Id: contentlib.inc,v 1.4 2001/11/15 18:07:44 riessen Exp $
 #
 ######################################################################
 
 function show_content($proid,$show_proposals,$which_proposals) {
   global $t, $bx, $db, $sess;
 
-  $query = "SELECT * FROM tech_content,auth_user WHERE proid='$proid' AND content_user=username ORDER BY creation";
+  $query = "SELECT * FROM tech_content,auth_user WHERE proid='$proid' "
+     ."AND content_user=username ORDER BY creation";
   $db->query($query);
-  while($db->next_record()) {
-	$bx->box_begin();
-	$bx->box_title($t->translate("Technical Content"));
-	$bx->box_body_begin();
-   	$timestamp = mktimestamp($db->f("creation"));
-        echo "<b>";
-	lib_pnick($db->f("content_user"));
-	echo " - ".timestr($timestamp)."</b><p>\n";
-    	echo "<br><b>Needed Skills:</b> ".$db->f("skills")."\n";
-    	echo "<br><b>Plattform:</b> ".$db->f("platform")."\n";
-    	echo "<br><b>Architecture:</b> ".$db->f("architecture")."\n";
-    	echo "<br><b>Environment:</b> ".$db->f("environment")."\n";
-	if ($db->f("docs") != "") echo "<br><b>Documentation:</b> ".html_link($db->f("docs"),array(),$db->f("docs"))."\n";
-    	echo "<br><b>Status:</b> ".show_status($db->f("status"))."\n";
-    	echo "<p><b>Technical Specification:</b> ".$db->f("specification")."\n";
-        echo "<br>&nbsp;\n";
-    	$bx->box_body_end();
-
-	content_box_footer($proid,$db->f("content_id"),$which_proposals);
-    	$bx->box_end();
-
-	lib_comment_it($proid,"Specifications",$db->f("content_id"),"0","Comment on Specification #".$db->f("content_id"),"Comment This Specification");
-
-	echo "<p>";
-
-	if (!strcmp($show_proposals,"yes") && !strcmp($which_proposals,$db->f("content_id"))) show_proposals($proid,$db->f("content_id"));
-  }
 
   if ($db->num_rows() == 0) {
-	print "There have not been posted any technical content suggestionsto this project.\n";
+      print "No technical content suggestions have been posted to "
+          ."this project.\n";
+  } else {
+      while($db->next_record()) {
+          $bx->box_begin();
+          $bx->box_title($t->translate("Technical Content"));
+          $bx->box_body_begin();
+          $timestamp = mktimestamp($db->f("creation"));
+          echo "<b>";
+          lib_pnick($db->f("content_user"));
+          echo " - ".timestr($timestamp)."</b><p>\n";
+          echo "<br><b>Needed Skills:</b> ".$db->f("skills")."\n";
+          echo "<br><b>Plattform:</b> ".$db->f("platform")."\n";
+          echo "<br><b>Architecture:</b> ".$db->f("architecture")."\n";
+          echo "<br><b>Environment:</b> ".$db->f("environment")."\n";
+          if ($db->f("docs") != "") {
+              echo "<br><b>Documentation:</b> "
+                  .html_link($db->f("docs"),array(),$db->f("docs"))."\n";
+          }
+          echo "<br><b>Status:</b> ".show_status($db->f("status"))."\n";
+          echo "<p><b>Technical Specification:</b> "
+              .$db->f("specification")."\n";
+          echo "<br>&nbsp;\n";
+          $bx->box_body_end();
+          
+          content_box_footer($proid,$db->f("content_id"),$which_proposals);
+          $bx->box_end();
+          
+          lib_comment_it($proid,"Specifications",$db->f("content_id"),"0",
+                         "Comment on Specification #".$db->f("content_id"),
+                         "Comment This Specification");
+
+          echo "<p>";
+          
+          if (!strcmp($show_proposals,"yes") 
+              && !strcmp($which_proposals,$db->f("content_id"))) {
+              show_proposals($proid,$db->f("content_id"));
+          }
+      }
   }
 }
 

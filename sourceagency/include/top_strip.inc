@@ -17,16 +17,17 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: top_strip.inc,v 1.2 2001/11/08 16:17:41 riessen Exp $
+# $Id: top_strip.inc,v 1.3 2001/11/15 18:07:44 riessen Exp $
 #
 ######################################################################
 
 ?>
 
 <!-- top strip -->
-<table BORDER=0 CELLSPACING=0 CELLPADDING=2 WIDTH="100%" BGCOLOR="<?php echo $th_navstrip_bgcolor;?>">
+<table BORDER="0" CELLSPACING="0" CELLPADDING="2" WIDTH="100%" 
+       BGCOLOR="<?php echo $th_navstrip_bgcolor;?>">
 <tr>
-<td width=45%><span class=maintitlebar>
+<td width="45%"><span class=maintitlebar>
 <?php
 $i = 0;
 while (list($title, $url) = each($ts_array)) {

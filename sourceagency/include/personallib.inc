@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: personallib.inc,v 1.10 2001/11/07 18:48:53 riessen Exp $
+# $Id: personallib.inc,v 1.11 2001/11/15 18:07:44 riessen Exp $
 #
 ######################################################################
 
@@ -93,14 +93,15 @@ function personal_related_projects($username,$status) {
 
         // FIXME: security.lib::is_sponsor does not accept argument
 	if (is_sponsor($username)) {
-		$user_type = "sponsor";
-		$table = "sponsoring";
+            $user_type = "sponsor";
+            $table = "sponsoring";
 	} elseif (is_developer($username)) { 
             // FIXME: security.lib::is_developer does not accept
             // FIXME: argument
-		$user_type = "developer";
-		$table = "developing";
-	}
+            $user_type = "developer";
+            $table = "developing";
+	} /** FIXME: this sets table to "" when the user is admin or editer
+           ** FIXME: but not developer or sponsor **/
 
 	$db_local->query("SELECT * FROM $table,description WHERE "
                          . "$user_type='$username' AND $table.status='$status'"

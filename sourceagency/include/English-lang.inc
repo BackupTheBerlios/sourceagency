@@ -12,23 +12,15 @@
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
-# This file shows a bar with a title at the top of the pages
+# Contains the English(sic) translation of the SourceAgency portal.
 #
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: English-lang.inc,v 1.8 2001/11/14 12:27:05 riessen Exp $
+# $Id: English-lang.inc,v 1.9 2001/11/15 18:07:44 riessen Exp $
 #
 ######################################################################
-
-// php4 defines require_once
-if ( floor( phpversion() >= 4 ) ) {
-  require_once( "logger.inc" );
-}
-// php3: ASSUME: that the class logger is defined
-$l = new Logger;
-$l->log( "translating '" . $phrase . "'" );
 
 switch($phrase) {
     
@@ -37,6 +29,8 @@ switch($phrase) {
     case "comments_mod": $tmp = "Modify Comments"; break;
     case "consultants": $tmp = "Consultants"; break;
     case "summary": $tmp = "Summary"; break;
+    case "configure_edit": $tmp = "Edit Configuration"; break;
+    case "content suggestions": $tmp = "Content Suggestions"; break;
 
     default:   $tmp = "$phrase";  break;
 }

@@ -16,14 +16,17 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: configurelib.inc,v 1.2 2001/11/07 18:48:52 riessen Exp $
+# $Id: configurelib.inc,v 1.3 2001/11/15 18:07:44 riessen Exp $
 #
 ######################################################################
 
 function configure_form($proid) {
-  global $bx, $t, $sess, $preview, $quorum, $other_tech_contents, $other_developing_proposals, $consultants;
+  global $bx, $t, $sess, $preview, $quorum, $other_tech_contents, 
+    $other_developing_proposals, $consultants;
 
-  if(!configure_first_time($proid) && !isset($preview)) configure_modify_form($proid,$user);
+  if(!configure_first_time($proid) && !isset($preview)) {
+      configure_modify_form($proid,$user);
+  }
 
   $bx->box_begin();
   $bx->box_title($t->translate("Configure Project"));
@@ -33,33 +36,44 @@ function configure_form($proid) {
   $bx->box_columns_begin(2);
 
   if (is_sponsor()) {
-	$bx->box_column ("right","30%","","<b>".$t->translate("Quorum for decision making")."</b>: ");
-  	$bx->box_column ("left","70%","",select_quorum($quorum));
-  	$bx->box_next_row_of_columns();
+      $bx->box_column ("right","30%","","<b>".
+                       $t->translate("Quorum for decision making")."</b>: ");
+      $bx->box_column ("left","70%","",select_quorum($quorum));
+      $bx->box_next_row_of_columns();
   }
 
   if (is_project_initiator($proid)) {
-  $bx->box_column ("right","30%","","<b>".$t->translate("Other tech_contents?")."</b>: ");
-  $bx->box_column ("left","70%","",lib_select_yes_or_no("other_tech_contents",$other_tech_contents));
+      $bx->box_column ("right","30%","","<b>"
+                       .$t->translate("Other technical contents?")."</b>: ");
+      $bx->box_column ("left","70%","",
+                       lib_select_yes_or_no("other_tech_contents",
+                                            $other_tech_contents));
   }
 
   $bx->box_next_row_of_columns();
 
   if (is_developer()) {
-  	$bx->box_column ("right","30%","","<b>".$t->translate("Other developing proposals?")."</b>: ");
-  	$bx->box_column ("left","70%","",lib_select_yes_or_no("other_developing_proposals",$other_developing_proposals));
-  	$bx->box_next_row_of_columns();
+      $bx->box_column ("right","30%","","<b>"
+                       .$t->translate("Other developing proposals?")."</b>: ");
+      $bx->box_column ("left","70%","",
+                       lib_select_yes_or_no("other_developing_proposals",
+                                            $other_developing_proposals));
+      $bx->box_next_row_of_columns();
   }
 
   if (is_sponsor() && is_project_initiator($proid)) {
-  	$bx->box_column ("right","30%","","<b>".$t->translate("Consultants?")."</b>: ");
-  	$bx->box_column ("left","70%","",lib_select_yes_or_no("consultants",$consultants));
+      $bx->box_column ("right","30%","",
+                       "<b>".$t->translate("Consultants?")."</b>: ");
+      $bx->box_column ("left","70%","",
+                       lib_select_yes_or_no("consultants",$consultants));
   }
 
   $bx->box_next_row_of_columns();
 
   $bx->box_column ("right","30%","","&nbsp;");
-  $bx->box_column ("left","70%","",html_form_submit("Preview","preview").html_form_submit("Submit","submit"));
+  $bx->box_column ("left","70%","",
+                   html_form_submit("Preview","preview")
+                   .html_form_submit("Submit","submit"));
   htmlp_form_end();
   $bx->box_columns_end();
 
@@ -69,25 +83,36 @@ function configure_form($proid) {
 
 
 function configure_preview($proid) {
-  global $t, $bx, $auth, $sess, $quorum, $other_tech_contents, $other_developing_proposals, $consultants;
+    global $t, $bx, $auth, $sess, $quorum, $other_tech_contents, 
+        $other_developing_proposals, $consultants;
 
-  $bx->box_begin();
-  $bx->box_title("<center><b>".$t->translate("PREVIEW")."</b></center>");
-  $bx->box_title($t->translate("Project Configuration"));
-  $bx->box_body_begin();
-  $timestamp = time();
-  echo "<b>";
-  $db_local = new DB_SourceAgency;
-  $db_local->query("SELECT email_usr FROM auth_user WHERE username='".$auth->auth["uname"]."'");
-  $db_local->next_record();
-  lib_pnick($auth->auth["uname"]);
-  echo " - ".timestr($timestamp)."</b><br>&nbsp;\n";
-  if (is_sponsor()) echo "<br><b>Quorum</b>: $quorum %\n";
-  if (is_project_initiator($proid))  echo "<br><b>Other tech_contents</b>: $other_tech_contents\n";
-  if (is_developer())  echo "<br><b>Other developing proposals</b>: $other_developing_proposals\n";
-  if (is_sponsor() && is_project_initiator($proid))  echo "<br><b>Consultants</b>: $consultants\n";
-  $bx->box_body_end();
-  $bx->box_end();
+    $bx->box_begin();
+    $bx->box_title("<center><b>".$t->translate("PREVIEW")."</b></center>");
+    $bx->box_title($t->translate("Project Configuration"));
+    $bx->box_body_begin();
+    $timestamp = time();
+    echo "<b>";
+    $db_local = new DB_SourceAgency;
+    $db_local->query("SELECT email_usr FROM auth_user WHERE username='"
+                     .$auth->auth["uname"]."'");
+    $db_local->next_record();
+    lib_pnick($auth->auth["uname"]);
+    echo " - ".timestr($timestamp)."</b><br>&nbsp;\n";
+    if (is_sponsor()) {
+        echo "<br><b>Quorum</b>: $quorum %\n";
+    }
+    if (is_project_initiator($proid))  {
+        echo "<br><b>Other tech_contents</b>: $other_tech_contents\n";
+    }
+    if (is_developer())  {
+        echo "<br><b>Other developing proposals</b>: "
+            ."$other_developing_proposals\n";
+    }
+    if (is_sponsor() && is_project_initiator($proid))  {
+        echo "<br><b>Consultants</b>: $consultants\n";
+    }
+    $bx->box_body_end();
+    $bx->box_end();
 }
 
 
@@ -96,70 +121,91 @@ function configure_show($proid) {
 
   $query = "SELECT * FROM configure WHERE proid='$proid'";
   $db->query($query);
-  while($db->next_record()) {
-	$bx->box_begin();
-	$bx->box_title($t->translate("Project Configuration"));
-	$bx->box_body_begin();
-        echo "<br>";
-
-    	if ($db->f("quorum") != "") echo "<p><b>Quorum</b>: ".$db->f("quorum")."%\n";
-	else echo "<br><b>Quorum</b>: This decision is taken by the sponsors\n";
-
-	echo "<br><b>Consultants</b>: ".$db->f("consultants")."\n";
-
-    	echo "<br><b>Other_tech_contents</b>: ".$db->f("other_tech_contents")."\n";
-    	echo "<br><b>Other_developing_proposals</b>: ".$db->f("other_developing_proposals")."\n";
-
-    	if ($db->f("sponsor") != "") echo "<br><b>First Sponsor</b>: ".$db->f("sponsor")."\n";
-	else echo "<br><b>First Sponsor</b>: No sponsors yet\n";
-
-    	if ($db->f("developer") != "") echo "<br><b>Developer</b>: ".$db->f("developer")."\n";
-	else echo "<br><b>Developer</b>: No main developer yet\n";
-    	$bx->box_body_end();
-    	$bx->box_end();
-  }
 
   if ($db->num_rows() == 0) {
-	print "<p>The project parameters have not been configured by the project owner(s).<p>\n";
+      print "<p>The project parameters have not been configured by "
+          ."the project owner(s).<p>\n";
+  } else {
+
+      while($db->next_record()) {
+          $bx->box_begin();
+          $bx->box_title($t->translate("Project Configuration"));
+          $bx->box_body_begin();
+          echo "<br>";
+          
+          $tmp_q = $db->f("quorum");
+          echo "<p><b>Quorum</b>: " . ( $tmp_q != "" ? $tmp_q . "%"
+                     : $t->translate("Decision to be taken by Sponsors"))."\n";
+          
+          echo "<br><b>Consultants</b>: ".$db->f("consultants")."\n";
+          
+          echo "<br><b>Other Technical Contents</b>: "
+              .$db->f("other_tech_contents")."\n";
+          echo "<br><b>Other Developing Proposals</b>: "
+              .$db->f("other_developing_proposals")."\n";
+          
+          $tmp_s = $db->f("sponsor");
+          echo "<br><b>First Sponsor</b>: " . ( $tmp_s != "" ? $tmp_s 
+                                  : $t->translate("No sponsors")) . "\n";
+          $tmp_d = $db->f("developer");
+          echo "<br><b>Developer</b>: " . ( $tmp_d != "" ? $tmp_d
+                                  : $t->translate("No main developer")) . "\n";
+          $bx->box_body_end();
+          $bx->box_end();
+      }
   }
 }
 
 function configure_modify_form($proid) {
-  global $quorum, $consultants, $other_tech_contents, $other_developing_proposals;
-
-	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT * FROM configure WHERE proid='$proid'");
-	$db_local->next_record();
-	$quorum = $db_local->f("quorum");
-	$consultants = $db_local->f("consultants");
-	$other_tech_contents = $db_local->f("other_tech_contents");
-	$other_developing_proposals  = $db_local->f("other_developing_proposals");
+    global $quorum, $consultants, $other_tech_contents, 
+        $other_developing_proposals;
+    
+    $db_local = new DB_SourceAgency;
+    $db_local->query("SELECT * FROM configure WHERE proid='$proid'");
+    $db_local->next_record();
+    $quorum = $db_local->f("quorum");
+    $consultants = $db_local->f("consultants");
+    $other_tech_contents = $db_local->f("other_tech_contents");
+    $other_developing_proposals  = $db_local->f("other_developing_proposals");
 }
 
 function configure_insert($proid,$user) {
-  global $db,$auth,$quorum,$consultants,$other_tech_contents,$other_developing_proposals;
+  global $db,$auth,$quorum,$consultants,$other_tech_contents,
+      $other_developing_proposals;
 
-  if(!configure_first_time($proid)) configure_modify($proid,$user);
-  else {
-	if (is_sponsor()) $query = "quorum='$quorum',consultants='$consultants',other_tech_contents='$other_tech_contents',other_developing_proposals='Yes',sponsor='$user',developer=''";
-	else $query = "consultants='No',other_tech_contents='$other_tech_contents',other_developing_proposals='$other_developing_proposals',developer='$user'";
-
+  if(!configure_first_time($proid)) {
+      configure_modify($proid,$user);
+  } else {
+      if (is_sponsor()) {
+          $query = ("quorum='$quorum',consultants='$consultants',"
+                    ."other_tech_contents='$other_tech_contents',"
+                    ."other_developing_proposals='Yes',sponsor='$user',"
+                    ."developer=''");
+	} else {
+            $query =("consultants='No',other_tech_contents='"
+                     ."$other_tech_contents',other_developing_proposals="
+                     ."'$other_developing_proposals',developer='$user'");
+        }
    	$db->query("INSERT configure SET proid='$proid',$query");
    	configure_show($proid);
 
 	// Insert into history
-  	$db->query("INSERT history SET proid='$proid', history_user='$user', type='Configure', action='Project configuration'");
+  	$db->query("INSERT history SET proid='$proid', history_user='$user',"
+                   ." type='Configure', action='Project configuration'");
 
-  echo "<b>Congratulations</b>. You have just configured your project.<p>\n";
-  if (is_sponsor()) {
-  	echo "<br>The last step before waiting to be reviewed by a SourceAgency editor is to ".html_link("sponsoring_edit.php3",array("proid" => $proid),"Sponsor this project");
-  } elseif (is_developer()) {
-	lib_insertion_finished();
-  }
-  echo "<p><br>\n";
+        echo "<b>Congratulations</b>. You have just configured your "
+            ."project.<p>\n";
+        if (is_sponsor()) {
+            echo "<br>The last step before waiting to be reviewed by a "
+                ."SourceAgency editor is to "
+                .html_link("sponsoring_edit.php3",array("proid" => $proid),
+                           "Sponsor this project");
+        } elseif (is_developer()) {
+            lib_insertion_finished();
+        }
+        echo "<p><br>\n";
 
-  lib_insertion_information();
-
+        lib_insertion_information();
   }
 }
 

@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.8 2001/11/15 15:38:31 riessen Exp $
+# $Id: security.inc,v 1.9 2001/11/15 18:07:44 riessen Exp $
 #
 ######################################################################
 
@@ -430,21 +430,6 @@ function is_project_initiator($proid) {
   return 0;
 }
 
-function is_sponsor() {
-  global $auth;
-
-  $db_local = new DB_SourceAgency;
-
-  // modified to allow multiple permissions, problems occur if
-  // another permission contains the string 'sponsor'
-  if (isset($auth) && !empty($auth->auth["perm"])) { 
-	$db_local->query("SELECT * FROM auth_user WHERE perms like '%sponsor%'"
-                         ." AND username='".$auth->auth["uname"]."'");
-	if ($db_local->num_rows() > 0) return 1;
-  }
-  return 0;
-}
-
 function is_accepted_sponsor($proid) {
   global $auth;
 
@@ -473,18 +458,30 @@ function is_accepted_referee($proid) {
   return 0;
 }
 
-function is_developer() {
+function _check_permissions( $perm ) {
   global $auth;
 
   $db_local = new DB_SourceAgency;
   // modification to allow for multiple permissions, problems
   // occur if other permissions _contain_ the string 'devel'  
   if (isset($auth) && !empty($auth->auth["perm"])) { 
-	$db_local->query("SELECT * FROM auth_user WHERE perms LIKE '%devel%' "
-                         ."AND username='".$auth->auth["uname"]."'");
-	if ($db_local->num_rows() > 0) return 1;
+	$db_local->query("SELECT * FROM auth_user WHERE perms LIKE '%"
+                         .$perm."%' AND username='".$auth->auth["uname"]."'");
+        return $db_local->num_rows();
   }
   return 0;
+}
+
+function is_sponsor() {
+  return _check_permissions( "sponsor" );
+}
+
+function is_administrator() {
+  return _check_permissions( "admin" );
+}
+
+function is_developer() {
+  return _check_permissions( "devel" );
 }
 
 function is_involved_developer($proid) {

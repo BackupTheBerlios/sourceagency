@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.7 2001/11/14 12:23:54 riessen Exp $
+# $Id: config.inc,v 1.8 2001/11/15 18:07:44 riessen Exp $
 #
 ######################################################################
 
@@ -163,15 +163,17 @@ $project_volume[] = "> 6 Man Months";
 #
 ######################################################################
 
-$platform_array[] = "Platform 1";
-$platform_array[] = "Platform 2";
-$platform_array[] = "Platform 3";
-$platform_array[] = "Platform 4";
-$platform_array[] = "Platform 5";
-$platform_array[] = "Platform 6";
-$platform_array[] = "Platform 7";
-$platform_array[] = "Platform 8";
-
+$platform_array[] = "Linux";
+$platform_array[] = "Solaris";
+$platform_array[] = "SunOS";
+$platform_array[] = "FreeBSD";
+$platform_array[] = "Windows XP";
+$platform_array[] = "Windows 2000";
+$platform_array[] = "Windows NT";
+$platform_array[] = "Windows 3.X";
+$platform_array[] = "HPUX";
+$platform_array[] = "MSDOS";
+$platform_array[] = "Platform independent";
 ######################################################################
 # Architectures
 #
@@ -180,14 +182,13 @@ $platform_array[] = "Platform 8";
 #
 ######################################################################
 
-$architecture_array[] = "Architecture 1";
-$architecture_array[] = "Architecture 2";
-$architecture_array[] = "Architecture 3";
-$architecture_array[] = "Architecture 4";
-$architecture_array[] = "Architecture 5";
-$architecture_array[] = "Architecture 6";
-$architecture_array[] = "Architecture 7";
-$architecture_array[] = "Architecture 8";
+$architecture_array[] = "x86";
+$architecture_array[] = "Sparc";
+$architecture_array[] = "HP";
+$architecture_array[] = "Apple";
+$architecture_array[] = "IBM";
+$architecture_array[] = "CHAIR";
+$architecture_array[] = "Architecture Independent";
 
 ######################################################################
 # Environments

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: insertlib.inc,v 1.2 2001/11/07 18:48:52 riessen Exp $
+# $Id: insertlib.inc,v 1.3 2001/11/15 18:07:44 riessen Exp $
 #
 ######################################################################
 
@@ -30,23 +30,30 @@ function insert_form() {
 
   $bx->box_columns_begin(2);
 
-  $bx->box_column ("right","30%","","<b>".$t->translate("Project Title")."</b> (128): ");
-  $bx->box_column ("left","70%","",html_input_text("project_title",40,128,$project_title));
+  $bx->box_column ("right","30%","","<b>".$t->translate("Project Title")
+                   ."</b> (128): ");
+  $bx->box_column ("left","70%","",
+                   html_input_text("project_title",40,128,$project_title));
 
   $bx->box_next_row_of_columns();
 
   $bx->box_column ("right","30%","","<b>".$t->translate("Type")."</b>: ");
-  $bx->box_column ("left","70%","",select_from_config("type","project_types",$type));
+  $bx->box_column ("left","70%","",
+                   select_from_config("type","project_types",$type));
 
   $bx->box_next_row_of_columns();
 
-  $bx->box_column ("right","30%","","<b>".$t->translate("Brief description")."</b> (*): ");
-  $bx->box_column ("left","70%","",html_textarea("description",40,7,"virtual",255,$description));
+  $bx->box_column ("right","30%","","<b>".$t->translate("Brief description")
+                   ."</b> (*): ");
+  $bx->box_column ("left","70%","",html_textarea("description",40,7,"virtual",
+                                                 255,$description));
 
   $bx->box_next_row_of_columns();
 
-  $bx->box_column ("right","30%","","<b>".$t->translate("Project Volume")."</b>: ");
-  $bx->box_column ("left","70%","",select_from_config("volume","project_volume",$volume));
+  $bx->box_column ("right","30%","","<b>".$t->translate("Project Volume")
+                   ."</b>: ");
+  $bx->box_column ("left","70%","",
+                   select_from_config("volume","project_volume",$volume));
 
   $bx->box_next_row_of_columns();
 
@@ -59,7 +66,7 @@ function insert_form() {
   $bx->box_end();  
 }
 
-	/* We look if the insertion has all the fields we require */
+/* We look if the insertion has all the fields we require */
 
 function everything_filled($project_title,$description) {
 
