@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.16 2001/11/26 13:57:54 riessen Exp $
+# $Id: lib.inc,v 1.17 2001/11/29 15:39:35 grex Exp $
 #
 ######################################################################
 
@@ -75,7 +75,7 @@ function license($selected) {
     $return = html_select("license");
     $db_local = new DB_SourceAgency;
     $db_local->query("SELECT * FROM licenses ORDER BY license ASC");
-    // FIXME: potential bug if there are no licenses in the database
+    // TODO: potential bug if there are no licenses in the database
     while ($db_local->next_record()) {
 
         $return .= html_select_option($db_local->f("license"),
@@ -243,23 +243,26 @@ function wrap($string,$width=75,$break=" ") {
 
 function typestr($type) {
     global $t;
-    if ($type == "A") {
+    switch($type) {
+    case 'A':
         $str = $t->translate("Adaption");
-    }
-    if ($type == "E") {
+        break;
+    case 'E': 
         $str = $t->translate("Expansion");
-    }
-    if ($type == "C") {
+        break;
+    case 'C': 
         $str = $t->translate("Documentation");
-    }
-    if ($type == "D") {
+        break;
+    case 'D':
         $str = $t->translate("Development");
-    }
-    if ($type == "O") {
+        break;
+    case 'O':
         $str = $t->translate("Other");
+        break;
+    default:
+        $str = $t->translate("Other");
+        break;
     }
-    // FIXME: this causes a warning if none of the above
-    // FIXME: ifs match ... 
     return $str;
 }
 
@@ -517,21 +520,6 @@ function summary($proid) {
     $bx->box_column_finish();
     $bx->box_column_start("right","35%","");
 
-    // FIXME: if background_color is not used, then this entire 
-    // FIXME: block can be removed
-    {
-        $db_look = new DB_SourceAgency;
-        $db_look->query("SELECT * FROM description,auth_user WHERE "
-                        . "proid='$proid' AND description_user = username");
-        $db_look->next_record();
-        
-        if ($db_look->f("perms") == "sponsor") {
-            $background_color = "#FFFFCC";
-        }
-        else {
-            $background_color = "#f9dfc0";
-        }
-    }
     $bx->box_begin();
     $bx->box_title($t->translate("Step information"));
     $bx->box_body_begin();
@@ -772,7 +760,7 @@ function lib_show_description($query) {
                                  $db_local->f("project_title")) 
                        . " (".$db_local->f("type").")");
   	$bx->box_body_begin();
- 	echo "<b>"; #.$t->translate("by")." ";
+ 	echo "<b>".$t->translate("by")." ";
 	lib_pnick($db_local->f("description_user"));
   	echo " - ".timestr(mktimestamp($db_local->f("description_creation")));
   	echo ( "<p><b>".$t->translate("Description")."</b>: "
@@ -787,9 +775,13 @@ function lib_show_description($query) {
 function select_from_config($name,$array_name,$selected) {
     $array_value="";
     
-    /* FIXME: I don't know why this doesn't work with arrays */
-
+    // WISH: config.inc is included once again! This needs not to be done as it should have occured at the beginning of the page
     include("config.inc");
+
+    // WISH: It would be nice if the parameter $array_name could attack directly the array
+    // WISH: then this switch would be obsolete
+    // WISH: the problem is that I have not encountered how it works!
+
     switch ($array_name) {
         case "project_types": {
             $array = $project_types; 
@@ -824,9 +816,15 @@ function select_from_config($name,$array_name,$selected) {
     
     $output = html_select($name)."\n";
     while (list(, $array_value) = each($array)) {
+//          if (!strcmp($array_value,$selected)) {
+//              $select = "selected";
+//          }
+//          else {
+//              $select="";
+//          }
         $output .= html_select_option( $array_value,
-                                       !strcmp($array_value,$selected), 
-                                       $array_value ) . "\n";
+        !strcmp($array_value,$selected), 
+        $array_value ) . "\n";
     }
     $output .= html_select_end() . "\n";
     
@@ -1030,9 +1028,7 @@ $selected_month, $selected_year) {
     $return .= html_select_end();
     $return .= html_select($selection_name."_year");
 
-    // FIXME: 2001 and 2004 are magic numbers, might be better to 
-    // FIXME: define them somewhere ????
-    for ($i=2001; $i <= 2004; $i++) {
+    for ($i=$config_first_year; $i <= $config_last_year; $i++) {
 //   	if ($i == $selected_year) {
 //              $select="selected";
 //          }
@@ -1103,8 +1099,7 @@ function lib_select_yes_or_no($name,$selected) {
 }
 
 function lib_nick($nick) {
-    global $t;
-    return "<b>".$t->translate("by")." ".$nick."</b>";
+    return "<b>by ".$nick."</b>";
 }
 
 function lib_pnick($nick) {
