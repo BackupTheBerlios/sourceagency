@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: box.inc,v 1.13 2002/05/07 20:06:10 grex Exp $
+# $Id: box.inc,v 1.14 2002/05/07 20:08:58 grex Exp $
 #
 ######################################################################
 
@@ -144,6 +144,11 @@ class box {
 	$this->box_body_font_color = $body_font_color;
 	$this->box_body_align = $body_align;
         $this->box_body_valign = $body_valign;
+
+	/* HTML4 specification requires valign to be always set */
+        if (!$this->box_body_valign) {
+  	    $this->box_body_valign = 'top';
+	}
     }
    
     /**
