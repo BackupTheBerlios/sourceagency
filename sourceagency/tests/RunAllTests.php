@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: RunAllTests.php,v 1.15 2002/06/14 09:14:11 riessen Exp $
+# $Id: RunAllTests.php,v 1.16 2002/07/22 11:26:55 riessen Exp $
 #
 ######################################################################
 
@@ -59,10 +59,14 @@ include_once( "box.inc" );
 
 // define the global TestSuite
 $suite = new TestSuite;
+$testRunner = new TestRunner;
+$total_tests = 0;
+$total_failures = 0;
 
 // function for scanning a directory and including all 
 // files that begin with 'Test'
 function scan_directory( ) {
+    global $suite, $total_tests, $total_failures, $testRunner;
     $d = opendir( "." );
     while ( $entry = readdir( $d ) ) {
         if ( $entry == "." || $entry == ".." ) {
@@ -78,6 +82,17 @@ function scan_directory( ) {
                 print "Requiring file ... $entry<br>\n";
             }
             require_once( $entry );
+
+            // because we run into memory problems if we include
+            // all files and then run the tests, we run the test suite
+            // after each include.
+            $result = $testRunner->run( $suite );
+            mkdb_check_did_db_fail_calls();
+            $total_tests += $result->countTests();
+            $total_failures += $result->countFailures();
+
+            $result = '';
+            $suite = new TestSuite;
         }
     }
     closedir( $d );
@@ -86,11 +101,9 @@ function scan_directory( ) {
 // load in all available test files.
 scan_directory( );
 
-// run all defined tests....
-$testRunner = new TestRunner;
-$testRunner->run( $suite );
-mkdb_check_did_db_fail_calls();
-
+// summary information 
+print "<br>\n ----- Summary ----- <br>\n";
+print "Total tests/failures: <b>$total_tests</b>/<b>$total_failures</b><br>\n";
 // finally print information about how long the tests took
 $time = getmicrotime() - $time_start;
 print "Executed all tests in $time seconds";

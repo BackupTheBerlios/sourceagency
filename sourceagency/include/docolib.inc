@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: docolib.inc,v 1.3 2002/06/06 08:15:08 riessen Exp $
+# $Id: docolib.inc,v 1.4 2002/07/22 11:26:54 riessen Exp $
 #
 ######################################################################
 
@@ -65,7 +65,8 @@ function doco_form()
     $bx->box_columns_begin(2);
 
     $bx->box_column ('right','30%','',
-                     '<b>'.$t->translate('Page (without extension)').'</b> (64): ');
+                     '<b>'.$t->translate('Page (without extension)')
+                     .'</b> (64): ');
     $bx->box_column ('left', '70%', '',
                      html_input_text('page', 40, 64, $page));
 
@@ -139,7 +140,8 @@ function doco_mod($db)
     $bx->box_columns_begin(2);
 
     $bx->box_column ('right','30%','',
-                     '<b>'.$t->translate('Page (without extension)').'</b> (64): ');
+                     '<b>'.$t->translate('Page (without extension)')
+                     .'</b> (64): ');
     $bx->box_column ('left', '70%', '',
                      html_input_text('page', 40, 64, $db->f('page')));
 
@@ -155,7 +157,8 @@ function doco_mod($db)
     $bx->box_column ('right', '30%', '',
                      '<b>'.$t->translate('doco').'</b> (*): ');
     $bx->box_column ('left','70%','',
-                     html_textarea('doco', 40, 7, 'virtual', 255, $db->f('doco')));
+                     html_textarea('doco', 40, 7, 'virtual', 255, 
+                                   $db->f('doco')));
 
     $bx->box_next_row_of_columns();
 

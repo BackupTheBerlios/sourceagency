@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: followmentlib.inc,v 1.5 2002/05/28 08:54:51 riessen Exp $
+# $Id: followmentlib.inc,v 1.6 2002/07/22 11:26:54 riessen Exp $
 #
 ######################################################################
 
@@ -50,11 +50,13 @@ function show_followment($proid) {
             echo "<tr bgcolor=$bgcolor>\n";
             echo "<td><b>".$db->f("number")."</b></td>";
             echo "<td><b>".$db->f("goals")."</b></td>";
-            echo "<td><b>".timestr_middle(mktimestamp($db->f("release")))."</b></td>";
+            echo "<td><b>".timestr_middle(mktimestamp($db->f("release")))
+              ."</b></td>";
             echo "<td><b>".$db->f("product")."</b></td>";
             echo "<td><b>".$db->f("payment")."</b></td>";
             echo "<td><b>".show_status($db->f("status"))."</b></td>";
-            echo "<td><b>".timestr_short(mktimestamp($db->f("creation")))."</b></td>";
+            echo "<td><b>".timestr_short(mktimestamp($db->f("creation")))
+              ."</b></td>";
             echo "</tr>\n";
   	}
 

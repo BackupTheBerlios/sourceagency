@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: commentslib.inc,v 1.9 2002/06/20 12:05:27 riessen Exp $
+# $Id: commentslib.inc,v 1.10 2002/07/22 11:26:54 riessen Exp $
 #
 ######################################################################
 
@@ -152,15 +152,15 @@ function comments_form($proid)
 
     $bx->box_column ('right', '30%', '', '<b>'
                      .stripslashes($t->translate('Subject')).'</b> (128): ');
-    $bx->box_column ('left', '70%', '', html_input_text('subject', 40, 128,
-                                                        stripslashes($subject)));
+    $bx->box_column ('left', '70%','',html_input_text('subject', 40, 128,
+                                                      stripslashes($subject)));
 
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('right', '30%', '', '<b>'
                      .stripslashes($t->translate('Body')).'</b> (*): ');
-    $bx->box_column ('left', '70%', '', html_textarea('text', 40, 7, 'virtual', 255,
-                                                      stripslashes($text)));
+    $bx->box_column ('left', '70%', '',html_textarea('text', 40, 7, 'virtual', 
+                                                     255,stripslashes($text)));
 
     $bx->box_next_row_of_columns();
 

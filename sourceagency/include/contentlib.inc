@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: contentlib.inc,v 1.7 2002/06/26 09:57:26 riessen Exp $
+# $Id: contentlib.inc,v 1.8 2002/07/22 11:26:54 riessen Exp $
 #
 ######################################################################
 
@@ -119,9 +119,8 @@ function show_content($proid, $show_proposals, $which_proposals)
 
             echo '<p>';
           
-            // FIXME: in the following strcmp the yes should be a no????
-            if (!strcmp($show_proposals, 'yes') 
-                && !strcmp($which_proposals, $db->f('content_id'))) {
+            if ( $show_proposals == 'yes' 
+                              && $which_proposals == $db->f('content_id') ) {
                 show_proposals($proid, $db->f('content_id'));
             }
         }
@@ -205,10 +204,13 @@ function content_box_footer($proid, $content_id, $which_proposals)
     include( 'config.inc' );
     $bx->box_column_start('left','50%',$th_box_title_bgcolor); 
 
-    if (!strcmp($db->f('content_id'),$which_proposals)) {
+    if ( $db->f('content_id') == $which_proposals ) {
         htmlp_link('step2.php3',array('proid' => $proid),'Proposals');
     } else {
-        htmlp_link('step2.php3',array('proid' => $proid, 'show_proposals' => 'yes', 'which_proposals' => $db->f('content_id')),'Proposals');
+        htmlp_link('step2.php3',array('proid' => $proid, 
+                                      'show_proposals' => 'yes', 
+                                      'which_proposals'=>$db->f('content_id')),
+                   'Proposals');
     }
     echo ' ['.$db_number->f("COUNT(*)").'] &nbsp;|&nbsp; ';
 
@@ -257,27 +259,42 @@ function show_proposals($proid, $content_id)
     // as it is done at the beginning of every page.
     require('config.inc');
 
-    $bx_small = new box('80%',$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
+    $bx_small = new box('80%',$th_box_frame_color,$th_box_frame_width,
+                        $th_box_title_bgcolor,$th_box_title_font_color,
+                        $th_box_title_align,$th_box_body_bgcolor,
+                        $th_box_body_font_color,$th_box_body_align);
 
     $db_proposal = new DB_SourceAgency;
-    $db_proposal->query("SELECT * FROM developing,auth_user WHERE proid='$proid' AND content_id='".$db->f("content_id")."' AND developer=username ORDER BY developing.creation");
+    $db_proposal->query("SELECT * FROM developing,auth_user WHERE proid="
+                        ."'$proid' AND content_id='".$db->f("content_id")
+                        ."' AND developer=username ORDER BY "
+                        ."developing.creation");
 
     while($db_proposal->next_record()) {
   	$bx_small->box_begin();
 	$bx_small->box_title($t->translate('Developing Proposal'));
 	$bx_small->box_body_begin();
 	$timestamp = mktimestamp($db_proposal->f('creation'));
-	echo '<b>'.lib_nick($db_proposal->f('username')).' - '.timestr($timestamp)."</b>\n";
+	echo '<b>'.lib_nick($db_proposal->f('username')).' - '
+            .timestr($timestamp)."</b>\n";
 	echo '<p><b>Cost:</b> '.$db_proposal->f('cost')." euros\n";
     	echo '<br><b>License:</b> '.$db_proposal->f('license')."\n";
     	echo '<br><b>Status:</b> '.show_status($db_proposal->f('status'))."\n";
 	if ($db_proposal->f('cooperation') != 'No') {
-            echo '<br><b>Cooperation:</b> '.html_link('cooperation_edit.php3',array('proid' => $proid, 'devid' => $db_proposal->f('devid')),$db_proposal->f('cooperation') .'  &nbsp; [ <b>Cooperate</b> ]')."\n";
+            echo '<br><b>Cooperation:</b> '
+                .html_link('cooperation_edit.php3',
+                           array('proid' => $proid, 
+                                 'devid' => $db_proposal->f('devid')),
+                           $db_proposal->f('cooperation') 
+                           .'  &nbsp; [ <b>Cooperate</b> ]')."\n";
 	} else {
-            echo '<br><b>Cooperation:</b> '.$db_proposal->f('cooperation')."\n";
+            echo '<br><b>Cooperation:</b> '
+                .$db_proposal->f('cooperation')."\n";
         }
-    	echo '<br><b>Valid:</b> '.timestr_middle(mktimestamp($db_proposal->f('valid')))."\n";
-    	echo '<br><b>Start:</b> '.timestr_middle(mktimestamp($db_proposal->f('start')))."\n";
+    	echo '<br><b>Valid:</b> '
+            .timestr_middle(mktimestamp($db_proposal->f('valid')))."\n";
+    	echo '<br><b>Start:</b> '
+            .timestr_middle(mktimestamp($db_proposal->f('start')))."\n";
     	echo '<br><b>Duration:</b> '.$db_proposal->f('duration')." weeks\n";
         echo "<br>&nbsp;\n";
     	$bx_small->box_body_end();
@@ -285,10 +302,14 @@ function show_proposals($proid, $content_id)
 
 	$db_number = new DB_SourceAgency;
     	if ($db_proposal->f('cooperation') != 'No') {
-	    $db_number->query("SELECT COUNT(*) FROM cooperation WHERE devid='".$db_proposal->f("devid")."'");
+	    $db_number->query("SELECT COUNT(*) FROM cooperation WHERE "
+                              ."devid='".$db_proposal->f("devid")."'");
 	    $db_number->next_record();
 	    if ($db_number->f("COUNT(*)")) {
-		htmlp_link('cooperation.php3',array('proid' => $proid, 'devid' => $db_proposal->f('devid')),'Cooperation');
+		htmlp_link('cooperation.php3',
+                           array('proid' => $proid, 
+                                 'devid' => $db_proposal->f('devid')),
+                           'Cooperation');
 		echo ' ['.$db_number->f("COUNT(*)").']';
 	    } else {
                 echo 'Cooperation ['.$db_number->f("COUNT(*)").']';
@@ -296,10 +317,16 @@ function show_proposals($proid, $content_id)
   	    echo '&nbsp;|&nbsp; ';
   	}
 
-	$db_number->query("SELECT COUNT(*) FROM comments WHERE proid='$proid' AND type='proposals' AND number='".$db_proposal->f("devid")."'");
+	$db_number->query("SELECT COUNT(*) FROM comments WHERE proid='$proid' "
+                          ."AND type='proposals' AND number='"
+                          .$db_proposal->f("devid")."'");
         $db_number->next_record();
 	if ($db_number->f("COUNT(*)") > 0) {
-            htmlp_link('comments.php3',array('proid' => $proid, 'type' => 'proposals', 'number' => $db_proposal->f('devid')),'Comments');
+            htmlp_link('comments.php3', 
+                       array('proid' => $proid, 
+                             'type' => 'proposals', 
+                             'number' => $db_proposal->f('devid')),
+                       'Comments');
 	    echo ' ['.$db_number->f('COUNT(*)')."]\n";
 	} else {
             echo 'Comments [0]';
@@ -307,7 +334,10 @@ function show_proposals($proid, $content_id)
    	$bx_small->box_title_end();
 	$bx_small->box_end();
 
-	print "<FONT SIZE=-1>[ <a href=\"".$sess->url("comments_edit.php3").$sess->add_query(array("proid" => $proid, "type" => "proposal", "number" => $db_proposal->f("devid")))."\">Comment This Proposal</a> ]</FONT><p>\n";
+	print "<FONT SIZE=-1>[ <a href=\"".$sess->url("comments_edit.php3")
+            .$sess->add_query(array("proid" => $proid, "type" => "proposal", 
+                                    "number" => $db_proposal->f("devid")))
+            ."\">Comment This Proposal</a> ]</FONT><p>\n";
     }
 }
 
@@ -554,7 +584,8 @@ function show_selected_content($proid)
 {
     global $t, $bx, $db;
 
-    $query = "SELECT * FROM tech_content,auth_user WHERE proid='$proid' AND content_user=username AND tech_content.status='A'";
+    $query = ( "SELECT * FROM tech_content,auth_user WHERE proid='$proid' "
+               ."AND content_user=username AND tech_content.status='A'" );
     $db->query($query);
     $db->next_record();
 
@@ -563,7 +594,8 @@ function show_selected_content($proid)
     $bx->box_body_begin();
     $timestamp = mktimestamp($db->f('creation'));
     // FIXME: the end link </a> is not ........ VVVV ... required?????
-    echo '<b>by '.lib_nick($db->f('username')).'</a> - '.timestr($timestamp)."</b>\n";
+    echo '<b>by '.lib_nick($db->f('username')).'</a> - '
+        .timestr($timestamp)."</b>\n";
     echo '<p><b>Skills:</b> '.$db->f('skills')."\n";
     echo '<br><b>Plattform:</b> '.$db->f('platform')."\n";
     echo '<br><b>Architecture:</b> '.$db->f('architecture')."\n";

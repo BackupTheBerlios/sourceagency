@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.22 2002/06/11 13:00:38 riessen Exp $
+# $Id: browselib.inc,v 1.23 2002/07/22 11:26:54 riessen Exp $
 #
 ######################################################################
 
@@ -601,8 +601,8 @@ function _browse_project_name()
 {
     global $bx, $t;
 
-    $alphabet = array ('A','B','C','D','E','F','G','H','I','J','K','L',
-	   	       'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+    $alphabet=array ('A','B','C','D','E','F','G','H','I','J','K','L',
+                     'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
     
     $bx->box_begin();
     $bx->box_title($t->translate('Projects ordered alphabetically'));
@@ -613,7 +613,8 @@ function _browse_project_name()
     $bx->box_column('right','6%','','<b>'.$t->translate('No.').'</b>');
     $bx->box_column('center','20%','','<b>#&nbsp;'.$t->translate('Projects')
                     .'</b>');
-    $bx->box_column('left','70%','','<b>'.$t->translate('Project Name').'</b>');
+    $bx->box_column('left','70%','',
+                    '<b>'.$t->translate('Project Name').'</b>');
     $bx->box_next_row_of_columns();
     
     $colors = array( 1 => 'gold', 0 => '#FFFFFF' );

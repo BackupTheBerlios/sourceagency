@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: cooperationlib.inc,v 1.6 2002/06/26 09:57:26 riessen Exp $
+# $Id: cooperationlib.inc,v 1.7 2002/07/22 11:26:54 riessen Exp $
 #
 ######################################################################
 
@@ -63,11 +63,13 @@ function cooperation_form($proid, $devid)
     $bx->box_begin();
     $bx->box_title($t->translate('Cooperation'));
     $bx->box_body_begin();
-    htmlp_form_action('PHP_SELF',array('proid' => $proid, 'devid' => $devid),'POST');
+    htmlp_form_action('PHP_SELF',array('proid' => $proid, 
+                                       'devid' => $devid),'POST');
 
     $bx->box_columns_begin(2);
 
-    $bx->box_column ('right','30%','','<b>'.$t->translate('Cost in euro').'</b> (7): ');
+    $bx->box_column ('right','30%','','<b>'
+                     .$t->translate('Cost in euro').'</b> (7): ');
     $bx->box_column ('left','70%','',html_input_text('cost',7,7,$cost));
 
     $bx->box_next_row_of_columns();

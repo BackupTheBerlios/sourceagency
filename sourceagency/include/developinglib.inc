@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: developinglib.inc,v 1.8 2002/07/09 11:15:33 riessen Exp $
+# $Id: developinglib.inc,v 1.9 2002/07/22 11:26:54 riessen Exp $
 #
 ######################################################################
 
@@ -73,9 +73,14 @@ function show_developings($proid, $content_id)
 {
     global $t, $bx, $db;
 
-    $query = "SELECT * FROM developing,auth_user WHERE proid='$proid' AND content_id='$content_id' AND developer=username ORDER BY developing.creation DESC";
+    $query = ( "SELECT * FROM developing,auth_user WHERE proid='$proid' "
+               ."AND content_id='$content_id' AND developer=username "
+               ."ORDER BY developing.creation DESC" );
     $db->query($query);
-    if ($db->num_rows() != 0) {
+    if ($db->num_rows() == 0) {
+	print ( "There have not been posted any developement proposals "
+                ."to this project.\n" );
+    } else {
         while($db->next_record()) {
 	    $bx->box_begin();
 	    $bx->box_title($t->translate('Developing Proposal'));
@@ -100,9 +105,6 @@ function show_developings($proid, $content_id)
     	    $bx->box_body_end();
     	    $bx->box_end();
         }
-    } else {
-	print "There have not been posted any developement proposals "
-          ."to this project.\n";
     }
 }
 
@@ -131,7 +133,8 @@ function show_developings($proid, $content_id)
 function developing_preview($proid)
 {
     global $t, $bx, $auth;
-    global $cost, $license, $cooperation, $valid_day, $valid_month, $valid_year, $start_day, $start_month, $start_year, $duration;
+    global $cost, $license, $cooperation, $valid_day, $valid_month, 
+        $valid_year, $start_day, $start_month, $start_year, $duration;
 
     $bx->box_begin();
     $bx->box_title('<center><b>'.$t->translate('PREVIEW').'</b></center>');
@@ -145,8 +148,12 @@ function developing_preview($proid)
     echo "<br><b>License:</b> $license\n";
     echo "<br><b>Cooperation:</b> $cooperation\n";
     echo "<br><b>Status:</b> Proposed\n";
-    echo '<br><b>Validity:</b> '.timestr_middle(mktimestamp(date_to_timestamp($valid_day,$valid_month,$valid_year)))."\n";
-    echo '<br><b>Start possible:</b> '.timestr_middle(mktimestamp(date_to_timestamp($start_day,$start_month,$start_year)))."\n";
+    echo '<br><b>Validity:</b> '
+        .timestr_middle(mktimestamp(date_to_timestamp($valid_day,$valid_month,
+        $valid_year)))."\n";
+    echo '<br><b>Start possible:</b> '
+        .timestr_middle(mktimestamp(date_to_timestamp($start_day,$start_month,
+        $start_year)))."\n";
     echo "<br><b>Duration:</b> $duration weeks\n";
     $bx->box_body_end();
     $bx->box_end();
@@ -178,7 +185,8 @@ function developing_preview($proid)
 function developing_form($proid, $content_id)
 {
     global $bx, $t, $sess;
-    global $cost, $license, $cooperation, $valid_day, $valid_month, $valid_year, $start_day, $start_month, $start_year, $duration;
+    global $cost, $license, $cooperation, $valid_day, $valid_month, 
+        $valid_year, $start_day, $start_month, $start_year, $duration;
 
     $bx->box_begin();
     $bx->box_title($t->translate('Development proposal'));
@@ -187,32 +195,40 @@ function developing_form($proid, $content_id)
 
     $bx->box_columns_begin(2);
 
-    $bx->box_column ('right','30%','','<b>'.$t->translate('Cost').'</b> (12): ');
+    $bx->box_column ('right','30%','','<b>'.$t->translate('Cost')
+                     .'</b> (12): ');
     $bx->box_column ('left','70%','',html_input_text('cost',12,12,$cost));
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ('right','30%','','<b>'.$t->translate('License').'</b> (12): ');
+    $bx->box_column ('right','30%','','<b>'.$t->translate('License')
+                     .'</b> (12): ');
     $bx->box_column ('left','70%','',license($license));
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ('right','30%','','<b>'.$t->translate('Developer cooperation wanted?').'</b>');
-    $bx->box_column ('left','70%','',developing_select_cooperation($cooperation));
+    $bx->box_column ('right','30%','','<b>'
+                     .$t->translate('Developer cooperation wanted?').'</b>');
+    $bx->box_column ('left','70%','',
+                     developing_select_cooperation($cooperation));
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ('right','30%','','<b>'.$t->translate('Valid until').'</b>: ');
-    $bx->box_column ('left','70%','', select_date('valid',$valid_day,$valid_month,$valid_year));
+    $bx->box_column ('right','30%','','<b>'.$t->translate('Valid until')
+                     .'</b>: ');
+    $bx->box_column ('left','70%','', 
+                     select_date('valid',$valid_day,$valid_month,$valid_year));
 
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('right','30%','','<b>'.$t->translate('Start').'</b>: ');
-    $bx->box_column ('left','70%','',select_date('start',$start_day,$start_month,$start_year));
+    $bx->box_column ('left','70%','',
+                     select_date('start',$start_day,$start_month,$start_year));
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ('right','30%','','<b>'.$t->translate('Duration (in weeks)').'</b>: ');
+    $bx->box_column ('right','30%','','<b>'
+                     .$t->translate('Duration (in weeks)').'</b>: ');
     $bx->box_column ('left','70%','',select_duration($duration));
 
     $bx->box_next_row_of_columns();
@@ -220,7 +236,9 @@ function developing_form($proid, $content_id)
     htmlp_form_hidden('content_id',$content_id);
 
     $bx->box_column ('right','30%','','&nbsp;');
-    $bx->box_column ('left','70%','',html_form_submit('Preview','preview').html_form_submit('Submit','submit'));
+    $bx->box_column ('left','70%','',
+                     html_form_submit('Preview','preview')
+                     .html_form_submit('Submit','submit'));
     htmlp_form_end();
     $bx->box_columns_end();
 
@@ -255,49 +273,62 @@ function developing_form($proid, $content_id)
 function developing_modify_form($proid, $content_id)
 {
     global $bx, $t, $sess;
-    global $cost, $license, $cooperation, $valid_day, $valid_month, $valid_year, $start_day, $start_month, $start_year, $duration, $creation;
+    global $cost, $license, $cooperation, $valid_day, $valid_month, 
+        $valid_year, $start_day, $start_month, $start_year, $duration, 
+        $creation;
 
     $bx->box_begin();
     $bx->box_title($t->translate('Developement proposal modification'));
     $bx->box_body_begin();
-    print html_form_action('PHP_SELF',array('proid' => $proid),'POST');
+    htmlp_form_action('PHP_SELF',array('proid' => $proid),'POST');
 
     $bx->box_columns_begin(2);
 
-    $bx->box_column ('right','30%','','<b>'.$t->translate('Cost').'</b> (12): ');
+    $bx->box_column ('right','30%','','<b>'
+                     .$t->translate('Cost').'</b> (12): ');
     $bx->box_column ('left','70%','',html_input_text('cost',12,12,$cost));
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ('right','30%','','<b>'.$t->translate('License').'</b> (12): ');
+    $bx->box_column ('right','30%','','<b>'
+                     .$t->translate('License').'</b> (12): ');
     $bx->box_column ('left','70%','',license($license));
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ('right','30%','','<b>'.$t->translate('Developer cooperation wanted?').'</b> (SELECT BOX)');
-    $bx->box_column ('left','70%','',html_input_text('cooperation',12,12,$cooperation));
+    $bx->box_column ('right','30%','','<b>'
+                     .$t->translate('Developer cooperation wanted?')
+                     .'</b> (SELECT BOX)');
+    $bx->box_column ('left','70%','',html_input_text('cooperation',12,12,
+                                                     $cooperation));
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ('right','30%','','<b>'.$t->translate('Valid until (select box)').'</b>: ');
+    $bx->box_column ('right','30%','','<b>'
+                     .$t->translate('Valid until (select box)').'</b>: ');
     // FIXME: valid is an undefined  variable
     $bx->box_column ('left','70%','',html_input_text('valid',14,14,$valid));
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ('right','30%','','<b>'.$t->translate('Start (Select box)').'</b>: ');
+    $bx->box_column ('right','30%','','<b>'
+                     .$t->translate('Start (Select box)').'</b>: ');
     // FIXME: start is an undefined variable
     $bx->box_column ('left','70%','',html_input_text('start',14,14,$start));
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ('right','30%','','<b>'.$t->translate('Duration (Select box)').'</b>: ');
-    $bx->box_column ('left','70%','',html_input_text('duration',3,3,$duration));
+    $bx->box_column ('right','30%','','<b>'
+                     .$t->translate('Duration (Select box)').'</b>: ');
+    $bx->box_column ('left','70%','',
+                     html_input_text('duration',3,3,$duration));
 
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('right','30%','','&nbsp;');
-    $bx->box_column ('left','70%','',html_form_submit('Preview','preview').html_form_submit('Submit','submit'));
+    $bx->box_column ('left','70%','',
+                     html_form_submit('Preview','preview')
+                     .html_form_submit('Submit','submit'));
     htmlp_form_end();
     $bx->box_columns_end();
 
@@ -370,10 +401,15 @@ function developing_insert($proid, $user,$content_id, $cost, $license,
  *
  * @access  public
  */
-function developing_modify($proid, $content_id, $developer, $cost, $license, $cooperation, $valid, $start, $duration, $creation) {
+function developing_modify($proid, $content_id, $developer, $cost, $license, 
+                          $cooperation, $valid, $start, $duration, $creation) {
     global $db;
 
-    $db->query("UPDATE developing SET developer='$developer', cost='$cost', license='$license', cooperation='$cooperation', valid='$valid', start='$start', duration='$duration',status='M' WHERE proid='$proid' AND content_id='$content_id' AND creation='$creation'");
+    $db->query("UPDATE developing SET developer='$developer', cost='$cost', "
+               ."license='$license', cooperation='$cooperation', valid="
+               ."'$valid', start='$start', duration='$duration',status='M' "
+               ."WHERE proid='$proid' AND content_id='$content_id' AND "
+               ."creation='$creation'");
     show_developings($proid, $content_id);
 }
 
@@ -392,10 +428,13 @@ function show_selected_developing($proid)
 {
     global $t, $bx, $db;
 
-    $query = "SELECT * FROM developing,auth_user WHERE proid='$proid' AND developer=username AND developing.status='A'";
+    $query = ( "SELECT * FROM developing,auth_user WHERE proid='$proid' "
+               ."AND developer=username AND developing.status='A'" );
     $db->query($query);
     if ($db->num_rows() != 1) {
-        echo "<b><font color=red>The number of accepted developing proposals is not correct. SEe show_selected_developing()</font></b>\n";
+        echo ( "<b><font color=red>The number of accepted developing "
+               ."proposals is not correct. SEe show_selected_developing()"
+               ."</font></b>\n" );
     } else {
         $db->next_record();
 
@@ -410,8 +449,10 @@ function show_selected_developing($proid)
         echo '<br><b>License:</b> '.$db->f("license")."\n";
         echo '<br><b>Cooperation:</b> '.$db->f("cooperation")."\n";
         echo '<br><b>Status:</b> '.show_status($db->f("status"))."\n";
-        echo '<br><b>Validity:</b> '.timestr_middle(mktimestamp($db->f("valid")))."\n";
-        echo '<br><b>Start possible:</b> '.timestr_middle(mktimestamp($db->f("start")))."\n";
+        echo '<br><b>Validity:</b> '
+            .timestr_middle(mktimestamp($db->f("valid")))."\n";
+        echo '<br><b>Start possible:</b> '
+            .timestr_middle(mktimestamp($db->f("start")))."\n";
         echo '<br><b>Duration:</b> '.$db->f("duration")." weeks\n";
         $bx->box_body_end();
         $bx->box_end();

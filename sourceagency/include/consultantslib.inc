@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: consultantslib.inc,v 1.8 2002/07/19 10:19:17 riessen Exp $
+# $Id: consultantslib.inc,v 1.9 2002/07/22 11:26:54 riessen Exp $
 #
 ######################################################################
 
@@ -77,7 +77,10 @@ function show_consultants($proid)
               ."AND username=consultant ORDER BY creation");
     $db->query($query);
 
-    if ($db->num_rows() != 0) {
+    if ( $db->num_rows() == 0 ) {
+        print "<p>No developers have offered themselves as "
+            ."consultants yet.<p>\n";
+    } else {
         $bx->box_begin();
         $bx->box_title($t->translate('Consultants'));
         $bx->box_body_begin();
@@ -108,9 +111,7 @@ function show_consultants($proid)
         $bx->box_columns_end();
         $bx->box_body_end();
         $bx->box_end();
-    } else {
-        print "<p>No developers have offered themselves as consultants yet.<p>\n";
-    }
+    } 
 }
 
 /**

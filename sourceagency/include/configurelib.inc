@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: configurelib.inc,v 1.9 2002/07/09 11:15:33 riessen Exp $
+# $Id: configurelib.inc,v 1.10 2002/07/22 11:26:54 riessen Exp $
 #
 ######################################################################
 
@@ -93,11 +93,6 @@ function configure_preview($proid) {
     $bx->box_body_begin();
     $timestamp = time();
     echo "<b>";
-    // TODO: results are not used, can be removed.
-//      $db_local = new DB_SourceAgency;
-//      $db_local->query("SELECT email_usr FROM auth_user WHERE username='"
-//                       .$auth->auth["uname"]."'");
-//      $db_local->next_record();
     lib_pnick($auth->auth["uname"]);
     echo " - ".timestr($timestamp)."</b><br>&nbsp;\n";
     if (is_sponsor()) {

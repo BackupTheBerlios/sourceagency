@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: faqlib.inc,v 1.5 2002/06/06 08:15:38 riessen Exp $
+# $Id: faqlib.inc,v 1.6 2002/07/22 11:26:54 riessen Exp $
 #
 ######################################################################
 
@@ -65,7 +65,8 @@ function faqform()
     $bx->box_column ('right','30%','',
                      '<b>'.$t->translate('Question').'</b> (*): ');
     $bx->box_column ('left', '70%', '',
-                     html_textarea('question', 40, 4, 'virtual', 255, $question));
+                     html_textarea('question', 40, 4, 'virtual', 255, 
+                                   $question));
 
     $bx->box_next_row_of_columns();
 
@@ -133,14 +134,16 @@ function faqmod($db)
     $bx->box_column ('right','30%','',
                      '<b>'.$t->translate('Question').'</b> (*): ');
     $bx->box_column ('left', '70%', '',
-                     html_textarea('question', 40, 4, 'virtual', 255, $db->f('question')));
+                     html_textarea('question', 40, 4, 'virtual', 255, 
+                                   $db->f('question')));
 
     $bx->box_next_row_of_columns();
 
     $bx->box_column ('right', '30%', '',
                      '<b>'.$t->translate('Answer').'</b> (*): ');
     $bx->box_column ('left','70%','',
-                     html_textarea('answer', 40, 7, 'virtual', 255, $db->f('answer')));
+                     html_textarea('answer', 40, 7, 'virtual', 255, 
+                                   $db->f('answer')));
 
     $bx->box_next_row_of_columns();
 
