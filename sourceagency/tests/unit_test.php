@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.3 2002/01/11 13:37:49 riessen Exp $
+# $Id: unit_test.php,v 1.4 2002/01/28 02:16:46 riessen Exp $
 #
 ######################################################################
 
@@ -26,9 +26,10 @@ class UnitTest
 extends TestCase
 {
     var $p_regexp_html_comment = "<!--[^->]*-->";
-    function UnitTest() {
-        $this->assertEquals( false, true, "Class UnitTest should not be "
-                             . "directly instantiated" );
+    function UnitTest( $name = "" ) {
+        $this->TestCase( $name );
+//          $this->assertEquals( false, true, "Class UnitTest should not be "
+//                               . "directly instantiated" );
     }
 
     // could actually be defined in phpunit ....
@@ -41,6 +42,9 @@ extends TestCase
 
     // this should also accept a $text argument instead of taking the
     // length from the captured text ...
+    function _testFor_string_length( $str, $len, $msg = "Length mismatch" ) {
+        $this->assertEquals( $len, strlen( $str ), $msg );
+    }
     function _testFor_length( $length, $msg = "Length mismatch" ) {
         $this->assertEquals( $length, capture_text_length(), $msg );
     }
