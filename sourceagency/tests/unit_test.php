@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.1 2002/01/09 10:49:43 riessen Exp $
+# $Id: unit_test.php,v 1.2 2002/01/09 16:15:48 riessen Exp $
 #
 ######################################################################
 
@@ -25,6 +25,7 @@
 class UnitTest
 extends TestCase
 {
+    var $p_regexp_html_comment = "<!--[^->]*-->";
     function UnitTest() {
         $this->assertEquals( false, true, "Class UnitTest should not be "
                              . "directly instantiated" );
