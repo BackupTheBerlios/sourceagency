@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: followmentlib.inc,v 1.3 2001/11/08 16:17:41 riessen Exp $
+# $Id: followmentlib.inc,v 1.4 2002/05/13 10:23:09 riessen Exp $
 #
 ######################################################################
 
@@ -33,27 +33,28 @@ function show_followment($proid) {
 	$bx->box_body_begin();
 
         echo"<table border=1><tr>\n";
-	echo "<td align=center><b>Number</b></td>";
-	echo "<td align=center><b>Goals</b></td>";
-	echo "<td align=center><b>Release Date</b></td>";
-	echo "<td align=center><b>Product</b></td>";
-	echo "<td align=center><b>Payment</b></td>";
-	echo "<td align=center><b>Status</b></td>";
-	echo "<td align=center><b>Creation</b></td>";
+	echo "<td align=center><b>".$t->translate("Number")."</b></td>";
+	echo "<td align=center><b>".$t->translate("Goals")."</b></td>";
+	echo "<td align=center><b>".$t->translate("Release Date")."</b></td>";
+	echo "<td align=center><b>".$t->translate("Product")."</b></td>";
+	echo "<td align=center><b>".$t->translate("Payment")."</b></td>";
+	echo "<td align=center><b>".$t->translate("Status")."</b></td>";
+	echo "<td align=center><b>".$t->translate("Creation")."</b></td>";
 	echo "</tr>\n";
 
 	while($db->next_record()) {
-		if ($db->f("number")%2 != 0) $bgcolor = "gold";
-		else $bgcolor = "#FFFFFF";
-		echo "<tr bgcolor=$bgcolor>\n";
-		echo "<td><b>".$db->f("number")."</b></td>";
-		echo "<td><b>".$db->f("goals")."</b></td>";
-		echo "<td><b>".timestr_middle(mktimestamp($db->f("release")))."</b></td>";
-		echo "<td><b>".$db->f("product")."</b></td>";
-		echo "<td><b>".$db->f("payment")."</b></td>";
-		echo "<td><b>".show_status($db->f("status"))."</b></td>";
-		echo "<td><b>".timestr_short(mktimestamp($db->f("creation")))."</b></td>";
-		echo "</tr>\n";
+
+            $bgcolor = $db->f("number")%2 != 0 ? "gold" : "#FFFFFF";
+
+            echo "<tr bgcolor=$bgcolor>\n";
+            echo "<td><b>".$db->f("number")."</b></td>";
+            echo "<td><b>".$db->f("goals")."</b></td>";
+            echo "<td><b>".timestr_middle(mktimestamp($db->f("release")))."</b></td>";
+            echo "<td><b>".$db->f("product")."</b></td>";
+            echo "<td><b>".$db->f("payment")."</b></td>";
+            echo "<td><b>".show_status($db->f("status"))."</b></td>";
+            echo "<td><b>".timestr_short(mktimestamp($db->f("creation")))."</b></td>";
+            echo "</tr>\n";
   	}
 
         echo"</table>\n";
@@ -62,7 +63,8 @@ function show_followment($proid) {
   }
 
   if ($db->num_rows() == 0) {
-	print "There have not been posted any milestones by the project main developer.\n";
+	print $t->translate("There have not been posted any milestones "
+                            ."by the project main developer").".\n";
   }
 }
 
