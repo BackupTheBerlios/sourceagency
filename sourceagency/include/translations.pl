@@ -32,7 +32,7 @@ while ($file = glob "*.php3") {
 	} elsif (/$t->translate\(\$/) {
 	    # print "Tranlation is a variable: line $i\n";
 	} elsif (/$t->translate/) {
-	    push @uncompleted, "File $file at line $i";
+	    push @uncomplete, "File $file at line $i";
 	}
     }
     close FILE;
