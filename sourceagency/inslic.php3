@@ -108,7 +108,7 @@ if (($config_perm_admlicens != 'all')
                     $be->box_full($t->translate('Warning!'), 
                                   $t->translate('If you press another time the '
                                                .'Delete-button you will alter')
-                                               .$number_of_projects
+                                               .' '.$number_of_projects.' '
                                                .$t->translate('projects that have '
                                                .'actually license').' '.$license);
 
