@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestNewslib.php,v 1.6 2002/01/28 02:22:56 riessen Exp $
+# $Id: TestNewslib.php,v 1.7 2002/02/01 08:40:52 riessen Exp $
 #
 ######################################################################
 
@@ -60,8 +60,7 @@ extends UnitTest
         
         capture_start();
         newsform( "proid" ); 
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 1811 );
 
         $this->_testFor_pattern( $text, ("<font color=\"#000000\"><b>"
@@ -108,8 +107,7 @@ extends UnitTest
         
         capture_start();
         news_modify_form( "proid" ); 
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 1865 );
 
         $this->_testFor_pattern( $text, ("<font color=\"#000000\"><b>Modifying"
@@ -165,8 +163,7 @@ extends UnitTest
 
         capture_start();
         news_preview( "fubar" );
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 2578 + strlen(timestr(time())));
         
         $this->_testFor_pattern( $text, ("<font color=\"#000000\"><b><center>"
@@ -294,8 +291,7 @@ extends UnitTest
         $db = new DB_SourceAgency;
         capture_start();
         newsshow( $proid[0] );
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 67 );
         $this->_testFor_pattern( $text, ("<p>There have not been posted any "
                                          ."news by the project owner[(]s[)]."
@@ -305,11 +301,9 @@ extends UnitTest
         // second call, one record but no comment on it.
         //
         $db = new DB_SourceAgency;
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         newsshow( $proid[1] );
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 722 );
 
         $this->_testFor_pattern( $text, ("<font color=\"#000000\"><b>News: "
@@ -332,11 +326,9 @@ extends UnitTest
         // a recursive call to show_comments_on_it which in turn has no rows
         //
         $db = new DB_SourceAgency;
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         newsshow( $proid[2] );
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 1591 );
 
         $this->_testFor_pattern( $text, ("<font color=\"#000000\"><b>News: "
@@ -416,8 +408,7 @@ extends UnitTest
         capture_start();
         news_insert( $row[0]["proid"],$row[0]["user"],$row[0]["subject"],
                      $row[0]["text"] );
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 67 );
         $this->_testFor_pattern($text,("<p>There have not been posted any "
                                        ."news by the project owner[(]s[)]"
@@ -463,8 +454,7 @@ extends UnitTest
         capture_start();
         news_modify( $row[0]["proid"],$row[0]["user"],$row[0]["subject"],
         $row[0]["text"], $row[0]["creation"]);
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 67 );
         $this->_testFor_pattern($text,("<p>There have not been posted any "
                                        ."news by the project owner[(]s[)]"

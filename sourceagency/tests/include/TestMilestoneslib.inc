@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMilestoneslib.inc,v 1.7 2002/01/28 02:22:56 riessen Exp $
+# $Id: TestMilestoneslib.inc,v 1.8 2002/02/01 08:40:52 riessen Exp $
 #
 ######################################################################
 
@@ -119,83 +119,61 @@ extends UnitTest
         capture_start();
         show_milestones( $dat[0]["proid"], $dat[0]["devid"],
                          $dat[0]["sponsor"] );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 0 );
 
         //
         // second call, the status part of the third query is present
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         show_milestones( $dat[1]["proid"], $dat[1]["devid"],
                          $dat[1]["sponsor"] );
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 0 );
 
         //
         // third call, two records of data
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         show_milestones( $dat[2]["proid"], $dat[2]["devid"],
                          $dat[2]["sponsor"] );
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 3575 );
-        $this->_testFor_pattern( $text, ("<td align=\"center\" width=\"7%\""
-                                         ." bgcolor=\"#FFFFFF\"><b>Number"
-                                         ."<\/b><\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"\" width=\"53%\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Goals"
-                                         ."<\/b><\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"center\" width=\"16%\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Release "
-                                         ."Date<\/b><\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"center\" width=\"12%\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Product"
-                                         ."<\/b><\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"center\" width=\"8%\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Payment"
-                                         ."<\/b><\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"center\" width=\"14%\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Status"
-                                         ."<\/b><\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"center\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>number_3"
-                                         ."<\/b><\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>goals_3"
-                                         ."<\/b><\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"center\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b><\/b>"
-                                         ."<\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"center\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>product_3"
-                                         ."<\/b><\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"center\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>payment_3% "
-                                         ."<\/b><\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"center\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Proposed"
-                                         ."<\/b><\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"center\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>number_4"
-                                         ."<\/b><\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>goals_4"
-                                         ."<\/b><\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"center\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b><\/b>"
-                                         ."<\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"center\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>product_4"
-                                         ."<\/b><\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"center\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>payment_4% "
-                                         ."<\/b><\/td>"));
+        $pats = array( 0=> ("<td align=\"center\" width=\"7%\" bgcolor=\""
+                            ."#FFFFFF\"><b>Number<\/b><\/td>"),
+                       1=> ("<td align=\"\" width=\"53%\" bgcolor=\""
+                            ."#FFFFFF\"><b>Goals<\/b><\/td>"),
+                       2=> ("<td align=\"center\" width=\"16%\" bgcolor=\""
+                            ."#FFFFFF\"><b>Release Date<\/b><\/td>"),
+                       3=> ("<td align=\"center\" width=\"12%\" bgcolor=\""
+                            ."#FFFFFF\"><b>Product<\/b><\/td>"),
+                       4=> ("<td align=\"center\" width=\"8%\" bgcolor=\""
+                            ."#FFFFFF\"><b>Payment<\/b><\/td>"),
+                       5=> ("<td align=\"center\" width=\"14%\" bgcolor=\""
+                            ."#FFFFFF\"><b>Status<\/b><\/td>"),
+                       6=> ("<td align=\"center\" width=\"\" bgcolor=\""
+                            ."#FFFFFF\"><b>number_3<\/b><\/td>"),
+                       7=> ("<td align=\"\" width=\"\" bgcolor=\"#FFFFFF\"><b>"
+                            ."goals_3<\/b><\/td>"),
+                       8=> ("<td align=\"center\" width=\"\" bgcolor=\""
+                            ."#FFFFFF\"><b><\/b><\/td>"),
+                       9=> ("<td align=\"center\" width=\"\" bgcolor=\""
+                            ."#FFFFFF\"><b>product_3<\/b><\/td>"),
+                       10=>("<td align=\"center\" width=\"\" bgcolor=\""
+                            ."#FFFFFF\"><b>payment_3% <\/b><\/td>"),
+                       11=>("<td align=\"center\" width=\"\" bgcolor=\""
+                            ."#FFFFFF\"><b>Proposed<\/b><\/td>"),
+                       12=>("<td align=\"center\" width=\"\" bgcolor=\""
+                            ."#FFFFFF\"><b>number_4<\/b><\/td>"),
+                       13=>("<td align=\"\" width=\"\" bgcolor=\"#FFFFFF\">"
+                            ."<b>goals_4<\/b><\/td>"),
+                       14=>("<td align=\"center\" width=\"\" bgcolor=\""
+                            ."#FFFFFF\"><b><\/b><\/td>"),
+                       15=>("<td align=\"center\" width=\"\" bgcolor=\""
+                            ."#FFFFFF\"><b>product_4<\/b><\/td>"),
+                       16=>("<td align=\"center\" width=\"\" bgcolor=\""
+                            ."#FFFFFF\"><b>payment_4% <\/b><\/td>"));
+        $this->_testFor_patterns( $text, $pats, 17 );
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -207,9 +185,7 @@ extends UnitTest
         $db_q = array( 0 => ("SELECT number FROM milestones WHERE proid='%s' "
                              . "AND devid='%s' ORDER BY number"));
 
-        $dat = array(0 => $this->_generate_array(array("proid","devid"),0),
-                     1 => $this->_generate_array(array("proid","devid"),1),
-                     2 => $this->_generate_array(array("proid","devid"),2));
+        $dat = $this->_generate_records( array("proid","devid"), 3 );
         
         for ( $idx = 0; $idx < 3; $idx++ ) {
             $db_config->add_query( sprintf( $db_q[0], $dat[$idx]["proid"],

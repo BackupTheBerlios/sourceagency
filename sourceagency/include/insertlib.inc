@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: insertlib.inc,v 1.3 2001/11/15 18:07:44 riessen Exp $
+# $Id: insertlib.inc,v 1.4 2002/02/01 08:40:52 riessen Exp $
 #
 ######################################################################
 
@@ -110,6 +110,7 @@ function no_other_project_with_same_title($project_title) {
   $query="SELECT * FROM description WHERE project_title='$project_title'";
   $db->query($query);
   if ($db->num_rows() == 1) {
+        require("config.inc");
 	$be = new box("",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
 	$be->box_full($t->translate("Error"), $t->translate("Another project with that title already exists")."."
     	."<br>".$t->translate("Please select")." ".html_link("insform.php3",array(),$t->translate("New Projects")));
@@ -126,6 +127,7 @@ function insert_into_database($project_title,$description,$type,$volume) {
   $tables = "description";
   $set = "project_title='$project_title',type='$type',description='$description', description_user='".$auth->auth["uname"]."', volume='$volume', status='$status', description_creation=NOW()";
   $db->query("INSERT $tables SET $set");
+  // TODO: affected_rows should be a function call, not a variable ???
   if ($db->affected_rows =0) $be->box_full($t->translate("Error"), $t->translate("Database error"));
 					// Get project index
   $columns = "*";

@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.4 2002/01/28 02:16:46 riessen Exp $
+# $Id: unit_test.php,v 1.5 2002/02/01 08:40:52 riessen Exp $
 #
 ######################################################################
 
@@ -54,12 +54,30 @@ extends TestCase
     function _testFor_pattern( $text, $pattern, $msg = "pattern not found" ) {
         $this->assertRegexp( "/" . $pattern . "/", $text, $msg);
     }
+    function _testFor_patterns( $text, $pattern_array, $check_size = -1 ) {
+        reset( $pattern_array );
+        if ( $check_size > 0 ) {
+            $this->assertEquals( $check_size, count( $pattern_array ), 
+                                 "pattern count mismatch" );
+        }
+        while ( list( $key, $val ) = each( $pattern_array ) ) {
+            $this->_testFor_pattern( $text, $val, ("Pattern with key '" . $key
+                                                   . "' was not found"));
+        }
+    }
 
     function _check_db( $db_config ) {
         $this->assert( !$db_config->did_db_fail(), 
                        $db_config->error_message());
     }
 
+    function &_generate_records( $keynames = array(), $count = 0 ) {
+        $rVal = array();
+        for ( $idx = 0; $idx < $count; $idx++ ) {
+            $rVal[$idx] = $this->_generate_array( $keynames, $idx );
+        }
+        return $rVal;
+    }
     function &_generate_array( $keynames = array(), $postfix = 0 ) {
         $rVal = array();
         foreach ( $keynames as $val ) {

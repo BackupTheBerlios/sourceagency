@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestMonitorlib.php,v 1.1 2002/01/28 02:06:03 riessen Exp $
+// $Id: TestMonitorlib.php,v 1.2 2002/02/01 08:40:52 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -45,27 +45,27 @@ extends UnitTest
 
         $ret = select_importance( "low" );
         $this->_testFor_string_length( $ret, 126 );
-        $this->_testFor_pattern( $ret, "option selected value=\"low\"" );
-        $this->_testFor_pattern( $ret, "option value=\"medium\"" );
-        $this->_testFor_pattern( $ret, "option value=\"high\"" );
+        $pats=array(0=>"option selected value=\"low\"",
+                    1=>"option value=\"medium\"",
+                    2=>"option value=\"high\"" );
+        $this->_testFor_patterns( $ret, $pats, 3 );
 
         $ret = select_importance( "medium" );
         $this->_testFor_string_length( $ret, 126 );
-        $this->_testFor_pattern( $ret, "option value=\"low\"" );
-        $this->_testFor_pattern( $ret, "option selected value=\"medium\"" );
-        $this->_testFor_pattern( $ret, "option value=\"high\"" );
+        $pats[0] = "option value=\"low\"";
+        $pats[1] = "option selected value=\"medium\"";
+        $this->_testFor_patterns( $ret, $pats, 3 );
 
         $ret = select_importance( "high" );
         $this->_testFor_string_length( $ret, 126 );
-        $this->_testFor_pattern( $ret, "option value=\"low\"" );
-        $this->_testFor_pattern( $ret, "option value=\"medium\"" );
-        $this->_testFor_pattern( $ret, "option selected value=\"high\"" );
+        $pats[1] = "option value=\"medium\"";
+        $pats[2] = "option selected value=\"high\"";
+        $this->_testFor_patterns( $ret, $pats, 3 );
 
         $ret = select_importance( "fubar" );
         $this->_testFor_string_length( $ret, 117 );
-        $this->_testFor_pattern( $ret, "option value=\"low\"" );
-        $this->_testFor_pattern( $ret, "option value=\"medium\"" );
-        $this->_testFor_pattern( $ret, "option value=\"high\"" );
+        $pats[2] = "option value=\"high\"";
+        $this->_testFor_patterns( $ret, $pats, 3 );
     }
 
     function testMonitor_mail() {
@@ -104,34 +104,28 @@ extends UnitTest
         // 
         // first call, high propriety
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         monitor_mail( $row[0]["proid"], $row[0]["type"], $row[0]["subject"],
                       $row[0]["message"]);
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 0 );
 
         // 
         // second call, middle propriety
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         monitor_mail( $row[1]["proid"], $row[1]["type"], $row[1]["subject"],
                       $row[1]["message"]);
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 0 );
         
         // 
         // third call, middle propriety
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         monitor_mail( $row[2]["proid"], $row[2]["type"], $row[2]["subject"],
                       $row[2]["message"]);
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 0 );
 
         // finally check that everything went smoothly with the DB
@@ -175,11 +169,9 @@ extends UnitTest
         // first call, no records
         //
         $db = new DB_SourceAgency;
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         monitor_show( $proid[0] );
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 41 );
         $this->_testFor_pattern( $text, ("<p>Nobody is monitoring this "
                                          ."project[.]<p>\n"));
@@ -187,11 +179,9 @@ extends UnitTest
         // second call, 4 records
         //
         $db = new DB_SourceAgency;
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         monitor_show( $proid[1] );
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 3880 );
         
         $color = array( 0 => "gold", 1 => "#FFFFFF" );
@@ -241,11 +231,9 @@ extends UnitTest
         //
         $importance = "middle";
         $auth->set_uname( $row[0]["uname"] );
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         monitor_preview( $row[0]["proid"] );
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 803 + strlen( timestr( time() )));
 
         $this->_testFor_pattern( $text, "<b><b>by uname_0<\/b>" );
@@ -260,12 +248,10 @@ extends UnitTest
         //
         // first call
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         $importance = "low";
         monitor_form( "proid_0" );
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 1477 );
 
         $this->_testFor_pattern( $text, ("<select name=\"importance\">\n"
@@ -279,12 +265,10 @@ extends UnitTest
         //
         // second call
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         $importance = "medium";
         monitor_form( "proid_1" );
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 1477 );
 
         $this->_testFor_pattern( $text, ("<select name=\"importance\">\n"
@@ -298,12 +282,10 @@ extends UnitTest
         //
         // third call
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         $importance = "fubar";
         monitor_form( "proid_2" );
-        capture_stop();
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 1468 );
 
         $this->_testFor_pattern( $text, ("<select name=\"importance\">\n"

@@ -16,13 +16,15 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: followuplib.inc,v 1.7 2001/12/17 10:06:11 grex Exp $
+# $Id: followuplib.inc,v 1.8 2002/02/01 08:40:52 riessen Exp $
 #
 ######################################################################
 
 function followup_devel_preview($proid) {
   global $t, $db, $bx, $auth, $milestone_number, $location, $count;
 
+  // FIXME: nothing to ensure that there really is a single 
+  // FIXME: record of information
 	$db->query("SELECT * FROM milestones WHERE proid='$proid' AND number='$milestone_number'");
 	$db->next_record();
 
@@ -291,6 +293,9 @@ function followup_current_count($proid,$milestone_number) {
 
 	$db_local = new DB_SourceAgency;
 	$db_local->query("SELECT count FROM follow_up WHERE milestone_number='$milestone_number' AND proid='$proid'");
+        // TODO: why do we return 1 here instead of 0? if we returned 1 we
+        // TODO: could use this function to test whether a project has any
+        // TODO: milestones.
 	if ($db_local->num_rows() == 0) return 1;
 	$db_local->next_record();
 	return $db_local->f("count");
@@ -298,6 +303,8 @@ function followup_current_count($proid,$milestone_number) {
 
 function followup_location($proid,$milestone_number,$count) {
 
+  // FIXME: the $proid argument is not used ...
+  // TODO: what happens if there is no record?
 	$db_local = new DB_SourceAgency;
 	$db_local->query("SELECT location FROM follow_up WHERE milestone_number='$milestone_number' AND count='$count'");
 	$db_local->next_record();

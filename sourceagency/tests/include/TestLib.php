@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.10 2002/01/28 02:11:11 riessen Exp $
+# $Id: TestLib.php,v 1.11 2002/02/01 08:40:52 riessen Exp $
 #
 ######################################################################
 
@@ -131,9 +131,7 @@ extends UnitTest
 
         capture_start();
         lib_pnick( "SNAFU" );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 15 );
         $this->assertEquals( "<b>by SNAFU</b>", $text );
     }
@@ -275,86 +273,66 @@ extends UnitTest
         //
         capture_start();
         calendar_box( $dat["r0"] );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 2174 );
-        $this->_testFor_pattern( $text, ("<b>Project Owner\(s\):<\/b><\/td>\n"
-                                         . $this->p_regexp_html_comment . "\n"
-                                         . $this->p_regexp_html_comment . "\n"
-                                         . "<td align=\"left\" width=\"45%\""
-                                         . " bgcolor=\"#FFFFFF\">&nbsp;"
-                                         .$row1["description_user"]."<\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"left\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Project "
-                                         ."Type:<\/b><\/td>\n"
-                                         . $this->p_regexp_html_comment . "\n"
-                                         . $this->p_regexp_html_comment . "\n"
-                                         ."<td align=\"left\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\">&nbsp;"
-                                         .$row1["type"]."<\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"left\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Project "
-                                         ."Volume:<\/b><\/td>\n"
-                                         .$this->p_regexp_html_comment . "\n"
-                                         .$this->p_regexp_html_comment . "\n"
-                                         ."<td align=\"left\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\">&nbsp;"
-                                         .$row1["volume"]
-                                         ."<\/td>"));
-        // TODO: this is wrong, 100 euro should not appear here ....
-        $this->_testFor_pattern( $text, ("<td align=\"left\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Current "
-                                         ."project budget:<\/b><\/td>\n"
-                                         .$this->p_regexp_html_comment . "\n"
-                                         .$this->p_regexp_html_comment . "\n"
-                                         ."<td align=\"left\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\">INCORRECT euro"
-                                         ."<\/td>"));
-
+        $ps=array( 0=>("<b>Project Owner\(s\):<\/b><\/td>\n"
+                       . $this->p_regexp_html_comment . "\n"
+                       . $this->p_regexp_html_comment
+                       . "\n<td align=\"left\" width=\"45%\" bgcolor=\""
+                       ."#FFFFFF\">&nbsp;".$row1["description_user"]."<\/td>"),
+                   1=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\"><b>"
+                       ."Project Type:<\/b><\/td>\n"
+                       . $this->p_regexp_html_comment . "\n"
+                       . $this->p_regexp_html_comment 
+                       ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."&nbsp;".$row1["type"]."<\/td>"),
+                   2=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."<b>Project Volume:<\/b><\/td>\n"
+                       .$this->p_regexp_html_comment . "\n"
+                       .$this->p_regexp_html_comment
+                       ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."&nbsp;".$row1["volume"]."<\/td>"),
+                   // TODO: this is wrong, 100 euro should not appear here ....
+                   3=>("<td align=\"left\" width=\"\" "
+                       ."bgcolor=\"#FFFFFF\"><b>Current "
+                       ."project budget:<\/b><\/td>\n"
+                       .$this->p_regexp_html_comment . "\n"
+                       .$this->p_regexp_html_comment . "\n"
+                       ."<td align=\"left\" width=\"\" "
+                       ."bgcolor=\"#FFFFFF\">INCORRECT euro"
+                       ."<\/td>"));
+        $this->_testFor_patterns( $text, $ps, 4);
         //
         // This run has a budget and the budget value should be printed
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         calendar_box( $dat["r2"] );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 2169 );
-        $this->_testFor_pattern( $text, ("<b>Project Owner\(s\):<\/b><\/td>\n"
-                                         . $this->p_regexp_html_comment . "\n"
-                                         . $this->p_regexp_html_comment . "\n"
-                                         . "<td align=\"left\" width=\"45%\""
-                                         . " bgcolor=\"#FFFFFF\">&nbsp;"
-                                         .$row3["description_user"]."<\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"left\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Project "
-                                         ."Type:<\/b><\/td>\n"
-                                         . $this->p_regexp_html_comment . "\n"
-                                         . $this->p_regexp_html_comment . "\n"
-                                         ."<td align=\"left\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\">&nbsp;"
-                                         .$row3["type"]."<\/td>"));
-        $this->_testFor_pattern( $text, ("<td align=\"left\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Project "
-                                         ."Volume:<\/b><\/td>\n"
-                                         .$this->p_regexp_html_comment . "\n"
-                                         .$this->p_regexp_html_comment . "\n"
-                                         ."<td align=\"left\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\">&nbsp;"
-                                         .$row3["volume"]
-                                         ."<\/td>"));
-        // TODO: this is wrong, 100 euro should not appear here ....
-        $this->_testFor_pattern( $text, ("<td align=\"left\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\"><b>Current "
-                                         ."project budget:<\/b><\/td>\n"
-                                         .$this->p_regexp_html_comment . "\n"
-                                         .$this->p_regexp_html_comment . "\n"
-                                         ."<td align=\"left\" width=\"\" "
-                                         ."bgcolor=\"#FFFFFF\">"
-                                         .$row4["SUM(budget)"]
-                                         ." euro<\/td>"));
-
+        $ps=array( 0=>("<b>Project Owner\(s\):<\/b><\/td>\n"
+                       . $this->p_regexp_html_comment . "\n"
+                       . $this->p_regexp_html_comment
+                       . "\n<td align=\"left\" width=\"45%\" bgcolor=\""
+                       ."#FFFFFF\">&nbsp;".$row3["description_user"]."<\/td>"),
+                   1=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."<b>Project Type:<\/b><\/td>\n"
+                       . $this->p_regexp_html_comment . "\n"
+                       . $this->p_regexp_html_comment
+                       ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF"
+                       ."\">&nbsp;".$row3["type"]."<\/td>"),
+                   2=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."<b>Project Volume:<\/b><\/td>\n"
+                       .$this->p_regexp_html_comment . "\n"
+                       .$this->p_regexp_html_comment 
+                       ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF"
+                       ."\">&nbsp;".$row3["volume"]."<\/td>"),
+                   // TODO: this is wrong, 100 euro should not appear here ....
+                   3=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."<b>Current project budget:<\/b><\/td>\n"
+                       .$this->p_regexp_html_comment . "\n"
+                       .$this->p_regexp_html_comment
+                       ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       .$row4["SUM(budget)"]." euro<\/td>"));
+        $this->_testFor_patterns( $text, $ps, 4 );
         // check that the database component did not fail
         $this->_check_db( $db_config );
     }
@@ -418,9 +396,7 @@ extends UnitTest
 
         capture_start();
         licensep( $row[0]["license"] );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 153 );
 
         $this->_testFor_pattern( $text, "selected value=\"".$row[0]["license"]
@@ -454,23 +430,18 @@ extends UnitTest
 
         capture_start();
         lib_show_description( $db_q[0] );
-        capture_stop();
-        
-        $text = capture_text_get();
-        $this->_testFor_pattern( $text, ("<b>by description_user_1<\/b>"));
-        $this->_testFor_pattern( $text, ("<a href=\"summary.php3\?proid="
-                                         ."proid_1\">project_title_1<\/a>" ));
-        $this->_testFor_pattern( $text, "<b>Description<\/b>: description_1");
-        $this->_testFor_pattern( $text, "<b>Volume<\/b>: volume_1" );
-
+        $text = capture_stop_and_get();
+        $pats = array( 0=>("<b>by description_user_1<\/b>"),
+                       1=>("<a href=\"summary.php3\?proid="
+                           ."proid_1\">project_title_1<\/a>" ),
+                       2=>("<b>Description<\/b>: description_1"),
+                       3=>("<b>Volume<\/b>: volume_1" ));
+        $this->_testFor_patterns($text, $pats, 4 );
         $this->_testFor_length( 656 );
 
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         lib_show_description( $db_q[1] );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 0 );
 
         // check that the database component did not fail
@@ -485,20 +456,12 @@ extends UnitTest
                              ."proid='%s' AND type='%s' AND number='%s' "
                              . "AND ref='%s' AND user_cmt=username "
                              . "ORDER BY creation_cmt ASC") );
-
         // data for 2 calls 
-        $dat = array( 0 => $this->_generate_array( array( "proid", "cmt_type",
-                                                          "num", "cmt_id"),0),
-                      1 => $this->_generate_array( array( "proid", "cmt_type",
-                                                          "num", "cmt_id"),1));
+        $dat = $this->_generate_records( array( "proid", "cmt_type","num", 
+                                                "cmt_id"), 2 );
         // data records 
-        $row = array();
-        for ( $idx = 0; $idx < 3; $idx++ ) {
-            $row[$idx] = 
-                 $this->_generate_array( array( "user_cmt", "subject_cmt",
-                                                "creation_cmt", "id" ), $idx );
-        }
-
+        $row = $this->_generate_records( array( "user_cmt", "subject_cmt",
+                                                "creation_cmt", "id" ), 3 );
         $db_config->add_record( $row[0], 1 );
         $db_config->add_record( $row[1], 1 );
         $db_config->add_record( $row[2], 2 );
@@ -536,43 +499,30 @@ extends UnitTest
         capture_start();
         lib_show_comments_on_it( $dat[0]["proid"],$dat[0]["cmt_type"],
                                  $dat[0]["num"], $dat[0]["cmt_id"] );
-        capture_stop();
-        
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 4 );
         $this->assertEquals( "<p>\n", $text );
 
         //
         // this has two data points and does a recursive call ...
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         lib_show_comments_on_it( $dat[1]["proid"],$dat[1]["cmt_type"],
                                  $dat[1]["num"], $dat[1]["cmt_id"] );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 439 );
 
-        $this->_testFor_pattern( $text, ("<li><a href=\"comments[.]php3\?"
-                                         . "proid=proid_1&type=cmt_type_1&"
-                                         . "number=num_1&ref=cmt_id_1\">"
-                                         . "subject_cmt_0<\/a>\n by <b>"
-                                         . "user_cmt_0<\/b> on <b><\/b>"
-                                         . "\n<ul>"));
-        $this->_testFor_pattern( $text, ("<li><a href=\"comments[.]php3\?"
-                                         ."proid=proid_1&type=cmt_type_1&"
-                                         ."number=num_1&ref=id_0\">"
-                                         ."subject_cmt_2<\/a>\n by <b>"
-                                         ."user_cmt_2<\/b> on <b><\/b>\n<p>"
-                                         ."\n<\/ul>"));
-        $this->_testFor_pattern( $text, ("<li><a href=\"comments[.]php3\?"
-                                         ."proid=proid_1&type=cmt_type_1&"
-                                         ."number=num_1&ref=cmt_id_1\">"
-                                         ."subject_cmt_1<\/a>\n by <b>"
-                                         ."user_cmt_1<\/b> on <b><\/b>\n<p>"
-                                         ."\n<\/ul>"));
-
+        $ps=array(0=>("<li><a href=\"comments[.]php3\?proid=proid_1&type="
+                      ."cmt_type_1&number=num_1&ref=cmt_id_1\">subject_cmt_0"
+                      ."<\/a>\n by <b>user_cmt_0<\/b> on <b><\/b>\n<ul>"),
+                  1=>("<li><a href=\"comments[.]php3\?proid=proid_1&type="
+                      ."cmt_type_1&number=num_1&ref=id_0\">subject_cmt_2<\/a>"
+                      ."\n by <b>user_cmt_2<\/b> on <b><\/b>\n<p>\n<\/ul>"),
+                  2=>("<li><a href=\"comments[.]php3\?proid=proid_1&type="
+                      ."cmt_type_1&number=num_1&ref=cmt_id_1\">subject_cmt_1"
+                      ."<\/a>\n by <b>user_cmt_1<\/b> on <b><\/b>\n<p>"
+                      ."\n<\/ul>"));
+        $this->_testFor_patterns( $text, $ps, 3 );
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
     }

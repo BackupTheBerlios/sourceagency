@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestPersonallib.php,v 1.19 2002/01/28 02:11:11 riessen Exp $
+# $Id: TestPersonallib.php,v 1.20 2002/02/01 08:40:52 riessen Exp $
 #
 ######################################################################
 
@@ -167,9 +167,7 @@ extends UnitTest
         $auth->set_uname( $user1 );
         $auth->set_perm( "hell yes!" );
         personal_related_projects( $auth->auth['uname'], $status1 );
-        capture_stop();
-        
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 566 );
         $this->_testFor_pattern( $text, ("<b>Involved ".show_status($status1)
                                          ." Projects<\/b>" ));
@@ -182,14 +180,11 @@ extends UnitTest
         // 
         // snafu
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         $auth->set_uname( $user2 );
         $auth->set_perm( "hell yes!" );
         personal_related_projects( $auth->auth['uname'], $status2 );
-        capture_stop();
-        
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 564 );
         $this->_testFor_pattern( $text, ("<b>Involved ".show_status($status2)
                                          ." Projects<\/b>" ));
@@ -314,9 +309,7 @@ extends UnitTest
         capture_start();
         // here next_record will not be called
         personal_comments_short( $user1 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 563 );
         $this->_testFor_pattern( $text, "Last 10 Comments by " . $user1 );
         $this->_testFor_line( $text, "no comments posted" );
@@ -326,13 +319,10 @@ extends UnitTest
         //
         // snafu query
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_comments_short( $user2 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 1106 );
 
         $this->_testFor_pattern( $text, "Last 10 Comments by " . $user2 );
@@ -415,9 +405,7 @@ extends UnitTest
         capture_start();
         // here next_record will not be called
         personal_comments_long( $user1 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 559 );
         $this->_testFor_pattern( $text, "All Comments by " . $user1 );
         $this->_testFor_line( $text, "no comments posted" );
@@ -427,13 +415,10 @@ extends UnitTest
         //
         // snafu query
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_comments_long( $user2 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 1102 );
 
         $this->_testFor_pattern( $text, "All Comments by " . $user2 );
@@ -601,9 +586,7 @@ extends UnitTest
         capture_start();
         // here next_record will not be called
         personal_news_short( $user1 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 554 );
         $this->_testFor_pattern( $text, "Last 5 News by " . $user1 );
         $this->_testFor_line( $text, "no news posted" );
@@ -613,13 +596,10 @@ extends UnitTest
         //
         // snafu query
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_news_short( $user2 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 999 );
         $this->_testFor_pattern( $text, "Last 5 News by " . $user2 );
         $this->assertNotRegexp( "/no news posted/", $text, 
@@ -636,13 +616,10 @@ extends UnitTest
         //
         // fritz query
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_news_short( $user3 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 1780 );
         $this->_testFor_pattern( $text, "Last 5 News by " . $user3 );
         $this->assertNotRegexp( "/no news posted/", $text, 
@@ -735,9 +712,7 @@ extends UnitTest
         capture_start();
         // here next_record will not be called
         personal_news_long( $user1 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 551 );
         $this->_testFor_pattern( $text, "All news by " . $user1 );
         $this->_testFor_line( $text, "no news posted" );
@@ -745,13 +720,10 @@ extends UnitTest
         //
         // snafu query
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_news_long( $user2 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 1012 );
         $this->_testFor_pattern( $text, "All news by " . $user2 );
 
@@ -804,9 +776,7 @@ extends UnitTest
         capture_start();
         // here next_record will not be called
         personal_consultants( $user1, $status1 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 552 );
         // check title string
         $this->_testFor_pattern( $text, ("Consultant [(]"
@@ -816,13 +786,10 @@ extends UnitTest
         //
         // snafu query
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_consultants( $user2, $status2 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 605 );
         // check title string
         $this->_testFor_pattern( $text, ("Consultant [(]"
@@ -833,13 +800,10 @@ extends UnitTest
         //
         // fubar query
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_consultants( $user3, $status3 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 697 );
         // check title string
         $this->_testFor_pattern( $text, ("Consultant [(]"
@@ -892,9 +856,7 @@ extends UnitTest
         capture_start();
         // here next_record will not be called
         personal_referees( $user1, $status1 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 546 );
         // check title string
         $this->_testFor_pattern( $text, ("Referee [(]"
@@ -904,13 +866,10 @@ extends UnitTest
         //
         // snafu query
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_referees( $user2, $status2 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 602 );
         // check title string
         $this->_testFor_pattern( $text, ("Referee [(]"
@@ -921,13 +880,10 @@ extends UnitTest
         //
         // fritz query
         //
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         // here next_record will not be called
         personal_referees( $user3, $status3 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 694 );
         // check title string
         $this->_testFor_pattern( $text, ("Referee [(]"
@@ -981,9 +937,7 @@ extends UnitTest
         capture_start();
         // here next_record will not be called
         personal_cooperation( $user1, $status1 );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 576 );
         // check title string
         $this->_testFor_pattern( $text, ("Developing Cooperation [(]"
@@ -991,13 +945,10 @@ extends UnitTest
         $this->_testFor_line( $text, ("No developing cooperation proposal "
                                       ."with this status") );
 
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         personal_cooperation( $user2, $status2 );
-        capture_stop();
-        
+        $text = capture_stop_and_get();
         $this->_testFor_length( 699 );
-        $text = capture_text_get();
         // check the title string
         $this->_testFor_pattern( $text, ("Developing Cooperation [(]"
                                          .show_status( $status2 )."[)]")); 
@@ -1007,13 +958,10 @@ extends UnitTest
                                                        $row1['devid'] );
 
         // fritz query
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         personal_cooperation( $user3, $status3 );
-        capture_stop();
-        
+        $text = capture_stop_and_get();
         $this->_testFor_length( 873 );
-        $text = capture_text_get();
         // check the title string
         $this->_testFor_pattern( $text, ("Developing Cooperation [(]"
                                          .show_status( $status3 )."[)]")); 
@@ -1063,33 +1011,25 @@ extends UnitTest
         capture_start();
         // here next_record will not be called
         personal_my_projects( "fubar" );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
         $this->_testFor_length( 524 );
         $this->_testFor_pattern( $text, "My Projects" ); // title
         $this->_testFor_line( $text, "No personal projects" );
         
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         // here next_record should be called once --> num_row == 1
         personal_my_projects( "snafu" );
-        capture_stop();
-        
+        $text = capture_stop_and_get();
         $this->_testFor_length( 597 );
-        $text = capture_text_get();
         $this->_testFor_pattern( $text, "My Projects" ); // title
         $this->_testFor_project_link($text,$row1['proid'],
                                      $row1['project_title'], $row1['status']);
 
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         // here next_record should be called once --> num_row == 1
         personal_my_projects( "fritz" );
-        capture_stop();
-
+        $text = capture_stop_and_get();
         $this->_testFor_length( 691 );
-        $text = capture_text_get();
         $this->_testFor_pattern( $text, "My Projects" ); // title
         $this->_testFor_project_link($text,$row2['proid'],
                                      $row2['project_title'],$row2['status']);
@@ -1135,34 +1075,26 @@ extends UnitTest
         capture_start();
         // here next_record will not be called
         personal_monitored_projects( "fubar" );
-        capture_stop();
-
-        $text = capture_text_get();
+        $text = capture_stop_and_get();
 
         $this->_testFor_length( 532 );
         $this->_testFor_pattern( $text, "Monitored Projects" ); // title
         $this->_testFor_line( $text, "No monitored projects" );
 
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         // here next_record should be called once --> num_row == 1
         personal_monitored_projects( "snafu" );
-        capture_stop();
-        
+        $text = capture_stop_and_get();
         $this->_testFor_length( 604 );
-        $text = capture_text_get();
         $this->_testFor_pattern( $text, "Monitored Projects" ); // title
         $this->_testFor_project_link($text,$row1['proid'],
                                      $row1['project_title'], $row1['status']);
 
-        capture_reset_text();
-        capture_start();
+        capture_reset_and_start();
         // here next_record should be called once --> num_row == 1
         personal_monitored_projects( "fritz" );
-        capture_stop();
-
+        $text = capture_stop_and_get();
         $this->_testFor_length( 698 );
-        $text = capture_text_get();
         $this->_testFor_pattern( $text, "Monitored Projects" ); // title
         $this->_testFor_project_link($text,$row2['proid'],
                                      $row2['project_title'], $row2['status']);

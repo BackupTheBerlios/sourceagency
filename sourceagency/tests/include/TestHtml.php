@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.11 2002/01/28 02:11:11 riessen Exp $
+# $Id: TestHtml.php,v 1.12 2002/02/01 08:40:52 riessen Exp $
 #
 ######################################################################
 
@@ -40,16 +40,11 @@ extends UnitTest
 
     function setup() {
         /* Called before each test method */
-        $this->_reset_capture();
+        capture_reset_and_start();
     }
     function tearDown() {
         /* Called after each test method */
         capture_stop();
-    }
-
-    function _reset_capture() {
-        capture_reset_text();
-        capture_start();
     }
 
     function testhtml_link() {
@@ -70,7 +65,7 @@ extends UnitTest
         $actual = html_link( 'snafu', "", 'goodbye cruel world' );
         $expect = "<a href=\"snafu\">goodbye cruel world</a>\n";
         $this->assertEquals( $expect, $actual );
-        $this->_reset_capture();
+        capture_reset_and_start();
         htmlp_link( 'snafu', "", 'goodbye cruel world' );
         $text = capture_stop_and_get();
         $this->_testFor_length( 40 );
@@ -83,7 +78,7 @@ extends UnitTest
                             'hello world' );
         $expect = "<a href=\"fubar?one=what+the+hell\">hello world</a>\n";
         $this->assertEquals( $expect, $actual );
-        $this->_reset_capture();
+        capture_reset_and_start();
         htmlp_link('fubar',array( 'one' => 'what the hell'),
                   'hello world' );
         $text = capture_stop_and_get();
@@ -97,7 +92,7 @@ extends UnitTest
                             'hello world' );
         $expect = "<a href=\"fubar?one=what%2Bthe%2Bhell\">hello world</a>\n";
         $this->assertEquals( $expect, $actual );
-        $this->_reset_capture();
+        capture_reset_and_start();
         htmlp_link('fubar',array( 'one' => 'what+the+hell'),
                    'hello world' );
         $text = capture_stop_and_get();
@@ -149,7 +144,7 @@ extends UnitTest
         $actual = html_form_action( "file", "query", "type" );
         $expect = "<form action=\"file\" method=\"type\">";
         $this->assertEquals( $expect, $actual );
-        $this->_reset_capture();
+        capture_reset_and_start();
         htmlp_form_action( "file", "query", "type" );
         $text = capture_stop_and_get();
         $this->_testFor_length( 34 );
@@ -194,7 +189,7 @@ extends UnitTest
         $actual = html_select_option( "value", "", "text" );
         $expect = "<option value=\"value\">text\n";
         $this->assertEquals( $expect, $actual );
-        $this->_reset_capture();
+        capture_reset_and_start();
         htmlp_select_option( "value", "", "text" );
         $text = capture_stop_and_get();
         $this->_testFor_length( 27 );
@@ -206,7 +201,7 @@ extends UnitTest
         $actual = html_select_option( "value", false, "text" );
         $expect = "<option value=\"value\">text\n";
         $this->assertEquals( $expect, $actual );
-        $this->_reset_capture();
+        capture_reset_and_start();
         htmlp_select_option( "value", false, "text" );
         $text = capture_stop_and_get();
         $this->_testFor_length( 27 );
@@ -218,7 +213,7 @@ extends UnitTest
         $actual = html_select_option( "value", true, "text" );
         $expect = "<option selected value=\"value\">text\n";
         $this->assertEquals( $expect, $actual );
-        $this->_reset_capture();
+        capture_reset_and_start();
         htmlp_select_option( "value", true, "text" );
         $text = capture_stop_and_get();
         $this->_testFor_length( 36 );
@@ -275,7 +270,7 @@ extends UnitTest
         $actual = html_checkbox( "name", "value", "" );
         $expect = ("<input type=\"checkbox\" name=\"name\" value=\"value\">");
         $this->assertEquals( $expect, $actual );
-        $this->_reset_capture();
+        capture_reset_and_start();
         htmlp_checkbox( "name", "value", "" );
         $text = capture_stop_and_get();
         $this->_testFor_length( 49 );
@@ -287,7 +282,7 @@ extends UnitTest
         $actual = html_checkbox( "name", "value", false );
         $expect = ("<input type=\"checkbox\" name=\"name\" value=\"value\">");
         $this->assertEquals( $expect, $actual );
-        $this->_reset_capture();
+        capture_reset_and_start();
         htmlp_checkbox( "name", "value", false );
         $text = capture_stop_and_get();
         $this->_testFor_length( 49 );
@@ -300,7 +295,7 @@ extends UnitTest
         $expect = ("<input type=\"checkbox\" name=\"name\" value=\"value\""
                    ." checked >");
         $this->assertEquals( $expect, $actual );
-        $this->_reset_capture();
+        capture_reset_and_start();
         htmlp_checkbox( "name", "value", true );
         $text = capture_stop_and_get();
         $this->_testFor_length( 58 );
@@ -326,7 +321,7 @@ extends UnitTest
         $actual = html_radio( "name", "value", "" );
         $expect = ("<input type=\"radio\" name=\"name\" value=\"value\">");
         $this->assertEquals( $expect, $actual );
-        $this->_reset_capture();
+        capture_reset_and_start();
         htmlp_radio( "name", "value", "" );
         $text = capture_stop_and_get();
         $this->_testFor_length( 46 );
@@ -338,7 +333,7 @@ extends UnitTest
         $actual = html_radio( "name", "value", false );
         $expect = ("<input type=\"radio\" name=\"name\" value=\"value\">");
         $this->assertEquals( $expect, $actual );
-        $this->_reset_capture();
+        capture_reset_and_start();
         htmlp_radio( "name", "value", false );
         $text = capture_stop_and_get();
         $this->_testFor_length( 46 );
@@ -351,7 +346,7 @@ extends UnitTest
         $expect = ("<input type=\"radio\" name=\"name\" value=\"value\""
                    ." checked >");
         $this->assertEquals( $expect, $actual );
-        $this->_reset_capture();
+        capture_reset_and_start();
         htmlp_radio( "name", "value", true );
         $text = capture_stop_and_get();
         $this->_testFor_length( 55 );

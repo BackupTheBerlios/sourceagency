@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: constants.php,v 1.17 2002/01/11 13:35:38 riessen Exp $
+# $Id: constants.php,v 1.18 2002/02/01 08:40:52 riessen Exp $
 #
 ######################################################################
 
@@ -114,15 +114,22 @@ function capture_stop() {
     ob_end_flush();
 }
 
+// resets the contents of the capture buffer to zero
+function capture_reset_text() {
+    global $g_cap_text;
+    $g_cap_text="";
+}
+
 // stop the capturing and return the captured text
 function capture_stop_and_get() {
   capture_stop();
   return capture_text_get();
 }
 
-// resets the contents of the capture buffer to zero
-function capture_reset_text() {
-    global $g_cap_text;
-    $g_cap_text="";
+// short cut: one call instead of two
+function capture_reset_and_start() {
+    capture_reset_text();
+    capture_start();
 }
+
 ?>
