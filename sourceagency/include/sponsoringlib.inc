@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: sponsoringlib.inc,v 1.2 2001/11/08 16:17:41 riessen Exp $
+# $Id: sponsoringlib.inc,v 1.3 2001/11/20 16:42:30 riessen Exp $
 #
 ######################################################################
 
@@ -31,7 +31,8 @@ function sponsoring_form($proid) {
   $bx->box_columns_begin(2);
 
   $bx->box_column ("right","30%","","<b>".$t->translate("Valid until")."</b>: ");
-  $bx->box_column ("left","70%","",select_date("valid",$valid_day,$valid_month,$valid_year));
+  $bx->box_column ("left","70%","",select_date("valid",$valid_day,
+                                               $valid_month,$valid_year));
 
   $bx->box_next_row_of_columns();
 
