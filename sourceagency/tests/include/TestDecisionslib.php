@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDecisionslib.php,v 1.9 2002/07/02 10:40:59 riessen Exp $
+// $Id: TestDecisionslib.php,v 1.10 2002/07/04 13:04:16 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -551,15 +551,12 @@ extends UnitTest
 
         // the line break symbols in the warning messages went from <br>
         // in versions less than 4.1.X(??) to being <br /> and since there
-        // are two in a warning message, there are four extra characters
+        // are two breaks to a warning message, there are four extra characters
         // hence this if statement
-        $search=array( "/.* in <b>/s", "/<\/b> on .*/s" );
-        $replace=array( "", "" );
-        $file = preg_replace( $search, $replace, $this->get_text() );
-        $sleng = ( $this->v_gt( "4.1.0", phpversion()) ? 147 + strlen( $file )
-                                                      : 151 + strlen( $file ));
+        $file = $this->get_file_line_from_warning();
+        $sleng = strlen( $file[1] ) + strlen( $file[2] );
+        $sleng += ( $this->v_gt( "4.1.0", phpversion()) ? 144 : 148 );
         $this->_testFor_string_length( $sleng );
-
 
         $ps = array( 0 => '<b>Warning<\/b>:  Division by zero in <b>',
                      1 => ( '<p>Your quota: <b>'.$d[1]['budget']
@@ -742,13 +739,11 @@ extends UnitTest
 
         // the line break symbols in the warning messages went from <br>
         // in versions less than 4.1.X(??) to being <br /> and since there
-        // are two in a warning message, there are four extra characters
+        // are two breaks to a warning message, there are four extra characters
         // hence this if statement
-        $search=array( "/.* in <b>/s", "/<\/b> on .*/s" );
-        $replace=array( "", "" );
-        $file = preg_replace( $search, $replace, $this->get_text() );
-        $sleng = ( $this->v_gt( "4.1.0", phpversion()) ? 73 + strlen( $file )
-                                                      : 77 + strlen( $file ));
+        $file = $this->get_file_line_from_warning();
+        $sleng = strlen( $file[1] ) + strlen( $file[2] );
+        $sleng += ( $this->v_gt( "4.1.0", phpversion()) ? 70 : 74 );
         $this->_testFor_string_length( $sleng );
 
         $this->_testFor_pattern( 'Division by zero in' );

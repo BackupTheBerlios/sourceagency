@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestContentlib.php,v 1.5 2002/06/26 09:57:26 riessen Exp $
+// $Id: TestContentlib.php,v 1.6 2002/07/04 13:04:16 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -24,30 +24,39 @@ extends UnitTest
     var $queries;
 
     function UnitTestContentlib( $name ) {
-        $this->queries = 
-             array( 'content_box_footer_1' =>
-                    ("SELECT COUNT(*) FROM developing WHERE proid='%s' "
-                     ."AND content_id='%s'"),
-                    'content_box_footer_2' =>
-                    ("SELECT COUNT(*) FROM comments WHERE proid='%s' AND "
-                     ."type='Specifications' AND number='%s'"),
-                    'show_content' =>
-                    ("SELECT * FROM tech_content,auth_user WHERE proid='%s' "
-                     ."AND content_user=username ORDER BY creation"),
-                    'content_insert' =>
-                    ("INSERT tech_content SET proid='%s',content_user='%s',"
-                     ."skills='%s',platform='%s',architecture='%s',"
-                     ."environment='%s',docs='%s',specification='%s',"
-                     ."status='P'"),
-                    'content_modify' =>
-                    ("UPDATE tech_content SET proid='%s',content_user='%s',"
-                     ."skills='%s',platform='%s',architecture='%s',"
-                     ."environment='%s',docs='%s',specification='%s', status"
-                     ."='M' WHERE creation='%s'"),
-                    'show_selected_content' =>
-                    ("SELECT * FROM tech_content,auth_user WHERE proid='%s' "
-                     ."AND content_user=username AND tech_content.status='A'")
-                 );
+        $this->queries = array( 
+          'content_box_footer_1' =>
+          ("SELECT COUNT(*) FROM developing WHERE proid='%s' "
+           ."AND content_id='%s'"),
+          'content_box_footer_2' =>
+          ("SELECT COUNT(*) FROM comments WHERE proid='%s' AND "
+           ."type='Specifications' AND number='%s'"),
+          'show_content' =>
+          ("SELECT * FROM tech_content,auth_user WHERE proid='%s' "
+           ."AND content_user=username ORDER BY creation"),
+          'content_insert' =>
+          ("INSERT tech_content SET proid='%s',content_user='%s',"
+           ."skills='%s',platform='%s',architecture='%s',"
+           ."environment='%s',docs='%s',specification='%s',"
+           ."status='P'"),
+          'content_modify' =>
+          ("UPDATE tech_content SET proid='%s',content_user='%s',"
+           ."skills='%s',platform='%s',architecture='%s',"
+           ."environment='%s',docs='%s',specification='%s', status"
+           ."='M' WHERE creation='%s'"),
+          'show_selected_content' =>
+          ("SELECT * FROM tech_content,auth_user WHERE proid='%s' "
+           ."AND content_user=username AND tech_content.status='A'"),
+          'show_proposals_1' =>
+          ("SELECT * FROM developing,auth_user WHERE proid='%s' AND "
+           ."content_id='%s' AND developer=username ORDER BY "
+           ."developing.creation"),
+          'show_proposals_2' =>
+          ("SELECT COUNT(*) FROM cooperation WHERE devid='%s'"),
+          'show_proposals_3' =>
+          ("SELECT COUNT(*) FROM comments WHERE proid='%s' AND type="
+           ."'proposals' AND number='%s'")
+          );
         $this->UnitTest( $name );
     }
     
@@ -504,9 +513,183 @@ extends UnitTest
                           $dat['content_id'],'0','Comment on Specification #'
                           .$dat['content_id'], 'Comment This Specification');
     }
+    function _checkFor_show_proposals( $proid, &$row, $count_star_1, 
+                                                              $count_star_2 ) {
+        global $t, $sess;
+        $strings=array( '><b>'.$t->translate('Developing Proposal').'</b><',
+                        '<b>'.lib_nick($row['username']).' - '
+                        .timestr(mktimestamp($row['creation']))."</b>\n" );
+        foreach ( $strings as $str ) {
+            $this->_testFor_pattern( $this->_to_regexp( $str ) );
+        }
+                    
+        $tv=array( 'Cost' => $row['cost']." euros",
+                   'License' => $row['license'],
+                   'Status' => show_status($row['status']),
+                   'Valid' => timestr_middle(mktimestamp($row['valid'])),
+                   'Start' => timestr_middle(mktimestamp($row['start'])),
+                   'Duration' => $row['duration']." weeks" );
+        while ( list( $key, $val ) = each( $tv ) ) {
+            $str = sprintf( "<b>%s:</b> %s\n", $t->translate($key), $val );
+            $this->_testFor_pattern( "[<]..?[>]".$this->_to_regexp( $str ) );
+        }
+
+        /** check for a cooperation link or not .... **/
+        $str1 = html_link('cooperation.php3',
+                          array('proid' => $proid, 'devid' => $row['devid']),
+                          'Cooperation') . ' ['. $count_star_1 . ']';
+        $str2 = 'Cooperation [' . $count_star_1 . ']';
+        if ( $row['cooperation'] != 'No' ) {
+            if ( $count_star_1 ) {
+                $this->_testFor_pattern( $this->_to_regexp( $str1 ) );
+                $this->reverse_next_test();
+                $this->_testFor_pattern( $this->_to_regexp( $str2 ) );
+            } else {
+                $this->reverse_next_test();
+                $this->_testFor_pattern( $this->_to_regexp( $str1 ) );
+                $this->_testFor_pattern( $this->_to_regexp( $str2 ) );
+            }
+        } else {
+            $this->reverse_next_test();
+            $this->_testFor_pattern( $this->_to_regexp( $str1 ) );
+            $this->reverse_next_test();
+            $this->_testFor_pattern( $this->_to_regexp( $str2 ) );
+        }
+        
+        /** check for a comments link **/
+        $str1 = ( html_link('comments.php3',array('proid' => $proid, 
+                                                  'type' => 'proposals', 
+                                                  'number' => $row['devid']),
+                            'Comments')
+                  . ' ['.$count_star_2."]\n");
+        $str2 = 'Comments [0]';
+        if ( $count_star_2 > 0 ) {
+            $this->_testFor_pattern( $this->_to_regexp( $str1 ) );
+            $this->reverse_next_test();
+            $this->_testFor_pattern( $this->_to_regexp( $str2 ) );
+        } else {
+            $this->reverse_next_test();
+            $this->_testFor_pattern( $this->_to_regexp( $str1 ) );
+            $this->_testFor_pattern( $this->_to_regexp( $str2 ) );
+        }
+
+	$str = ( "<FONT SIZE=-1>[ <a href=\"".$sess->url("comments_edit.php3")
+                 .$sess->add_query(array("proid" => $proid, 
+                                         "type" => "proposal", 
+                                         "number" => $row["devid"]))
+                 ."\">Comment This Proposal</a> ]</FONT><p>\n");
+        $this->_testFor_pattern( $this->_to_regexp( $str ) );
+    }
+
+    function _config_db_show_proposals( &$db_config, $inst_nr, &$args,
+                                        &$content_id, &$row_data, 
+                                        $count_star_1, $count_star_2 ) {
+        global $qs;
+        $db_config->add_record( $content_id, $inst_nr );
+
+        $inst_nr++;
+        $db_config->add_query( sprintf( $qs[0], $args['proid'], 
+                                                $content_id['content_id']), 
+                               $inst_nr);
+        $db_config->add_record( $row_data, $inst_nr );
+        $db_config->add_record( false, $inst_nr );
+        
+        $inst_nr++;
+        if ( $row_data['cooperation'] != 'No' ) {
+            $db_config->add_query( sprintf( $qs[1], $row_data['devid']), 
+                                   $inst_nr );
+            $db_config->add_record( array( 'COUNT(*)'=>$count_star_1 ),
+                                    $inst_nr );
+        }
+        $db_config->add_query( sprintf( $qs[2], $args['proid'], 
+                                                $row_data['devid']), $inst_nr);
+        $db_config->add_record( array('COUNT(*)' => $count_star_2), $inst_nr);
+
+        return ++$inst_nr;
+    }
 
     function testShow_proposals() {
-        $this->_test_to_be_completed();
+        global $db, $qs;
+        
+        $fname = 'show_proposals';
+        $qs=array( 0 => $this->queries[ $fname . '_1' ],
+                   1 => $this->queries[ $fname . '_2' ],
+                   2 => $this->queries[ $fname . '_3' ] );
+
+        $db_config = new mock_db_configure( 20 );
+        $args=$this->_generate_records( array( 'proid', 'content_id' ), 10 );
+        $d1=$this->_generate_records( array( 'content_id' ), 10 );
+        $d2=$this->_generate_records( array( 'creation', 'username', 'cost',
+                                             'license','status', 'cooperation',
+                                             'devid', 'valid', 'start',
+                                             'duration'), 10 );
+        $inst_nr = 0;
+
+        // test one, no records
+        $db_config->add_record( $d1[0], 0 );
+        $db_config->add_query( sprintf( $qs[0], $args[0]['proid'], 
+                                                $d1[0]['content_id']), 1 );
+        $db_config->add_record( false, 1 );
+        $db = new DB_SourceAgency;
+        $db->next_record();
+        $this->capture_call( $fname, 0, $args[0] );
+        $inst_nr = 2;
+
+        // test two: one record, cooperation == No, COUNT(*) == 0
+        $d2[0]['cooperation'] = 'No';
+        $inst_nr = $this->_config_db_show_proposals( $db_config, $inst_nr, 
+                                            $args[1],$d1[1], $d2[0], -1, 0 );
+        $db = new DB_SourceAgency;
+        $db->next_record();
+        $this->capture_call( $fname, 1108, $args[1] );
+        $this->_checkFor_show_proposals( $args[1]['proid'], $d2[0], -1, 0 );
+
+        // test three: one record, cooperation == Yes, both COUNT(*) == 0
+        $d2[1]['cooperation'] = 'Yes';
+        $inst_nr = $this->_config_db_show_proposals( $db_config, $inst_nr, 
+                                              $args[2],$d1[2], $d2[1], 0, 0 );
+        $db = new DB_SourceAgency;
+        $db->next_record();
+        $this->capture_call( $fname, 1274, $args[2] );
+        $this->_checkFor_show_proposals( $args[2]['proid'], $d2[1], 0, 0 );
+        
+        // test four: one record, cooperation == No, COUNT(*) == 1
+        $d2[2]['cooperation'] = 'No';
+        $inst_nr = $this->_config_db_show_proposals( $db_config, $inst_nr, 
+                                     $args[3],$d1[3], $d2[2], -1, 1 );
+        $db = new DB_SourceAgency;
+        $db->next_record();
+        $this->capture_call( $fname, 1224, $args[3] );
+        $this->_checkFor_show_proposals( $args[3]['proid'], $d2[2], -1, 1 );
+
+        // test five: one record, cooperation == Yes, both COUNT(*) == 1
+        $d2[3]['cooperation'] = 'Yes';
+        $inst_nr = $this->_config_db_show_proposals( $db_config, $inst_nr, 
+                                               $args[4],$d1[4], $d2[3], 1, 1 );
+        $db = new DB_SourceAgency;
+        $db->next_record();
+        $this->capture_call( $fname, 1424, $args[4] );
+        $this->_checkFor_show_proposals( $args[4]['proid'], $d2[3], 1, 1 );
+
+        // test six: one record, cooperation == Yes ...
+        $d2[4]['cooperation'] = 'Yes';
+        $inst_nr = $this->_config_db_show_proposals( $db_config, $inst_nr, 
+                                              $args[5],$d1[5], $d2[4], 0, 1 );
+        $db = new DB_SourceAgency;
+        $db->next_record();
+        $this->capture_call( $fname, 1356, $args[5] );
+        $this->_checkFor_show_proposals( $args[5]['proid'], $d2[4], 0, 1 );
+
+        // test seven: one record, cooperation == Yes ...
+        $d2[5]['cooperation'] = 'Yes';
+        $inst_nr = $this->_config_db_show_proposals( $db_config, $inst_nr, 
+                                               $args[6],$d1[6], $d2[5], 1, 0 );
+        $db = new DB_SourceAgency;
+        $db->next_record();
+        $this->capture_call( $fname, 1342, $args[6] );
+        $this->_checkFor_show_proposals( $args[6]['proid'], $d2[5], 1, 0 );
+
+        $this->_check_db( $db_config );
     }
 
     function testshow_selected_content() {

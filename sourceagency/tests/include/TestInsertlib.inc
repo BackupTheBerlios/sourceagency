@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestInsertlib.inc,v 1.14 2002/07/02 10:40:59 riessen Exp $
+# $Id: TestInsertlib.inc,v 1.15 2002/07/04 13:04:16 riessen Exp $
 #
 ######################################################################
 
@@ -228,29 +228,44 @@ extends UnitTest
                                                 'description' ), 3 );
         // test one
         $this->assertEquals( 1, $this->capture_call( $fname, 0, $args[0] ) );
+
         // test two
         $args[1]['project_title'] = '';
         $this->assertEquals( 0, $this->capture_call( $fname, 841, $args[1] ) );
-        // test three
+
+        // test three: project title is unset 
         $project_title = 'this is the project title'; 
         unset( $project_title );
         $description = 'tis is the description';
         capture_reset_and_start();
         $this->assertEquals( 0, $fname( $project_title, $description ) );
         $this->set_text( capture_stop_and_get() );
-        $this->_testFor_string_length( 1005 );
+        $file = $this->get_file_line_from_warning();
+        $sleng = strlen( $file[1] ) + strlen( $file[2] );
+        // line break in warning message went from <br> to <br /> between
+        // 4.0.* and 4.1.*
+        $sleng += ( $this->v_gt( "4.1.0", phpversion()) ? 929 : 933 );
+        $this->_testFor_string_length( $sleng );
 
-        // test four
+        // test four: description is empty
         $args[2]['description'] = '';
         $this->assertEquals( 0, $this->capture_call( $fname, 851, $args[2]));
-        // test three
+
+        // test three: unset project description
         $description = 'this is the project title'; 
         unset( $description );
         $project_title = 'tis is the description';
+        // can't use capture call here because the array call_user_func_array
+        // already complains about description not being set
         capture_reset_and_start();
         $this->assertEquals( 0, $fname( $project_title, $description ) );
         $this->set_text( capture_stop_and_get() );
-        $this->_testFor_string_length( 1013 );
+        $file = $this->get_file_line_from_warning();
+        $sleng = strlen( $file[1] ) + strlen( $file[2] );
+        // line break in warning message went from <br> to <br /> between
+        // 4.0.* and 4.1.*
+        $sleng += ( $this->v_gt( "4.1.0", phpversion()) ? 937 : 941 );
+        $this->_testFor_string_length( $sleng );
     }
 
     function testInsert_into_database() {
