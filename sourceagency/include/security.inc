@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.9 2001/11/15 18:07:44 riessen Exp $
+# $Id: security.inc,v 1.10 2001/11/19 17:50:19 riessen Exp $
 #
 ######################################################################
 
@@ -27,82 +27,110 @@
 		// in the summary page
 
 function allowed_actions ($project_status, $action_number, $proid) {
-    global $g_step_text, $t;
+    global $g_step_text, $t, $g_step_explanation, $g_step_count;
 
-  $db_allowed = new DB_SourceAgency;
+    $db_allowed = new DB_SourceAgency;
+    
+    if ( $action_number < 1 ) {
+        $action_number = 1;
+    } else if ( $action_number > $g_step_count ) {
+        $action_number = $g_step_count;
+    }
 
-    // FIXME: this is a potential bug when action_number > 6 or < 1
     $text = $t->translate( $g_step_text[ $action_number ] );
 
-    // NOI18N: all the text here should be i18n
-    // TODO: the descriptions for steps should be stored in the database
-    // TODO: or the config file but not hardcored here ....
-  switch($action_number) {
-	case 1: 	$link = "step1.php3?proid=".$proid;
-			$db_allowed->query("SELECT consultants FROM configure WHERE proid='$proid'");
-			$db_allowed->next_record();
-			if($db_allowed->f("consultants") == "Yes") {		
-				$db_allowed->query("SELECT COUNT(*) FROM consultants WHERE proid='$proid'");
-				$db_allowed->next_record();
-				$statistics = "( <B>".$db_allowed->f("COUNT(*)")."</B> consultant offerings)";
-				$explanation = "Help for sponsors on making a propper project submission.";
-			} else {
-				$statistics = "( this project is configured to have <b>no</b> consultants)";
-				$explanation = "Help for sponsors on making a propper project submission.";
-			}
-			break;
-	case 2: 	$link = "step2.php3?proid=".$proid;
-					// Sponsor Involvement
-			$db_allowed->query("SELECT COUNT(*) FROM tech_content WHERE proid='$proid'");
-			$db_allowed->next_record();
-			$statistics = "( <B>".$db_allowed->f("COUNT(*)")."</B> suggested project contents";
-			$db_allowed->query("SELECT COUNT(*) FROM developing WHERE proid='$proid'");
-			$db_allowed->next_record();
-			$statistics .= ", <B>".$db_allowed->f("COUNT(*)")."</B> developing proposals )";
-			$explanation = "This project may have different specifications. Developers can make their developing proposals to that specifications.";
-			break;
-	case 3:	 	$link = "step3.php3?proid=".$proid;
-			$db_allowed->query("SELECT COUNT(*) FROM milestones WHERE proid='$proid'");
-			$db_allowed->next_record();
-			$statistics = "( <B>".$db_allowed->f("COUNT(*)")."</B> suggested milestones )";
-			$db_allowed->query("SELECT COUNT(*) FROM milestones WHERE proid='$proid'");
-			$explanation = "Project milestones proposed by developers.";
-			break;
-	case 4: 	$link = "step4.php3?proid=".$proid;
-			$db_allowed->query("SELECT COUNT(*) FROM referees WHERE proid='$proid'");
-			$db_allowed->next_record();
-			$statistics = "( <B>".$db_allowed->f("COUNT(*)")."</B> referees offered )";
-			$explanation = "Developers can propose themselves as referees. Sponsors and developers will elect one of them.";
-			break;
-	case 5: 	$link = "step5.php3?proid=".$proid;
-			$statistics = "( <B>x</B> milestones of <b>x</b> total milestones fulfilled )";
-			$explanation = "Milestone delivery and other tasks related to the project follow-up.";
-			break;
-	case 6: 	$link = "step6.php3?proid=".$proid;
-			$statistics = "";
-			$explanation = "Final rating between sponsors and developers.";
-			break;
-        /** FIXME: this case has no default case **/
-  }
+    switch($action_number) {
+	case 1: {
+            $link = "step1.php3?proid=".$proid;
+            $db_allowed->query("SELECT consultants FROM configure "
+                               ."WHERE proid='$proid'");
+            $db_allowed->next_record();
+            if($db_allowed->f("consultants") == "Yes") {		
+                $db_allowed->query("SELECT COUNT(*) FROM consultants "
+                                   ."WHERE proid='$proid'");
+                $db_allowed->next_record();
+                $statistics = ( "( <B>".$db_allowed->f("COUNT(*)")
+                                ."</B> consultant offerings)" );
+            } else {
+                $statistics = ( "( this project is configured to have "
+                                ."<b>no</b> consultants)" );
+            }
+            $explanation = $g_step_explanation[1];
+            break;
+        }
+	case 2: {
+            $link = "step2.php3?proid=".$proid;
+            // Sponsor Involvement
+            $db_allowed->query("SELECT COUNT(*) FROM tech_content "
+                               ."WHERE proid='$proid'");
+            $db_allowed->next_record();
+            $statistics = ("( <B>".$db_allowed->f("COUNT(*)")."</B> "
+                           ."suggested project contents");
+            $db_allowed->query("SELECT COUNT(*) FROM developing "
+                               ."WHERE proid='$proid'");
+            $db_allowed->next_record();
+            $statistics .= (", <B>".$db_allowed->f("COUNT(*)")
+                            ."</B> developing proposals )");
+            $explanation = $g_step_explanation[2];
+            break;
+        }
+	case 3:	{
+            $link = "step3.php3?proid=".$proid;
+            $db_allowed->query("SELECT COUNT(*) FROM milestones "
+                               ."WHERE proid='$proid'");
+            $db_allowed->next_record();
+            $statistics = ( "( <B>".$db_allowed->f("COUNT(*)")
+                            ."</B> suggested milestones )");
+            $db_allowed->query("SELECT COUNT(*) FROM milestones "
+                               ."WHERE proid='$proid'");
+            $explanation = $g_step_explanation[3];
+            break;
+        }
+	case 4: {
+            $link = "step4.php3?proid=".$proid;
+            $db_allowed->query("SELECT COUNT(*) FROM referees "
+                               ."WHERE proid='$proid'");
+            $db_allowed->next_record();
+            $statistics = ( "( <B>".$db_allowed->f("COUNT(*)")
+                            ."</B> referees offered )" );
+            $explanation = $g_step_explanation[4];
+            break;
+        }
+	case 5: {
+            $link = "step5.php3?proid=".$proid;
+            $statistics = ( "( <B>x</B> milestones of <b>x</b> total "
+                            ."milestones fulfilled )" );
+            $explanation = $g_step_explanation[5];
+            break;
+        }
+	case 6: {
+            $link = "step6.php3?proid=".$proid;
+            $statistics = "";
+            $explanation = $g_step_explanation[6];
+            break;
+        }
+        // no need for default, action_number is checked to be within
+        // the range 1 .. g_step_count
+    }
 
-  if ($action_number > 1) {
-      print "<hr>\n";
-  }
-  print ( $project_status >= $action_number ? "<a href=\"$link\">" 
-                                               : "<font color=\"#CCCCCC\">");
-  print "<IMG src=\"images/ic/".$action_number;
-  if ($project_status < $action_number) {
-      print "grey";
-  }
+    if ($action_number > 1) {
+        print "<hr>\n";
+    }
+    print ( $project_status >= $action_number ? "<a href=\"$link\">" 
+                                                : "<font color=\"#CCCCCC\">");
+    print "<IMG src=\"images/ic/".$action_number;
+    if ($project_status < $action_number) {
+        print "grey";
+    }
 
-  // FIXME: should height and width be hardcoded here?
-  print ".png\" border=0 width=\"48\" height=\"48\" alt=\"1\">&nbsp;"
-      . $text . ( $project_status >= $action_number ? "</a>" : "</font>" );
+    // FIXME: should height and width be hardcoded here?
+    print ".png\" border=0 width=\"48\" height=\"48\" alt=\"1\">&nbsp;"
+        . $text . ( $project_status >= $action_number ? "</a>" : "</font>" );
 
-  if ($project_status >= $action_number) {
-      print " ".$statistics;
-  }
-  print "<br><i>".$explanation."</i>\n";
+    if ($project_status >= $action_number) {
+        print " ".$statistics;
+    }
+    print "<br><i>".$t->translate($explanation)."</i>\n";
 }
 
 function check_proid ($proid) {
@@ -461,6 +489,8 @@ function is_accepted_referee($proid) {
 function _check_permissions( $perm ) {
   global $auth;
 
+  // FIXME: isn't this information already stored in the perm object
+  // FIXME: for the user????, can't we use perm->have_perm('....')
   $db_local = new DB_SourceAgency;
   // modification to allow for multiple permissions, problems
   // occur if other permissions _contain_ the string 'devel'  
