@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: developinglib.inc,v 1.9 2002/07/22 11:26:54 riessen Exp $
+# $Id: developinglib.inc,v 1.10 2002/11/20 10:27:23 erik Exp $
 #
 ######################################################################
 
@@ -237,8 +237,8 @@ function developing_form($proid, $content_id)
 
     $bx->box_column ('right','30%','','&nbsp;');
     $bx->box_column ('left','70%','',
-                     html_form_submit('Preview','preview')
-                     .html_form_submit('Submit','submit'));
+                     html_form_submit($t->translate('Preview'),'preview')
+                     .html_form_submit($t->translate('Submit'),'submit'));
     htmlp_form_end();
     $bx->box_columns_end();
 

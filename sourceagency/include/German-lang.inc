@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: German-lang.inc,v 1.28 2002/11/20 10:15:43 erik Exp $
+# $Id: German-lang.inc,v 1.29 2002/11/20 10:27:23 erik Exp $
 #
 ######################################################################
 
@@ -103,16 +103,20 @@ function translate_real($phrase) {
     case 'Deleted': $tmp = 'Gelöscht'; break;
     case 'Description': $tmp = 'Beschreibung'; break;
     case 'Developer Cooperation Wanted': $tmp = 'Entwicklerkooperation gesucht'; break;
+    case 'Developer cooperation wanted?': $tmp = 'Entwicklerkooperation gesucht?'; break;
     case 'Developers Wanted': $tmp = 'Entwickler gesucht'; break;
+    case 'Developers can propose their implementations using this form':$tmp='Entwickler können über dieses Formular Implementierungsvorschläge machen';break;
     case 'Developers': $tmp = 'Entwickler'; break;
     case 'Developer': $tmp = 'Entwickler'; break;
     case 'Developing': $tmp = 'In Entwicklung'; break;
     case 'Developing Cooperation': $tmp = 'Entwicklungskooperation'; break;
-    case 'Developing projects': $tmp = 'Entwickler-Projekte'; break;
+    case 'Developing projects': $tmp = 'Entwickler-Projekte'; break;    
     case 'Developing Proposal': $tmp = 'Entwicklungsangebot'; break;
+    case 'Development proposal': $tmp = 'Entwicklungsangebot'; break;
     case 'Development': $tmp = 'Entwicklung'; break;
     case 'Documentation': $tmp = 'Dokumentation'; break;
     case 'Duration': $tmp = 'Dauer'; break;
+    case 'Duration (in weeks)': $tmp = 'Dauer (in Wochen)'; break;
     case 'E-Mail': $tmp = 'E-Mail'; break;
     case 'Editing News': $tmp = 'Neuigkeit erstellen'; break;
     case 'Either your Username or Password are invalid': $tmp = 'Entweder haben Sie den falschen Benutzernamen oder Passwort eingegeben'; break;
@@ -151,6 +155,7 @@ function translate_real($phrase) {
     case 'If you are not yet a registered User, please select': $tmp = 'Falls Sie noch kein registrierter Benutzer sind, bitte wählen'; break;
     case 'Here you will find all the information related to you': $tmp = 'Hier finden Sie alle Informationen, die mit Ihnen in Beziehung stehen'; break;
     case 'If you are a registered developer, you can propose yourself as a consultant for this project....':$tmp='Wenn Sie sich als Benutzer registrieren, können Sie sich als Berater für dieses Projekt vorschlagen.';break;
+    case 'implementation proposal':$tmp='Entwicklungsangebot';break;
     case 'Importance': $tmp = 'Wichtigkeit'; break;
     case 'Importance filter': $tmp = 'Wichtigkeitsfilter'; break;
     case 'Index': $tmp = 'Hauptseite'; break;
