@@ -16,17 +16,13 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: personal.php3,v 1.4 2002/05/02 12:02:41 riessen Exp $
+# $Id: personal.php3,v 1.5 2002/05/02 12:15:46 riessen Exp $
 #
 ######################################################################  
 
-page_open(array("sess" => "SourceAgency_Session"));
-if (isset($auth) && !empty($auth->auth["perm"])) {
-  page_close();
-  page_open(array("sess" => "SourceAgency_Session",
-                  "auth" => "SourceAgency_Auth",
-                  "perm" => "SourceAgency_Perm"));
-}
+page_open(array("sess" => "SourceAgency_Session", 
+                "auth" => "SourceAgency_Auth",
+                "perm" => "SourceAgency_Perm"));
 
 require("header.inc");
 require("personallib.inc");
@@ -40,6 +36,13 @@ start_content();
 
 $page = "personal";
 
+if ($perm->have_perm("devel_pending") || $perm->have_perm("sponsor_pending")) {
+  $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_error_font_color,$th_box_body_align);
+  $be->box_full($t->translate("Error"), $t->translate("Access denied"));
+} else {
   $bx->box_begin();
   $bx->box_body_begin();
   $bx->box_columns_begin(2);
@@ -134,10 +137,11 @@ $page = "personal";
     $bx->box_end();
   }
 
-personal_comments_short($auth->auth["uname"]);
-personal_news_short($auth->auth["uname"]);
+  personal_comments_short($auth->auth["uname"]);
+  personal_news_short($auth->auth["uname"]);
+}
 
 end_content();
 require("footer.inc");
-page_close();
+@page_close();
 ?>
