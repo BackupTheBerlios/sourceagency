@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: RunAllTests.php,v 1.10 2002/02/21 13:07:40 riessen Exp $
+# $Id: RunAllTests.php,v 1.11 2002/04/12 13:01:49 riessen Exp $
 #
 ######################################################################
 
@@ -82,7 +82,7 @@ function scan_directory( ) {
         } else if ( preg_match( "/^[T|t]est/", $entry ) 
                     && (preg_match( "/[.]php3?$/", $entry)
                         || preg_match( "/[.]inc$/", $entry ))) {
-            print "Requiring file ... $entry\n";
+            print "Requiring file ... $entry<br>\n";
             require_once( $entry );
         }
     }
