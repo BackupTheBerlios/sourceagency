@@ -29,11 +29,12 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 
 require("header.inc");
 
-$bx = new box("",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-<?php
+start_content();
 $bx->box_begin();
 $bx->box_title($t->translate("Forgot Password"));
 $bx->box_body_begin();
@@ -47,10 +48,8 @@ echo "<input type=\"submit\" name=\"remind\" value=\"".$t->translate("Remind me"
 echo "</td></tr></form></table>\n";
 $bx->box_body_end();
 $bx->box_end();
-?>
-<!-- end content -->
 
-<?php
+end_content();
 require("footer.inc");
 page_close();
 ?>

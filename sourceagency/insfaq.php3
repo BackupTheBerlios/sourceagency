@@ -125,6 +125,7 @@ if (($config_perm_admfaq != "all")
       $tables = "faq";
       $insert = "question='$question',answer='$answer',language='$la'";
       if (!$db->query("INSERT $tables SET $insert")) {
+        // TODO: is mysql_die(..) specific to a mysql database?
         mysql_die($db);
       }
       // We show what we've inserted

@@ -28,14 +28,12 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require ("newslib.inc");
 
-$bx = new box("80%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
+$bx = new box("80%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-?>
-
-<!-- content -->
-
-<?php
-
+start_content();
 $page = "news_edit";
 
 if (check_permission($proid,$page)) {
@@ -46,19 +44,17 @@ if (check_permission($proid,$page)) {
   print "<br><p>\n";
 
   if (!isset($submit) || empty($submit)) {
-	if (isset($preview) && !empty($preview)) news_preview($proid);
-	newsform($proid);
+      if (isset($preview) && !empty($preview)) {
+          news_preview($proid);
+      }
+      newsform($proid);
   } else {
-	news_insert($proid,$auth->auth["uname"],$subject,$text);
+      news_insert($proid,$auth->auth["uname"],$subject,$text);
   }
-
+  
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 @page_close();
 ?>

@@ -28,42 +28,41 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require("monitorlib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-
-<?php
-
+start_content();
 $page = "monitor_edit";
 
 if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
- // I18N
+  // I18N
   print "If you are interested in this project, you can monitor it.\n";
-
- if (!isset($submit) || empty($submit)) {
-	if (isset($preview) && !empty($preview)) monitor_preview($proid);
-	monitor_form($proid);
+  
+  if (!isset($submit) || empty($submit)) {
+      if (isset($preview) && !empty($preview)) {
+          monitor_preview($proid);
+      }
+      monitor_form($proid);
   } else {
-	monitor_insert($proid,$auth->auth["uname"],$importance);
+      monitor_insert($proid,$auth->auth["uname"],$importance);
   }
-
+  
  // I18N
   print "<p>You will recieve an e-mail for every action in this project that has the importance you specify.";
   print "<br><b>Low importance</b> means you will receive all the events that happen to this project (high traffic).";
   print "<br><b>High importance</b> means you will receive only an e-mail whenever a very important event happens to this project (low traffic).";
 
-  echo "<p align=right>[ Have a look at the&nbsp;".html_link("monitor.php3",array("proid" => $proid),"users that monitor this project")."&nbsp; ]\n";
-
+  echo "<p align=right>[ Have a look at the&nbsp;"
+      .html_link("monitor.php3",array("proid" => $proid),
+                 "users that monitor this project")."&nbsp; ]\n";
+  
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 @page_close();
 ?>
