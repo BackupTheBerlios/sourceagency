@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: top_strip.inc,v 1.5 2002/05/07 19:54:27 grex Exp $
+# $Id: top_strip.inc,v 1.6 2002/05/07 21:26:53 grex Exp $
 #
 ######################################################################
 
@@ -39,9 +39,9 @@ while (list($title, $url) = each($ts_array)) {
 };
 echo "\n</span></td><td width=\"55%\" align=\"right\">\n";
 if (isset($auth) && !empty($auth->auth["perm"])  && !($logout)) {
-	echo "<FONT COLOR=\"".$th_nav_bgcolor."\">".$t->translate("Logged in")." <b>".$auth->auth["uname"]."</b> (<b>".$auth->auth["perm"]."</b>) / ".$t->translate("Expires")." <b>".timestr_short($auth->auth["exp"])."</b></FONT>";
+	echo "<font color=\"".$th_nav_bgcolor."\">".$t->translate("Logged in")." <b>".$auth->auth["uname"]."</b> (<b>".$auth->auth["perm"]."</b>) / ".$t->translate("Expires")." <b>".timestr_short($auth->auth["exp"])."</b></font>";
 } else {
-	echo "<FONT COLOR=\"".$th_nav_bgcolor."\"><B>".$t->translate("Not Logged in")."</B></FONT>";
+	echo "<font color=\"".$th_nav_bgcolor."\"><b>".$t->translate("Not Logged in")."</b></font>";
 }
 ?>
 
