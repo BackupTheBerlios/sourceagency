@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.15 2001/11/20 16:40:38 riessen Exp $
+# $Id: lib.inc,v 1.16 2001/11/26 13:57:54 riessen Exp $
 #
 ######################################################################
 
@@ -518,7 +518,7 @@ function summary($proid) {
     $bx->box_column_start("right","35%","");
 
     // FIXME: if background_color is not used, then this entire 
-    // FIXME: can be removed
+    // FIXME: block can be removed
     {
         $db_look = new DB_SourceAgency;
         $db_look->query("SELECT * FROM description,auth_user WHERE "
@@ -772,7 +772,7 @@ function lib_show_description($query) {
                                  $db_local->f("project_title")) 
                        . " (".$db_local->f("type").")");
   	$bx->box_body_begin();
- 	echo "<b>".$t->translate("by")." ";
+ 	echo "<b>"; #.$t->translate("by")." ";
 	lib_pnick($db_local->f("description_user"));
   	echo " - ".timestr(mktimestamp($db_local->f("description_creation")));
   	echo ( "<p><b>".$t->translate("Description")."</b>: "
@@ -824,15 +824,9 @@ function select_from_config($name,$array_name,$selected) {
     
     $output = html_select($name)."\n";
     while (list(, $array_value) = each($array)) {
-//          if (!strcmp($array_value,$selected)) {
-//              $select = "selected";
-//          }
-//          else {
-//              $select="";
-//          }
         $output .= html_select_option( $array_value,
-        !strcmp($array_value,$selected), 
-        $array_value ) . "\n";
+                                       !strcmp($array_value,$selected), 
+                                       $array_value ) . "\n";
     }
     $output .= html_select_end() . "\n";
     
@@ -1109,7 +1103,8 @@ function lib_select_yes_or_no($name,$selected) {
 }
 
 function lib_nick($nick) {
-    return "<b>by ".$nick."</b>";
+    global $t;
+    return "<b>".$t->translate("by")." ".$nick."</b>";
 }
 
 function lib_pnick($nick) {

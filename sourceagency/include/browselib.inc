@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.6 2001/11/22 17:09:13 riessen Exp $
+# $Id: browselib.inc,v 1.7 2001/11/26 13:57:54 riessen Exp $
 #
 ######################################################################
 
@@ -145,7 +145,7 @@ function browse_type() {
 
 
 function browse_steps() {
-    global $bx, $t;
+    global $bx, $t, $g_step_count, $g_step_text;
     
     $bx->box_begin();
     $bx->box_title($t->translate("Steps"));
@@ -157,13 +157,10 @@ function browse_steps() {
                     .$t->translate("Projects")."</b>");
     $bx->box_column("left","70%","","<b>".$t->translate("Step")."</b>");
     $bx->box_next_row_of_columns();
-    
-    for($i=1;$i < 7;$i++) {
-  	if ($i%2 != 0) {
-            $bgcolor = "gold";
-        } else {
-            $bgcolor = "#FFFFFF";
-        }
+
+    $colors = array( 1 => "gold", 0 => "#FFFFFF", -1 => "gold" );
+    for($i = ( is_administrator() ? -1 : 1);$i <= $g_step_count;$i++) {
+        $bgcolor = $colors[ $i%2 ];
 
   	$db2 = new DB_SourceAgency;
   	$db2->query("SELECT COUNT(*) FROM description WHERE status = '$i'");
@@ -178,7 +175,8 @@ function browse_steps() {
         } else {
             $bx->box_column("center","",$bgcolor,$num);
         }
-  	$bx->box_column("left","",$bgcolor,"Step ".$i);
+  	$bx->box_column("left","",$bgcolor,"Step ".$i
+                        ." (".$t->translate($g_step_text[$i]).")");
   	$bx->box_next_row_of_columns();
     }
     $bx->box_columns_end();

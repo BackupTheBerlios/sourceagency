@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: menubar.inc,v 1.4 2001/11/15 18:07:44 riessen Exp $
+# $Id: menubar.inc,v 1.5 2001/11/26 13:57:54 riessen Exp $
 #
 ######################################################################
 
@@ -232,7 +232,7 @@ while (list(, $ln) = each($la_array)) {
 }
 if ( is_administrator() ) {
   echo "<option value=\"Unknown\"" . ($la == "Unknown" ? "selected" : "")
-    .">Unknown</option>\n";
+    .">".$t->translate("Unknown")."</option>\n";
 }
 ?>
 </select>
