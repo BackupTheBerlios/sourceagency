@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.18 2002/05/15 13:23:58 riessen Exp $
+# $Id: TestHtml.php,v 1.19 2002/05/15 16:06:44 riessen Exp $
 #
 ######################################################################
 
@@ -419,15 +419,57 @@ extends UnitTest
     }
 
     function testHtml_form_image() {
-        $this->_test_to_be_completed();
+        $expect = "\n".'   <input type="image" src="file" alt="alternative">';
+        $text = html_form_image( "file", "alternative" );
+        $this->assertEquals( $expect, $text, "test 1" );
+        htmlp_form_image( "file", "alternative" );
+        $text = capture_stop_and_get();
+        $this->assertEquals( $expect, $text, "test 2" );
     }
 
     function testHtml_form_reset() {
-        $this->_test_to_be_completed();
+        $text[0] = html_form_reset();
+        $text[1] = html_form_reset( "Reset" );
+        capture_reset_and_start();
+        htmlp_form_reset();
+        $text[2] = capture_stop_and_get();
+        capture_reset_and_start();
+        htmlp_form_reset("Reset");
+        $text[3] = capture_stop_and_get();
+        $expect = "\n".'   <input type="reset" value="Reset">';
+
+        for ( $idx = 0; $idx < 4; $idx++ ) {
+            $this->assertEquals( $expect, $text[$idx], "test(E) $idx" );
+            for ( $jdx = 0; $jdx < 4; $jdx++ ) {
+                $this->assertEquals( $text[$idx], $text[$jdx], 
+                                     "test $idx, $jdx" );
+            }
+        }
     }
       
     function testHtml_input_password() {
-        $this->_test_to_be_completed();
+        $exp1 = ( "\n".'   <input type="password" name="name'
+                  .'" size="size" maxlength="maxlength" value="">');
+        $exp2 = ( "\n".'   <input type="password" name="name'
+                  .'" size="size" maxlength="maxlength" value="value">');
+
+        $text[0] = html_input_password( "name", "size", "maxlength" );
+        $text[1] = html_input_password( "name", "size", "maxlength", "value" );
+
+        capture_reset_and_start();
+        htmlp_input_password( "name", "size", "maxlength" );
+        $text[2] = capture_stop_and_get();
+
+        capture_reset_and_start();
+        htmlp_input_password( "name", "size", "maxlength", "value" );
+        $text[3] = capture_stop_and_get();
+
+        $this->assertEquals( $exp1, $text[0], "test 1" );
+        $this->assertEquals( $exp1, $text[2], "test 2" );
+        $this->assertEquals( $exp2, $text[1], "test 3" );
+        $this->assertEquals( $exp2, $text[3], "test 4" );
+        $this->assertEquals( $text[0], $text[2], "test 5" );
+        $this->assertEquals( $text[1], $text[3], "test 6" );
     }
 
 }
