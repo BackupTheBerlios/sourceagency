@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.25 2002/06/04 10:57:52 riessen Exp $
+# $Id: TestLib.php,v 1.26 2002/06/11 14:01:17 riessen Exp $
 #
 ######################################################################
 
@@ -284,17 +284,14 @@ extends UnitTest
 
         // test one: no budget
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        calendar_box( $dat["r0"] );
-        $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
+        $this->capture_call( 'calendar_box', 3287, array(0=>$dat["r0"]));
 
         $this->_checkFor_columns( 2 );
 
         $titles=array("Project Owner(s)","Project Type","Project Nature",
                       "Project Volume","Current project budget","Creation");
-        $this->_checkFor_column_titles( $titles, 'left', '55%',
-                                                            '', '<b>%s:</b>' );
+        $this->_checkFor_column_titles( $titles,'left','55%','','<b>%s:</b>');
 
         $tStamp = mktimestamp($row1['description_creation']);
         $nature = "Unknown";
@@ -308,23 +305,17 @@ extends UnitTest
                        '&nbsp;'.timestr_middle($tStamp));
         $this->_checkFor_column_values( $values, 'left', '', '');
 
-        $this->_testFor_string_length( 3287 );
-
         // test two:
         // This run has a budget and the budget value should be printed
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        calendar_box( $dat["r2"] );
-        $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 2' );
+        $this->capture_call( 'calendar_box', 3293, array(0=>$dat["r2"]));
 
         $this->_checkFor_columns( 2 );
 
-        $this->_testFor_string_length( 3293 );
         $titles=array("Project Owner(s)","Project Type","Project Nature",
                       "Project Volume","Current project budget","Creation");
-        $this->_checkFor_column_titles( $titles, 'left', '55%',
-                                                            '', '<b>%s:</b>' );
+        $this->_checkFor_column_titles( $titles,'left','55%','', '<b>%s:</b>');
 
         $tStamp = mktimestamp($row3['description_creation']);
         $nature = "Developing";
@@ -360,11 +351,8 @@ extends UnitTest
         $row[3] = array( "license" => "hugo" );
         $db_config->add_record( $row[3], 0 );
 
-        capture_reset_and_start();
-        licensep( $row[0]["license"] );
-        $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
-        $this->_testFor_string_length( 198 );
+        $this->capture_call( 'licensep', 198, array( 0=>$row[0]["license"]));
 
         $this->_testFor_pattern( "selected value=\"".$row[0]["license"]
                                         ."\">".$row[0]["license"]."" );
@@ -397,24 +385,20 @@ extends UnitTest
         $db_config->add_num_row( 0, 1 );
 
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        lib_show_description( sprintf( $db_q[0], "*", "*") );
-        $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
+        $this->capture_call( 'lib_show_description', 828, 
+                             array( 0 => sprintf( $db_q[0], "*", "*") ));
         $pats = array( 0=>("<b>by description_user_0<\/b>"),
                        1=>("<a href=\"summary.php3\?proid="
                            ."proid_0\" class=\"\">project_title_0<\/a>" ),
                        2=>("<b>Description<\/b>: description_0"),
                        3=>("<b>Volume<\/b>: volume_0" ));
         $this->_testFor_patterns($pats, 4 );
-        $this->_testFor_string_length( 828 );
 
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        lib_show_description( sprintf( $db_q[0], "X", "Y") );
-        $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 2' );
-        $this->_testFor_string_length( 0 );
+        $this->capture_call( 'lib_show_description', 0, 
+                             array( 0 => sprintf( $db_q[0], "X", "Y")));
 
         // check that the database component did not fail
         $this->_check_db( $db_config );
@@ -468,23 +452,15 @@ extends UnitTest
         //
         // no data points and no recursive call
         //
-        capture_reset_and_start();
-        lib_show_comments_on_it( $dat[0]["proid"],$dat[0]["cmt_type"],
-                                 $dat[0]["num"], $dat[0]["cmt_id"] );
-        $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 1' );
-        $this->_testFor_string_length( 4 );
+        $this->capture_call( 'lib_show_comments_on_it', 4, $dat[0] );
         $this->assertEquals( "<p>\n", $this->get_text() );
 
         //
         // this has two data points and does a recursive call ...
         //
-        capture_reset_and_start();
-        lib_show_comments_on_it( $dat[1]["proid"],$dat[1]["cmt_type"],
-                                 $dat[1]["num"], $dat[1]["cmt_id"] );
-        $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 2' );
-        $this->_testFor_string_length( 463 );
+        $this->capture_call( 'lib_show_comments_on_it', 463, $dat[1] );
 
         foreach ( array( &$row[0], &$row[1] ) as $rw ) {
             $this->_testFor_html_link( 'comments.php3', 
@@ -541,10 +517,7 @@ extends UnitTest
     function testLib_comment_it() {
         $dat=$this->_generate_records(array('proid','type','number','ref',
                                            'subject','text'),1);
-        capture_reset_and_start();
-        call_user_func_array( 'lib_comment_it', $dat[0] );
-        $this->set_text( capture_stop_and_get() );
-        $this->_testFor_string_length( 144 );
+        $this->capture_call( 'lib_comment_it', 144, $dat[0] );
         $this->_call_method( '_testFor_lib_comment_it', $dat[0]);
     }
 
@@ -553,7 +526,22 @@ extends UnitTest
     }
 
     function testLib_die() {
-        $this->_test_to_be_completed();
+        global $db, $t;
+        // mailuser queries the database
+        $db_config = new mock_db_configure( 1 );
+        $db_config->add_query( "SELECT email_usr FROM auth_user WHERE perms "
+                               ."LIKE '%admin%'" );
+        $db_config->add_record( FALSE );
+
+        $db = new DB_SourceAgency;
+        $this->capture_call( 'lib_die', 753, array( ''=>'is error msg' ));
+
+        $this->_testFor_pattern( 'is error msg' );
+        $this->_testFor_pattern($t->translate('This error is being mailed to '
+                                              .'the system administrators.'));
+        $this->_testFor_pattern($t->translate('An error has ocurred'));
+
+        $this->_check_db( $db_config );
     }
 
     function testLib_get_project_step() {
