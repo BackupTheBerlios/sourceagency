@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: menubar.inc,v 1.9 2002/04/18 11:06:20 riessen Exp $
+# $Id: menubar.inc,v 1.10 2002/04/19 15:24:06 riessen Exp $
 #
 ######################################################################
 
@@ -70,7 +70,7 @@ if ( isset($auth) && !empty($auth->auth['perm']) && !($logout)) {
       || $perm->have_perm('admin')) {
 ?>
 <br><a href="<?php $sess->purl('chguser.php3') ?>" class="menus"
-><?php echo $t->translate('Change User'); ?></a>
+><?php echo $t->translate('Change User Info'); ?></a>
 
 <?php
 	}
