@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestRatingslib.php,v 1.11 2002/07/23 14:09:40 riessen Exp $
+// $Id: TestRatingslib.php,v 1.12 2002/07/23 14:21:55 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -108,10 +108,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->assertRegexp( '/Undefined variable:  array/',
                              $GLOBALS['err_msg'] );
-        $sleng = ( strlen( $GLOBALS['err_file'] ) 
-                   + strlen( $GLOBALS['err_line'] ) 
-                   + strlen( $sess->self_url()) + 1388);
-        $this->_testFor_string_length( $sleng );
+        $this->_testFor_string_length( 1451 + strlen($sess->self_url() );
 
         // test two: sponsor
         $args[1]['dev_or_spo'] = 'sponsor';
@@ -152,10 +149,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->assertRegexp( '/Undefined variable:  array/', 
                              $GLOBALS['err_msg']);
-        $sleng = ( strlen( $GLOBALS['err_file'] ) 
-                   + strlen( $GLOBALS['err_line'] ) 
-                   + strlen( $sess->self_url()) + 1387 );
-        $this->_testFor_string_length( $sleng );
+        $this->_testFor_string_length( 1450 + strlen( $sess->self_url()) );
 
         // test two: sponsor
         $args[1]['dev_or_spo'] = 'sponsor';
@@ -617,7 +611,7 @@ extends UnitTest
     }
 
     function testShow_participants_rating() {
-        global $bx, $db, $queries;
+        global $bx, $db, $queries, $sess;
 
         $fname = 'show_participants_rating';
         $qs = array( 0 => $queries[ $fname ] );
@@ -635,9 +629,7 @@ extends UnitTest
         call_user_func_array( $fname, $args[0] );
         $this->set_text( capture_stop_and_get() );
         $this->_checkFor_a_box( $args[0]['part_type'] );
-        $slen = strlen( $GLOBALS['err_file'] ) 
-           + strlen($GLOBALS['err_line']) + 611;
-        $this->_testFor_string_length( $slen );
+        $this->_testFor_string_length( 674 );
         $str = '/Undefined variable:  table/';
         $this->assertRegexp( $str, $GLOBALS['err_msg'] );
 
