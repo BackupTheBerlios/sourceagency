@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: footer.inc,v 1.4 2001/11/08 16:17:41 riessen Exp $
+# $Id: footer.inc,v 1.5 2002/03/18 09:18:29 riessen Exp $
 #
 ######################################################################
 
@@ -35,7 +35,7 @@ BGCOLOR="<?php echo $th_navstrip_bgcolor;?>">
 <td width=15%>&nbsp;</td>
 <td ALIGN=CENTER width=70%><span class="titlebar">
 <font color="<?php echo $th_navstrip_font_color;?>">Copyright
-&copy;2001 <a href="<?php echo $org_url;?>" class="maintitlebar" 
+&copy; 2001,2002 <a href="<?php echo $org_url;?>" class="maintitlebar" 
 TARGET="_blank"><?php echo $org_name;?></a>.</font></span></td>
 <td width=15% align=right><span class="titlebar">
 <A HREF="<?php echo $sys_url;?>html" target="_blank"><FONT 
