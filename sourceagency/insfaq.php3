@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: insfaq.php3,v 1.6 2002/04/20 13:07:50 grex Exp $
+# $Id: insfaq.php3,v 1.7 2002/05/07 11:26:58 riessen Exp $
 #
 ######################################################################  
 
@@ -49,28 +49,34 @@ if (($config_perm_admfaq != 'all')
 } else {
     if (isset($delete)) {
         if ($delete == 1) {
-            $query = "SELECT * FROM faq WHERE faqid='$faqid' AND language='$la'";
+            $query = "SELECT * FROM faq WHERE faqid='$faqid' AND "
+               ."language='$la'";
             $db->query($query);
             $db->next_record();
             faqshow($db);
             $bx->box_begin();
-            $bx->box_title($t->translate('Do you really want to delete this FAQ? '
-                                   .'There is no way for undeletion.'));
+            $bx->box_title($t->translate('Do you really want to '
+                                         .'delete this FAQ? '
+                                         .'There is no way for undeletion.'));
             $bx->box_body_begin();
             $bx->box_columns_begin(2);
-            $bx->box_column('left', '76%', '', '<b>'.$db->f('question').'</b><p>'.$db->f('answer'));
-            $bx->box_column('right', '12%', '', html_form_action('PHP_SELF')
-    	 	                               .html_form_hidden('modify', 0)
-    	 	                               .html_form_hidden('delete', 2)
-    	 	                               .html_form_hidden('faqid', $db->f('faqid'))
-                                               .html_form_submit($t->translate('Yes, Delete'), 'Delete')
-                                               .html_form_end()
-                                               .html_form_action('PHP_SELF')
-    	 	                               .html_form_hidden('modify', 1)
-    	 	                               .html_form_hidden('delete', 0)
-    	 	                               .html_form_hidden('faqid', $db->f('faqid'))
-                                               .html_form_submit($t->translate('No, just modify'), 'modify')
-                                               .html_form_end());
+            $bx->box_column('left', '76%', '', '<b>'.$db->f('question')
+                            .'</b><p>'.$db->f('answer'));
+            $bx->box_column('right', '12%', '', 
+                            html_form_action('PHP_SELF')
+                            .html_form_hidden('modify', 0)
+                            .html_form_hidden('delete', 2)
+                            .html_form_hidden('faqid', $db->f('faqid'))
+                            .html_form_submit($t->translate('Yes, Delete'),
+                                              'Delete')
+                            .html_form_end()
+                            .html_form_action('PHP_SELF')
+                            .html_form_hidden('modify', 1)
+                            .html_form_hidden('delete', 0)
+                            .html_form_hidden('faqid', $db->f('faqid'))
+                            .html_form_submit($t->translate('No, just modify'),
+                                              'modify')
+                            .html_form_end());
             $bx->box_columns_end();
             $bx->box_body_end();
             $bx->box_end();
@@ -78,9 +84,11 @@ if (($config_perm_admfaq != 'all')
 
         if ($delete == 2) {
             // We remove it from our DB
-            $db->query("DELETE FROM faq WHERE faqid='$faqid' AND language='$la'");
+            $db->query("DELETE FROM faq WHERE faqid='$faqid' AND "
+                       ."language='$la'");
             if ($db->affected_rows() < 1) {
-                $be->box_full($t->translate('Error'), $t->translate('Database Error'));
+                $be->box_full($t->translate('Error'), 
+                              $t->translate('Database Error'));
             } else { 
       	        $bx->box_full($t->translate('Frequently Asked Questions '
                                             .'Administration'),
@@ -91,7 +99,8 @@ if (($config_perm_admfaq != 'all')
 
     if (isset($modify)) {
          if ($modify == 1) {
-             $db->query("SELECT * FROM faq WHERE faqid='$faqid' AND language='$la'");
+             $db->query("SELECT * FROM faq WHERE faqid='$faqid' AND "
+                        ."language='$la'");
              $db->next_record();
              faqmod($db);
          }
@@ -101,7 +110,8 @@ if (($config_perm_admfaq != 'all')
             $db->query("UPDATE faq SET question='$question',answer='$answer' "
                        ."WHERE faqid='$faqid'");
             if ($db->affected_rows() < 1) {
-                $be->box_full($t->translate('Error'), $t->translate('Database Error'));
+                $be->box_full($t->translate('Error'), 
+                                $t->translate('Database Error'));
             } else {
                 // We show what we just have inserted
                 $bx->box_full($t->translate('Frequently Asked Questions '
@@ -122,7 +132,8 @@ if (($config_perm_admfaq != 'all')
             $tables = 'faq';
             $insert = "question='$question',answer='$answer',language='$la'";
             if (!$db->query("INSERT $tables SET $insert")) {
-	        lib_die('Error in insfaq.php3: Database insertion not completed');
+	        lib_die('Error in insfaq.php3: Database insertion not '
+                        .'completed');
             }
             // We show what we've inserted
             $bx->box_full($t->translate('Frequently Asked Questions '
@@ -136,5 +147,5 @@ if (($config_perm_admfaq != 'all')
 
 end_content();
 require('footer.inc');
-page_close();
+@page_close();
 ?>

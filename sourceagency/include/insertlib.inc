@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: insertlib.inc,v 1.5 2002/04/20 14:29:16 grex Exp $
+# $Id: insertlib.inc,v 1.6 2002/05/07 11:26:58 riessen Exp $
 #
 ######################################################################
 
@@ -90,10 +90,12 @@ function insert_form()
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column('right', '30%', '', '<b>'.$t->translate('Brief description')
+    $bx->box_column('right', '30%', '', '<b>'
+                    .$t->translate('Brief description')
                     .'</b> (*): ');
-    $bx->box_column('left', '70%', '', html_textarea('description', 40, 7, 'virtual',
-                                                  255, $description));
+    $bx->box_column('left', '70%', '', 
+                    html_textarea('description', 40, 7, 'virtual',
+                                  255, $description));
 
     $bx->box_next_row_of_columns();
 
@@ -105,7 +107,8 @@ function insert_form()
     $bx->box_next_row_of_columns();
 
     $bx->box_column('right', '30%', '', '&nbsp;');
-    $bx->box_column('left', '70%', '', html_form_submit('Submit', 'Submit'));
+    $bx->box_column('left', '70%', '', 
+                    html_form_submit($t->translate('Submit'), 'Submit'));
     htmlp_form_end();
     $bx->box_columns_end();
 
@@ -163,8 +166,12 @@ function project_title_not_set()
 
     $be->box_full($t->translate('Error'),
 		  $t->translate('No Project Title specified').'.'
-                 .'<br>'.$t->translate('Please select').' '
-		  .html_link('insform.php3', array('description' => $description, 'type' => $type, 'volume' => $volume), $t->translate('New Projects')));
+                  .'<br>'.$t->translate('Please select').' '
+		  .html_link('insform.php3', 
+                             array('description' => $description, 
+                                   'type' => $type, 
+                                   'volume' => $volume), 
+                             $t->translate('New Projects')));
 }
 
 /**
@@ -193,7 +200,10 @@ function description_not_set()
     $be->box_full($t->translate('Error'),
 		  $t->translate('No Project Description specified').'.'
                   .'<br>'.$t->translate('Please select').' '
-		  .html_link('insform.php3', array('project_title' => $project_title, 'type' => $type, 'volume' => $volume), $t->translate('New Projects')));
+		  .html_link('insform.php3', 
+                             array('project_title' => $project_title, 
+                                   'type' => $type, 'volume' => $volume), 
+                             $t->translate('New Projects')));
 }
 
 /**
@@ -221,9 +231,11 @@ function no_other_project_with_same_title($project_title)
 		      $th_box_title_align, $th_box_body_bgcolor,
 		      $th_box_error_font_color, $th_box_body_align);
 	$be->box_full($t->translate('Error'), 
-		      $t->translate('Another project with that title already exists').'.'
-    	              .'<br>'.$t->translate('Please select').' '
-                      .html_link('insform.php3', array(), $t->translate('New Projects')));
+                       $t->translate('Another project with that title '
+                                     .'already exists').'.'
+                      .'<br>'.$t->translate('Please select').' '
+                      .html_link('insform.php3', array(), 
+                                 $t->translate('New Projects')));
     	return 0;
     }
     return 1;
@@ -251,7 +263,10 @@ function insert_into_database($project_title, $description, $type, $volume)
     $status = 0;
 
     $tables = 'description';
-    $set = "project_title='$project_title', type='$type', description='$description',  description_user='".$auth->auth['uname']."',  volume='$volume', status='$status', description_creation=NOW()";
+    $set = ( "project_title='$project_title', type='$type', "
+             ."description='$description',  description_user='"
+             .$auth->auth['uname']."',  volume='$volume', status='$status', "
+             ."description_creation=NOW()");
     $db->query("INSERT $tables SET $set");
 
     if ($db->affected_rows == 0) {
@@ -266,7 +281,10 @@ function insert_into_database($project_title, $description, $type, $volume)
 
     /* Insert default views for this project */
     $tables = 'views';
-    $set = "configure='Project Participants', views='Project Participants', news='Project Initiator', history='Everybody', step3='Everybody', step4='Everybody', step5='Everybody',cooperation='Everybody',proid=".$db->f('proid');
+    $set = ( "configure='Project Participants', views='Project Participants',"
+             ." news='Project Initiator', history='Everybody', "
+             ."step3='Everybody', step4='Everybody', step5='Everybody',"
+             ."cooperation='Everybody',proid=".$db->f('proid'));
     $db->query("INSERT $tables SET $set");
 
     /* Insert new counters */
@@ -277,21 +295,26 @@ function insert_into_database($project_title, $description, $type, $volume)
     /* Select and show new/updated project with counters */
     $columns = '*';
     $tables = 'description,auth_user';
-    $where = "description.proid='".$db->f("proid")."' AND description.description_user=auth_user.username";
+    $where = ( "description.proid='".$db->f("proid").
+               "' AND description.description_user=auth_user.username" );
     $group = 'description.proid';
 
     $query  = "SELECT $columns FROM $tables WHERE $where GROUP BY $group";
     lib_show_description($query);
 
-    echo "Congratulations. You have just inserted the project.\n";
-    echo '<br>The next step is to '.html_link('configure_edit.php3', array('proid' => $db->f('proid')), 'configure your project!');
-    echo "<p><br>\n";
+    echo $t->translate('Congratulations. You have just inserted the project')
+      .".\n<br>".$t->translate('The next step is to').' '
+      .html_link('configure_edit.php3', 
+                 array('proid' => $db->f('proid')), 
+                 $t->translate('configure your project!'))
+      ."<p><br>\n";
 
     lib_insertion_information();
 
     if ($ml_notify) {
-  	$msg = 'insert project $project_title by '.$auth->auth['uname'].'.';
-      	mailuser('editor', 'Project inserted', $msg);
+  	$msg = $t->translate('insert project') . " $project_title "
+           .$t->translate('by') . ' ' . $auth->auth['uname'] . '.';
+      	mailuser('editor', $t->translate('Project inserted'), $msg);
     }
 }
 ?>

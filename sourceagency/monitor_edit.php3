@@ -39,8 +39,8 @@ $page = "monitor_edit";
 if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
-  // I18N
-  print "If you are interested in this project, you can monitor it.\n";
+  print $t->translate('If you are interested in this project, '
+                      .'you can monitor it').".\n";
   
   if (!isset($submit) || empty($submit)) {
       if (isset($preview) && !empty($preview)) {
@@ -51,14 +51,19 @@ if (check_permission($proid,$page)) {
       monitor_insert($proid,$auth->auth["uname"],$importance);
   }
   
- // I18N
-  print "<p>You will recieve an e-mail for every action in this project that has the importance you specify.";
-  print "<br><b>Low importance</b> means you will receive all the events that happen to this project (high traffic).";
-  print "<br><b>High importance</b> means you will receive only an e-mail whenever a very important event happens to this project (low traffic).";
+
+  print $t->translate("<p>"."You will recieve an e-mail for every action in "
+                      ."this project that has the importance you specify."
+                      ."<br><b>Low importance</b> means you will receive "
+                      ."all the events that happen to this project (high "
+                      ."traffic).<br><b>High importance</b> means you will "
+                      ."receive only an e-mail whenever a very important "
+                      ."event happens to this project (low traffic).");
 
   echo "<p align=right>[ Have a look at the&nbsp;"
       .html_link("monitor.php3",array("proid" => $proid),
-                 "users that monitor this project")."&nbsp; ]\n";
+                 $t->translate("users that monitor this project"))
+    ."&nbsp; ]\n";
   
 }
 

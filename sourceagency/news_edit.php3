@@ -39,9 +39,8 @@ $page = "news_edit";
 if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
-  // I18N: translation required
-  print "News can be posted by the project owner(s).\n";
-  print "<br><p>\n";
+  print $t->translate('News can be posted by the project owner(s)')
+    .".\n<br><p>\n";
 
   if (!isset($submit) || empty($submit)) {
       if (isset($preview) && !empty($preview)) {

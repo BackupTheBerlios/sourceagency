@@ -40,19 +40,23 @@ if (check_proid($proid)) {
   top_bar($proid,$page);
 
   htmlp_image("ic/b.png",0,48,48,"Summary");
-  // I18N
-  print "News are posted by the project initiator. Any other contribution can be done by filling out a General Comment.\n";
+
+  print $t->translate("News are posted by the project initiator. "
+                      ."Any other contribution can be done by "
+                      ."filling out a General Comment").".\n";
+
   if(is_project_initiator($proid))  {
     print "<p align=right>[ ".html_link("news_edit.php3",
                                         array("proid" => $proid),
-                                        "Submit News")." ]\n"; 
+                                        $t->translate("Submit News"))." ]\n"; 
   }
 
   print "<br><p>\n";
 
   newsshow($proid);
 
-  lib_comment_it($proid,"General","0","0","","General Comments");
+  lib_comment_it($proid,"General","0","0","",
+                               $t->translate("General Comments"));
 }
 
 end_content();

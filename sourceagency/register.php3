@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: register.php3,v 1.3 2002/05/06 12:46:35 riessen Exp $
+# $Id: register.php3,v 1.4 2002/05/07 11:26:58 riessen Exp $
 #
 ######################################################################
 
@@ -146,19 +146,22 @@ while (is_array($HTTP_POST_VARS)
                  ."<p>".$t->translate("Your new username is")
                  .": <b>$username</b>"
                  ."<p>".$t->translate("You are now being sent further "
-                                      ."information via email.").".";
+                                      ."information via email").".";
         }
 
         if ($ml_notify) {
-            $message  = "Username: $username\n";
+            $message  = $t->translate("Username").": $username\n";
             if ($user_type == "devel") {
-                $message .= "User type: Developer\n";
+                $message .= $t->translate("User type").": "
+                     .$t->translate("Developer")."\n";
             } else {
-                $message .= "User type: Sponsor\n";
+                $message .= $t->translate("User type").": "
+                     .$t->translate("Sponsor")."\n";
             }
-            $message .= "Realname: $realname\n";
-            $message .= "E-Mail:   $email_usr\n";
-            mailuser("admin", "New User has registered", $message);
+            $message .= $t->translate("Realname").": $realname\n";
+            $message .= $t->translate("E-Mail").":   $email_usr\n";
+            mailuser("admin", $t->translate("New User has registered"), 
+                     $message);
         }
         $bx->box_full($t->translate("User Registration"), $msg);
         $reg = 1;
@@ -218,5 +221,5 @@ if (!$reg) {
 end_content();
 
 require("footer.inc");
-page_close();
+@page_close();
 ?>

@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: doco.php3,v 1.7 2002/04/18 11:25:51 riessen Exp $
+# $Id: doco.php3,v 1.8 2002/05/07 11:26:58 riessen Exp $
 #
 ######################################################################
 
@@ -74,5 +74,5 @@ if ( is_not_set_or_empty( $page ) ) {
 
 end_content();
 require('footer.inc');
-page_close();
+@page_close();
 ?>

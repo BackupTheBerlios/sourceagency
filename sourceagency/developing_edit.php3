@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: developing_edit.php3,v 1.3 2002/03/18 16:53:31 riessen Exp $
+# $Id: developing_edit.php3,v 1.4 2002/05/07 11:26:58 riessen Exp $
 #
 ######################################################################  
 
@@ -43,8 +43,8 @@ $page = "developing_edit";
 if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
-  print "Developers can propose their developements using this form.\n";
-  print "<br><p>\n";
+  print $t->translate('Developers can propose their developements '
+                      .'using this form').".\n<br><p>\n";
 
   if (!isset($submit) || empty($submit)) {
       if (isset($preview) && !empty($preview)) {

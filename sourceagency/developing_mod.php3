@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: developing_mod.php3,v 1.3 2001/11/16 11:06:29 riessen Exp $
+# $Id: developing_mod.php3,v 1.4 2002/05/07 11:26:58 riessen Exp $
 #
 ######################################################################  
 
@@ -46,8 +46,7 @@ if (check_proid($proid)) {
   $content_id='1';
   $creation = '20010802192415';
 
-  print "Developers can modify their proposals.\n";
-  print "<br><p>\n";
+  print $t->translate('Developers can modify their proposals').".\n<br><p>\n";
 
   if ( is_not_set_or_empty( $preview ) && is_not_set_or_empty($submit) ) {
     $db->query("SELECT * FROM developing WHERE content_id='$content_id' "

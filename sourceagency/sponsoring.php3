@@ -40,8 +40,9 @@ $page = 'sponsoring';
 if (check_proid($proid)) {
     top_bar($proid, $page);
     
-    htmlp_image('ic/d.png', 0, 48, 48, 'Summary');
-    print "Here sponsors can involve themselves in projects... \n";
+    htmlp_image('ic/d.png', 0, 48, 48, $t->translate('Summary'));
+    print $t->translate("Here sponsors can involve themselves in projects")
+      .".\n";
 
     print "<p align=right>[ <b><a href=\""
           .$sess->url('sponsoring_edit.php3')
@@ -51,7 +52,8 @@ if (check_proid($proid)) {
     
     show_sponsorings($proid);
  
-    lib_comment_it($proid, 'General', 0, 0, '', 'General Comments');
+    lib_comment_it($proid, 'General', 0, 0, '', 
+                    $t->translate('General Comments'));
 }
 
 end_content();

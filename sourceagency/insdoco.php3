@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: insdoco.php3,v 1.7 2002/04/24 15:58:40 riessen Exp $
+# $Id: insdoco.php3,v 1.8 2002/05/07 11:26:58 riessen Exp $
 #
 ######################################################################  
 
@@ -49,28 +49,32 @@ if (($config_perm_admdoco != 'all')
 
     if (isset($delete)) {
         if ($delete == 1) {
-            $query = "SELECT * FROM doco WHERE docoid='$docoid' AND language='$la'";
+            $query = "SELECT * FROM doco WHERE docoid='$docoid' "
+               ."AND language='$la'";
+
             $db->query($query);
             $db->next_record();
             doco_show($db);
             $bx->box_begin();
-            $bx->box_title($t->translate('Do you really want to delete this Page '
-                                   .'Documentation entry?'));
+            $bx->box_title($t->translate('Do you really want to delete '
+                                         .'this Page Documentation entry?'));
             $bx->box_body_begin();
             $bx->box_columns_begin(2);
-            $bx->box_column('left', '76%', '',  'There is no way for undeletion.');
-            $bx->box_column('right', '12%', '', html_form_action('PHP_SELF')
-    	 	                               .html_form_hidden('modify', 0)
-    	 	                               .html_form_hidden('delete', 2)
-    	 	                               .html_form_hidden('docoid', $db->f('docoid'))
-                                               .html_form_submit($t->translate('Yes, Delete'))
-                                               .html_form_end()
-                                               .html_form_action('PHP_SELF')
-    	 	                               .html_form_hidden('modify', 1)
-    	 	                               .html_form_hidden('delete', 0)
-    	 	                               .html_form_hidden('docoid', $db->f('docoid'))
-                                               .html_form_submit($t->translate('No, just modify'))
-                                               .html_form_end());
+            $bx->box_column('left', '76%', '',  
+                            $t->translate( 'There is no way for undeletion.'));
+            $bx->box_column('right', '12%', '', 
+                            html_form_action('PHP_SELF')
+                            .html_form_hidden('modify', 0)
+                            .html_form_hidden('delete', 2)
+                            .html_form_hidden('docoid', $db->f('docoid'))
+                            .html_form_submit($t->translate('Yes, Delete'))
+                            .html_form_end()
+                            .html_form_action('PHP_SELF')
+                            .html_form_hidden('modify', 1)
+                            .html_form_hidden('delete', 0)
+                            .html_form_hidden('docoid', $db->f('docoid'))
+                            .html_form_submit($t->translate('No, just modify'))
+                            .html_form_end());
             $bx->box_columns_end();
             $bx->box_body_end();
             $bx->box_end();
@@ -78,33 +82,41 @@ if (($config_perm_admdoco != 'all')
 
         if ($delete == 2) {
             // We remove it from our DB
-            $db->query("DELETE FROM doco WHERE docoid='$docoid' AND language='$la'");
+            $db->query("DELETE FROM doco WHERE docoid='$docoid' "
+                       ."AND language='$la'");
             if ($db->affected_rows() < 1) {
-                $be->box_full($t->translate('Error'), $t->translate('Database Error'));
+                $be->box_full($t->translate('Error'), 
+                               $t->translate('Database Error'));
             } else { 
-      	        $bx->box_full($t->translate('Page Documentation Administration'),
-                $t->translate('The documentation for that page has been deleted'));
+      	        $bx->box_full($t->translate('Page Documentation '
+                                            .'Administration'),
+                              $t->translate('The documentation for that '
+                                            .'page has been deleted'));
             }
         }  
     }
 
     if (isset($modify)) {
          if ($modify == 1) {
-             $db->query("SELECT * FROM doco WHERE docoid='$docoid' AND language='$la'");
+             $db->query("SELECT * FROM doco WHERE docoid='$docoid' "
+                        ."AND language='$la'");
              $db->next_record();
              doco_mod($db);
          }
     
         if ($modify == 2) {
             // We insert it into the DB
-            $db->query("UPDATE doco SET page='$page',header='$header',doco='$doco' "
-                       ."WHERE docoid='$docoid'");
+            $db->query("UPDATE doco SET page='$page',header='$header',"
+                       ."doco='$doco' WHERE docoid='$docoid'");
             if ($db->affected_rows() < 1) {
-                $be->box_full($t->translate('Error'), $t->translate('Database Error'));
+                $be->box_full($t->translate('Error'), 
+                               $t->translate('Database Error'));
             } else {
                 // We show what we just have inserted
-                $bx->box_full($t->translate('Online Documentation Administration'),
-                $t->translate('The following documentation has been modified'));
+                $bx->box_full($t->translate('Online Documentation '
+                                            .'Administration'),
+                              $t->translate('The following documentation '
+                                            .'has been modified'));
                 $db->query("SELECT * FROM doco WHERE docoid='$docoid'");
                 $db->next_record();
                 doco_show($db);
@@ -118,13 +130,17 @@ if (($config_perm_admdoco != 'all')
         if ($create == 2) {
             // We insert it into the DB
             $tables = 'doco';
-            $insert = "page='$page',header='$header',doco='$doco',language='$la'";
+            $insert = "page='$page',header='$header',doco='$doco',"
+                 ."language='$la'";
+
             if (!$db->query("INSERT $tables SET $insert")) {
-	        lib_die('Error in insdoco.php3: Database insertion not completed');
+	        lib_die('Error in insdoco.php3: Database insertion '
+                        .'not completed');
             }
             // We show what we've inserted
             $bx->box_full($t->translate('Page Documentation Administration'),
-                          $t->translate('The following Page Documentation has been inserted'));
+                          $t->translate('The following Page Documentation '
+                                        .'has been inserted'));
             $bx->box_full($page.': '.$header, $doco);
         }
     }
@@ -132,5 +148,5 @@ if (($config_perm_admdoco != 'all')
 
 end_content();
 require('footer.inc');
-page_close();
+@page_close();
 ?>

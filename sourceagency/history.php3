@@ -40,29 +40,32 @@ if (check_proid($proid)) {
   top_bar($proid,$page);
 
   htmlp_image("ic/e.png",0,48,48,"Summary");
-  // I18N
-  print "This is the chronological list of all the actions that have affected the current project.\n";
+
+  print $t->translate('This is the chronological list of all the actions '
+                      .'that have affected the current project').".\n";
 
   $i=0;
 
-  history_extract_table("description","description_creation","description_user","project_title");
-  history_extract_table("consultants","creation","consultant","Consultant offered");
+  history_extract_table("description","description_creation",
+                        "description_user","project_title");
+  history_extract_table("consultants","creation","consultant",
+                        "Consultant offered");
   history_extract_table("comments","creation_cmt","user_cmt","subject_cmt");
   history_extract_table("news","creation_news","user_news","subject_news");
-  history_extract_table("tech_content","creation","content_user","Content proposed");
+  history_extract_table("tech_content","creation","content_user",
+                        "Content proposed");
   history_extract_table("history","creation","history_user","action");
-  history_extract_table("developing","creation","developer","Developing Proposal");
+  history_extract_table("developing","creation","developer",
+                        "Developing Proposal");
   history_extract_table("sponsoring","creation","sponsor","Sponsoring wish");
   history_extract_table("milestones","creation","milestone_user","product");
   history_extract_table("referees","creation","referee","Referee offered");
 
-
   bubblesort($history);
-
   show_history($history);
 
-  lib_comment_it($proid,"General","0","0","Comment on the Project History",
-                 "General Comments");
+  lib_comment_it($proid,'General','0','0','Comment on the Project History',
+                 $t->translate('General Comments'));
 }
 
 end_content();
