@@ -1,8 +1,8 @@
 <?php
 
 ######################################################################
-# SourceAgency
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
@@ -16,6 +16,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: backend.php3,v 1.2 2001/11/12 13:00:05 riessen Exp $
+#
 ###################################################################### 
 
 page_open(array("sess" => "SourceAgency_Session"));
@@ -55,7 +58,9 @@ echo "    <height>73</height>\n";
 echo "  </image>\n";
 
 $db = new DB_SourceAgency;
-$db->query("SELECT * FROM description,auth_user WHERE description_user=username AND description.status>'1' ORDER BY description_creation DESC limit 10");
+$db->query("SELECT * FROM description,auth_user WHERE "
+           ."description_user=username AND description.status>'1' "
+           ."ORDER BY description_creation DESC limit 10");
 $i=0;
 while($db->next_record()) {
   echo "  <item>\n";

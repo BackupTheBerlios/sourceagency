@@ -1,13 +1,13 @@
 <?php
 
 ######################################################################
-# SourceAgency: Software Announcement & Retrieval System
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #             Gregorio Robles (grex@scouts-es.org)
 #
-# BerliOS SourceAgency: http://sourcewell.berlios.de
+# BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
 # Editing news
@@ -15,6 +15,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: cooperation_edit.php3,v 1.2 2001/11/12 13:00:05 riessen Exp $
+#
 ######################################################################  
 
 page_open(array("sess" => "SourceAgency_Session"));
@@ -28,36 +31,33 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require ("cooperationlib.inc");
 
-$bx = new box("80%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
+$bx = new box("80%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-?>
-
-<!-- content -->
-
-<?php
+start_content();
 
 $page = "cooperation_edit";
 
 if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
-  print "Developers can cooperate in developments if other developers require it.\n";
-  print "<br><p>\n";
+  // NOI18N
+  print ("Developers can cooperate in developments if other developers "
+         ."require it.\n<br><p>\n");
 
-  if (!isset($submit) || empty($submit)) {
-	if (isset($preview) && !empty($preview)) cooperation_preview($proid,$devid);
-	cooperation_form($proid,$devid);
+  if ( is_not_set_or_empty( $submit ) ) {
+    if ( is_set_and_not_empty( $preview ) ) {
+      cooperation_preview( $proid, $devid );
+    }
+    cooperation_form( $proid, $devid );
   } else {
-	cooperation_insert($devid,$auth->auth["uname"],$cost);
+    cooperation_insert($devid,$auth->auth["uname"],$cost);
   }
-
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 @page_close();
 ?>

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browse.php3,v 1.2 2001/11/09 20:34:08 riessen Exp $
+# $Id: browse.php3,v 1.3 2001/11/12 13:00:05 riessen Exp $
 #
 ######################################################################  
 
@@ -36,6 +36,8 @@ $bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
               $th_box_title_align,$th_box_body_bgcolor,
               $th_box_body_font_color,$th_box_body_align);
 
+start_content();
+
 $page = "browse";
 
   $bx->box_begin();
@@ -46,27 +48,31 @@ $page = "browse";
   $bx->box_begin();
   $bx->box_title($t->translate("Categories"));
   $bx->box_body_begin();
-  htmlp_link("$PHP_SELF",array("through" => "license"),"License");
-  echo "<br>".html_link("$PHP_SELF",array("through" => "type"),"Type");
-  echo "<br>".html_link("$PHP_SELF",array("through" => "steps"),"Steps");
-  echo "<br>".html_link("$PHP_SELF",array("through" => "volume"),"Volume");
-#  echo "<br>".html_link("$PHP_SELF",array("through" => "date"),"[Date]");
-  echo "<br>".html_link("$PHP_SELF",array("through" => "platform"),"Platform");
-  echo "<br>".html_link("$PHP_SELF",array("through" => "architecture"),"Architecture");
-  echo "<br>".html_link("$PHP_SELF",array("through" => "environment"),"Environment");
-#  echo "<br>".html_link("$PHP_SELF",array("through" => "audience"),"[Intended Audience]");
-#  echo "<br>".html_link("$PHP_SELF",array("through" => "os"),"[Operating System]");
-#  echo "<br>".html_link("$PHP_SELF",array("through" => "programming"),"[Programming Language]");
+
+  echo html_link("$PHP_SELF",array("through" => "license"),
+                 $t->translate("License"));
+  echo "<br>".html_link("$PHP_SELF",array("through" => "type"),
+                        $t->translate( "Type" ));
+  echo "<br>".html_link("$PHP_SELF",array("through" => "steps"),
+                        $t->translate( "Steps" ));
+  echo "<br>".html_link("$PHP_SELF",array("through" => "volume"),
+                        $t->translate( "Volume" ));
+  echo "<br>".html_link("$PHP_SELF",array("through" => "platform"),
+                        $t->translate( "Platform" ));
+  echo "<br>".html_link("$PHP_SELF",array("through" => "architecture"),
+                        $t->translate( "Architecture" ));
+  echo "<br>".html_link("$PHP_SELF",array("through" => "environment"),
+                        $t->translate( "Environment" ));
   $bx->box_body_end();
   $bx->box_end();
   $bx->box_column_finish();
 
   if (isset($through)) {
-	browse_through($through);
+      browse_through($through);
   } else {
-	$bx->box_column_start("","50%","");
-	echo "&nbsp;\n";
-	$bx->box_column_finish();
+      $bx->box_column_start("","50%","");
+      echo "&nbsp;\n";
+      $bx->box_column_finish();
   }
 
   $bx->box_columns_end();
@@ -75,15 +81,12 @@ $page = "browse";
 
 
   if (isset($$through)) {
-	browse_list($through,$$through);
+      browse_list($through,$$through);
   }
 
 
-?>
+end_content();
 
-<!-- end content -->
-
-<?php
 require("footer.inc");
 @page_close();
 ?>
