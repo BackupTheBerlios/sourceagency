@@ -1,12 +1,11 @@
 <?php
-
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ===============================================================
 #
 # Copyright (c) 2001 by
-#                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
-#                Gregorio Robles (grex@scouts-es.org)
+#                Gregorio Robles (grex@scouts-es.org) and
 #                Gerrit Riessen (riessen@open-source-consultants.de)
 #
 # BerliOS SourceAgency: http://sourceagency.berlios.de
@@ -18,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: German-lang.inc,v 1.16 2002/05/03 11:15:32 riessen Exp $
+# $Id: German-lang.inc,v 1.17 2002/05/06 21:58:27 grex Exp $
 #
 ######################################################################
 
@@ -142,19 +141,19 @@ function translate_real($phrase) {
         case 'Partners': $tmp = 'PartnerInnen'; break;
         case 'Password': $tmp = 'Passwort'; break;
         case 'Pending Proj.': $tmp = 'Anstehend Projekt'; break;
-        case 'Permission denied': $tmp = 'Zugriffverweigert'; break;
+        case 'Permission denied': $tmp = 'Zugriff verweigert'; break;
         case 'Permission': $tmp = 'Zugriff'; break;
-        case 'Personal Page': $tmp = 'Personliche Seite'; break;
+        case 'Personal Page': $tmp = 'Persönliche Seite'; break;
         case 'Platform': $tmp = 'Plattform'; break;
         case 'Please try again': $tmp = 'Bitte versuchen Sie es nochmal'; break;
         case 'Project': $tmp = 'Projekt'; break;
         case 'Project Follow-up': $tmp = 'Projekt Nachgehen'; break;
         case 'Project History': $tmp = 'Projekt Historie'; break;
         case 'Project Information': $tmp = 'Projekt Information'; break;
-        case 'Project Insertion process': $tmp = 'Projekt einfügung Prozess'; break;
+        case 'Project Insertion process': $tmp = 'Projekteingabeprozess'; break;
         case 'Project Name': $tmp = 'Projektname'; break;
         case 'Project Nature': $tmp = 'Projekt Natur'; break;
-        case 'Project Owner(s)': $tmp = 'Projekt Besitzere'; break;
+        case 'Project Owner(s)': $tmp = 'Projektbesitzer'; break;
         case 'Project Title': $tmp = 'Projekt Titel'; break;
         case 'Project Type': $tmp = 'Projekt Typ'; break;
         case 'Project Volume': $tmp = 'Projekt Volumen'; break;
@@ -171,7 +170,7 @@ function translate_real($phrase) {
         case 'Referees': $tmp = 'Sachverständige'; break;
         case 'Register as a new User': $tmp = 'Neuer Benutzeranmeldung'; break;
         case 'Register': $tmp = 'Anmelden'; break;
-        case 'Remind me': $tmp = 'Erinnern mich'; break;
+        case 'Remind me': $tmp = 'Erinnern'; break;
         case 'Rename a License': $tmp = 'Lizenz umbenennen'; break;
         case 'Rename': $tmp = 'Umbenennen'; break;
         case 'Search': $tmp = 'Suche'; break;
@@ -188,13 +187,13 @@ function translate_real($phrase) {
         case 'Sponsors Wanted': $tmp = 'Sponsoren gesucht'; break;
         case 'Sponsors can make the current decision following this link': $tmp = 'Sponsoren können diesem Link folgen um eine Entscheidung zu treffen'; break;
         case 'Sponsors': $tmp = 'Sponsoren'; break;
-        case 'Step information': $tmp = 'Schritt informationen'; break;
+        case 'Step information': $tmp = 'Schrittinformationen'; break;
         case 'Step specific actions (only at its time)': $tmp = 'Schritt spezielle Aktionen'; break;
         case 'Step': $tmp = 'Schritt'; break;
         case 'Steps': $tmp = 'Schritte'; break;
         case 'Submit News': $tmp = 'Neuigkeiten einreichen'; break;
         case 'Summary': $tmp = 'Zusammenfassung'; break;
-        case 'System Credits': $tmp = 'Systembeschreibung'; break;
+        case 'System Credits': $tmp = $phrase'; break;
         case 'Technical Content': $tmp = 'Technische Inhalte'; break;
         case 'Technical Specifications': $tmp = 'Technische Spezifikationen'; break;
         case 'There have not been posted any news by the project owner(s)': $tmp = 'Keine Neuigkeiten sind von die Projektbesitzer aufgegeben wurden'; break;
@@ -222,7 +221,7 @@ function translate_real($phrase) {
         case 'consultants': $tmp = 'Berater'; break;
         case 'content suggestions': $tmp = 'Inhaltsvorschläge'; break;
         case 'feedback': $tmp = 'Rückmeldung'; break;
-        case 'general comments': $tmp = 'Generelle Kommatare'; break;
+        case 'general comments': $tmp = 'Generelle Kommentare'; break;
         case 'history': $tmp = 'Historie'; break;
         case 'in': $tmp = $phrase; break;
         case 'milestones': $tmp = 'Meilensteine'; break;
