@@ -1,31 +1,13 @@
 <?php
-	require("config.inc");
-	$ua = "$HTTP_USER_AGENT";
-	$fsn = "10pt";
-	$h1 = "14pt";
-	$h2 = "12pt";
-	$h3 = "10pt";
-	$h4 = "9pt";
-	$h5 = "8pt";
-	$h6 = "8pt";
-	if (ereg("X11", "$ua")) {
-		$fsn = "12pt";
-        $h1 = "16pt";
-        $h2 = "14pt";
-        $h3 = "12pt";
-        $h4 = "10pt";
-        $h5 = "8pt";
-        $h6 = "6pt";
-	}
-	if (ereg("Gecko", "$ua")) {
-		$fsn = "10pt";
-        $h1 = "14pt";
-        $h2 = "12pt";
-        $h3 = "10pt";
-        $h4 = "9pt";
-        $h5 = "8pt";
-        $h6 = "8pt";
-	}
+require("config.inc");
+$fsn = "12px";
+$fss = "10px";
+$h1 = "16px";
+$h2 = "14px";
+$h3 = "12px";
+$h4 = "10px";
+$h5 = "8px";
+$h6 = "8px";
 ?>
 BODY { background-color: #FFFFFF }
 
