@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: capture.php,v 1.1 2002/02/07 13:02:15 riessen Exp $
+# $Id: capture.php,v 1.2 2002/07/22 12:03:53 riessen Exp $
 #
 ######################################################################
 
@@ -25,8 +25,6 @@
 $g_cap_text="";
 
 // this function is passed to the ob_start function to capture text
-// somehow the description of ob_start is incorrect: no buffer is 
-// created and the data isn't stored ... no idea!
 function capture_text( $str ) {
     global $g_cap_text;
     $g_cap_text .= $str;
