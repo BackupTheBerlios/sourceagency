@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: logger.inc,v 1.3 2001/11/08 16:17:41 riessen Exp $
+# $Id: logger.inc,v 1.4 2001/11/09 20:13:14 riessen Exp $
 #
 ######################################################################
 
@@ -36,14 +36,16 @@ class Logger {
 
     function log( $msg ) {
         global $g_logger_file_pointer;
-        fwrite( $g_logger_file_pointer, "[" . date("D M j G:i:s T Y")
-                                        . "]: " . $msg . "\n" );
+        if ( $g_logger_file_pointer > -1 ) {
+            fwrite( $g_logger_file_pointer, "[" . date("D M j G:i:s T Y")
+                                                       . "]: " . $msg . "\n" );
+        }
     }
 
     // called in the footer
     function close() {
         global $g_logger_file_pointer;
-        if ( $g_logger_file_pointer ) {
+        if ( $g_logger_file_pointer > -1 ) {
             fclose( $g_logger_file_pointer );
         }
     }
