@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: mock_database.php,v 1.11 2001/11/12 12:58:18 riessen Exp $
+# $Id: mock_database.php,v 1.12 2002/01/09 16:14:17 riessen Exp $
 #
 ######################################################################
 
@@ -72,7 +72,7 @@ class mock_db_configure
         global $g_mkdb_failed, $g_mkdb_failure_text, $g_mkdb_instance_counter;
 
         $g_mkdb_failed = false;
-        $g_mkdb_failure_text = ">>>>Database failed<<<<\n";
+        $g_mkdb_failure_text = ">>>>Database failed<<<<<br>\n";
 
         $g_mkdb_instance_counter = 0;
         $this->set_nr_instance_expected( 1 );
@@ -135,15 +135,33 @@ class mock_db_configure
     // actually created .....
     function did_db_fail() {
         global $g_mkdb_failed, $g_mkdb_failure_text, $g_mkdb_instance_counter,
-            $g_mkdb_nr_instance_expected;
+            $g_mkdb_nr_instance_expected, $g_mkdb_cur_query_call,
+            $g_mkdb_queries;
 
         if ( $g_mkdb_instance_counter != $g_mkdb_nr_instance_expected ) {
             $g_mkdb_failure_text 
-                 .= ("\n\n****** Instance creation count mismatch ******\n"
-                     . "Expected: " . $g_mkdb_nr_instance_expected 
-                     . " but created: " . $g_mkdb_instance_counter . "\n");
+                 .= ("<br>\n<br>\n****** Instance creation count mismatch "
+                     ."******<br>\nExpected: " . $g_mkdb_nr_instance_expected 
+                     . " but created: " . $g_mkdb_instance_counter . "<br>\n");
             $g_mkdb_failed = true;
+        } else {
+            // check whether every instance also used all of it's queries,
+            // this detects whether more queries were defined than used.
+            for ( $idx = 0; $idx < $g_mkdb_instance_counter; $idx++ ) {
+                $query_count_actual = $g_mkdb_cur_query_call[$idx];
+                $query_count_expected = count( $g_mkdb_queries[$idx] );
+
+                if ( $query_count_expected != $query_count_actual ) {
+                    $g_mkdb_failure_text
+                         .= ("<br>\nInstance " . $idx . " did not use"
+                             ." all of its defined queries: expected = "
+                             . $query_count_expected . ", actual = "
+                             . $query_count_actual . "<br>\n" );
+                    $g_mkdb_failed = true;
+                }
+            }
         }
+
         return $g_mkdb_failed;
     }
 
@@ -195,16 +213,17 @@ extends Assert
         $cur_query_call = $g_mkdb_cur_query_call[$this->instance_number];
         $queries = $g_mkdb_queries[$this->instance_number];
 
-        $this->assertEquals( false, 
-                             $cur_query_call >= count($queries),
-                             "mock_database(query): no query for call = " 
-                             . $cur_query_call );
+        // check whether we have enough queries to satisy the query call
+        $this->assert( $cur_query_call < count($queries),
+                       "mock_database(query): no query for call = " 
+                       . $cur_query_call . ", query: [" . $query_string . "]");
 
+        // check that the query string passed as argument and the one
+        // expected match up.
         $this->assertEquals( $queries[$cur_query_call],
                              $query_string, "mock_database(query): query "
                              . "mismatch, call = " . $cur_query_call );
 
-        //$g_mkdb_cur_query_call++;
         $g_mkdb_cur_query_call[$this->instance_number]++;
     }
     
@@ -264,7 +283,8 @@ extends Assert
         global $g_mkdb_failed, $g_mkdb_failure_text;
         $g_mkdb_failure_text .= sprintf( "******** mock_database, instance: "
                                          . $this->instance_number
-                                         ." FAILURE: ****\n%s\n**********\n",
+                                         ." FAILURE: ****<br>\n%s<br>\n"
+                                         ."**********<br>\n",
                                          ($message ? $message
                                          : "No Message Give"));
         $g_mkdb_failed = true;
