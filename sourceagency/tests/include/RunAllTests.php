@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: RunAllTests.php,v 1.1 2001/10/11 09:19:37 ger Exp $
+// $Id: RunAllTests.php,v 1.2 2001/10/15 15:44:21 ger Exp $
 
 require_once( "../constants.php" );
 
@@ -25,6 +25,12 @@ define( "BEING_INCLUDED", "yes" );
 // required for the $sess global variable
 require_once( "session.inc" );
 $sess = new Session;
+global $sess;
+
+// defines the global translation object
+require_once( "translation.inc" );
+$t = new translation( "English" );
+global $t;
 
 // define the global TestSuite
 $suite = new TestSuite;

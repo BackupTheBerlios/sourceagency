@@ -1,0 +1,140 @@
+<?php
+// TestLib.php
+// 
+// Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
+// Copyright (C) 2001 Gerrit Riessen
+// 
+// $Id: TestLib.php,v 1.1 2001/10/15 15:44:21 ger Exp $
+
+require_once( "../constants.php" );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+    // LIB_ROOT is the base of my libraries and is defined in constants.php
+    ini_set('include_path', ini_get('include_path') . ':../../include' );
+
+    // required for the $sess global variable
+    require_once( "session.inc" );
+    $sess = new Session;
+    
+    // global translation object
+    require_once( "translation.inc" );
+    $t = new translation("English");
+}
+
+require_once( 'lib.inc' );
+
+class UnitTestLib
+extends TestCase
+{
+    function UnitTestLib( $name ) {
+        $this->TestCase( $name );
+    }
+
+    function testMonth() {
+        // this tests the function month defined in lib.inc, this 
+        // requirest the $t global variable. This assumes that the
+        // translation language is set to English
+        $this->assertEquals( "January",   month( 1  ) );
+        $this->assertEquals( "February",  month( 2  ) );
+        $this->assertEquals( "March",     month( 3  ) );
+        $this->assertEquals( "April",     month( 4  ) );
+        $this->assertEquals( "May",       month( 5  ) );
+        $this->assertEquals( "June",      month( 6  ) );
+        $this->assertEquals( "July",      month( 7  ) );
+        $this->assertEquals( "August",    month( 8  ) );
+        $this->assertEquals( "September", month( 9  ) );
+        $this->assertEquals( "October",   month( 10 ) );
+        $this->assertEquals( "November",  month( 11 ) );
+        $this->assertEquals( "December",  month( 12 ) );
+
+        $this->assertEquals( "January",   month( "1"  ) );
+        $this->assertEquals( "February",  month( "2"  ) );
+        $this->assertEquals( "March",     month( "3"  ) );
+        $this->assertEquals( "April",     month( "4"  ) );
+        $this->assertEquals( "May",       month( "5"  ) );
+        $this->assertEquals( "June",      month( "6"  ) );
+        $this->assertEquals( "July",      month( "7"  ) );
+        $this->assertEquals( "August",    month( "8"  ) );
+        $this->assertEquals( "September", month( "9"  ) );
+        $this->assertEquals( "October",   month( "10" ) );
+        $this->assertEquals( "November",  month( "11" ) );
+        $this->assertEquals( "December",  month( "12" ) );
+    }
+
+    function testDate_to_Timestamp() {
+        $this->assertEquals( "20010914120000", 
+                             date_to_timestamp( "14",  "9", "2001" ) );
+        $this->assertEquals( "20011914120000", 
+                             date_to_timestamp( "14", "19", "2001" ) );
+        $this->assertEquals( "20010908120000", 
+                             date_to_timestamp( "08",  "9", "2001" ) );
+        $this->assertEquals( "20010907120000", 
+                             date_to_timestamp(  "7",  "9", "2001" ) );
+        $this->assertEquals( "20010907120000", 
+                             date_to_timestamp( "07", "09", "2001" ) );
+    }
+    
+    function testTimestamp_to_date() {
+        $ary = timestamp_to_date( "20010907120000" );
+        $this->assertEquals( "2001", $ary['year'] );
+        $this->assertEquals( "09",   $ary['month'] );
+        $this->assertEquals( "07",   $ary['day'] );
+
+        $ary = timestamp_to_date( "20211214120000" );
+        $this->assertEquals( "2021", $ary['year'] );
+        $this->assertEquals( "12",   $ary['month'] );
+        $this->assertEquals( "14",   $ary['day'] );
+    }
+
+    function testLib_select_yes_or_no() {
+        // this requires html
+        include( "html.inc" );
+        $ary = array();
+        $expect[0] = "<select name=\"fubar\">\n";
+        $expect[1] = "<option value=\"Yes\">Yes\n";
+        $expect[2] = "<option selected value=\"No\">No\n";
+        $expect[3] =  "</select>\n";
+        $this->assertEquals(implode('', $expect), 
+                            lib_select_yes_or_no( "fubar", "No" ) );
+
+        $expect[1] = "<option selected value=\"Yes\">Yes\n";
+        $expect[2] = "<option value=\"No\">No\n";
+        $this->assertEquals(implode('', $expect), 
+                            lib_select_yes_or_no( "fubar", "Yes" ) );
+
+        $expect[1] = "<option value=\"Yes\">Yes\n";
+        $this->assertEquals(implode('', $expect), 
+                            lib_select_yes_or_no( "fubar", "" ) );
+    }
+
+    function testLib_nick() {
+        $this->assertEquals( "<b>by FUBAR</b>", lib_nick( "FUBAR" ) );
+    }
+
+    function testSelect_date() {
+        $expect = array();
+        $expect[] = "<select name=\"fubar_day\">";
+        for ( $idx = 1; $idx < 32; $idx++ ) {
+            $expect[] = "<option value=\"" . $idx . "\">" . $idx;
+        }
+        $expect[] = "</select>";
+        $expect[] = "<select name=\"fubar_month\">";
+        for ( $idx = 1; $idx < 13; $idx++ ) {
+            $expect[] = "<option value=\"" . $idx . "\">" . month($idx);
+        }
+        $expect[] = "</select>";
+        $expect[] = "<select name=\"fubar_year\">";
+        for ( $idx = 2001; $idx < 2005; $idx++ ) {
+            $expect[] = "<option value=\"" . $idx . "\">" . $idx;
+        }
+        $expect[] = "</select>";
+
+        $this->assertEquals( implode( "\n", $expect ) . "\n",
+                             select_date( "fubar", "-1", "-1", "-1" ));
+    }
+
+    
+}
+
+define_test_suite( __FILE__ );
+?>
