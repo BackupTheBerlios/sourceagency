@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: html.inc,v 1.19 2002/05/15 16:06:31 riessen Exp $
+# $Id: html.inc,v 1.20 2002/05/21 09:50:24 riessen Exp $
 #
 ######################################################################
 
@@ -126,7 +126,7 @@ function html_form_action($file = 'PHP_SELF', $query='', $type='POST')
     }
     return($output);
 }
-function htmlp_form_action($file, $query='', $type='POST')
+function htmlp_form_action($file = 'PHP_SELF', $query = '', $type = 'POST')
 {
     print html_form_action( $file, $query, $type );
 }
