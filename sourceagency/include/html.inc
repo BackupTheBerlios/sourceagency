@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: html.inc,v 1.14 2002/04/22 09:46:19 riessen Exp $
+# $Id: html.inc,v 1.15 2002/04/22 10:07:24 riessen Exp $
 #
 ######################################################################
 
@@ -162,9 +162,9 @@ function html_select($name, $multiple = 0, $size = 0)
     $output .= ">\n";
     return($output);
 }
-function htmlp_select($name)
+function htmlp_select($name, $multiple = 0, $size = 0 )
 {
-    print html_select( $name );
+    print html_select( $name, $multiple, $size );
 }
 
 /**
