@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.14 2002/04/12 14:26:01 riessen Exp $
+# $Id: TestLib.php,v 1.15 2002/04/22 12:59:24 riessen Exp $
 #
 ######################################################################
 
@@ -108,22 +108,25 @@ extends UnitTest
     function testLib_select_yes_or_no() {
         // this requires html
         include_once( "html.inc" );
-        $ary = array();
-        $expect[0] = "<select name=\"fubar\">\n";
-        $expect[1] = "<option value=\"Yes\">Yes\n";
-        $expect[2] = "<option selected value=\"No\">No\n";
-        $expect[3] =  "</select>\n";
-        $this->assertEquals(implode('', $expect), 
-                            lib_select_yes_or_no( "fubar", "No" ) );
 
-        $expect[1] = "<option selected value=\"Yes\">Yes\n";
-        $expect[2] = "<option value=\"No\">No\n";
-        $this->assertEquals(implode('', $expect), 
-                            lib_select_yes_or_no( "fubar", "Yes" ) );
+        $text = lib_select_yes_or_no( "fubar", "No" );
+        $expect[0] = "[ \n]*<select name=\"fubar\" size=\"0\">";
+        $expect[1] = "[ \n]*<option value=\"Yes\">Yes";
+        $expect[2] = "[ \n]*<option selected value=\"No\">No";
+        $expect[3] =  "[ \n]*<\/select>[ \n]*";
+        $this->_testFor_pattern( $text, implode('', $expect), "p1" );
+        $this->_testFor_string_length( $text, 118, "test 1" );
 
-        $expect[1] = "<option value=\"Yes\">Yes\n";
-        $this->assertEquals(implode('', $expect), 
-                            lib_select_yes_or_no( "fubar", "" ) );
+        $text = lib_select_yes_or_no( "fubar", "Yes" );
+        $expect[1] = "[ \n]*<option selected value=\"Yes\">Yes";
+        $expect[2] = "[ \n]*<option value=\"No\">No";
+        $this->_testFor_pattern( $text, implode('', $expect), "p2" );
+        $this->_testFor_string_length( $text, 118, "test 2" );
+
+        $text = lib_select_yes_or_no( "fubar", "" );
+        $expect[1] = "[ \n]*<option value=\"Yes\">Yes";
+        $this->_testFor_pattern( $text, implode('', $expect), "p3" );
+        $this->_testFor_string_length( $text, 109, "test 3" );
     }
 
     function testLib_nick() {
@@ -138,24 +141,25 @@ extends UnitTest
 
     function testSelect_date() {
         $expect = array();
-        $expect[] = "<select name=\"fubar_day\">";
+        $expect[] = "[ \n]*<select name=\"fubar_day\" size=\"0\">";
         for ( $idx = 1; $idx < 32; $idx++ ) {
-            $expect[] = "<option value=\"" . $idx . "\">" . $idx;
+            $expect[] = "[ \n]*<option value=\"" . $idx . "\">" . $idx;
         }
-        $expect[] = "</select>";
-        $expect[] = "<select name=\"fubar_month\">";
+        $expect[] = "[ \n]*<\/select>";
+        $expect[] = "[ \n]*<select name=\"fubar_month\" size=\"0\">";
         for ( $idx = 1; $idx < 13; $idx++ ) {
-            $expect[] = "<option value=\"" . $idx . "\">" . month($idx);
+            $expect[] = "[ \n]*<option value=\"" . $idx . "\">" . month($idx);
         }
-        $expect[] = "</select>";
-        $expect[] = "<select name=\"fubar_year\">";
+        $expect[] = "[ \n]*<\/select>";
+        $expect[] = "[ \n]*<select name=\"fubar_year\" size=\"0\">";
         for ( $idx = 2001; $idx <= 2005; $idx++ ) {
-            $expect[] = "<option value=\"" . $idx . "\">" . $idx;
+            $expect[] = "[ \n]*<option value=\"" . $idx . "\">" . $idx;
         }
-        $expect[] = "</select>";
-
-        $this->assertEquals( implode( "\n", $expect ) . "\n",
-                             select_date( "fubar", "-1", "-1", "-1" ));
+        $expect[] = "[ \n]*<\/select>[ \n]*";
+        
+        $text = select_date( "fubar", "-1", "-1", "-1" );
+        $this->_testFor_pattern( $text, implode( "", $expect ) );
+        $this->_testFor_string_length( $text, 1597, "test 3" );
     }
 
     function testMktimestamp() {
@@ -277,37 +281,38 @@ extends UnitTest
         capture_start();
         calendar_box( $dat["r0"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 2455 );
-        $ps=array( 0=>("<b>Project Owner\(s\):<\/b><\/td>\n"
-                       . $this->p_regexp_html_comment . "\n"
-                       . $this->p_regexp_html_comment
-                       . "\n<td align=\"left\" width=\"45%\" bgcolor=\""
-                       ."#FFFFFF\">&nbsp;".$row1["description_user"]."<\/td>"),
-                   1=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\"><b>"
-                       ."Project Type:<\/b><\/td>\n"
-                       . $this->p_regexp_html_comment . "\n"
-                       . $this->p_regexp_html_comment 
-                       ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."&nbsp;".$row1["type"]."<\/td>"),
+        $this->_testFor_length( 3299, "test 1" );
+        $ps=array( 0=>("<b>Project Owner\(s\):<\/b>[ \n]*<\/td>[ \n]*"
+                       . $this->p_regexp_html_comment . "[ \n]*"
+                       . $this->p_regexp_html_comment . "[ \n]*"
+                       . "<td align=\"left\" width=\"45%\" bgcolor=\""
+                       ."#FFFFFF\">[ \n]*&nbsp;".$row1["description_user"]
+                       ."[ \n]*<\/td>"),
+                   1=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."[ \n]*<b>Project Type:<\/b>[ \n]*<\/td>[ \n]*"
+                       . $this->p_regexp_html_comment . "[ \n]*"
+                       . $this->p_regexp_html_comment . "[ \n]*"
+                       ."<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."[ \n]*&nbsp;".$row1["type"]."[ \n]*<\/td>"),
                    2=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."<b>Project Volume:<\/b><\/td>\n"
-                       .$this->p_regexp_html_comment . "\n"
-                       .$this->p_regexp_html_comment
-                       ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."&nbsp;".$row1["volume"]."<\/td>"),
+                       ."[ \n]*<b>Project Volume:<\/b>[ \n]*<\/td>[ \n]*"
+                       .$this->p_regexp_html_comment . "[ \n]*"
+                       .$this->p_regexp_html_comment . "[ \n]*"
+                       ."<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."[ \n]*&nbsp;".$row1["volume"]."[ \n]*<\/td>"),
                    3=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."<b>Project Nature:<\/b><\/td>\n"
-                       .$this->p_regexp_html_comment . "\n"
-                       .$this->p_regexp_html_comment
-                       ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."&nbsp;Unknown<\/td>"),
+                       ."[ \n]*<b>Project Nature:<\/b>[ \n]*<\/td>[ \n]*"
+                       .$this->p_regexp_html_comment . "[ \n]*"
+                       .$this->p_regexp_html_comment . "[ \n]*"
+                       ."<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."[ \n]*&nbsp;Unknown[ \n]*<\/td>"),
                    4=>("<td align=\"left\" width=\"\" "
-                       ."bgcolor=\"#FFFFFF\"><b>Current "
-                       ."project budget:<\/b><\/td>\n"
-                       .$this->p_regexp_html_comment . "\n"
-                       .$this->p_regexp_html_comment . "\n"
+                       ."bgcolor=\"#FFFFFF\">[ \n]*<b>Current "
+                       ."project budget:<\/b>[ \n]*<\/td>[ \n]*"
+                       .$this->p_regexp_html_comment . "[ \n]*"
+                       .$this->p_regexp_html_comment . "[ \n]*"
                        ."<td align=\"left\" width=\"\" "
-                       ."bgcolor=\"#FFFFFF\">0 euro"
+                       ."bgcolor=\"#FFFFFF\">[ \n]*0 euro[ \n]*"
                        ."<\/td>"));
         $this->_testFor_patterns( $text, $ps, 5);
         //
@@ -315,36 +320,37 @@ extends UnitTest
         capture_reset_and_start();
         calendar_box( $dat["r2"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 2461 );
-        $ps=array( 0=>("<b>Project Owner\(s\):<\/b><\/td>\n"
-                       . $this->p_regexp_html_comment . "\n"
-                       . $this->p_regexp_html_comment
-                       . "\n<td align=\"left\" width=\"45%\" bgcolor=\""
-                       ."#FFFFFF\">&nbsp;".$row3["description_user"]."<\/td>"),
+        $this->_testFor_length( 3305, "test 2" );
+        $ps=array( 0=>("<b>Project Owner\(s\):<\/b>[ \n]*<\/td>[ \n]*"
+                       . $this->p_regexp_html_comment . "[ \n]*"
+                       . $this->p_regexp_html_comment . "[ \n]*"
+                       . "<td align=\"left\" width=\"45%\" bgcolor=\""
+                       ."#FFFFFF\">[ \n]*&nbsp;"
+                       .$row3["description_user"]."[ \n]*<\/td>"),
                    1=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."<b>Project Type:<\/b><\/td>\n"
-                       . $this->p_regexp_html_comment . "\n"
-                       . $this->p_regexp_html_comment
-                       ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF"
-                       ."\">&nbsp;".$row3["type"]."<\/td>"),
+                       ."[ \n]*<b>Project Type:<\/b>[ \n]*<\/td>[ \n]*"
+                       . $this->p_regexp_html_comment . "[ \n]*"
+                       . $this->p_regexp_html_comment . "[ \n]*"
+                       ."<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF"
+                       ."\">[ \n]*&nbsp;".$row3["type"]."[ \n]*<\/td>"),
                    2=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."<b>Project Volume:<\/b><\/td>\n"
-                       .$this->p_regexp_html_comment . "\n"
-                       .$this->p_regexp_html_comment 
-                       ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF"
-                       ."\">&nbsp;".$row3["volume"]."<\/td>"),
+                       ."[ \n]*<b>Project Volume:<\/b>[ \n]*<\/td>[ \n]*"
+                       .$this->p_regexp_html_comment . "[ \n]*"
+                       .$this->p_regexp_html_comment . "[ \n]*"
+                       ."<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF"
+                       ."\">[ \n]*&nbsp;".$row3["volume"]."[ \n]*<\/td>"),
                    3=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."<b>Project Nature:<\/b><\/td>\n"
-                       .$this->p_regexp_html_comment . "\n"
-                       .$this->p_regexp_html_comment
-                       ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."&nbsp;Developing<\/td>"),
+                       ."[ \n]*<b>Project Nature:<\/b>[ \n]*<\/td>[ \n]*"
+                       .$this->p_regexp_html_comment . "[ \n]*"
+                       .$this->p_regexp_html_comment . "[ \n]*"
+                       ."<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."[ \n]*&nbsp;Developing[ \n]*<\/td>"),
                    4=>("<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       ."<b>Current project budget:<\/b><\/td>\n"
-                       .$this->p_regexp_html_comment . "\n"
-                       .$this->p_regexp_html_comment
-                       ."\n<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
-                       .$row4["SUM(budget)"]." euro<\/td>"));
+                       ."[ \n]*<b>Current project budget:<\/b>[ \n]*"
+                       ."<\/td>[ \n]*" . $this->p_regexp_html_comment 
+                       . "[ \n]*" . $this->p_regexp_html_comment . "[ \n]*"
+                       ."<td align=\"left\" width=\"\" bgcolor=\"#FFFFFF\">"
+                       ."[ \n]*".$row4["SUM(budget)"]." euro[ \n]*<\/td>"));
         $this->_testFor_patterns( $text, $ps, 5 );
         // check that the database component did not fail
         $this->_check_db( $db_config );
@@ -371,14 +377,15 @@ extends UnitTest
         capture_start();
         licensep( $row[0]["license"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 153 );
+        $this->_testFor_length( 198, "test 1" );
 
         $this->_testFor_pattern( $text, "selected value=\"".$row[0]["license"]
                                         ."\">".$row[0]["license"]."" );
 
         for ( $idx = 1; $idx < count( $row ); $idx++ ) {
             $this->_testFor_pattern( $text, ("value=\"".$row[$idx]["license"]
-                                             . "\">" .$row[$idx]["license"]));
+                                             . "\">" .$row[$idx]["license"]),
+                                     "row: " . $idx . " missing");
         }
 
         // check that the database component did not fail
@@ -409,7 +416,7 @@ extends UnitTest
                        2=>("<b>Description<\/b>: description_0"),
                        3=>("<b>Volume<\/b>: volume_0" ));
         $this->_testFor_patterns($text, $pats, 4 );
-        $this->_testFor_length( 656 );
+        $this->_testFor_length( 722, "test 1" );
 
         capture_reset_and_start();
         lib_show_description( sprintf( $db_q[0], "X", "Y") );
@@ -472,7 +479,7 @@ extends UnitTest
         lib_show_comments_on_it( $dat[0]["proid"],$dat[0]["cmt_type"],
                                  $dat[0]["num"], $dat[0]["cmt_id"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 4 );
+        $this->_testFor_length( 4, "test 1" );
         $this->assertEquals( "<p>\n", $text );
 
         //
@@ -482,23 +489,22 @@ extends UnitTest
         lib_show_comments_on_it( $dat[1]["proid"],$dat[1]["cmt_type"],
                                  $dat[1]["num"], $dat[1]["cmt_id"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 439 );
+        $this->_testFor_length( 436, "test 2" );
 
         $ps=array(0=>("<li><a href=\"comments[.]php3\?proid=proid_1&type="
                       ."cmt_type_1&number=num_1&ref=cmt_id_1\">subject_cmt_0"
-                      ."<\/a>\n by <b>user_cmt_0<\/b> on <b><\/b>\n<ul>"),
+                      ."<\/a> by <b>user_cmt_0<\/b> on <b><\/b>\n<ul>"),
                   1=>("<li><a href=\"comments[.]php3\?proid=proid_1&type="
                       ."cmt_type_1&number=num_1&ref=id_0\">subject_cmt_2<\/a>"
-                      ."\n by <b>user_cmt_2<\/b> on <b><\/b>\n<p>\n<\/ul>"),
+                      ." by <b>user_cmt_2<\/b> on <b><\/b>\n<p>\n<\/ul>"),
                   2=>("<li><a href=\"comments[.]php3\?proid=proid_1&type="
                       ."cmt_type_1&number=num_1&ref=cmt_id_1\">subject_cmt_1"
-                      ."<\/a>\n by <b>user_cmt_1<\/b> on <b><\/b>\n<p>"
+                      ."<\/a> by <b>user_cmt_1<\/b> on <b><\/b>\n<p>"
                       ."\n<\/ul>"));
         $this->_testFor_patterns( $text, $ps, 3 );
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
     }
-
 }
 
 define_test_suite( __FILE__ );
