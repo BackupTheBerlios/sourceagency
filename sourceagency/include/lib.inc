@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.30 2002/04/15 15:54:48 riessen Exp $
+# $Id: lib.inc,v 1.31 2002/04/20 12:11:28 grex Exp $
 #
 ######################################################################
 
@@ -1434,8 +1434,7 @@ function lib_in_step($proid, $step_num)
 function lib_comment_it($proid, $type, $number, $ref, $subject, $text)
 {
     global $sess;
-    // FIXME: $text is not translated. Question is whether the user of
-    // FIXME: the function should translate or the function????
+
     print '<FONT SIZE=-1>[ ';
     htmlp_link('comments_edit.php3', array('proid'   => $proid, 
                                            'type'    => $type, 
@@ -1451,12 +1450,11 @@ function lib_previous_comment($proid, $type, $number, $ref, $text)
     global $sess;
     
     print '<FONT SIZE=-1>[ ';
-    // FIXME: $text is not translated. Question is whether the user of
-    // FIXME: the function should translate or the function????
+
     htmlp_link('comments.php3',array('proid'  => $proid, 
                                      'type'   => $type, 
                                      'number' => $number, 
-                                     'ref'    => $ref),$text);
+                                     'ref'    => $ref), $text);
     print " ]</FONT>\n";
 }
 
