@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.28 2002/04/09 12:45:56 grex Exp $
+# $Id: lib.inc,v 1.29 2002/04/11 13:14:33 riessen Exp $
 #
 ######################################################################
 
@@ -1399,21 +1399,31 @@ function is_set_and_not_empty(&$val)
  * @return  boolean                 
  * @access public
  */
-function lib_in_step($proid, $step_num)
+function lib_get_project_step( $proid ) 
 {
     $db_local = new DB_SourceAgency;
-    $db_local->query("SELECT status FROM descripton WHERE proid='$proid'");
+    $db_local->query("SELECT status FROM description WHERE proid='$proid'");
+
     if ($db_local->num_rows() == 0) {
-        die('Error in lib.inc in function lib_in_step: no step for the given project');
+        die('Error in lib.inc in function lib_in_step: no step '
+            .'for the given project');
         return 0;
     } else {
         $db_local->next_record();
-        if ($db_local->f('status') == $step_num) {
-	    return 1;
-        } else {
-            return 0;
-	}
+        return $db_local->f('status');
     }
+}
+
+/**
+ * Return true if the specified project is past the specified step.
+ */
+function lib_past_step( $proid, $step_num ) 
+{
+    return ( lib_get_project_step( $proid ) > $step_num );
+}
+function lib_in_step($proid, $step_num)
+{
+    return ( lib_get_project_step( $proid ) == $step_num );
 }
 
 // REFACTOR: could be moved to html.inc ????
