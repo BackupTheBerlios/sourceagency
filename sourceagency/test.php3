@@ -193,7 +193,7 @@ include("config.inc");
           </ul>
 	</UL>
         <?php
-        if ($db->query("SELECT * FROM software")): ?>
+        if ($db->query("SELECT * FROM auth_user")): ?>
             <li><font color="green">Created a DB_SourceAgency database connection successfully.</font></li>
         <?php endif; ?>
 
