@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: top_strip.inc,v 1.4 2002/05/07 19:39:01 grex Exp $
+# $Id: top_strip.inc,v 1.5 2002/05/07 19:54:27 grex Exp $
 #
 ######################################################################
 
@@ -37,7 +37,7 @@ while (list($title, $url) = each($ts_array)) {
 	echo "<b><a href=\"$url\" class=\"maintitlebar\">".$t->translate("$title")."</a></b>";
 	$i++;
 };
-echo "\n</span></td><td width=55% align=right>\n";
+echo "\n</span></td><td width=\"55%\" align=\"right\">\n";
 if (isset($auth) && !empty($auth->auth["perm"])  && !($logout)) {
 	echo "<FONT COLOR=\"".$th_nav_bgcolor."\">".$t->translate("Logged in")." <b>".$auth->auth["uname"]."</b> (<b>".$auth->auth["perm"]."</b>) / ".$t->translate("Expires")." <b>".timestr_short($auth->auth["exp"])."</b></FONT>";
 } else {

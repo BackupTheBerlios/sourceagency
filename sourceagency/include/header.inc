@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: header.inc,v 1.10 2002/05/07 19:35:17 grex Exp $
+# $Id: header.inc,v 1.11 2002/05/07 19:54:27 grex Exp $
 #
 ######################################################################
 
@@ -56,8 +56,7 @@ $db = new DB_SourceAgency;
    <link rel="stylesheet" type="text/css" href="berlios.css">
    <link rel="shortcut icon" href="berlios.ico">
 </head>
-<body bgcolor="<?php echo $th_body_bgcolor;?>" topmargin="0" bottommargin="0" 
-leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<body bgcolor="<?php echo $th_body_bgcolor;?>">
 
 <?php
 require('top_strip.inc');
@@ -72,7 +71,7 @@ require('menubar.inc');
 ?>
 </td>
 
-<td width="10"><img src="images/blank.gif" border=0 height=1 width=10></td>
+<td width="10"><img src="images/blank.gif" border="0" height="1" width="10" alt=""></td>
 
 <td width="99%">
 <p>&nbsp;

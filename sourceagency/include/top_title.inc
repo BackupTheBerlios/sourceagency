@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: top_title.inc,v 1.11 2002/05/07 19:39:01 grex Exp $
+# $Id: top_title.inc,v 1.12 2002/05/07 19:54:27 grex Exp $
 #
 ######################################################################
 
@@ -25,8 +25,7 @@
 
 <!-- top title -->
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" 
-valign="center" >
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
 
 <tr valign="top" bgcolor="<?php echo $th_nav_bgcolor;?>">
 <td bgcolor="#FFFFFF">
@@ -37,7 +36,7 @@ vspace="5" hspace="5" alt="<?php echo $sys_logo_alt;?>"></a>
 </td>
 
 <td width="10">
-<img src="images/blank.gif" border="0" height="1" width="10">
+<img src="images/blank.gif" border="0" height="1" width="10" alt="">
 </td>
 
 <td align="left" valign="middle" > <!-- removed att: width="99%" -->
@@ -70,7 +69,7 @@ width="<?php echo $org_logo_width;?>" align="RIGHT"></a>
 
 <tr>
 <td colspan="5" bgcolor="<?php echo $th_navstrip_bgcolor;?>">
-<img src="images/blank.gif" height="1" width="1">
+<img src="images/blank.gif" height="1" width="1" alt="">
 </td>
 </tr>
 

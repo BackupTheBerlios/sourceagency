@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: box.inc,v 1.11 2002/05/06 07:58:55 riessen Exp $
+# $Id: box.inc,v 1.12 2002/05/07 19:54:27 grex Exp $
 #
 ######################################################################
 
@@ -298,7 +298,7 @@ class box {
      * @param    int         $number_of_columns     Number of columns
      * @access public
      */
-    function box_columns_begin($number_of_columns, $valign = '')
+    function box_columns_begin($number_of_columns, $valign = 'top')
     {
 	echo "\n   <!-- table with ".$number_of_columns." columns -->\n";
 	echo "   <table border=\"0\" cellspacing=\"0\" cellpadding=\"3\" align=\"center\" width=\"100%\" valign=\"top\">\n";
