@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: English-lang.inc,v 1.11 2002/04/02 12:28:04 grex Exp $
+# $Id: English-lang.inc,v 1.12 2002/04/02 12:41:30 grex Exp $
 #
 ######################################################################
 
@@ -41,34 +41,29 @@ function translate_real($phrase) {
     case "content suggestions": $tmp = "Content Suggestions"; break;
 
     /** explanations for the various steps a project has **/
-    case "step_1_explanation": {
+    case "step_1_explanation": 
         $tmp = "Help for sponsors on making a proper project submission."; 
         break;
-    }
-    case "step_2_explanation": {
-        $tmp = ( "This project may have different specifications. "
-                 ."Developers can make their developing proposals to "
-                 ."that specifications." );
+    case "step_2_explanation": 
+        $tmp =  "This project may have different specifications. "
+               ."Developers can make their developing proposals to "
+               ."that specifications.";
         break;
-    }
-    case "step_3_explanation": {
+    case "step_3_explanation": 
         $tmp = "Project milestones proposed by developers.";
         break;
-    }
-    case "step_4_explanation": {
-        $tmp = ( "Developers can propose themselves as referees. Sponsors "
-                 ."and developers will elect one of them." );
+    case "step_4_explanation": 
+        $tmp = "Developers can propose themselves as referees. Sponsors "
+              ."and developers will elect one of them.";
         break;
-    }
-    case "step_5_explanation": {
-        $tmp = ( "Milestone delivery and other tasks related to the "
-                 ."project follow-up." );
+    case "step_5_explanation": 
+        $tmp = "Milestone delivery and other tasks related to the "
+              ."project follow-up.";
         break;
-    }
-    case "step_6_explanation": {
+    case "step_6_explanation":
         $tmp = "Final rating between sponsors and developers.";
         break;
-    }
     default:   $tmp = "$phrase";  break;
+    }
 }
 ?>
