@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestInsertlib.inc,v 1.17 2002/07/23 14:09:40 riessen Exp $
+# $Id: TestInsertlib.inc,v 1.18 2002/07/23 14:25:11 riessen Exp $
 #
 ######################################################################
 
@@ -240,9 +240,8 @@ extends UnitTest
         capture_reset_and_start();
         $this->assertEquals( 0, $fname( $project_title, $description ) );
         $this->set_text( capture_stop_and_get() );
-        $sleng = ( strlen( $GLOBALS['err_file'] ) 
-                   + strlen( $GLOBALS['err_line'] ) + 769 );
-        $this->_testFor_string_length( $sleng );
+        $this->print_text_as_html();
+        $this->_testFor_string_length( 841 );
 
         // test four: description is empty
         $args[2]['description'] = '';
@@ -257,9 +256,7 @@ extends UnitTest
         capture_reset_and_start();
         $this->assertEquals( 0, $fname( $project_title, $description ) );
         $this->set_text( capture_stop_and_get() );
-        $sleng = ( strlen( $GLOBALS['err_file'] ) 
-                   + strlen( $GLOBALS['err_line'] ) + 779 );
-        $this->_testFor_string_length( $sleng );
+        $this->_testFor_string_length( 851 );
     }
 
     function testInsert_into_database() {
