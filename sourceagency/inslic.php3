@@ -102,7 +102,8 @@ if (($config_perm_admlicens != "all")
           // We inform the administrator how many
           // apps will be affected by this deletion
 
-          $db->query("SELECT COUNT(*) FROM licenses WHERE license='$license'");
+          $db->query("SELECT COUNT(*) FROM developing WHERE "
+                     ."license='$license'");
           $db->next_record();
           $number_of_apps = $db->f("COUNT(*)");
 
@@ -133,8 +134,8 @@ if (($config_perm_admlicens != "all")
 
         } else {
 
-          $db->query("UPDATE licenses SET license='Other' WHERE "
-                     ."license='$license'");
+          //$db->query("UPDATE licenses SET license='Other' WHERE "
+          //           ."license='$license'");
           $db->query("DELETE from licenses WHERE license='$license'");
   	  $bx->box_full($t->translate("Administration"), 
                         $t->translate("Deletion succesfully completed."));
