@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: header.inc,v 1.5 2001/11/29 15:38:02 grex Exp $
+# $Id: header.inc,v 1.6 2002/02/19 16:49:34 riessen Exp $
 #
 ######################################################################
 
@@ -43,8 +43,7 @@ $t = new translation($la);
 
 $db = new DB_SourceAgency;
 ?>
-
-<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
