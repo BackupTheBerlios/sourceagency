@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.11 2002/03/20 11:55:36 riessen Exp $
+# $Id: milestoneslib.inc,v 1.12 2002/03/20 12:10:03 riessen Exp $
 #
 ######################################################################
 
@@ -357,15 +357,8 @@ function select_milestone_number($proid,$devid,$selected) {
                 }
 	}
 
-	if ($i == $selected) {
-            $select="selected";
-        }
-	else {
-            $select="";
-        }
-
 	if ($ok) {
-            $return .= html_select_option($i,$select,$i);
+            $return .= html_select_option($i, ($i == $selected), $i);
         }
   }
   $return .= html_select_end();
