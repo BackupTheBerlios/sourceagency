@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConsultantslib.php,v 1.1 2002/05/13 10:20:11 riessen Exp $
+// $Id: TestConsultantslib.php,v 1.2 2002/05/13 13:04:07 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -123,7 +123,8 @@ extends UnitTest
         $p = '<td align="%s" width="%s" bgcolor="%s">[ ]+%s[ ]+<\/td>';
 
         $ps=array(0=>"<b>Offer yourself as project consultant<\/b>",
-                  1=>('<form action="'.$sess->self_url()
+                  1=>('<form action="'
+                      . ereg_replace( "/", "\/", $sess->self_url() )
                       .'[?]proid=proid_0" method="POST">'),
                   2=>sprintf( $p,"right","45%","#FFFFFF",'<b>'
                               .$t->translate("Your username")."<\/b>:"),
