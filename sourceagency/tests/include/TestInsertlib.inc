@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestInsertlib.inc,v 1.18 2002/07/23 14:25:11 riessen Exp $
+# $Id: TestInsertlib.inc,v 1.19 2002/07/23 14:26:06 riessen Exp $
 #
 ######################################################################
 
@@ -240,7 +240,6 @@ extends UnitTest
         capture_reset_and_start();
         $this->assertEquals( 0, $fname( $project_title, $description ) );
         $this->set_text( capture_stop_and_get() );
-        $this->print_text_as_html();
         $this->_testFor_string_length( 841 );
 
         // test four: description is empty
