@@ -20,14 +20,18 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.26 2002/04/09 00:29:47 grex Exp $
+# $Id: lib.inc,v 1.27 2002/04/09 11:00:26 grex Exp $
 #
 ######################################################################
 
-#
-# Returns time in timestamp format 
-#
-
+/**
+ * Returns time in timestamp format 
+ *
+ * @param   int       $time          TODO
+ * @return  int                      Timestamp
+ *
+ * @access public
+ */
 function mktimestamp($time)
 {
     $timestamp = mktime(substr($time,8,2),substr($time,10,2),
@@ -36,76 +40,120 @@ function mktimestamp($time)
     return $timestamp;
 }
 
+/**
+ * Returns a time string as this one: Monday, 3. October 2002, 22:02:23 GMT
+ *
+ * @param   int       $timestamp     Time in timestamp format
+ * @return  string                   Time string
+ *
+ * @access public
+ */
 function timestr($timestamp)
 {
     return strftime('%A, %e. %B %Y, %H:%M:%S %Z', $timestamp);
 }
 
+/**
+ * Returns a time string as this one: 3. October 2002
+ *
+ * @param   int       $timestamp     Time in timestamp format
+ * @return  string                   Time string
+ *
+ * @access public
+ */
 function timestr_middle($timestamp)
 {
     return strftime('%e. %B %Y', $timestamp);
 }
 
+/**
+ * Returns a time string as this one: Mon,3.Oct,22:02:32
+ *
+ * @param   int       $timestamp     Time in timestamp format
+ * @return  string                   Time string
+ *
+ * @access public
+ */
 function timestr_short($timestamp)
 {
     return strftime('%a,%e.%b,%H:%M:%S', $timestamp);
 }
 
+/**
+ * Returns a time string as this one: 3. Oct 2002, 22:02
+ *
+ * @param   int       $timestamp     Time in timestamp format
+ * @return  string                   Time string
+ *
+ * @access public
+ */
 function timestr_comment($timestamp)
 {
     return strftime('%e. %b %Y, %H:%M', $timestamp);
 }
 
+/**
+ * Returns a time string as this one: 3. Oct
+ *
+ * @param   int       $timestamp     Time in timestamp format
+ * @return  string                   Time string
+ *
+ * @access public
+ */
 function timestr_shortest($timestamp)
 {
     return strftime('%e. %b', $timestamp);
 }
 
-// 
-//  license ($selected)
-//  Displays the different licenses as a select form 
-//  $selected ist the SELECTED license
-// 
-
+/**
+ * Displays the different licenses in a select form
+ *
+ * @param   string    $selected      License selected by default
+ * @return  string                   HTML select box with all the licenses
+ *                                   that exist in database
+ *
+ * @access public
+ */
 function license($selected)
 {
-    $return = html_select('license');
     $db_local = new DB_SourceAgency;
     $db_local->query('SELECT * FROM licenses ORDER BY license ASC');
-    // TODO: potential bug if there are no licenses in the database
-    while ($db_local->next_record()) {
-
-        $return .= html_select_option($db_local->f('license'),
-                                      !strcmp($db_local->f('license'),
-                                              $selected),
-                                      $db_local->f('license'));
+    if ($db_local->num_rows() == 0) {
+        die('Error in function license() in lib.inc: There is no license in database');
+    } else {
+        $return = html_select('license');
+        while ($db_local->next_record()) {
+            $return .= html_select_option($db_local->f('license'),
+                                         !strcmp($db_local->f('license'),
+                                                  $selected),
+                                          $db_local->f('license'));
+        }
+        $return .= html_select_end();
     }
-    $return .= html_select_end();
-
     return $return;
 }
-
-// 
-//  licensep ($selected)
-//  Prints the different licenses as a select form 
-//  $selected ist the SELECTED license
-// 
-
 function licensep($selected)
 {
-    print license( $selected );
+    print license($selected);
 }
 
-
-## show_more($iter,$maxiter,$url,$urlquery)
-##
-## shows 10 apps of the current iteraction $iter
-## until it reaches the maximum number of iteractions $maxiter
-## $url is the name of the page (*.php3)
-## $urlquery contains an array with the paramaters for the new page
-##            (everything after the ?)
-
-function show_more($iter,$maxiter,$url,$urlquery)
+/**
+ * shows 10 apps of the current iteraction $iter
+ * until it reaches the maximum number of iteractions $maxiter
+ *
+ * REFACTOR: this function requires heavy refactoring
+ *
+ * @param   int       $iter          Current iteration
+ * @param   int       $maxiter       Maximal number of iterations
+ *                                   (given by the total number of itmes)
+ * @param   string    $url           Name of the page (*.php3)
+ * @param   array     $urlquery      PHPLib session array
+ *
+ * @global  object    $sess          PHPLib session object
+ *
+ * @access public
+ */
+function show_more($iter, $maxiter, $url, $urlquery)
 {
     global $sess;
 
@@ -193,11 +241,22 @@ function show_more($iter,$maxiter,$url,$urlquery)
     echo '</tr></table><BR>';
 }
 
-function wrap($string,$width=75,$break=' ')
+/**
+ * TODO
+ *
+ * @param   string    $string        TODO
+ * @param   int       $width         TODO
+ * @param   string    $break         TODO
+ *
+ * @return  string
+ *
+ * @access public
+ */
+function wrap($string, $width=75, $break=' ')
 {
     $out = '';
     $lin = '';
-    $tok = strtok($string,$break);
+    $tok = strtok($string, $break);
     while ($tok) {
         if ((strlen($lin) + strlen($tok)) > $width) {
             $out .= $lin."\n";
@@ -213,9 +272,21 @@ function wrap($string,$width=75,$break=' ')
     return $out;
 }
 
+/**
+ * This function prints the long form of the project type from its shorter form
+ * (as it is stored in database)
+ *
+ * @param   char      $type      Short form of the project type
+ * @global  object    $t         Translation Object
+ *
+ * @return  string               Long form of the project type
+ *
+ * @access public
+ */
 function typestr($type)
 {
     global $t;
+
     switch($type) {
     case 'A':
         $str = $t->translate('Adaption');
@@ -239,11 +310,56 @@ function typestr($type)
     return $str;
 }
 
-function draw_top_bar( $project_title, $page, $proid = '', 
+/**
+ * Displays the top bar if possible or error message if not
+ * 
+ * @param   int       $proid        Project ID
+ * @param   string    $page         Current page
+ *
+ * @global  object    $t            Translation Object
+ *
+ * @access public
+ * @see _draw_top_bar()
+ */
+function top_bar($proid, $page)
+{
+    global $t;
+
+    $db_top = new DB_SourceAgency;
+    $db_top->query("SELECT * FROM description WHERE proid='$proid'");
+
+    if ( $db_top->num_rows() == 0 ) {
+        _draw_top_bar( $t->translate('Invalid Project Id'), $page );
+    } else {
+        $db_top->next_record();
+        _draw_top_bar( $db_top->f('project_title'), $page, 
+                       $proid, $db_top->f('status') );
+    
+    }
+}
+
+/**
+ * Draws the Project Top Bar
+ * this bar enables to browse through the whole project
+ * It depends on the current status of the project (future steps are not available)
+ *
+ * @param   string    $project_title    Title of the project
+ * @param   string    $page             Current page
+ * @param   int       $proid            Project ID
+ * @param   int       $project_status   Project Status
+ *
+ * @global  object    $t            Translation Object
+ * @global  string    $g_step_text  TODO
+ * @global  int       $g_step_count TODO
+ *
+ * @access private
+ */
+function _draw_top_bar( $project_title, $page, $proid = '', 
                        $project_status = 0 )
 {
     global $t, $g_step_text, $g_step_count;
-    require('config.inc'); // needed for th_XXXXX variables
+    /* WISH: to do not have to include config.inc another time */
+    require('config.inc');
     $btop = new box('100%',$th_box_frame_color,1,$th_box_title_bgcolor,
                     $th_box_title_font_color,$th_box_title_align,
                     $th_box_body_bgcolor,$th_box_body_font_color,
@@ -322,24 +438,19 @@ function draw_top_bar( $project_title, $page, $proid = '',
     print "<br><p>\n";
 }
 
-function top_bar($proid, $page)
-{
-    global $t;
-
-    $db_top = new DB_SourceAgency;
-    $db_top->query("SELECT * FROM description WHERE proid='$proid'");
-
-    if ( $db_top->num_rows() == 0 ) {
-        draw_top_bar( $t->translate('Invalid Project Id'), $page );
-    } else {
-        $db_top->next_record();
-        draw_top_bar( $db_top->f('project_title'), $page, 
-                      $proid, $db_top->f('status') );
-    
-    }
-}
-
-
+/**
+ * The summary of the project contains the most important information of the project
+ * as well as links to all possible actions
+ *
+ * @param   int       $proid        Project ID
+ *
+ * @global  object    $bx           Box Object
+ * @global  object    $sess         PHPLib session object
+ * @global  object    $t            Translation Object
+ * @global  int       $g_step_count TODO
+ *
+ * @access public
+ */
 function summary($proid)
 {
     global $bx, $sess, $t, $g_step_count;
@@ -513,6 +624,19 @@ function summary($proid)
     $bx->box_end();
 }
 
+/**
+ * Gives information on the step given by $step
+ * (what the step is and what can be done)
+ *
+ * @param   int       $proid        Project ID
+ * @param   int       $step         Current step
+ *
+ * @global  object    $bx           Box Object
+ * @global  object    $t            Translation Object
+ * @global  string    $g_step_explanation TODO
+ *
+ * @access public
+ */
 function step_information($proid, $step)
 {
     global $bx, $t, $g_step_explanation;
@@ -537,7 +661,17 @@ function step_information($proid, $step)
     $bx->box_end();
 }
 
-// this function is used in the summary page
+/**
+ * TODO
+ * (this function is used in the summary page)
+ *
+ * @param   int       $proid        Project ID
+ *
+ * @global  object    $bx           Box Object
+ * @global  object    $t            Translation Object
+ *
+ * @access public
+ */
 function calendar_box($proid)
 {
     global $bx, $t;
@@ -571,6 +705,7 @@ function calendar_box($proid)
     $bx->box_column ('left','','','<b>'
                      .$t->translate('Project Nature')
                      .':</b>');
+
     // the nature is whether the project is a developing or a sponsored
     // project. we work it out from the permissions on the project initiator
     // if they are a devel, then it must be a developing.
@@ -639,6 +774,16 @@ $bx->box_column ('left','','','&nbsp;');
     print "<br>\n";
 }
 
+/**
+ * Shows the header of the last three news in the summary page
+ *
+ * @param   int       $proid        Project ID
+ *
+ * @global  object    $sess         PHPLib session object
+ * @global  object    $t            Translation Object
+ *
+ * @access public
+ */
 function summary_news($proid)
 {
     global $sess, $t;
@@ -697,6 +842,17 @@ function summary_news($proid)
             . "<br>&nbsp;\n" );
 }
 
+/**
+ * Short description of a project
+ *
+ * @param   string    $query        SQL query
+ *
+ * @global  object    $bx           Box object
+ * @global  object    $t            Translation Object
+ * @global  object    $sess         PHPLib session object
+ *
+ * @access public
+ */
 function lib_show_description($query) {
     global $bx, $t, $sess;
     
@@ -712,7 +868,7 @@ function lib_show_description($query) {
                                  $db_local->f("project_title")) 
                        . " (".$db_local->f("type").")");
   	$bx->box_body_begin();
- 	echo "<b>"; #.$t->translate("by")." ";
+ 	echo "<b>";
 	lib_pnick($db_local->f("description_user"));
   	echo " - ".timestr(mktimestamp($db_local->f("description_creation")));
   	echo ( "<p><b>".$t->translate("Description")."</b>: "
@@ -973,49 +1129,49 @@ function month($number)
 
     switch ($number) {
     case 1:
- 	return($t->translate("January"));
+ 	return($t->translate('January'));
     case 2:
-        return($t->translate("February"));
+        return($t->translate('February'));
     case 3:
-        return($t->translate("March"));
+        return($t->translate('March'));
     case 4:
-	return($t->translate("April"));
+	return($t->translate('April'));
     case 5:
-	return($t->translate("May"));
+	return($t->translate('May'));
     case 6:
-	return($t->translate("June"));
+	return($t->translate('June'));
     case 7:
-	return($t->translate("July"));
+	return($t->translate('July'));
     case 8:
-	return($t->translate("August"));
+	return($t->translate('August'));
     case 9:
-	return($t->translate("September"));
+	return($t->translate('September'));
     case 10:
-        return($t->translate("October"));
+        return($t->translate('October'));
     case 11:
-        return($t->translate("November"));
+        return($t->translate('November'));
     case 12:
-	return($t->translate("December"));
+	return($t->translate('December'));
     }
 }
 
 function date_to_timestamp($day, $month, $year)
 {
     if ($day < 10 && strlen($day) < 2 ) {
-        $day = "0" . $day;
+        $day = '0' . $day;
     }
     if ($month < 10 && strlen($month) < 2) {
-        $month = "0" . $month;
+        $month = '0' . $month;
     }
-    return ($year . $month . $day . "120000");
+    return ($year . $month . $day . '120000');
 }
 
 function timestamp_to_date($timestamp)
 {
     // TODO: precondition ensuring that the timestamp is the right length
-    $array["year"]  = substr($timestamp,0,4);
-    $array["month"] = substr($timestamp,4,2);
-    $array["day"]   = substr($timestamp,6,2);
+    $array['year']  = substr($timestamp,0,4);
+    $array['month'] = substr($timestamp,4,2);
+    $array['day']   = substr($timestamp,6,2);
 
     return($array);
 }
@@ -1025,11 +1181,11 @@ function lib_select_yes_or_no($name, $selected)
     global $t;
 
     $return = html_select($name);
-    $return .= html_select_option("Yes",($selected == "Yes"),
-                                  $t->translate("Yes"));
+    $return .= html_select_option('Yes',($selected == 'Yes'),
+                                  $t->translate('Yes'));
 
-    $return .= html_select_option("No",($selected == "No"),
-                                  $t->translate("No"));
+    $return .= html_select_option('No',($selected == 'No'),
+                                  $t->translate('No'));
     $return .= html_select_end();
 
     return($return);
@@ -1038,7 +1194,7 @@ function lib_select_yes_or_no($name, $selected)
 function lib_nick($nick)
 {
     global $t;     
-    return "<b>".$t->translate("by")." ".$nick."</b>";
+    return '<b>'.$t->translate('by').' '.$nick.'</b>';
 }
 function lib_pnick($nick) {
     print lib_nick($nick);
@@ -1049,26 +1205,26 @@ function lib_insertion_information()
     global $bx, $auth, $t;
 
     if (is_sponsor()) {
-        $bx->box_full( $t->translate("Project Insertion process"), 
-        $t->translate("You are logged in in SourceAgency as "
-                      ."sponsor <p>In order to insert a project,"
-                      ." you will have to follow this steps: "
-                      ."<ul><li>Fill out the insertion formular"
-                      ." <li>Configure the project parameters"
-                      ." <li>Fill out a sponsoring involvement"
-                      ." form for your project</ul> <p>After that"
-                      ." you should wait for a BerliOS editor to"
-                      ." review your project"));
+        $bx->box_full( $t->translate('Project Insertion process'), 
+        $t->translate('You are logged in in SourceAgency as '
+                      .'sponsor <p>In order to insert a project,'
+                      .' you will have to follow this steps: '
+                      .'<ul><li>Fill out the insertion formular'
+                      .' <li>Configure the project parameters'
+                      .' <li>Fill out a sponsoring involvement'
+                      .' form for your project</ul> <p>After that'
+                      .' you should wait for a BerliOS editor to'
+                      .' review your project'));
     }
 
     if (is_developer()) {
-        $bx->box_full($t->translate("Project Insertion process"), 
-        $t->translate("In order to insert a project, you will have"
-                      ." to follow this steps: <ul><li>Fill out "
-                      ."the insertion formular <li>Configure the "
-                      ."project parameters </ul> <p>After that you"
-                      ." should wait for a BerliOS editor to "
-                      ."review your project"));
+        $bx->box_full($t->translate('Project Insertion process'), 
+        $t->translate('In order to insert a project, you will have'
+                      .' to follow this steps: <ul><li>Fill out '
+                      .'the insertion formular <li>Configure the '
+                      .'project parameters </ul> <p>After that you'
+                      .' should wait for a BerliOS editor to '
+                      .'review your project'));
     }
 }
 
@@ -1079,23 +1235,23 @@ function show_project_milestones($proid)
                      ."AND status='A'");
     $db_local->next_record(); 
 
-    include("milestoneslib.inc");
-    show_milestones($proid,$db_local->f("devid"),"");
+    include('milestoneslib.inc');
+    show_milestones($proid,$db_local->f('devid'),'');
 }
 
 function lib_insertion_finished()
 {
     global $auth;
     // NOI18N: need to use translation here
-    echo "<b>Congratulations. You are finished with the insertion "
+    echo '<b>Congratulations. You are finished with the insertion '
         . "process.</b>\n<br>You will now have to wait for a "
         . "SourceAgency editor to review your pending project.\n"
         . "<br>Once this is done, you will receive an e-mail.\n"
-        . "<p>At your " 
-        . html_link("personal.php3", 
-                    array( "username" => $auth->auth["uname"] ),
-                    "Personal Page")
-        . " you will be <b>now</b> be able to see your project in "
+        . '<p>At your ' 
+        . html_link('personal.php3', 
+                    array( 'username' => $auth->auth['uname'] ),
+                    'Personal Page')
+        . ' you will be <b>now</b> be able to see your project in '
         . "<b>step 0</b> (<b>pending</b>).\n"
         . "<br>When the project is reviewed this will also change.\n";
 }
@@ -1124,5 +1280,31 @@ function is_set_and_not_empty(&$val)
     // a value can be set and empty, and is_not_set_or_empty would
     // return false
     return ( isset( $val ) && !empty( $val ) );
+}
+
+/**
+ * Returns true if the project with proid is in step number $step_num
+ *
+ * @param   int         $proid       Project id
+ * @param   int         $step_num    Required step number
+ *
+ * @return  boolean                 
+ * @access public
+ */
+function lib_in_step($proid, $step_num)
+{
+    $db_local = new DB_SourceAgency;
+    $db_local->query("SELECT status FROM descripton WHERE proid='$proid'");
+    if ($db_local->num_rows() == 0) {
+        die('Error in lib.inc in function lib_in_step: no step for the given project');
+        return 0;
+    } else {
+        $db_local->next_record();
+        if ($db_local->f('status') == $step_num) {
+	    return 1;
+        } else {
+            return 0;
+	}
+    }
 }
 ?>
