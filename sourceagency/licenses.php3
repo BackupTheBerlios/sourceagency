@@ -29,13 +29,17 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require "header.inc";
 require "browselib.inc";
 
-$bx = new box("80%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
+$bx = new box("80%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
+
+start_content();
 
 browse_licenses();
-?>
-<!-- end content -->
 
-<?php
+end_content();
+
 require("footer.inc");
 page_close();
 ?>

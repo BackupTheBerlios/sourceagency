@@ -28,13 +28,12 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require("historylib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-
-<?php
-
+start_content();
 $page = "history";
 
 if (check_proid($proid)) {
@@ -62,14 +61,11 @@ if (check_proid($proid)) {
 
   show_history($history);
 
-  lib_comment_it($proid,"General","0","0","Comment on the Project History","General Comments");
+  lib_comment_it($proid,"General","0","0","Comment on the Project History",
+                 "General Comments");
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 @page_close();
 ?>

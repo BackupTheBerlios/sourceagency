@@ -24,12 +24,13 @@ page_open(array("sess" => "SourceAgency_Session",
 require("header.inc");
 require("insertlib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-?>
+start_content();
 
-<!-- content -->
-<?php
 if ($perm->have_perm("devel_pending") || $perm->have_perm("sponsor_pending")) {
   $be->box_full($t->translate("Error"), $t->translate("Access denied"));
 } else {
@@ -37,15 +38,14 @@ if ($perm->have_perm("devel_pending") || $perm->have_perm("sponsor_pending")) {
   $project_title = trim($project_title);
   $description = trim($description);
 
-  if (everything_filled($project_title,$description) && no_other_project_with_same_title($project_title)) {
+  if (everything_filled($project_title,$description) 
+      && no_other_project_with_same_title($project_title)) {
 
 	insert_into_database($project_title,$description,$type,$volume);
   }
 }
-?>
-<!-- end content -->
 
-<?php
+end_content();
 require("footer.inc");
 page_close();
 ?>

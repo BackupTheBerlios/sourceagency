@@ -29,26 +29,29 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 
 require("header.inc");
 
-$bx = new box("80%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("80%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-<?php
+start_content();
 $db->query("SELECT * FROM faq");
 $i=1;
+
 while($db->next_record()) {
   $msg .= "<li><a href=#".$i++.">".$db->f("question")."</a>";
 }
+
 $bx->box_full($t->translate("Frequently Asked Questions"), $msg);
 $db->seek(0);
+
 while($db->next_record()) {
   echo "<a name=".$i++.">\n";
-  $bx->box_full($t->translate("Question").": ".$db->f("question"), "<b>".$t->translate("Answer").":</b> ".$db->f("answer"));
+  $bx->box_full($t->translate("Question").": ".$db->f("question"), 
+                "<b>".$t->translate("Answer").":</b> ".$db->f("answer"));
 }
-?>
-<!-- end content -->
 
-<?php
+end_content();
 require("footer.inc");
 page_close();
 ?>
