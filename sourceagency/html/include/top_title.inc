@@ -26,11 +26,11 @@
 valign="center" >
 
 <tr VALIGN="TOP" BGCOLOR="<?php echo $th_nav_bgcolor;?>">
-<td>
+<td bgcolor="#FFFFFF">
 <a href="<?php echo $sys_url_title;?>">
 <img SRC="<?php echo $sys_logo_image;?>" BORDER="0" 
 height="<?php echo $sys_logo_height;?>" width="<?php echo $sys_logo_width;?>"
-ALT="<?php echo $sys_logo_alt;?>"></a>
+vspace="5" hspace="5" ALT="<?php echo $sys_logo_alt;?>"></a>
 </td>
 
 <td WIDTH="10">
