@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: constants.php,v 1.26 2002/06/20 12:06:29 riessen Exp $
+# $Id: constants.php,v 1.27 2002/06/26 09:48:45 riessen Exp $
 #
 ######################################################################
 
@@ -116,7 +116,10 @@ function define_test_suite( $filename ) {
     }
 }
 
-function unset_global( $variable_name ) {
-    unset( $GLOBALS[ $variable_name ] );
+function unset_global(/** takes variable number of arguments **/) {
+    $args = func_get_args();
+    while ( list( , $variable_name ) = each( $args ) ) {
+        unset( $GLOBALS[ $variable_name ] );
+    }
 }
 ?>
