@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: comments_edit.php3,v 1.3 2001/11/09 20:34:08 riessen Exp $
+# $Id: comments_edit.php3,v 1.4 2001/11/19 17:51:51 riessen Exp $
 #
 ######################################################################  
 
@@ -50,8 +50,9 @@ if (check_permission($proid,$page)) {
       $number = 0;
   }
 
-  // I18N
-  print "Comments can be posted by everybody who is registered.\n<br><p>\n";
+  print( $t->translate( "General comments can be posted") . " "
+         . $t->translate( "by registered users of the system" ) 
+         . ".\n<br><p>\n" );
 
   if ( is_not_set_or_empty( $submit ) ) {
       if ( is_set_and_not_empty( $preview ) ) comments_preview( $proid );

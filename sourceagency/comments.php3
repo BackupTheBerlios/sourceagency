@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: comments.php3,v 1.2 2001/11/09 20:34:08 riessen Exp $
+# $Id: comments.php3,v 1.3 2001/11/19 17:51:35 riessen Exp $
 #
 ######################################################################  
 
@@ -47,9 +47,10 @@ if (check_permission($proid,$page)) {
   if ( is_not_set_or_empty( $ref ) ) $ref = "";
 
   htmlp_image("ic/c.png",0,48,48,"Summary");
-  // NOI8N
-  print( "General comments can be posted by any registered user "
-         . "(developer or sponsor) in the system.\n<br><p>\n" );
+
+  print( $t->translate( "General comments can be posted") . " "
+         . $t->translate( "by registered users of the system" ) 
+         . ".\n<br><p>\n" );
 
   comments_show($proid,$type,$number,$cmt_id,$ref);
 
