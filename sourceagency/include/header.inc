@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: header.inc,v 1.4 2001/11/26 13:57:54 riessen Exp $
+# $Id: header.inc,v 1.5 2001/11/29 15:38:02 grex Exp $
 #
 ######################################################################
 
@@ -37,10 +37,10 @@ require("lang.inc");
 require("box.inc");
 require("html.inc");
 $t = new translation($la);
-// FIXME: do we need to create an instance of the database class, it
-// FIXME: seems to be instantiated Just-In-Time-ly, i.e. when needed
-// FIXME: This is wrong, admprojects_insert uses this db instead 
-// FIXME: of creating it's own ....
+
+// As the database connection is used on almost any page,
+// the constructor is called here
+
 $db = new DB_SourceAgency;
 ?>
 
