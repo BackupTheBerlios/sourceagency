@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: monitorlib.inc,v 1.4 2002/04/09 23:49:43 grex Exp $
+# $Id: monitorlib.inc,v 1.5 2002/04/12 14:19:18 riessen Exp $
 #
 ######################################################################
 
@@ -153,7 +153,7 @@ function monitor_show($proid)
 
 	    $bx->box_next_row_of_columns();
 
-	    $bx->box_column('center','',$bgcolor,'<b>$i</b>');
+	    $bx->box_column('center','',$bgcolor,'<b>'.$i.'</b>');
 	    $bx->box_column('center','',$bgcolor,'<b>'.lib_nick($db->f('username')).'</b>');
 	    $bx->box_column('center','',$bgcolor,'<b>'.$db->f('perms').'</b>');
 	    $bx->box_column('center','',$bgcolor,'<b>'.$db->f('importance').'</b>');
