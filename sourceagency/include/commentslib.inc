@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: commentslib.inc,v 1.8 2002/05/28 08:54:28 riessen Exp $
+# $Id: commentslib.inc,v 1.9 2002/06/20 12:05:27 riessen Exp $
 #
 ######################################################################
 
@@ -234,7 +234,8 @@ function comments_preview($proid)
  *
  * @access  public
  */
-function comments_insert($proid, $user, $type_cmt, $number, $ref, $subject, $text)
+function comments_insert($proid, $user, $type_cmt, $number, 
+                         $ref, $subject, $text)
 {
     global $db, $t;
 
@@ -247,7 +248,9 @@ function comments_insert($proid, $user, $type_cmt, $number, $ref, $subject, $tex
                ."type='$type_cmt',number='$number',id='$id',ref='$ref',"
                ."subject_cmt='$subject',text_cmt='$text'");
 
-    include('monitorlib.inc');
+    if ( !function_exists( 'monitor_mail' ) ) {
+        include('monitorlib.inc');
+    }
     /* WISH: config.inc included only once */
     include('config.inc');
 
@@ -256,7 +259,7 @@ function comments_insert($proid, $user, $type_cmt, $number, $ref, $subject, $tex
                  ." $proid\n Subject: $subject\n "
                  .$t->translate("by")." $user\n\n "
                  .$t->translate("You can see it at")
-                 .": $sys_urlcomments.php3?proid=$proid&type=$type_cmt&"
+                 .": $sys_url/comments.php3?proid=$proid&type=$type_cmt&"
                  ."number=$number&id=$id");
 
     comments_show($proid, $type_cmt, $number, $id, $ref);
@@ -288,7 +291,9 @@ function comments_modify($proid, $user, $type_cmt, $number,
                ."text_cmt='$text' WHERE proid='$proid' AND type='$type_cmt'  "
                ."AND number='$number' AND id='$cmt_id' AND ref='$ref'");
 
-    include('monitorlib.inc');
+    if ( !function_exists( 'monitor_mail' ) ) {
+        include('monitorlib.inc');
+    }
     /* WISH: config.inc included only once */
     include('config.inc');
 
@@ -297,8 +302,8 @@ function comments_modify($proid, $user, $type_cmt, $number,
                  ." $proid\n Subject: $subject\n ".$t->translate("by")
                  ." $user\n\n "
                  .$t->translate("You can see it at")
-                 .": $sys_urlcomments.php3?"
-                 ."proid=$proid&type=$type_cmt&number=$number&id=$id");
+                 .": $sys_url/comments.php3?"
+                 ."proid=$proid&type=$type_cmt&number=$number&id=$cmt_id");
 
     comments_show($proid, $type_cmt, $number, $cmt_id, $ref);
 }
@@ -311,20 +316,20 @@ function comments_modify($proid, $user, $type_cmt, $number,
  * @global  string    $subject       Comment subject (head)
  * @global  string    $text          Comment text (body)
  * @global  int       $number        Item number (depends on comment type value)
- * @global  int       $cmt_id        Comment id
- * @global  int       $ref           Reference to the comment parent
- * @global  string    $type          Comment type
+ * @global  int       $cmt_id        Comment id *NOT USED*
+ * @global  int       $ref           Reference to the comment parent *NOT USED*
+ * @global  string    $type          Comment type *NOT USED*
  *
  * @global  object    $t             Translation object
  * @global  object    $bx            Box object
- * @global  object    $sess          PHPLib session object
+ * @global  object    $sess          PHPLib session object *NOT USED*
  *
  * @access  public
  */
 function comments_modify_form($proid)
 {
-    global $bx, $t, $sess;
-    global $subject, $text, $type, $number, $cmt_id, $ref, $creation;
+    global $bx, $t;
+    global $subject, $text, $number, $creation;
 
     $bx->box_begin();
     $bx->box_title($t->translate('Modifying Comments'));
