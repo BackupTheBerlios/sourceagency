@@ -21,9 +21,9 @@ CREATE TABLE active_sessions (
 # Dumping data for table 'active_sessions'
 #
 
-INSERT INTO active_sessions VALUES ('ea29c47f067c5d7c5f819d2c7cd1fc2f','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnR2VybWFuJzsg','20020905165955');
+INSERT INTO active_sessions VALUES ('ea29c47f067c5d7c5f819d2c7cd1fc2f','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0dlcm1hbic7ICRHTE9CQUxTWydhdXRoJ10gPSBuZXcgU291cmNlQWdlbmN5X0F1dGg7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGggPSBhcnJheSgpOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1aWQnXSA9ICc0OGRiN2FjMDJlOTc0NjQ4ZTM0NTRjMDIwMjFiNjMyYSc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3Blcm0nXSA9ICdzcG9uc29yJzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsnZXhwJ10gPSAnMTAzMTI1NzEwNic7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ3JlZnJlc2gnXSA9ICcxMDMxMjQ3OTY4JzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsndW5hbWUnXSA9ICduaWxpeCc7IA==','20020905194827');
 INSERT INTO active_sessions VALUES ('72fe751b44fb0a7c1812c7b31dfcea07','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20020905111818');
-INSERT INTO active_sessions VALUES ('f6dc8af8bc3db0df5faa67c6b39b4af4','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJHRoaXMtPnB0WydhdXRoJ10gPSAnMSc7ICRHTE9CQUxTWydsYSddID0gJ0dlcm1hbic7ICRHTE9CQUxTWydhdXRoJ10gPSBuZXcgU291cmNlQWdlbmN5X0F1dGg7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGggPSBhcnJheSgpOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1aWQnXSA9ICdmb3JtJzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsncGVybSddID0gJyc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ2V4cCddID0gJzIxNDc0ODM2NDcnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydyZWZyZXNoJ10gPSAnMjE0NzQ4MzY0Nyc7IA==','20020904171057');
+INSERT INTO active_sessions VALUES ('b3626a6807504e138e9977068453128d','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnR2VybWFuJzsg','20020906003407');
 
 #
 # Table structure for table 'auth_user'
@@ -332,12 +332,12 @@ CREATE TABLE description (
 # Dumping data for table 'description'
 #
 
-INSERT INTO description VALUES (1,'Developing project','Documentation','Developing project','devel','Regular',2,20011008202340);
-INSERT INTO description VALUES (2,'Sponsored project','Development','Sponsored project','sponsor','Very Small',3,20011008211238);
-INSERT INTO description VALUES (3,'OS Machine','Development','A Machine to develop Open Source','helix','Regular',2,20011009131944);
-INSERT INTO description VALUES (4,'Aaaaaaaaaaaaaah','Adaption','Aaaaaaaaaaaaaah','devel','Very Small',3,20011009193816);
-INSERT INTO description VALUES (5,'Thinking Machine','Expansion','Enhance the existing thinking machine.','nilix','Big',4,20011009142343);
-INSERT INTO description VALUES (6,'Lets hack on step 5','Expansion','This is a project for hacking specifically on step 5.','sponsor','Very Small',5,20011010182504);
+INSERT INTO description VALUES (1,'Developing project','Documentation','Developing project','devel','< 2 Man Months',2,20011008202340);
+INSERT INTO description VALUES (2,'Sponsored project','Development','Sponsored project','sponsor','< 0.25 Man Month',3,20011008211238);
+INSERT INTO description VALUES (3,'OS Machine','Development','A Machine to develop Open Source','helix','< 6 Man Months',2,20011009131944);
+INSERT INTO description VALUES (4,'Aaaaaaaaaaaaaah','Adaption','Aaaaaaaaaaaaaah','devel','< 0.25 Man Month',3,20011009193816);
+INSERT INTO description VALUES (5,'Thinking Machine','Expansion','Enhance the existing thinking machine.','nilix','> 6 Man Months',4,20011009142343);
+INSERT INTO description VALUES (6,'Lets hack on step 5','Expansion','This is a project for hacking specifically on step 5.','sponsor','< 0.25 Man Month',5,20011010182504);
 INSERT INTO description VALUES (7,'Open Source Moon Lander','Expansion','We, at NASA, require an Open Source Moon lander.','riessen','< 1 Man Month',3,20011114152650);
 INSERT INTO description VALUES (8,'immer locker bleiben','Adaption','hmmm','admin','> 6 Man Months',-1,20011126121204);
 INSERT INTO description VALUES (9,'New Project','Adaption','No Description','sponsor','< 0.25 Man Month',1,20011126120650);
