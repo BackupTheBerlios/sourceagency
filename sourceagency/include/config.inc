@@ -287,7 +287,7 @@ $th_navstrip_bgcolor = "#000000";
 $th_nav_font_color = "#333333";
 $th_navstrip_font_color = "#FFFFFF";
 
-$th_box_frame_color = "#000000";
+$th_box_frame_color = "#CCCCCC";
 $th_box_frame_width = "1";
 $th_box_title_bgcolor = "#CCCCCC";
 $th_box_body_bgcolor = "#FFFFFF";
@@ -297,7 +297,7 @@ $th_box_title_font_color = "#000000";
 $th_box_body_font_color = "#333333";
 $th_box_error_font_color = "#FF2020";
 
-$th_strip_frame_color = "#000000";
+$th_strip_frame_color = "#CCCCCC";
 $th_strip_frame_width = "1";
 $th_strip_title_bgcolor = "#CCCCCC";
 $th_strip_body_bgcolor = "";

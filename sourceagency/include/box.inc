@@ -43,8 +43,7 @@ class box {
 	function box_begin() {
 		echo "\n<!-- box begin -->\n";
     	echo "<table border=0 cellspacing=0 cellpadding=0 bgcolor=\"$this->box_frame_color\" width=\"$this->box_width\" align=center>\n";
-//		echo "<tr><td>\n";
-		echo "<tr bgcolor=\"white\"><td>\n";
+		echo "<tr><td>\n";
 		echo "<table border=0 cellspacing=\"$this->box_frame_width\" cellpadding=3 align=\"center\" width=\"100%\">\n";
 	}
 
