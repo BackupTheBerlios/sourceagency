@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: constants.php,v 1.19 2002/02/07 13:06:42 riessen Exp $
+# $Id: constants.php,v 1.20 2002/02/21 13:07:40 riessen Exp $
 #
 ######################################################################
 
@@ -28,10 +28,10 @@ if ( ! $env_php_lib_dir || $env_php_lib_dir == "" ) {
 }
 
 // this is were the phpunit class should be located, filename: phpunit.php
-ini_set('include_path', ini_get('include_path') . ':' . $PHP_LIB_DIR );
+ini_set('include_path', $PHP_LIB_DIR . ':' . ini_get('include_path') );
 // this is the location of the mock database and other unit test specific
 // stuff
-ini_set('include_path', ini_get('include_path') . ':' . getcwd() );
+ini_set('include_path', getcwd() . ':' . ini_get('include_path') );
 
 if ( !defined("BEING_INCLUDED" ) ) {
     ini_set('include_path', 

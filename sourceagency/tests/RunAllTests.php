@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: RunAllTests.php,v 1.9 2002/01/28 02:18:43 riessen Exp $
+# $Id: RunAllTests.php,v 1.10 2002/02/21 13:07:40 riessen Exp $
 #
 ######################################################################
 
@@ -27,9 +27,9 @@ if ( floor( phpversion() ) < 4 ) {
 // this is really insane but i have to re-edit the include path
 // assume that i'm in tests/include, two above me is include
 ini_set( 'include_path', 
-         ini_get('include_path') . ':' . getcwd() . '/../include');
+         getcwd() . '/../include' . ':' . ini_get('include_path') );
 ini_set( 'include_path', 
-         ini_get('include_path') . ':' . getcwd() . '/../../include');
+         getcwd() . '/../../include' . ':' . ini_get('include_path') );
 
 // indicate to all test files that they are being included.
 define( "BEING_INCLUDED", "yes" );
