@@ -8,6 +8,7 @@
 #		 Lutz Henckel (lutz.henckel@fokus.gmd.de) and
 #                Gregorio Robles (grex@scouts-es.org)
 #
+# BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
 # The HTML table library
@@ -16,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: box.inc,v 1.4 2001/11/07 18:48:52 riessen Exp $
+# $Id: box.inc,v 1.5 2001/11/08 14:19:21 riessen Exp $
 #
 ######################################################################
 
