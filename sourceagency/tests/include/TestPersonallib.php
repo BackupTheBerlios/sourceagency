@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestPersonallib.php,v 1.4 2001/10/22 10:06:16 riessen Exp $
+// $Id: TestPersonallib.php,v 1.5 2001/10/23 16:36:12 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -43,6 +43,9 @@ extends TestCase
                  ."monitor.proid=description.proid AND monitor"
                  .".username='%s' ORDER BY creation DESC");
 
+        // if using the capturing routines then ensure that it's reset,
+        // it uses global variables
+        capture_reset_text();
         $db_config = new mock_db_configure;
 
         $db_config->add_num_row(0);
@@ -71,13 +74,18 @@ extends TestCase
         $db_config->add_record( $row );
         $db_config->add_record( false );
 
+
         capture_start();
         // here next_record will not be called
         personal_monitored_projects( "fubar" );
         capture_stop();
 
         $text = capture_text_get();
-        $this->assertRegexp( "/No monitored projects/", $text );
+
+        $this->assertEquals( 532, capture_text_length(), 
+                             "(0) length mismatch" );
+        $this->assertRegexp( "/No monitored projects/", $text,
+                             "(0) no monitored projects missing");
 
         capture_reset_text();
 
@@ -86,29 +94,32 @@ extends TestCase
         personal_monitored_projects( "snafu" );
         capture_stop();
         
+        $this->assertEquals( 597, capture_text_length(), 
+                             "(1) length mismatch" );
         $text = capture_text_get();
         $this->assertRegexp( "/Project:[^\n]*summary[.]php3[?]proid=proid"
                              ."[^\n]*project_title[^\n]*status[^\n]*[<]br[>]/",
-                             $text );
+                             $text, "(1) missing project status" );
+
+        capture_reset_text();
 
         capture_start();
         // here next_record should be called once --> num_row == 1
         personal_monitored_projects( "fritz" );
         capture_stop();
 
+        $this->assertEquals( 690, capture_text_length(), 
+                             "(2) length mismatch");
         $text = capture_text_get();
         $this->assertRegexp( "/Project:[^\n]*summary[.]php3[?]proid=proid2"
                              ."[^\n]*project_title2[^\n]*status2[^\n]*"
-                             ."[<]br[>]/",
-                             $text );
+                             ."[<]br[>]/",$text, "(2) project 2 missing" );
         $this->assertRegexp( "/Project:[^\n]*summary[.]php3[?]proid=proid3"
                              ."[^\n]*project_title3[^\n]*status3[^\n]*"
-                             ."[<]br[>]/",
-                             $text );
+                             ."[<]br[>]/",$text, "(2) project 3 missing" );
 
         // if using a database, then ensure that it didn't fail
-        $this->assertEquals(false, 
-                            $db_config->did_db_fail(),
+        $this->assertEquals(false, $db_config->did_db_fail(),
                             $db_config->error_message() );
     }
 }
