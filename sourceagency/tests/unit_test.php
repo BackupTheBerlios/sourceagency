@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.27 2002/06/20 12:06:55 riessen Exp $
+# $Id: unit_test.php,v 1.28 2002/06/26 09:47:43 riessen Exp $
 #
 ######################################################################
 
@@ -64,7 +64,7 @@ extends TestCase
     }
 
     function &capture_call( $func_name, $exp_length, $args = array(),
-                            $debug = FALSE ) {
+                            $debug = FALSE, $check_for_warning = TRUE ) {
         if ( $debug ) {
             capture_stop();
             capture_reset_text();
@@ -77,9 +77,11 @@ extends TestCase
 
         // this is a paranoia check: make sure that no PHP warnings were
         // generated, if so, then print a warning and the entire text
-        if ( preg_match( '/Warning/', $this->get_text() ) ) {
-            print ( "<b>CaptureCall: Warning: text contained a warning "
-                    ."message?</b>\n" );
+        if ( $check_for_warning 
+               && preg_match( '/[<]b[>]Warning[<]\/b[>]:/', 
+                              $this->get_text() ) ) {
+            print( "<b>CaptureCall: Warning: captured text contained a "
+                   ."warning message?</b>\n" );
             $this->print_text_as_html();
         }
         return $rval;
