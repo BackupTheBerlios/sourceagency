@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.5 2001/11/06 12:44:56 riessen Exp $
+ * $Id: local.inc,v 1.6 2001/11/06 13:12:58 riessen Exp $
  *
  */ 
 
@@ -22,7 +22,9 @@
 
 if ( file_exists( 'local_database.inc' ) ) {
   /** defines the DB_sourceagency class **/
-  include_once( 'local_database.inc' );
+  include( 'local_database.inc' );
+} else if ( file_exists( 'include/local_database.inc' ) ) {
+  include( 'include/local_database.inc' );
 } else {
   class DB_SourceAgency extends DB_Sql {
     var $Host      = "localhost";
