@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: German-lang.inc,v 1.1 2003/11/21 12:56:01 helix Exp $
+# $Id: German-lang.inc,v 1.2 2004/02/02 12:30:16 helix Exp $
 #
 ######################################################################
 
@@ -107,7 +107,7 @@ function translate_real($phrase) {
     case 'Description': $tmp = 'Beschreibung'; break;
     case 'Developer Cooperation Wanted': $tmp = 'Entwicklerkooperation gesucht'; break;
     case 'Developer cooperation wanted?': $tmp = 'Entwicklerkooperation gesucht?'; break;
-    case 'Developers Wanted': $tmp = 'Entwickler gesucht'; break;
+    case 'Developing Proposals Wanted': $tmp = 'Entwicklungsangebote gesucht'; break;
     case 'Developers can propose their implementations using this form':$tmp='Entwickler können über dieses Formular Implementierungsvorschläge machen';break;
     case 'Developers': $tmp = 'Entwickler'; break;
     case 'Developer': $tmp = 'Entwickler'; break;
@@ -204,7 +204,6 @@ function translate_real($phrase) {
     case 'New License URL': $tmp = 'Neue Lizenz URL'; break;
     case 'New License': $tmp = 'Neue Lizenz'; break;
     case 'New Project': $tmp = 'Neues Projekt'; break;
-    case 'New Projects': $tmp = 'Neue Projekte'; break;
     case 'New User': $tmp = 'Neuer Benutzer'; break;
     case 'News': $tmp = 'Neuigkeiten'; break;
     case 'News are posted by the project initiator. Any other contribution can be done by filling out a General Comment': $tmp = 'Neuigkeiten werden durch den Projektinitiator erstellt. Alle andere können allgemeine Kommentare abgeben'; break;
@@ -298,6 +297,9 @@ function translate_real($phrase) {
     case 'Rating': $tmp = 'Bewertung'; break;
     case 'Realname': $tmp = 'Name'; break;
     case 'Receive an email update when something happens in this project': $tmp = 'Sie erhalten eine Mail, wenn sich das Projekt geändert hat'; break;    
+    case 'Recent Developers': $tmp = 'Neue Entwickler'; break;
+    case 'Recent Projects': $tmp = 'Neue Projekte'; break;
+    case 'Recent Sponsors': $tmp = 'Neue Sponsoren'; break;
     case 'Recommended': $tmp = 'Empfohlen'; break;
     case 'Referee registration and selection. Any developer who has the skills to be a referee can propose himself as one': $tmp = 'Anmeldung und Auswahl von Sachverständigen. Jeder Entwickler mit den notwendigen Fähigkeiten kann sich selbst als Sachverständiger vorschlagen'; break;
     case 'Referee offered': $tmp = 'Schiedsrichter angeboten'; break;

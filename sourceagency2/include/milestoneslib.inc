@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.2 2003/11/21 15:02:59 helix Exp $
+# $Id: milestoneslib.inc,v 1.3 2004/02/02 12:30:16 helix Exp $
 #
 ######################################################################
 
@@ -120,7 +120,7 @@ function show_milestones($proid, $devid, $who_wants_to_see)
                         .$t->translate('Status').'</b>');
       
         while($db->next_record()) {
-            $bgcolor = ( $db->f('number')%2 ? 'DFDFDF' : '#FFFFFF' );
+            $bgcolor = ( $db->f('number')%2 ? '#DFDFDF' : '#FFFFFF' );
           
             $bx->box_next_row_of_columns();
           
@@ -131,7 +131,7 @@ function show_milestones($proid, $devid, $who_wants_to_see)
                                            array('proid' => $proid, 
                                                  'devid' => $devid, 
                                                  'number'=>$db->f('number')),
-                                           'mod'));
+                                           'Modify'));
             } else {
                 $bx->box_column('center','',$bgcolor,
                                 $db->f('number'));
@@ -204,7 +204,7 @@ function milestones_preview($proid, $devid)
     $bx->box_column('center','8%','','<b>'.$t->translate('Payment').'</b>');
     $bx->box_column('center','14%','','<b>'.$t->translate('Status').'</b>');
 
-    $bgcolor = 'DFDFDF';
+    $bgcolor = '#DFDFDF';
 
     $bx->box_next_row_of_columns();
 

@@ -45,15 +45,13 @@ if (check_proid($proid)) {
 
   print $t->translate("News are posted by the project initiator. "
                       ."Any other contribution can be done by "
-                      ."filling out a General Comment").".\n";
+                      ."filling out a General Comment").".<p>\n";
 
   if(is_project_initiator($proid))  {
     print "<p align=right>[ ".html_link("news_edit.php",
                                         array("proid" => $proid),
                                         $t->translate("Submit News"))." ]\n"; 
   }
-
-  print "<br><p>\n";
 
   newsshow($proid);
 

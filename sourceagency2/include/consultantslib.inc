@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: consultantslib.inc,v 1.1 2003/11/21 12:56:01 helix Exp $
+# $Id: consultantslib.inc,v 1.2 2004/02/02 12:30:16 helix Exp $
 #
 ######################################################################
 
@@ -93,7 +93,7 @@ function show_consultants($proid)
         $bx->box_column('','','','<b>'.$t->translate('Creation').'</b>');
 
         $i =0;
-        $colors = array( 1 => 'gold', 0 => '#FFFFFF' );
+        $colors = array( 0 => '#DFDFDF', 1 => '#FFFFFF' );
         while($db->next_record()) {
             $bgcolor = $colors[ ($i++) % 2 ];
 

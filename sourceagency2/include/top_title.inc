@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: top_title.inc,v 1.1 2003/11/21 12:56:02 helix Exp $
+# $Id: top_title.inc,v 1.2 2004/02/02 12:30:16 helix Exp $
 #
 ######################################################################
 
@@ -50,7 +50,7 @@ vspace="5" hspace="5" alt="<?php echo $sys_logo_alt;?>"></a>
 <font size="+2" color="red">BETA BETA BETA</font><br>
 <?php echo $t->translate("This site is being beta tested"); ?>, 
 <?php echo $t->translate("please send any and all"); ?>
- <a href="mailto:sourceagency-support@lists.berlios.de?subject=SourceAgency Beta Feedback&cc=grex@scouts-es.org&cc=lutz.henckel@fokus.fhg.de&cc=riessen@berlios.de"
+ <a href="mailto:sourceagency-support@lists.berlios.de?subject=SourceAgency Beta Feedback"
 ><?php echo $t->translate("feedback"); ?></a>!
 </center>
 </td>

@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisionslib.inc,v 1.2 2003/11/21 15:02:59 helix Exp $
+# $Id: decisionslib.inc,v 1.3 2004/02/02 12:30:16 helix Exp $
 #
 ######################################################################
 
@@ -82,7 +82,7 @@ function show_decision_consultants($proid)
 
 	htmlp_form_action('PHP_SELF',array('proid' => $proid),'POST');
 
-        $colors = array( 0 => '#FFFFFF', 1 => 'DFDFDF' );
+        $colors = array( 0 => '#FFFFFF', 1 => '#DFDFDF' );
 	while($db->next_record()) {
 	    $i++;
             $bgcolor = $colors[ $i % 2 ];
@@ -193,7 +193,7 @@ function show_decision_contents($proid)
 
 	while($db->next_record()) {
 	    $i++;
-            $bgcolor = ( $i % 2 != 0 ? 'DFDFDF' : '#FFFFFF' );
+            $bgcolor = ( $i % 2 != 0 ? '#DFDFDF' : '#FFFFFF' );
 
   	    $db_content = new DB_SourceAgency;
 	    $db_content->query("SELECT SUM(budget) AS sum_content FROM "
@@ -298,7 +298,7 @@ function show_decision_proposals($proid)
 
 	while($db->next_record()) {
 	    $i++;
-            $bgcolor = ( $i%2 != 0 ? 'DFDFDF' : '#FFFFFF' );
+            $bgcolor = ( $i%2 != 0 ? '#DFDFDF' : '#FFFFFF' );
 
 	    $db_content = new DB_SourceAgency;
 	    $db_content->query("SELECT SUM(budget) AS sum_content FROM "
@@ -420,7 +420,7 @@ function show_decision_milestones($proid, $devid)
                                            'devid' => $devid),'POST');
 	while($db->next_record()) {
 	    $i++;
-            $bgcolor = ( $i%2 != 0 ? 'DFDFDF' : '#FFFFFF' );
+            $bgcolor = ( $i%2 != 0 ? '#DFDFDF' : '#FFFFFF' );
 
 	    $bx->box_next_row_of_columns();
 
@@ -530,7 +530,7 @@ function show_decision_referees($proid)
 
 	while($db->next_record()) {
 	    $i++;
-            $bgcolor = ( $i%2 != 0 ? 'DFDFDF' : '#FFFFFF' );
+            $bgcolor = ( $i%2 != 0 ? '#DFDFDF' : '#FFFFFF' );
 
 	    $db_referee = new DB_SourceAgency;
 	    $db_referee->query("SELECT SUM(budget) AS sum_referee FROM "

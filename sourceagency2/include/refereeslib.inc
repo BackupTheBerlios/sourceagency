@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: refereeslib.inc,v 1.2 2003/11/21 15:02:59 helix Exp $
+# $Id: refereeslib.inc,v 1.3 2004/02/02 12:30:16 helix Exp $
 #
 ######################################################################
 
@@ -91,17 +91,17 @@ function show_referees($proid)
 
 	while($db->next_record()) {
 	    $i++;
-            $bgcolor = ( $i%2 != 0 ? 'DFDFDF' : '#FFFFFF' );
+            $bgcolor = ( $i%2 != 0 ? '#DFDFDF' : '#FFFFFF' );
 
  	    $bx->box_next_row_of_columns();
 
-            $bx->box_column('','',$bgcolor,"<b>$i</b>");
-            $bx->box_column('','',$bgcolor,'<b>'
-                            .lib_nick($db->f('username')).'</b>');
-	    $bx->box_column('','',$bgcolor,'<b>'
-                            .show_status($db->f('status')).'</b>');
-            $bx->box_column('','',$bgcolor,'<b>'
-                            .timestr(mktimestamp($db->f('creation'))).'</b>');
+            $bx->box_column('','',$bgcolor,"$i");
+            $bx->box_column('','',$bgcolor,
+                            lib_nick($db->f('username')));
+	    $bx->box_column('','',$bgcolor,
+                            show_status($db->f('status')));
+            $bx->box_column('','',$bgcolor,
+                            timestr(mktimestamp($db->f('creation'))));
 	}
 
 	$bx->box_columns_end();

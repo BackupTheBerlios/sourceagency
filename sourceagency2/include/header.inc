@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: header.inc,v 1.1 2003/11/21 12:56:01 helix Exp $
+# $Id: header.inc,v 1.2 2004/02/02 12:30:16 helix Exp $
 #
 ######################################################################
 
@@ -75,4 +75,10 @@ require('menubar.inc');
 <td width="10"><img src="images/blank.gif" border="0" height="1" width="10" alt=""></td>
 
 <td width="99%">
-<p>&nbsp;
+<br>
+<?php
+if ( file_exists("./include/adsense.php") ) {
+        include("./include/adsense.php");
+}
+?>
+<p>

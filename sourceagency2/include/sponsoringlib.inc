@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: sponsoringlib.inc,v 1.1 2003/11/21 12:56:02 helix Exp $
+# $Id: sponsoringlib.inc,v 1.2 2004/02/02 12:30:16 helix Exp $
 #
 ######################################################################
 
@@ -197,7 +197,7 @@ function show_sponsorings($proid)
     if ($db->num_rows() == 0) {
         print "<p>".$t->translate("There have not been posted any "
                                   ."sponsoring involvement wishes to "
-                                  ."this project").".<p>\n";
+                                  ."this project")."\n";
     }
 }
 

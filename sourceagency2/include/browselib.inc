@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.2 2003/11/21 15:02:59 helix Exp $
+# $Id: browselib.inc,v 1.3 2004/02/02 12:30:16 helix Exp $
 #
 ######################################################################
 
@@ -171,7 +171,7 @@ function _browse_type()
     $bx->box_column('left','70%','','<b>'.$t->translate('Type').'</b>');
     $bx->box_next_row_of_columns();
     
-    $colors = array( 0 => 'gold', 1 => '#FFFFFF' );
+    $colors = array( 0 => 'DFDFDF', 1 => '#FFFFFF' );
 
     for($i=0;$i < sizeof($project_types);$i++) {
         $bgcolor = $colors[ $i % 2 ];
@@ -225,7 +225,7 @@ function _browse_steps()
     $bx->box_column('left','70%','','<b>'.$t->translate('Step').'</b>');
     $bx->box_next_row_of_columns();
 
-    $colors = array( 1 => 'gold', 0 => '#FFFFFF', -1 => 'gold' );
+    $colors = array( 1 => 'DFDFDF', 0 => '#FFFFFF', -1 => 'DFDFDF' );
 
     for($i = (is_administrator() ? -1 : 1); $i <= $g_step_count; $i++) {
         $bgcolor = $colors[ $i%2 ];
@@ -281,7 +281,7 @@ function _browse_volume()
     $bx->box_column('left','70%','','<b>'.$t->translate('Volume').'</b>');
     $bx->box_next_row_of_columns();
 
-    $colors = array( 0 => 'gold', 1 => '#FFFFFF' );
+    $colors = array( 0 => 'DFDFDF', 1 => '#FFFFFF' );
 
     for( $i=0; $i < sizeof($project_volume); $i++) {
         $bgcolor = $colors[ $i % 2 ];
@@ -335,7 +335,7 @@ function _browse_platform()
     $bx->box_column('left','70%','','<b>'.$t->translate('Platform').'</b>');
     $bx->box_next_row_of_columns();
 
-    $colors = array( 0 => 'gold', 1 => '#FFFFFF' );
+    $colors = array( 0 => 'DFDFDF', 1 => '#FFFFFF' );
 
     for($i=0;$i < sizeof($platform_array);$i++) {
         $bgcolor = $colors[ $i % 2 ];
@@ -390,7 +390,7 @@ function _browse_architecture()
                     .'</b>');
     $bx->box_next_row_of_columns();
 
-    $colors = array( 0 => 'gold', 1 => '#FFFFFF' );
+    $colors = array( 0 => 'DFDFDF', 1 => '#FFFFFF' );
 
     for($i=0;$i < sizeof($architecture_array);$i++) {
         $bgcolor = $colors[ $i % 2 ];
@@ -444,7 +444,7 @@ function _browse_environment()
     $bx->box_column('left','70%','','<b>'.$t->translate('Environment').'</b>');
     $bx->box_next_row_of_columns();
     
-    $colors = array( 0 => 'gold', 1 => '#FFFFFF' );
+    $colors = array( 0 => 'DFDFDF', 1 => '#FFFFFF' );
 
     for($i=0;$i < sizeof($environment_array);$i++) {
         $bgcolor = $colors[ $i % 2 ];
@@ -518,47 +518,47 @@ function browse_list($by, $what)
     case 'license':
         $query = ("SELECT * FROM description,developing WHERE "
                   ."description.proid=developing.proid AND "
-                  ."license = '$what'");
+                  ."license = '$what' AND description.status > 0");
         break;
     case 'type':
-        $query = "SELECT * FROM description WHERE type='$what'";
+        $query = "SELECT * FROM description WHERE type='$what' AND status > 0";
         break;
     case 'steps':
-        $query = "SELECT * FROM description WHERE status='$what'";
+        $query = "SELECT * FROM description WHERE status='$what' AND status > 0";
         break;
     case 'volume':
-        $query = "SELECT * FROM description WHERE volume='$what'";
+        $query = "SELECT * FROM description WHERE volume='$what' AND status > 0";
         break;
     case 'date':
-        $query = "SELECT * FROM description WHERE creation='$what'";
+        $query = "SELECT * FROM description WHERE creation='$what' AND status > 0";
         break;
     case 'platform':
         $query = ("SELECT * FROM description,tech_content WHERE "
                   ."description.proid=tech_content.proid AND "
-                  ."platform='$what'");
+                  ."platform='$what' AND description.status > 0");
         break;
     case 'architecture':
         $query = ("SELECT * FROM description,tech_content WHERE "
                   ."description.proid=tech_content.proid AND "
-                  ."architecture='$what'");
+                  ."architecture='$what' AND description.status > 0");
         break;
     case 'environment':
         $query = ("SELECT * FROM description,tech_content WHERE "
                   ."description.proid=tech_content.proid AND "
-                  ."environment='$what'");
+                  ."environment='$what' AND description.status > 0");
         break;
     case 'audience': // FIXME: broken query
-        $query = "SELECT * FROM description WHERE ='$what'";
+        $query = "SELECT * FROM description WHERE ='$what' AND status > 0";
         break;
     case 'os': // FIXME: broken query
-        $query = "SELECT * FROM description WHERE ='$what'";
+        $query = "SELECT * FROM description WHERE ='$what' AND status > 0";
         break;
     case 'language': // FIXME: broken query
-        $query = "SELECT * FROM description WHERE ='$what'";
+        $query = "SELECT * FROM description WHERE ='$what' AND status > 0";
         break;
     case 'project_name':
         $query = 'SELECT * FROM description WHERE status > 0'
-                     ." AND  project_title LIKE '". $what . "%'";
+                     ." AND project_title LIKE '". $what . "%'";
         break;
     default:
         lib_die('Error in browselib.inc function browse_list. '.$by
@@ -617,7 +617,7 @@ function _browse_project_name()
                     '<b>'.$t->translate('Project Name').'</b>');
     $bx->box_next_row_of_columns();
     
-    $colors = array( 1 => 'gold', 0 => '#FFFFFF' );
+    $colors = array( 1 => 'DFDFDF', 0 => '#FFFFFF' );
 
     while (list(, $ltr) = each($alphabet)) {
         $bgcolor = $colors[ $i % 2 ];

@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: Spanish-lang.inc,v 1.1 2003/11/21 12:56:02 helix Exp $
+# $Id: Spanish-lang.inc,v 1.2 2004/02/02 12:30:16 helix Exp $
 #
 ######################################################################
 
@@ -115,7 +115,6 @@ function translate_real($phrase) {
     case 'New License URL': $tmp = 'Nueva URL de Licencia'; break;
     case 'New License': $tmp = 'Nueva Lizencia'; break;
     case 'New Project': $tmp = 'Nuevo Proyecto'; break;
-    case 'New Projects': $tmp = 'Nuevos Proyectos'; break;
     case 'New User': $tmp = 'Nuevo Usuario'; break;
     case 'News': $tmp = 'Noticias'; break;
     case 'Newsletter': $tmp = 'Lista de Noticias'; break;
@@ -162,6 +161,9 @@ function translate_real($phrase) {
     case 'Rating': $tmp = 'Puntuación'; break;
     case 'Realname': $tmp = 'Nombre'; break;
     case 'Receive an email update when something happens in this project': $tmp = 'Reciba una notificación de suceso en este proyecto vía correo electrónico'; break;
+    case 'Recent Developers': $tmp = 'Nuevos Desarrolladores'; break;
+    case 'Recent Projects': $tmp = 'Nuevos Proyectos'; break;
+    case 'Recent Sponsors': $tmp = 'Nuevos Patrocinadores'; break;
     case 'Referees Wanted': $tmp = 'Se buscan árbitros'; break;
     case 'Referees': $tmp = 'Árbitros'; break;
     case 'Register as a new User': $tmp = 'Regístrese como usuario'; break;

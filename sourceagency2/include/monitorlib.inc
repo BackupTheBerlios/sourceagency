@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: monitorlib.inc,v 1.2 2003/11/21 15:02:59 helix Exp $
+# $Id: monitorlib.inc,v 1.3 2004/02/02 12:30:16 helix Exp $
 #
 ######################################################################
 
@@ -152,7 +152,7 @@ function monitor_show($proid)
                         .$t->translate('Creation').'</b>');
 	$i=1;
 
-        $colors = array( 1 => 'DFDFDF', 0 => '#FFFFFF' );
+        $colors = array( 1 => '#DFDFDF', 0 => '#FFFFFF' );
   	while($db->next_record()) {
             $bgcolor = $colors[ $i % 2 ];
 

@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.1 2003/11/21 12:56:01 helix Exp $
+# $Id: lib.inc,v 1.2 2004/02/02 12:30:16 helix Exp $
 #
 ######################################################################
 
@@ -488,7 +488,7 @@ function _draw_top_bar( $project_title, $page, $proid = '',
     $btop->box_columns_begin(2);
 
     // 1st column (left one)
-    $btop->box_column('left','','',"<font size=\"+2\"><b> "
+    $btop->box_column('left','','',"<font size=\"+1\"><b>"
                       . $project_title . ' - ' . $t->translate($page) 
                       . '</b></font>');
 
@@ -546,14 +546,15 @@ function _draw_top_bar( $project_title, $page, $proid = '',
 	}
     }
 
+    $btop->box_column_finish();
     $btop->box_next_row_of_columns();
 
-    $btop->box_colspan (2,'','#000000',html_image('blank.gif',0,1,1,''));
+//  $btop->box_colspan (2,'','#000000',html_image('blank.gif',0,1,1,''));
+    $btop->box_colspan (2,'','#FFFFFF','<hr>');
     $btop->box_columns_end();
     $btop->box_body_end();
     $btop->box_end();
-
-    print "<br><p>\n";
+    print "<p>\n";
 }
 
 /**
@@ -685,13 +686,13 @@ function summary($proid)
     $bx->box_title($t->translate('Stay informed'));
     $bx->box_body_begin();
 
-    print ( '<br>' . html_link('monitor_edit.php',array('proid' => $proid),
+    print (html_link('monitor_edit.php',array('proid' => $proid),
                                html_image('ic/check.png',0,16,15,
                                           'ic/check.png')
                                . ' '.$t->translate('Monitor this Project'))
             . '<br>'. $t->translate('Receive an email update when something '
                                  .'happens in this project')
-            . "<p>\n" );
+            . "\n" );
 
     $bx->box_body_end();
 
@@ -703,7 +704,7 @@ function summary($proid)
     $bx->box_title($t->translate('Actions by involved users'));
     $bx->box_body_begin();
 
-    print ('<br>' . html_link('configure.php',array('proid' => $proid),
+    print (html_link('configure.php',array('proid' => $proid),
                               html_image('ic/check.png',0,16,15,'ic/check.png')
                               . ' '
                               .$t->translate('Project configuration'))
@@ -726,7 +727,7 @@ function summary($proid)
                       .$t->translate('Decision making'))
             . '<br>'
             .$t->translate('Sponsors can make their decisions')
-            .".\n&nbsp;<p><br>" );
+            ."\n" );
 
     $bx->box_body_end();
 
@@ -797,13 +798,11 @@ function calendar_box($proid)
                        . "proid='$proid' AND description_user = username");
     $db_general->next_record();
     
-    print "<br>\n";
-    
     $bx->box_columns_begin(2);
     
-    $bx->box_column ('left','55%','','<b>'
-                     .$t->translate('Project Owner(s)')
-                     .':</b>');
+    $bx->box_column ('left','55%','',
+                     $t->translate('Project Owner(s)')
+                     .':');
     $bx->box_column ('left','45%','',
                      $db_general->f('description_user'));
     
@@ -811,16 +810,16 @@ function calendar_box($proid)
     $bx->box_colspan (2,'','','');
     $bx->box_next_row_of_columns();
     
-    $bx->box_column ('left','','','<b>'
-                     .$t->translate('Project Type')
-                     .':</b>');
+    $bx->box_column ('left','','',
+                     $t->translate('Project Type')
+                     .':');
     $bx->box_column ('left','','',$t->translate($db_general->f('type')));
     
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ('left','','','<b>'
-                     .$t->translate('Project Nature')
-                     .':</b>');
+    $bx->box_column ('left','','',
+                     $t->translate('Project Nature')
+                     .':');
 
     // the nature is whether the project is a developing or a sponsored
     // project. we work it out from the permissions on the project initiator
@@ -846,9 +845,9 @@ function calendar_box($proid)
     
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ('left','','','<b>'
-                     .$t->translate('Project Volume')
-                     .':</b>');
+    $bx->box_column ('left','','',
+                     $t->translate('Project Volume')
+                     .':');
     $bx->box_column ('left','','',$t->translate($db_general->f('volume')));
     
     $bx->box_next_row_of_columns();
@@ -861,18 +860,18 @@ function calendar_box($proid)
     $db_local->next_record();
     $budget = ( $db_local->num_rows() == 0 ? 0 : $db_local->f("SUM(budget)") );
     
-    $bx->box_column ('left','','','<b>'
-                     .$t->translate('Current project budget')
-                     .':</b>');
+    $bx->box_column ('left','','',
+                     $t->translate('Current project budget')
+                     .':');
     $bx->box_column ('left','','',"$budget Euro");
     
     $bx->box_next_row_of_columns();
     $bx->box_colspan (2,'','','');
     $bx->box_next_row_of_columns();
-    
-    $bx->box_column ('left','','','<b>'
-                     .$t->translate('Creation')
-                     .':</b>');
+   
+    $bx->box_column ('left','','',
+                     $t->translate('Creation')
+                     .':');
     
     $tStamp = mktimestamp($db_general->f('description_creation'));
     $bx->box_column ('left','','',timestr_middle($tStamp));
@@ -887,7 +886,7 @@ $bx->box_column ('left','','','&nbsp;');
     
     $bx->box_columns_end();
 
-    print "<br>\n";
+    print "\n";
 }
 
 /**
@@ -907,8 +906,7 @@ function summary_news($proid)
     $db_summ_news = new DB_SourceAgency;
     $db_summ_news->query("SELECT * FROM news,auth_user WHERE "
                          . "proid='$proid' AND user_news=username "
-                         . "ORDER BY creation_news DESC LIMIT 3");
-    print "<br>\n";
+                         . "ORDER BY creation_news DESC LIMIT 5");
     
     if ($db_summ_news->num_rows() == 0) {
 	print ($t->translate("There have not been posted any news by the "
@@ -925,16 +923,16 @@ function summary_news($proid)
             
             print '&nbsp;';
             htmlp_link('news.php',array('proid' => $proid),
-                       '<b>' . $db_summ_news->f('subject_news') . '</b><br>');
+                       $db_summ_news->f('subject_news') . '<br>');
             
             $timestamp = mktimestamp($db_summ_news->f('creation_news'));
             
-            print ( "<b><font size=\"-1\">&nbsp;"
+            print ( "&nbsp;"
                     . lib_nick($db_summ_news->f('user_news')) . ' - '
-                    . timestr_comment($timestamp) . "</b></font><br>\n" );
+                    . timestr_comment($timestamp) . "<br>\n" );
             
             if ($db_comments_on_news->num_rows() > 0) {
-                print ( "&nbsp;<font size=-1>[ "
+                print ( "&nbsp;[ "
                         . $db_comments_on_news->num_rows() . " ");
                 htmlp_link('comments.php',
                            array('proid'  => $proid, 
@@ -942,7 +940,7 @@ function summary_news($proid)
                                  'number' => $db_summ_news->f('creation_news'),
                                  'ref'    => '0'), 
                            $t->translate('comments'));
-                print( " ".$t->translate('on it')." ]</font>\n" );
+                print( " ".$t->translate('on it')." ]\n" );
             }
             print "<p>\n";
         }
@@ -950,10 +948,9 @@ function summary_news($proid)
 
     print ( "<p align=right><a href=\"" . $sess->url("news_edit.php")
             . $sess->add_query(array("proid" => $proid))
-            . "\"><FONT SIZE=\"-1\">["
+            . "\">["
             .$t->translate("Submit News")
-            ."]</FONT></a>&nbsp;&nbsp;"
-            . "<br>&nbsp;\n" );
+            ."]</a>&nbsp;\n" );
 }
 
 /**
@@ -1360,7 +1357,7 @@ function lib_insertion_finished()
  * @see end_content()
  */
 function start_content() {
-    print "\n\n<!-- content -->\n";
+    print "\n<!-- content -->\n";
 }
 
 /**
@@ -1445,13 +1442,13 @@ function lib_in_step($proid, $step_num)
 // REFACTOR: could be moved to html.inc ????
 function lib_comment_it($proid, $type, $number, $ref, $subject, $text)
 {
-    print '<FONT SIZE=-1>[ ';
+    print '<p><font size=-1>[ ';
     htmlp_link('comments_edit.php', array('proid'   => $proid, 
                                            'type'    => $type, 
                                            'number'  => $number, 
                                            'ref'     => $ref, 
                                            'subject' => $subject), $text);
-    print " ]</FONT>\n";
+    print " ]</font>\n";
 }
 
 // REFACTOR: could be moved to html.inc ????
@@ -1459,13 +1456,13 @@ function lib_previous_comment($proid, $type, $number, $ref, $text)
 {
     global $sess;
     
-    print '<FONT SIZE=-1>[ ';
+    print '<font size=-1>[ ';
 
     htmlp_link('comments.php',array('proid'  => $proid, 
                                      'type'   => $type, 
                                      'number' => $number, 
                                      'ref'    => $ref), $text);
-    print " ]</FONT>\n";
+    print " ]</font>\n";
 }
 
 function lib_show_comments_on_it($proid, $type_cmt, $number, $cmt_id)

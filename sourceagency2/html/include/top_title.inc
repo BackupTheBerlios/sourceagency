@@ -50,7 +50,7 @@ vspace="5" hspace="5" ALT="<?php echo $sys_logo_alt;?>"></a>
 <font font="times" size="+1" color="red">BETA BETA BETA</font><br>
 This site is being beta tested, 
 please send any and all
- <a href="mailto:sourceagency-support@lists.berlios.de?subject=SourceAgency Beta Feedback&cc=grex@scouts-es.org&cc=lutz.henckel@fokus.fraunhofer.de&cc=riessen@berlios.de"
+ <a href="mailto:sourceagency-support@lists.berlios.de?subject=SourceAgency Beta Feedback"
 >feedback</a>!
 </center>
 </td>

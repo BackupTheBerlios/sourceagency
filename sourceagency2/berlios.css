@@ -11,7 +11,7 @@ $h6 = "8px";
 ?>
 BODY { background-color: #FFFFFF }
 
-OL,UL,P,BODY,TD,TR,TH,FORM { font-family: <?php echo $th_font_family;?>; font-size:<?php echo $fsn ?>; color: <?php echo $th_font_color;?> }
+OL,UL,P,BODY,TD,TR,TH,FORM,INPUT,TEXTAREA,SELECT { font-family: <?php echo $th_font_family;?>; font-size:<?php echo $fsn ?>; color: <?php echo $th_font_color;?> }
 
 H1 { font-size: <?php echo $h1; ?>; font-family: <?php echo $th_font_family;?> }
 H2 { font-size: <?php echo $h2; ?>; font-family: <?php echo $th_font_family;?> }
@@ -29,6 +29,8 @@ A.maintitlebar:visited { color: <?php echo $th_navstrip_font_color;?> }
 .menus { color: <?php echo $th_nav_font_color;?>; text-decoration: none }
 .menus:visited { color: <?php echo $th_font_color;?>; text-decoration: none }
 .menus:hover { text-decoration:underline; }
+
+.newsind { font-family: <?php echo $th_font_family; ?>; font-size: <?php echo $fss; ?>; text-indent: -9px; margin-left: 9px; padding-bottom: 2px;}
 
 A:link { text-decoration:none }
 A:visited { text-decoration:none }

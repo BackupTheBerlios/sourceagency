@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: insertlib.inc,v 1.1 2003/11/21 12:56:01 helix Exp $
+# $Id: insertlib.inc,v 1.2 2004/02/02 12:30:16 helix Exp $
 #
 ######################################################################
 
@@ -250,6 +250,7 @@ function no_other_project_with_same_title($project_title)
  * @param   string    $type
  * @param   string    $volume
  *
+ * @global  string    $ml_notify
  * @global  object    $db            PHPLib database object
  * @global  object    $auth          PHPLib authentication object
  * @global  object    $t             Translation object
@@ -258,7 +259,7 @@ function no_other_project_with_same_title($project_title)
  */
 function insert_into_database($project_title, $description, $type, $volume)
 {
-    global $db, $auth, $t;
+    global $db, $auth, $t, $ml_notify;
 
     $status = 0;
 
@@ -269,8 +270,9 @@ function insert_into_database($project_title, $description, $type, $volume)
              ."description_creation=NOW()");
     $db->query("INSERT $tables SET $set");
 
-    if ($db->affected_rows == 0) {
-        lib_die('Database error in insert_into_database() in insertlib.inc');
+    if ($db->affected_rows() == 0) {
+        lib_die('Database error in insert_into_database() in insertlib.inc'
+		.": INSERT $tables SET $set");
     }
 
     /* Get project index */
@@ -311,11 +313,10 @@ function insert_into_database($project_title, $description, $type, $volume)
 
     lib_insertion_information();
 
-    // FIXME: ml_notify is not defined
-//      if ($ml_notify) {
-//    	$msg = $t->translate('insert project') . " $project_title "
-//             .$t->translate('by') . ' ' . $auth->auth['uname'] . '.';
-//        	mailuser('editor', $t->translate('Project inserted'), $msg);
-//      }
+    if ($ml_notify) {
+    	$msg = $t->translate('insert project') . " $project_title "
+             .$t->translate('by') . ' ' . $auth->auth['uname'] . '.';
+        	mailuser('editor', $t->translate('Project inserted'), $msg);
+    }
 }
 ?>

@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: box.inc,v 1.1 2003/11/21 12:56:01 helix Exp $
+# $Id: box.inc,v 1.2 2004/02/02 12:30:16 helix Exp $
 #
 ######################################################################
 
@@ -176,7 +176,7 @@ class box {
     function box_end()
     {
 	echo "</table>\n";
-	echo "</td></tr></table><br>\n";
+	echo "</td></tr></table>\n";
 	echo "<!-- box end -->\n";
     }
 
@@ -188,8 +188,8 @@ class box {
     function box_title_begin()
     {
 	echo "   <!-- box title begin -->\n";
-	echo "   <tr bgcolor=\"$this->box_title_bgcolor\">";
-        echo "      <td align=\"$this->box_title_align\">\n";
+	echo "   <tr bgcolor=\"$this->box_title_bgcolor\">\n";
+        echo "        <td align=\"$this->box_title_align\">\n";
     }
 
     /**
@@ -199,7 +199,7 @@ class box {
      */
     function box_title_end()
     {
-	echo "      </td>\n";
+	echo "       </td>\n";
         echo "   </tr>\n";
 	echo "   <!-- box title end -->\n";
     }
@@ -217,7 +217,7 @@ class box {
     function box_title($title)
     {
 	$this->box_title_begin();
-	echo ( "      <font color=\"$this->box_title_font_color\">"
+	echo ( "           <font color=\"$this->box_title_font_color\">"
                ."<b>$title</b></font>\n" );
 	$this->box_title_end();
     }
@@ -231,8 +231,9 @@ class box {
     {
        	echo ( "   <!-- box body begin -->\n"
                . "   <tr bgcolor=\"$this->box_body_bgcolor\">\n"
-               . "         <td align=\"$this->box_body_align\" valign="
-               . "\"$this->box_body_valign\"><font color=\""
+               . "       <td align=\"$this->box_body_align\" valign="
+               . "\"$this->box_body_valign\">\n"
+               . "           <font color=\""
                . "$this->box_body_font_color\">\n" );
     }
 
@@ -243,7 +244,7 @@ class box {
      */
     function box_body_end()
     {
-	echo ( "      </font>\n"
+	echo ( "           </font>\n"
                . "      </td>\n"
                . "   </tr>\n"
                . "   <!-- box body end -->\n" );
@@ -262,9 +263,7 @@ class box {
     function box_body($text)
     {
 	$this->box_body_begin();
-	echo ( "            <font color=\"".$this->box_body_font_color."\">\n"
-               . '            '.$text
-               . "            </font>\n" );
+	echo ( "            $text\n" );
 	$this->box_body_end();
     }
 
@@ -311,10 +310,10 @@ class box {
      */
     function box_columns_begin($number_of_columns, $valign = 'top')
     {
-	echo ( "\n   <!-- table with ".$number_of_columns." columns -->\n"
+	echo ( "   <!-- table with ".$number_of_columns." columns -->\n"
                . "   <table border=\"0\" cellspacing=\"0\" cellpadding=\"3"
                . "\" align=\"center\" width=\"100%\">\n"
-               . "      <tr valign=\"$valign\">\n");
+               . "       <tr valign=\"$valign\">\n");
     }
 
     /**
@@ -331,9 +330,10 @@ class box {
 	if (!isset($bg_color) || empty($bg_color)) {
             $bg_color='#FFFFFF';
 	}
-	echo ( "         <!-- New Column starts -->\n"
-               . "         <td align=\"".$align."\" width=\"".$width
-               ."\" bgcolor=\"".$bg_color."\">" );
+	echo ( "           <!-- New Column starts -->\n"
+               . "           <td align=\"".$align."\" width=\"".$width
+               ."\" bgcolor=\"".$bg_color."\">\n"
+               ."                " );
     }
 
     /**
@@ -343,7 +343,7 @@ class box {
      */
     function box_column_finish()
     {
-	echo "</td>\n         <!-- Column finishes -->\n";
+	echo "           </td>\n           <!-- Column finishes -->\n";
     }
 
     /**
@@ -353,7 +353,7 @@ class box {
      */
     function box_columns_end()
     {
-       	echo "      </tr>\n   </table>\n   <!-- end table with columns -->\n";
+       	echo "       </tr>\n   </table>\n   <!-- end table with columns -->\n";
     }		
 
     /**
@@ -394,8 +394,8 @@ class box {
      */
     function box_next_row_of_columns()
     {
-       	echo ( "      </tr>\n      <!-- next row with several columns -->\n"
-               . "      <tr>\n" );
+       	echo ( "       </tr>\n       <!-- next row with several columns -->\n"
+               . "       <tr>\n" );
     }
 
     /**
@@ -415,12 +415,13 @@ class box {
      */
     function box_colspan($number_of_columns, $align, $bgcolor, $text='')
     {
-       	echo ( "         <!-- New Column spanned over $number_of_columns "
+       	echo ( "           <!-- New Column spanned over $number_of_columns "
                . "columns starts -->\n"
-               . "         <td colspan=\"".$number_of_columns."\" align=\""
-               . $align."\" bgcolor=\"".$bgcolor."\">" . $text
-               . "</td>\n"
-               . "         <!-- Column spanned over $number_of_columns "
+               . "           <td colspan=\"".$number_of_columns."\" align=\""
+               . $align."\" bgcolor=\"".$bgcolor."\">"
+               . "               $text\n"
+               . "           </td>\n"
+               . "           <!-- Column spanned over $number_of_columns "
                ."columns finished -->\n" );
     }
 
