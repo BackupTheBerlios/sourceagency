@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.18 2002/06/14 09:14:11 riessen Exp $
+# $Id: milestoneslib.inc,v 1.19 2002/07/17 12:38:48 riessen Exp $
 #
 ######################################################################
 
@@ -209,14 +209,14 @@ function milestones_preview($proid, $devid)
 
     $bx->box_next_row_of_columns();
 
-    $bx->box_column('center','',$bgcolor,'<b>$number</b>');
-    $bx->box_column('','',$bgcolor,'<b>$goals</b>');
+    $bx->box_column('center','',$bgcolor,"<b>$number</b>");
+    $bx->box_column('','',$bgcolor,"<b>$goals</b>");
     $tStamp = mktimestamp(date_to_timestamp($release_day,
     $release_month, $release_year));
     $bx->box_column('center','',$bgcolor,
                     '<b>'.timestr_middle($tStamp).'</b>');
-    $bx->box_column('center','',$bgcolor,'<b>$product</b>');
-    $bx->box_column('center','',$bgcolor,'<b>$payment %</b>');
+    $bx->box_column('center','',$bgcolor,"<b>$product</b>");
+    $bx->box_column('center','',$bgcolor,"<b>$payment %</b>");
     $bx->box_column('center','',$bgcolor,'<b>'
                     .$t->translate('Proposed').'</b>');
 
