@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: personallib.inc,v 1.15 2002/04/20 13:07:50 grex Exp $
+# $Id: personallib.inc,v 1.16 2002/05/02 12:02:22 riessen Exp $
 #
 ######################################################################
 
@@ -127,10 +127,11 @@ function personal_ratings_long($username)
  */
 function personal_related_projects($username, $status)
 {
-    global $bx;
+    global $bx,$t;
 
     $bx->box_begin();
-    $bx->box_title('Involved '.show_status($status).' Projects');
+    $bx->box_title($t->translate('Involved Projects')
+                    .' ('.show_status($status).')');
     $bx->box_body_begin();
 
     $db_local = new DB_SourceAgency;
@@ -142,7 +143,9 @@ function personal_related_projects($username, $status)
         $user_type = 'developer';
         $table = 'developing';
     } else {
-        lib_die('error in personallib.inc in function personal_related_projects(): User is whether editor or sponsor. Users cannot have multiple permissions');
+        lib_die('error in personallib.inc in function '
+                .'personal_related_projects(): User is whether editor '
+                .'or sponsor. Users cannot have multiple permissions');
     }
 
     $db_local->query("SELECT * FROM $table,description WHERE "
@@ -436,10 +439,10 @@ function personal_news_long($username)
  */
 function personal_consultants($username, $status)
 {
-    global $bx;
+    global $bx, $t;
 
     $bx->box_begin();
-    $bx->box_title('Consultant ('.show_status($status).')');
+    $bx->box_title($t->translate('Consultant').' ('.show_status($status).')');
     $bx->box_body_begin();
     $db_local = new DB_SourceAgency;
     $db_local->query("SELECT * FROM consultants,description WHERE "
@@ -473,10 +476,10 @@ function personal_consultants($username, $status)
  */
 function personal_referees($username, $status)
 {
-    global $bx;
+    global $bx, $t;
 
     $bx->box_begin();
-    $bx->box_title('Referee ('.show_status($status).')');
+    $bx->box_title($t->translate('Referee').' ('.show_status($status).')');
     $bx->box_body_begin();
     $db_local = new DB_SourceAgency;
     $db_local->query("SELECT * FROM referees,description WHERE "
