@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: footer.inc,v 1.2 2004/02/02 12:30:16 helix Exp $
+# $Id: footer.inc,v 1.3 2004/03/02 12:48:44 helix Exp $
 #
 ######################################################################
 
@@ -34,8 +34,8 @@ bgcolor="<?php echo $th_navstrip_bgcolor;?>">
 <td width="15%">&nbsp;</td>
 <td align="center" width="70%"><span class="titlebar">
 <font color="<?php echo $th_navstrip_font_color;?>">Copyright
-&copy; 2001-2004 <a href="<?php echo $org_url;?>" class="maintitlebar" 
-target="_blank"><?php echo $org_name;?></a>.</font></span></td>
+&copy; 2001-<?php echo date("Y");?> <a href="<?php echo $org_url;?>" class="maintitlebar" 
+target="_blank"><?php echo $org_name;?></a></font></span></td>
 <td width="15%" align="right"><span class="titlebar">
 <a href="<?php echo $sys_url;?>html" target="_blank"><font 
 color="<?php echo $th_nav_bgcolor;?>"
