@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: faqlib.inc,v 1.4 2002/04/19 10:20:59 grex Exp $
+# $Id: faqlib.inc,v 1.5 2002/06/06 08:15:38 riessen Exp $
 #
 ######################################################################
 
@@ -53,6 +53,7 @@
 function faqform()
 {
     global $sess, $bx, $t;
+    global $question, $answer;
 
     $bx->box_begin();
     $bx->box_title($t->translate('New Frequently Asked Question'));
