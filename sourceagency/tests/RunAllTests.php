@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: RunAllTests.php,v 1.12 2002/05/07 09:07:45 riessen Exp $
+# $Id: RunAllTests.php,v 1.13 2002/05/07 09:24:10 riessen Exp $
 #
 ######################################################################
 
@@ -24,10 +24,6 @@ if ( floor( phpversion() ) < 4 ) {
   exit;
 }
 
-// this is really insane but i have to re-edit the include path
-// assume that i'm in tests/include, two above me is include
-ini_set( 'include_path', 
-         getcwd() . '/../../include' . ':' . ini_get('include_path') );
 ini_set( 'include_path', 
          getcwd() . '/../include' . ':' . ini_get('include_path') );
 
