@@ -1,25 +1,26 @@
 <?php
-// TestMilestoneslib.inc
+// TestNewslib.php
 // 
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestMilestoneslib.inc,v 1.2 2001/10/16 14:17:10 ger Exp $
+// $Id: TestNewslib.php,v 1.1 2001/10/16 14:17:10 ger Exp $
 
 require_once( "../constants.php" );
 
 if ( !defined("BEING_INCLUDED" ) ) {
 }
 
-require_once( 'milestoneslib.inc' );
+require_once( 'newslib.inc' );
 
-class UnitTestMilestoneslib
+class UnitTestNewslib
 extends TestCase
 {
-    function UnitTestMilestoneslib( $name ) {
+    function UnitTestNewslib( $name ) {
         $this->TestCase( $name );
     }
 }
 
 define_test_suite( __FILE__ );
+
 ?>
