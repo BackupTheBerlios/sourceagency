@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: followuplib.inc,v 1.13 2002/07/22 11:26:54 riessen Exp $
+# $Id: followuplib.inc,v 1.14 2002/07/22 11:35:15 riessen Exp $
 #
 ######################################################################
 
@@ -602,6 +602,9 @@ function followup_milestone_schedule($proid, $milestone_number, $count)
         break;
     }
 
+    if ( !function_exists( 'is_main_developer' ) ) {
+        include( 'security.inc' );
+    }
     switch (_current_iteration($proid)) {
     case '0':
         print "<p>The milestone has not been posted by the main developer";
