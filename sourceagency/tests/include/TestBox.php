@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestBox.php,v 1.1 2001/10/23 16:36:12 riessen Exp $
+// $Id: TestBox.php,v 1.2 2001/10/24 11:16:57 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -40,43 +40,42 @@ extends TestCase
         $this->assertRegexp( "/<table border=0 cellspacing=0 cellpadding=0 "
                              . "bgcolor=\"frame_color\" width=\"box_width\" "
                              . "align=center>/", $text, 
-                             "box begin (0) table line" );
+                             "(0) box begin mismatch" );
         
         $this->assertRegexp( "/<table border=0 cellspacing=\"frame_width\""
                              . " cellpadding=3 align=\"center\" width=\""
-                             . "100%\">/", $text, "box begin (1) table line" );
+                             . "100%\">/", $text, 
+                             "(1) box begin mismatch" );
     }
     function _testFor_box_end( $text ) {
         $this->assertRegexp("/<\/table>\n<\/td><\/tr><\/table>/", $text,
-                            "box end text mismatch" );
+                            "box end mismatch" );
     }
 
     function _testFor_box_title_begin( $text ) {
         $this->assertRegexp("/<tr bgcolor=\"title_bgcolor\"><td align=\""
                             . "title_align\">\n/", $text,
-                            "box title begin missing text" );
+                            "box title begin mismatch" );
     }
     function _testFor_box_title_end( $text ) {
-        $this->assertRegexp( "/<\/td><\/tr>/", $text, 
-                             "box title end text mismatch" );
+        $this->assertRegexp( "/<\/td><\/tr>/", $text,"box title end mismatch");
     }
     function _testFor_box_title( $text, $title ) {
-        $this->assertRegexp("/<b>".$title."<\/b>/",$text,
-                            "box title text mismatch");
+        $this->assertRegexp("/<b>".$title."<\/b>/",$text,"box title mismatch");
     }
     function _testFor_box_body_begin( $text ) {
         $this->assertRegexp( "/<tr bgcolor=\"body_bgcolor\"><td align=\""
                              . "body_align\"><font color="
                              . "\"body_font_color\">/",$text, 
-                             "box body begin text mismatch");
+                             "box body begin mismatch");
     }
     function _testFor_box_body_end( $text ) {
         $this->assertRegexp( "/<\/font><\/td><\/tr>/", $text, 
-                             "box body end text mismatch");
+                             "box body end mismatch");
     }
     function _testFor_box_body( $text, $body ) {
         $this->assertRegexp( "/<font color=\"body_font_color\">" . $body
-                             . "<\/font>/", $text, "box body end");
+                             . "<\/font>/", $text, "box body mismatch");
     }
     function _thisFor_box_columns_begin( $text, $nr_cols ) {
         $this->assertRegexp( "/<!-- table with " . $nr_cols . " columns -->/",
@@ -93,6 +92,19 @@ extends TestCase
                              ."\" bgcolor=\"".$bgcolor."\">/", 
                              $text, "box column start mismatch" );
     }
+    function _testFor_box_column_finish( $text ) {
+      $this->assertRegexp( "/<\/td>\n/", $text, 
+                           "box column finish mismatch");
+    }
+    function _testFor_box_columns_end( $text ) {
+        $this->assertRegexp( "/<\/tr>\n<\/table>\n/", $text,
+                             "box columns end mismatch" );
+    }
+    function _testFor_box_next_row_of_columns( $text ) {
+        $this->assertRegexp( "/<\/tr>\n<!--[^-]+-->\n<tr>\n/",
+                             $text, "box next row of columns mismatch" );
+    }
+
 
     // the following the individual test methods
     function testBox_begin() {
@@ -231,6 +243,71 @@ extends TestCase
         $text = capture_text_get();
         $this->assertEquals( 105, capture_text_length(), "Length mismatch" );
         $this->_testFor_box_column_start( $text, $align, $width );
+    }
+
+    function testBox_column_finish() {
+        $this->box->box_column_finish();
+        capture_stop();
+
+        $text = capture_text_get();
+        $this->assertEquals( 31, capture_text_length(), "Length mismatch" );
+        $this->_testFor_box_column_finish( $text );
+    }
+
+    function testBox_columns_end() {
+        $this->box->box_columns_end();
+        capture_stop();
+
+        $text = capture_text_get();
+        $this->assertEquals( 47, capture_text_length(), "Length mismatch" );
+        $this->_testFor_box_columns_end( $text );
+    }
+
+    function testBox_column() {
+        $inserted_text = "this is the text that is being instered";
+        $align = "this is the alignment";
+        $width = "this is the width";
+        $bgcolor = "the is the background color";
+        $this->box->box_column($align, $width, $bgcolor, $inserted_text);
+        capture_stop();
+
+        $text = capture_text_get();
+        $this->assertEquals( 195, capture_text_length(), "Length mismatch" );
+        $this->_testFor_box_column_start( $text, $align, $width, $bgcolor );
+        $this->assertRegexp( "/" . $inserted_text . "/", $text, 
+                             "box column mismatch");
+        $this->_testFor_box_column_finish( $text );
+    }
+
+    function testBox_next_row_of_columns() {
+        $this->box->box_next_row_of_columns();
+        capture_stop();
+
+        $text = capture_text_get();
+        $this->assertEquals( 50, capture_text_length(), "Length mismatch" );
+        $this->_testFor_box_next_row_of_columns( $text );
+    }
+
+    function _testFor_box_colspan( $text, $nr_cols, $align, $bgcolor,
+                                   $insert_text ) {
+        $this->assertRegexp( "/<!--[^-]+-->\n<td colspan=\"".$nr_cols."\" "
+                             ."align=\"".$align."\" bgcolor=\"".$bgcolor."\">"
+                             .$insert_text."<\/td>\n<!--[^-]+-->\n/",$text,
+                             "box colspan mismatch" );
+    }
+
+    function testBox_colspan() {
+        $nr_cols = "number of columns";
+        $align = "this is the alignment";
+        $bgcolor = "this is the background color";
+        $insert_text = "this is the inserted text";
+        $this->box->box_colspan($nr_cols, $align, $bgcolor, $insert_text);
+        capture_stop();
+
+        $text = capture_text_get();
+        $this->assertEquals( 262, capture_text_length(), "Length mismatch" );
+        $this->_testFor_box_colspan( $text, $nr_cols, $align, $bgcolor, 
+                                     $insert_text);
     }
 }
 
