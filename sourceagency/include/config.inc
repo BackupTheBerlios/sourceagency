@@ -7,6 +7,7 @@
 # Copyright (c) 2001 by
 #                Gregorio Robles (grex@scouts-es.org) and
 #		 Lutz Henckel (lutz.henckel@fokus.gmd.de)
+#                Gerrit Riessen (riessen@open-source-consultants.de)
 #
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
@@ -17,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.6 2001/11/09 20:26:39 riessen Exp $
+# $Id: config.inc,v 1.7 2001/11/14 12:23:54 riessen Exp $
 #
 ######################################################################
 
@@ -103,6 +104,25 @@ $ts_array = array (
 $la_array[] = "English";
 $la_array[] = "German";
 # $la_array[] = "Spanish";
+
+######################################################################
+# Step names and count
+#
+# you give each step a name here, but the descriptions are (at this
+# stage) hardcoded in security.inc::allowed_actions
+# Also changing the number of steps doesn't change anything: 6 steps
+# is also pretty much hardcoded.
+#
+# The texts are sent through the translator before being used on the page.
+#
+######################################################################
+$g_step_text[1] = "Consultancy";
+$g_step_text[2] = "Technical Specifications";
+$g_step_text[3] = "Milestones";
+$g_step_text[4] = "Referees";
+$g_step_text[5] = "Project Follow-up";
+$g_step_text[6] = "Rating";
+$g_step_count = 6;
 
 ######################################################################
 # Project Types
