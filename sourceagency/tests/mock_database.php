@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: mock_database.php,v 1.19 2002/05/16 15:01:41 riessen Exp $
+# $Id: mock_database.php,v 1.20 2002/06/26 09:50:18 riessen Exp $
 #
 ######################################################################
 
@@ -395,10 +395,16 @@ extends Assert
     function affected_rows() {
         // TODO: implement method 'affected_rows' which returns the number
         // TODO: of rows that were changed by an insert statement
+        // This has one value for each query, i.e. this value is strongly
+        // correlated to the query, unlike the num_rows which is affected
+        // by the next_record call. Inparticular, this should only be set
+        // if the query is an update or insert query.
+        $this->assert( false, "affected_rows: Method not implemented" );
     }
 
     function nf() {
         // TODO: 'number of fields' for current query?
+        $this->assert( false, "nf: Method not implemented" );
     }
 
     function num_rows() {
