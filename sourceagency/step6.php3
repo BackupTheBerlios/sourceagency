@@ -28,22 +28,26 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require("ratingslib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-?>
-
-<!-- content -->
-
-<?php
+start_content();
 
 $page = "rating";
 
 if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
-  print "The sponsor rates the developers and the developers rates the sponsors. Sponsors and developers can rate also sponsor and developers that have taken part in the project. Everybody is able to make his rating private.\n";
+  print ( "The sponsor rates the developers and the developers rates "
+          ."the sponsors. Sponsors and developers can rate also sponsor "
+          ."and developers that have taken part in the project. Everybody "
+          ."is able to make his rating private.\n");
 
-  print "<p align=right>[ <b>".html_link("step6_edit.php3",array("proid" => $proid),"<b>Rate!</b>")."</b> ]";
+  print ( "<p align=right>[ <b>".html_link("step6_edit.php3",
+                                           array("proid" => $proid),
+                                           "<b>Rate!</b>")."</b> ]");
 
   $bx->box_begin();
   $bx->box_title("Project Participants");
@@ -64,11 +68,8 @@ if (check_permission($proid,$page)) {
 
 }
 
-?>
+end_content();
 
-<!-- end content -->
-
-<?php
 require("footer.inc");
 @page_close();
 ?>
