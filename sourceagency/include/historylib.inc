@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: historylib.inc,v 1.5 2002/05/07 11:26:58 riessen Exp $
+# $Id: historylib.inc,v 1.6 2002/06/06 12:40:16 riessen Exp $
 #
 ######################################################################
 
@@ -102,7 +102,7 @@ function history_extract_table($table_name, $table_creation,
 function bubblesort(&$history)
 {
     for ($i = sizeof($history); $i >= 0; $i--) {
-	for ($j = 1; $j <= $i; $j++) {
+	for ($j = 1; $j < $i; $j++) {
 	    if ($history[$j-1] < $history[$j]) {
 		$temp = $history[$j-1];
 		$history[$j-1] = $history[$j];
