@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.10 2002/05/16 15:03:36 riessen Exp $
+# $Id: unit_test.php,v 1.11 2002/05/21 09:51:04 riessen Exp $
 #
 ######################################################################
 
@@ -26,10 +26,9 @@ class UnitTest
 extends TestCase
 {
     var $p_regexp_html_comment = "<!--[^->]*-->";
+
     function UnitTest( $name = "" ) {
         $this->TestCase( $name );
-//          $this->assertEquals( false, true, "Class UnitTest should not be "
-//                               . "directly instantiated" );
     }
 
     // could actually be defined in phpunit ....
@@ -49,9 +48,10 @@ extends TestCase
     function _testFor_captured_length( $length, $msg = '' ) {
         $this->_check_length( capture_text_length(), $length, $msg );
     }
-    function _testFor_line( $text, $line ) {
-        $this->_testFor_pattern( $text, $line . "\n" );
+    function _testFor_line( $text, $line, $msg = '' ) {
+        $this->_testFor_pattern( $text, $line . "\n", $msg );
     }
+    // test for a specific regular expression in a given text
     function _testFor_pattern( $text, $pattern, $msg = '' ) {
         $this->assertRegexp( "/" . $pattern . "/", $text, 
                                                 $msg . ' (Pattern not Found)');
@@ -80,9 +80,10 @@ extends TestCase
       }
     }
 
+    // passed a mock_db_configure object, this method ensures nothing failed
+    // while using the database objects.
     function _check_db( $db_config ) {
-        $this->assert( !$db_config->did_db_fail(), 
-                       $db_config->error_message());
+        $this->assert(!$db_config->did_db_fail(),$db_config->error_message());
     }
 
     function &_generate_records( $keynames = array(), $count = 0 ) {
@@ -98,6 +99,48 @@ extends TestCase
             $rVal[$val] = $val . "_" . $postfix;
         }
         return $rVal;
+    }
+
+    //
+    // The following are methods to test for common html code
+    //
+    function _query_to_regexp( $str ) {
+        return ( ereg_replace( "[+]", "[+]",
+                               ereg_replace( "[?]", "[?]", 
+                                             ereg_replace( "/", "\/", $str))));
+    }
+
+    function _testFor_html_link( $text, $addr='PHP_SELF', $paras=array(), 
+                                 $link_text='', $css='', $msg='') {
+        global $sess;
+        
+        $str = sprintf('<a href="%%s" class="%s">%s</a>',$css,$link_text);
+        
+        $str = sprintf( $str, ($addr == 'PHP_SELF' ? $sess->self_url()
+                                                   : $sess->url($addr))
+                              . ((is_array($paras) && isset($paras) 
+                                 && !empty($paras)) ? $sess->add_query($paras) 
+                                 : "" ));
+
+        $this->_testFor_pattern( $text, $this->_query_to_regexp($str),
+                                 "_testFor_html_link" 
+                                            . ($msg != '' ? ' ('.$msg.')':''));
+        return $str;
+    }
+
+    function _testFor_html_form_action( $text, $file = 'PHP_SELF',
+                                        $query='', $method='POST', $msg='') {
+        global $sess;
+        
+        $str = sprintf( '%s<form action="%s" method="%s">', "\n",
+                        ($file == 'PHP_SELF' ? $sess->self_url() 
+                                             : $sess->url( $file ))
+                        .$sess->add_query( $query ), $method );
+
+        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+                                 "_testFor_html_form_action"
+                                       .($msg == '' ? '' : ' (' . $msg . ')'));
+        return ($str);
     }
 }
 ?>

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.19 2002/05/15 16:06:44 riessen Exp $
+# $Id: TestHtml.php,v 1.20 2002/05/21 09:51:04 riessen Exp $
 #
 ######################################################################
 
@@ -49,81 +49,101 @@ extends UnitTest
 
     function testhtml_link() {
         //
-        // test 1
+        // a total of five tests
         //
-        $actual = html_link('fubar',array( 'one' => 'what'),'hello world' );
-        $expect = "<a href=\"fubar?one=what\" class=\"\">hello world</a>";
-        $this->assertEquals( $expect, $actual );
-        htmlp_link('fubar',array( 'one' => 'what'),'hello world' );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 49, "test 1" );
-        $this->assertEquals( $expect, $text );
-        
-        // 
-        // test 2
-        //
-        $actual = html_link( 'snafu', "", 'goodbye cruel world' );
-        $expect = "<a href=\"snafu\" class=\"\">goodbye cruel world</a>";
-        $this->assertEquals( $expect, $actual );
-        capture_reset_and_start();
-        htmlp_link( 'snafu', "", 'goodbye cruel world' );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 48, "test 2" );
-        $this->assertEquals( $expect, $text );
+        global $sess;
+        $args=$this->_generate_records(array('url','paras','text','css',),5);
+        $args[0]['url'] = 'fubar';           $args[0]['css'] = '';
+        $args[1]['url'] = 'PHP_SELF';        $args[1]['css'] = '';
+        $args[2]['url'] = 'PHP_SELF';        $args[2]['css'] = 'css';
+        $args[3]['url'] = 'fubar';           $args[3]['css'] = 'css';
+        $args[4]['url'] = 'snafu and fubar'; $args[4]['css'] = 'css';
 
-        //
-        // test 3
-        //
-        $actual = html_link('fubar',array( 'one' => 'what the hell'),
-                            'hello world' );
-        $expect = ( "<a href=\"fubar?one=what+the+hell\" class=\"\">"
-                    ."hello world</a>" );
-        $this->assertEquals( $expect, $actual );
-        capture_reset_and_start();
-        htmlp_link('fubar',array( 'one' => 'what the hell'),
-                  'hello world' );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 58, "test 3" );
-        $this->assertEquals( $expect, $text );
+        $args[0]['paras'] = array( 'one' => 'what' );
+        $args[1]['paras'] = '';
+        $args[2]['paras'] = array( 'one' => 'what the hell');
+        $args[3]['paras'] = '';
+        $args[4]['paras'] = array( 'one'=>'what+the+hell','two'=>'argument 2');
 
-        //
-        // test 4
-        //
-        $actual = html_link('fubar',array( 'one' => 'what+the+hell'),
-                            'hello world' );
-        $expect = ( "<a href=\"fubar?one=what%2Bthe%2Bhell\" class=\"\">"
-                    ."hello world</a>" );
-        $this->assertEquals( $expect, $actual );
-        capture_reset_and_start();
-        htmlp_link('fubar',array( 'one' => 'what+the+hell'),
-                   'hello world' );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 62, "test 4" );
-        $this->assertEquals( $expect, $text );
+        $args[0]['text'] = 'hello world';
+        $args[1]['text'] = 'goodbye cruel world';
+        $args[2]['text'] = 'hello world';
+        $args[3]['text'] = 'hello world';
+        $args[4]['text'] = 'goodbye cruel world';
+
+        $exp_length = array( 0=>49, 
+                             1=>43 + strlen( $sess->self_url()), 
+                             2=>56 + strlen($sess->self_url()), 
+                             3=>43, 
+                             4=>98);
+
+        for ( $idx = 0; $idx < count($args); $idx++ ) {
+            if ( $args[$idx]['css'] ) {
+                $actual = call_user_func_array( 'html_link',$args[$idx] );
+            } else {
+                $actual = html_link($args[$idx]['url'], $args[$idx]['paras'], 
+                                     $args[$idx]['text']);
+            }
+            $expect = $this->_testFor_html_link( $actual, $args[$idx]['url'], 
+                                     $args[$idx]['paras'], $args[$idx]['text'],
+                                     $args[$idx]['css'], "test $idx");
+            $this->assertEquals( $expect, $actual, "assert1: test $idx" );
+            capture_reset_and_start();
+            if ( $args[$idx]['css'] ) {
+                call_user_func_array( 'htmlp_link',$args[$idx] );
+            } else {
+                htmlp_link($args[$idx]['url'], $args[$idx]['paras'], 
+                                                        $args[$idx]['text']);
+            }
+            $text = capture_stop_and_get();
+            $this->_testFor_captured_length($exp_length[$idx],"test $idx");
+            $this->assertEquals( $expect, $text, "assert2: test $idx" );
+        }
+    }
+
+    function _testFor_html_anchor( $text, $name, $msg = '') {
+        $str = '<a name="'. $name . '"></a>';
+        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+                     '_testFor_html_anchor'.($msg == '' ? '': ' ('.$msg.')'));
+        return $str;
     }
 
     function testhtml_anchor() {
-        $actual = html_anchor( "hello world" );
-        $expect = "<a name=\"hello world\"></a>";
+        $name = 'hello world';
+        $actual = html_anchor( $name );
+        $expect = $this->_testFor_html_anchor( $actual, $name );
         $this->assertEquals( $expect, $actual );
 
         // test the print variation of the same function
-        htmlp_anchor( "hello world" );
+        htmlp_anchor( $name );
         $text = capture_stop_and_get();
         $this->_testFor_captured_length( 26, "test 1" );
         $this->assertEquals( $expect, $text );
     }
 
+    function _testFor_html_image( $text, $file, $border, $width, $height,
+                                  $alt, $msg = '' ) {
+        $str = ( '<img src="images/'.$file.'" border="'.$border.'"'
+                 .' width="'.$width.'" height="'.$height
+                 .'" alt="'.$alt.'">' );
+        $this->_testFor_pattern( $text, $this->_query_to_regexp( $str ),
+                           "_testFor_html_image" 
+                           . ($msg == '' ? '' : ' (' . $msg . ')'));
+        return $str;
+    }
     function testhtml_image() {
-        $actual = html_image("file", "border", "width", "height", "alternate");
-        $expect = ("<img src=\"images/file\" border=\"border\" width=\"width\""
-                   . " height=\"height\" alt=\"alternate\">");
+        $args=$this->_generate_records(array('file','border','width','height',
+                                             'alt'),1);
+        $actual = call_user_func_array( 'html_image', $args[0] );
+        $expect = $this->_testFor_html_image( $actual,$args[0]["file"], 
+                                        $args[0]["border"], $args[0]["width"], 
+                                        $args[0]["height"], $args[0]["alt"]);
         $this->assertEquals( $expect, $actual );
         
-        // test the print variation of the same function
-        htmlp_image("file", "border", "width", "height", "alternate");
+        // test the print version of the function
+        call_user_func_array( 'htmlp_image', $args[0] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 85, "test 1" );
+        $this->_testFor_captured_length( 89, "test 1" );
         $this->assertEquals( $expect, $text );
     }
 
@@ -132,28 +152,34 @@ extends UnitTest
         //
         // test 1
         //
-        $text = html_form_action( "PHP_SELF", "query", "type" );
-        $expect = ( "[ \n]+<form action=\""
-                    .ereg_replace( "/", "\/", $sess->self_url() )
-                    ."\" method=\"type\">" );
-        $this->_testFor_pattern( $text, $expect, "p1" );
-        htmlp_form_action( "PHP_SELF", "query", "type" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 31 +  strlen( $sess->self_url() ), 
-                                         "test 1");
-        $this->_testFor_pattern( $text, $expect, "p2" );
+        $args = $this->_generate_records(array("file","query","method"),3);
+        $args[0]["file"] = 'PHP_SELF';
+        $args[1]["file"] = 'file';
+        $args[2]["file"] = 'fubar';
+        $args[0]["query"] = 'query';
+        $args[1]["query"] = '';
+        $args[2]["query"] = array( 'one' => 'two three four' );
+        $args[0]["method"] = 'type';
+        $args[1]["method"] = 'POST';
+        $args[2]["method"] = 'GET';
 
-        // 
-        // test 2
-        //
-        $text = html_form_action( "file", "query", "type" );
-        $expect = "[ \n]+<form action=\"file\" method=\"type\">";
-        $this->_testFor_pattern( $text, $expect, "p3" );
-        capture_reset_and_start();
-        htmlp_form_action( "file", "query", "type" );
-        $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 35, "test 2" );
-        $this->_testFor_pattern( $text, $expect, "p4" );
+        $exp_length = array( 0 => 31 +  strlen( $sess->self_url()), 
+                             1 => 35, 2 => 54 );
+        
+        for ( $idx = 0; $idx < count( $args ); $idx++ ) {
+            $text = html_form_action( $args[$idx]["file"],$args[$idx]["query"],
+                                      $args[$idx]["method"] );
+            $expect = $this->_testFor_html_form_action( $text,
+                                      $args[$idx]["file"],$args[$idx]["query"],
+                                      $args[$idx]["method"], "test $idx" );
+            $this->assertEquals( $expect, $text, "assert1: test $idx" );
+            capture_reset_and_start();
+            htmlp_form_action( $args[$idx]["file"],$args[$idx]["query"],
+                                                       $args[$idx]["method"]);
+            $text = capture_stop_and_get();
+            $this->_testFor_captured_length( $exp_length[$idx], "test $idx");
+            $this->assertEquals( $expect, $text, "assert2: test $idx" );
+        }
     }
 
     function testhtml_form_hidden() {

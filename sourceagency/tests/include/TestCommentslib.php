@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestCommentslib.php,v 1.3 2002/05/16 15:04:16 riessen Exp $
+// $Id: TestCommentslib.php,v 1.4 2002/05/21 09:51:04 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -40,7 +40,9 @@ extends UnitTest
     }
 
     function testComments_form() {
-        $this->_test_to_be_completed();
+        capture_reset_and_start();
+        comments_form( "proid" );
+        $text = capture_stop_and_get();
     }
     function testComments_preview() {
         $this->_test_to_be_completed();

@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestViewslib.php,v 1.3 2002/05/16 15:13:12 riessen Exp $
+// $Id: TestViewslib.php,v 1.4 2002/05/21 09:51:04 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -57,6 +57,10 @@ extends UnitTest
         capture_reset_and_start();
         views_form( "proid" );
         $text = capture_stop_and_get();
+        
+        $this->_testFor_captured_length( 9483 );
+        $this->_testFor_html_form_action( $text, 'PHP_SELF', 
+                                            array('proid'=>'proid'), 'POST' );
     }
 
     function testViews_insert() {

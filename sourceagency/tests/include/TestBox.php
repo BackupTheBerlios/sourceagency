@@ -16,11 +16,14 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestBox.php,v 1.16 2002/05/15 16:09:29 riessen Exp $
+# $Id: TestBox.php,v 1.17 2002/05/21 09:51:04 riessen Exp $
 #
 ######################################################################
 
 include_once( "../constants.php" );
+
+if ( !defined("BEING_INCLUDED" ) ) {
+}
 
 include_once( "box.inc" );
 

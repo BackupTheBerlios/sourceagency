@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConsultantslib.php,v 1.4 2002/05/16 15:04:16 riessen Exp $
+// $Id: TestConsultantslib.php,v 1.5 2002/05/21 09:51:04 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -77,6 +77,7 @@ extends UnitTest
         capture_reset_and_start();
         show_consultants( $dat[0]["proid"] );
         $text = capture_stop_and_get();
+
         $this->_testFor_string_length( $text, 64, "test 1" );
         $this->_testFor_pattern( $text, "No developers have offered "
                                  ."themselves as consultants yet" );
