@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestPersonallib.php,v 1.10 2001/10/26 13:49:16 riessen Exp $
+// $Id: TestPersonallib.php,v 1.11 2001/10/26 15:57:53 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -108,12 +108,21 @@ extends TestCase
                                                 $desc_proid, $p_title ));
     }
 
+    function &_generate_array( $keynames, $postfix ) {
+        $rVal = array();
+        foreach ( $keynames as $val ) {
+            $rVal[$val] = $val . "_" . $postfix;
+        }
+        return $rVal;
+    }
+
     //
     // Start of the actual test methods
     //
     function testPersonal_comments_short() {
         $user1 = "fubar";
         $user2 = "snafu";
+        $user3 = "fritz";
 
         $db_config = new mock_db_configure;
         $db_config->set_nr_instance_expected( 4 );
@@ -124,32 +133,75 @@ extends TestCase
                        2 => ("SELECT * FROM description WHERE proid='%s'"));
         $db_config->add_query( sprintf( $db_q[0], $user1 ), 0 );
         $db_config->add_query( sprintf( $db_q[0], $user2 ), 1 );
-        $db_config->add_query( sprintf( $db_q[0], $user2 ), 4 );
+        $db_config->add_query( sprintf( $db_q[0], $user3 ), 4 );
 
         $db_config->add_num_row(0, 0); // fubar generates zero
         $db_config->add_record(false, 0);
         $db_config->add_num_row(2, 1); // snafu generates two
-        $db_config->add_num_row(12, 4); // snafu generates two
+        $db_config->add_num_row(12, 4); // fritz generates 12
 
-        $row1 = array( 'id'            => 'id_1',
-                       'proid'         => 'proid_1',
-                       'type'          => 'type_1',
-                       'number'        => 'number_1',
-                       'subject_cmt'   => 'subject_cmt_1',
-                       'creation_cmt'  => 'creation_cmt_1',
-                       'ref'           => 'reference_id_1');
+        // queries for snafu
+        $row1 = $this->_generate_array( array( 'id', 'proid', 'type', 'number',
+                                               'subject_cmt', 'creation_cmt',
+                                               'ref'), 1 );
         $db_config->add_record( $row1, 1 );
-        $row2 = array( 'id'            => 'id_2',
-                       'proid'         => 'proid_2',
-                       'type'          => 'type_2',
-                       'number'        => 'number_2',
-                       'subject_cmt'   => 'subject_cmt_2',
-                       'creation_cmt'  => 'creation_cmt_2',
-                       'ref'           => 'reference_id_2');
+        $row2 = $this->_generate_array( array( 'id', 'proid', 'type', 'number',
+                                               'subject_cmt', 'creation_cmt',
+                                               'ref'), 2 );
         $db_config->add_record( $row2, 1 );
         $db_config->add_record( false, 1 );
 
-        // sub-queries
+        // queries for fritz
+        $row7 = $this->_generate_array( array( 'id', 'proid', 'type', 'number',
+                                               'subject_cmt', 'creation_cmt',
+                                               'ref'), 7 );
+        $db_config->add_record( $row7, 4 );
+        $row8 = $this->_generate_array( array( 'id', 'proid', 'type', 'number',
+                                               'subject_cmt', 'creation_cmt',
+                                               'ref'), 8 );
+        $db_config->add_record( $row8, 4 );
+        $row9 = $this->_generate_array( array( 'id', 'proid', 'type', 'number',
+                                               'subject_cmt', 'creation_cmt',
+                                               'ref'), 9 );
+        $db_config->add_record( $row9, 4 );
+        $row10 = $this->_generate_array( array('id', 'proid', 'type', 'number',
+                                               'subject_cmt', 'creation_cmt',
+                                               'ref'), 10 );
+        $db_config->add_record( $row10, 4 );
+        $row11 = $this->_generate_array( array('id', 'proid', 'type', 'number',
+                                               'subject_cmt', 'creation_cmt',
+                                               'ref'), 11 );
+        $db_config->add_record( $row11, 4 );
+        $row12 = $this->_generate_array( array('id', 'proid', 'type', 'number',
+                                               'subject_cmt', 'creation_cmt',
+                                               'ref'), 12 );
+        $db_config->add_record( $row12, 4 );
+        $row13 = $this->_generate_array( array('id', 'proid', 'type', 'number',
+                                               'subject_cmt', 'creation_cmt',
+                                               'ref'), 13 );
+        $db_config->add_record( $row13, 4 );
+        $row14 = $this->_generate_array( array('id', 'proid', 'type', 'number',
+                                               'subject_cmt', 'creation_cmt',
+                                               'ref'), 14 );
+        $db_config->add_record( $row14, 4 );
+        $row15 = $this->_generate_array( array('id', 'proid', 'type', 'number',
+                                               'subject_cmt', 'creation_cmt',
+                                               'ref'), 15 );
+        $db_config->add_record( $row15, 4 );
+        $row16 = $this->_generate_array( array('id', 'proid', 'type', 'number',
+                                               'subject_cmt', 'creation_cmt',
+                                               'ref'), 16 );
+        $db_config->add_record( $row16, 4 );
+        $row17 = $this->_generate_array( array('id', 'proid', 'type', 'number',
+                                               'subject_cmt', 'creation_cmt',
+                                               'ref'), 17 );
+        $db_config->add_record( $row17, 4 );
+        $row18 = $this->_generate_array( array('id', 'proid', 'type', 'number',
+                                               'subject_cmt', 'creation_cmt',
+                                               'ref'), 18 );
+        $db_config->add_record( $row18, 4 );
+
+        // sub-queries for snafu
         $db_config->add_query( sprintf( $db_q[1], $row1['proid'],$row1['type'],
                                         $row1['id']), 2 );
         $row3 = array('COUNT(*)' => 'this is count start row3' );
@@ -195,7 +247,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 1120 );
+        $this->_testFor_length( 1102 );
 
         $this->_testFor_pattern( $text, "Last 10 Comments by " . $user2 );
         $this->assertNotRegexp( "/no comments posted/", $text );
@@ -238,21 +290,13 @@ extends TestCase
 
         $db_config->add_num_row(2, 1); // snafu generates two
 
-        $row1 = array( 'id'            => 'id_1',
-                       'proid'         => 'proid_1',
-                       'type'          => 'type_1',
-                       'number'        => 'number_1',
-                       'subject_cmt'   => 'subject_cmt_1',
-                       'creation_cmt'  => 'creation_cmt_1',
-                       'ref'           => 'reference_id_1');
+        $row1 = $this->_generate_array( array( 'id', 'proid', 'type','number',
+                                               'subject_cmt', 'creation_cmt',
+                                               'ref'), 1 );
         $db_config->add_record( $row1, 1 );
-        $row2 = array( 'id'            => 'id_2',
-                       'proid'         => 'proid_2',
-                       'type'          => 'type_2',
-                       'number'        => 'number_2',
-                       'subject_cmt'   => 'subject_cmt_2',
-                       'creation_cmt'  => 'creation_cmt_2',
-                       'ref'           => 'reference_id_2');
+        $row2 = $this->_generate_array( array('id','proid','type','number',
+                                              'subject_cmt','creation_cmt',
+                                              'ref'), 2 );
         $db_config->add_record( $row2, 1 );
         $db_config->add_record( false, 1 );
 
@@ -302,7 +346,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 1116 );
+        $this->_testFor_length( 1098 );
 
         $this->_testFor_pattern( $text, "All Comments by " . $user2 );
         $this->assertNotRegexp( "/no comments posted/", $text );
@@ -347,53 +391,35 @@ extends TestCase
         $db_config->add_num_row(2, 1); // snafu generates 2 results
         $db_config->add_num_row(7, 4); // fritz generates 7 results
 
-        $row1 = array( 'id'            => 'reference_id',
-                       'proid'         => 'project_id',
-                       'subject_news'  => 'subject news',
-                       'creation_news' => 'creation_news');
+        $row1 = $this->_generate_array( array( 'id', 'proid','subject_news',
+                                               'creation_news'), 1 );
         $db_config->add_record( $row1, 1 );
-        $row2 = array( 'id'            => 'reference_id_num_22',
-                       'proid'         => 'project_id_333',
-                       'subject_news'  => 'subject news 4444',
-                       'creation_news' => 'creation_news 55555');
+        $row2 = $this->_generate_array( array( 'id', 'proid','subject_news',
+                                               'creation_news'), 2 );
         $db_config->add_record( $row2, 1 );
         $db_config->add_record( false, 1 );
 
         // the 7 records of fritz query
-        $row7 = array( 'id'            => 'reference_id_num_4',
-                       'proid'         => 'project_id_4',
-                       'subject_news'  => 'subject news 4',
-                       'creation_news' => 'creation_news 4');
+        $row7 = $this->_generate_array( array( 'id', 'proid','subject_news',
+                                               'creation_news'), 7 );
         $db_config->add_record( $row7, 4 );
-        $row8 = array( 'id'            => 'reference_id_num_5',
-                       'proid'         => 'project_id_5',
-                       'subject_news'  => 'subject news 5',
-                       'creation_news' => 'creation_news 5');
+        $row8 = $this->_generate_array( array( 'id', 'proid','subject_news',
+                                               'creation_news'), 8 );
         $db_config->add_record( $row8, 4 );
-        $row9 = array( 'id'            => 'reference_id_num_6',
-                       'proid'         => 'project_id_6',
-                       'subject_news'  => 'subject news 6',
-                       'creation_news' => 'creation_news 6');
+        $row9 = $this->_generate_array( array( 'id', 'proid','subject_news',
+                                               'creation_news'), 9 );
         $db_config->add_record( $row9, 4 );
-        $row10 = array('id'            => 'reference_id_num_7',
-                       'proid'         => 'project_id_7',
-                       'subject_news'  => 'subject news 7',
-                       'creation_news' => 'creation_news 7');
+        $row10 = $this->_generate_array( array( 'id', 'proid','subject_news',
+                                               'creation_news'), 10 );
         $db_config->add_record( $row10, 4 );
-        $row11 = array('id'            => 'reference_id_num_8',
-                       'proid'         => 'project_id_8',
-                       'subject_news'  => 'subject news 8',
-                       'creation_news' => 'creation_news 8');
+        $row11 = $this->_generate_array( array( 'id', 'proid','subject_news',
+                                               'creation_news'), 11 );
         $db_config->add_record( $row11, 4 );
-        $row12 = array('id'            => 'reference_id_num_9',
-                       'proid'         => 'project_id_9',
-                       'subject_news'  => 'subject news 9',
-                       'creation_news' => 'creation_news 9');
+        $row12 = $this->_generate_array( array( 'id', 'proid','subject_news',
+                                               'creation_news'), 12 );
         $db_config->add_record( $row12, 4 );
-        $row13 = array('id'            => 'reference_id_num_10',
-                       'proid'         => 'project_id_10',
-                       'subject_news'  => 'subject news 10',
-                       'creation_news' => 'creation_news 10');
+        $row13 = $this->_generate_array( array( 'id', 'proid','subject_news',
+                                               'creation_news'), 13 );
         $db_config->add_record( $row13, 4 );
 
         // third&fourth instances created as part of the snafu query
@@ -499,7 +525,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 1006 );
+        $this->_testFor_length( 995 );
         $this->_testFor_pattern( $text, "Last 5 News by " . $user2 );
         $this->assertNotRegexp( "/no news posted/", $text, 
                                 "[User: ".$user2."] has news posted");
@@ -522,7 +548,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 2027 );
+        $this->_testFor_length( 2003 );
         $this->_testFor_pattern( $text, "Last 5 News by " . $user3 );
         $this->assertNotRegexp( "/no news posted/", $text, 
                                 "[User: ".$user3."] has news posted");
@@ -590,30 +616,26 @@ extends TestCase
 
         $db_config->add_record( false, 0 );
 
-        $row1 = array( 'id'            => 'reference_id',
-                       'proid'         => 'project_id',
-                       'project_title' => 'project_title',
-                       'subject_news'  => 'subject news',
-                       'creation_news' => 'creation_news');
+        $row1 = $this->_generate_array(array('id','subject_news',
+                                             'project_title','proid',
+                                             'creation_news'), 1 );
         $db_config->add_record( $row1, 1 );
-        $row2 = array( 'id'            => 'reference_id_num_2',
-                       'proid'         => 'project_id_222',
-                       'project_title' => 'project_title @@3',
-                       'subject_news'  => 'subject news 444',
-                       'creation_news' => 'creation_news %%%5');
+        $row2 = $this->_generate_array(array('id','subject_news',
+                                             'project_title','proid',
+                                             'creation_news'), 2 );
         $db_config->add_record( $row2, 1 );
         $db_config->add_record( false, 1 );
 
-        $row3 = array( 'COUNT(*)'      => 'count star value 2' );
+        $row3 = array( 'COUNT(*)'      => 'count star value 3' );
         $db_config->add_record( $row3, 2 );
-        $row4 = array( 'project_title' => 'reference_id_instance_2',
-                       'proid'         => 'project_id_instance_2');
+        $row4 = array( 'project_title' => 'reference_id_instance_4',
+                       'proid'         => 'project_id_instance_4');
         $db_config->add_record( $row4, 2 );
 
-        $row5 = array( 'COUNT(*)'      => 'count star value 3' );
+        $row5 = array( 'COUNT(*)'      => 'count star value 5' );
         $db_config->add_record( $row5, 3 );
-        $row6 = array( 'project_title' => 'reference_id_instance_3',
-                       'proid'         => 'project_id_instance_3');
+        $row6 = array( 'project_title' => 'reference_id_instance_6',
+                       'proid'         => 'project_id_instance_6');
         $db_config->add_record( $row6, 3 );
 
         $db_config->add_query(sprintf( $db_q[1],$row1['proid'],$row1['id']),2);
@@ -644,7 +666,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 1022 );
+        $this->_testFor_length( 1012 );
         $this->_testFor_pattern( $text, "All Comments by " . $user2 );
 
         $this->_testFor_news_link( $text, $row1['proid'],$row1['subject_news'],
@@ -679,19 +701,16 @@ extends TestCase
         $db_config->add_num_row(2, 2);
 
         // this is for the snafu query
-        $row1 = array( 'status'        => 'project_status',
-                       'proid'         => 'project_id',
-                       'project_title' => 'project_title' );
+        $row1 = $this->_generate_array(array('status','proid',
+                                             'project_title'),1);
         $db_config->add_record( $row1, 1 );
         $db_config->add_record( false, 1 );
         // this is for the fritz query
-        $row2 = array( 'status'        => 'project_status2',
-                       'proid'         => 'project_id2',
-                       'project_title' => 'project_title2' );
+        $row2 = $this->_generate_array(array('status','proid',
+                                             'project_title'),2);
         $db_config->add_record( $row2, 2 );
-        $row3 = array( 'status'        => 'project_status3',
-                       'proid'         => 'project_id3',
-                       'project_title' => 'project_title3' );
+        $row3 = $this->_generate_array(array('status','proid',
+                                             'project_title'),3);
         $db_config->add_record( $row3, 2 );
         $db_config->add_record( false, 2 );
         
@@ -720,7 +739,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 611 );
+        $this->_testFor_length( 604 );
         // check title string
         $this->_testFor_pattern( $text, ("Consultant [(]"
                                          .show_status( $status2 )."[)]")); 
@@ -737,7 +756,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 715 );
+        $this->_testFor_length( 695 );
         // check title string
         $this->_testFor_pattern( $text, ("Consultant [(]"
                                          .show_status( $status3 )."[)]")); 
@@ -772,19 +791,16 @@ extends TestCase
         $db_config->add_num_row(2, 2);
 
         // this is for the snafu query
-        $row1 = array( 'status'        => 'project_status',
-                       'proid'         => 'project_id',
-                       'project_title' => 'project_title' );
+        $row1 = $this->_generate_array(array('status','proid',
+                                             'project_title'),1);
         $db_config->add_record( $row1, 1 );
         $db_config->add_record( false, 1 );
         // this is for the fritz query
-        $row2 = array( 'status'        => 'project_status2',
-                       'proid'         => 'project_id2',
-                       'project_title' => 'project_title2' );
+        $row2 = $this->_generate_array(array('status','proid',
+                                             'project_title'),2);
         $db_config->add_record( $row2, 2 );
-        $row3 = array( 'status'        => 'project_status3',
-                       'proid'         => 'project_id3',
-                       'project_title' => 'project_title3' );
+        $row3 = $this->_generate_array(array('status','proid',
+                                             'project_title'),3);
         $db_config->add_record( $row3, 2 );
         $db_config->add_record( false, 2 );
 
@@ -813,7 +829,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 608 );
+        $this->_testFor_length( 601 );
         // check title string
         $this->_testFor_pattern( $text, ("Referee [(]"
                                          .show_status( $status2 )."[)]")); 
@@ -830,7 +846,7 @@ extends TestCase
         capture_stop();
 
         $text = capture_text_get();
-        $this->_testFor_length( 712 );
+        $this->_testFor_length( 692 );
         // check title string
         $this->_testFor_pattern( $text, ("Referee [(]"
                                          .show_status( $status3 )."[)]")); 
@@ -869,19 +885,16 @@ extends TestCase
         $db_config->add_num_row(2, 2);
         
         // this is for the snafu query
-        $row1 = array( 'proid'         => 'proid',
-                       'devid'         => 'devid',
-                       'project_title' => 'project_title' );
+        $row1 = $this->_generate_array(array('devid','proid',
+                                             'project_title'),1);
         $db_config->add_record( $row1, 1 );
         $db_config->add_record( false, 1 );
         // this is for teh fritz query
-        $row2 = array( 'proid'         => 'proid2',
-                       'devid'         => 'devid2',
-                       'project_title' => 'project_title2' );
+        $row2 = $this->_generate_array(array('devid','proid',
+                                             'project_title'),2);
         $db_config->add_record( $row2, 2 );
-        $row3 = array( 'proid'         => 'proid3',
-                       'devid'         => 'devid3',
-                       'project_title' => 'project_title3' );
+        $row3 = $this->_generate_array(array('devid','proid',
+                                             'project_title'),3);
         $db_config->add_record( $row3, 2 );
         $db_config->add_record( false, 2 );
         
@@ -903,7 +916,7 @@ extends TestCase
         personal_cooperation( $user2, $status2 );
         capture_stop();
         
-        $this->_testFor_length( 689 );
+        $this->_testFor_length( 697 );
         $text = capture_text_get();
         // check the title string
         $this->_testFor_pattern( $text, ("Developing Cooperation [(]"
@@ -919,7 +932,7 @@ extends TestCase
         personal_cooperation( $user3, $status3 );
         capture_stop();
         
-        $this->_testFor_length( 861 );
+        $this->_testFor_length( 869 );
         $text = capture_text_get();
         // check the title string
         $this->_testFor_pattern( $text, ("Developing Cooperation [(]"
@@ -955,21 +968,18 @@ extends TestCase
         
         // fubar query does not call next_record()
         // this is for the snafu query
-        $row = array( 'proid'         => 'proid',
-                      'status'        => 'status',
-                      'project_title' => 'project_title' );
-        $db_config->add_record( $row, 1 );
+        $row1 = $this->_generate_array(array('status','proid',
+                                             'project_title'),1);
+        $db_config->add_record( $row1, 1 );
         $db_config->add_record( false, 1 );
 
         // this is for the fritz query
-        $row = array( 'proid'         => 'proid2',
-                      'status'        => 'status2',
-                      'project_title' => 'project_title2' );
-        $db_config->add_record( $row, 2 );
-        $row = array( 'proid'         => 'proid3',
-                      'status'        => 'status3',
-                      'project_title' => 'project_title3' );
-        $db_config->add_record( $row, 2 );
+        $row2 = $this->_generate_array(array('status','proid',
+                                             'project_title'),2);
+        $db_config->add_record( $row2, 2 );
+        $row3 = $this->_generate_array(array('status','proid',
+                                             'project_title'),3);
+        $db_config->add_record( $row3, 2 );
         $db_config->add_record( false, 2 );
 
         capture_start();
@@ -988,10 +998,11 @@ extends TestCase
         personal_my_projects( "snafu" );
         capture_stop();
         
-        $this->_testFor_length( 590 );
+        $this->_testFor_length( 596 );
         $text = capture_text_get();
         $this->_testFor_pattern( $text, "My Projects" ); // title
-        $this->_testFor_project_link($text,"proid","project_title","status");
+        $this->_testFor_project_link($text,$row1['proid'],
+                                     $row1['project_title'], $row1['status']);
 
         capture_reset_text();
         capture_start();
@@ -999,13 +1010,13 @@ extends TestCase
         personal_my_projects( "fritz" );
         capture_stop();
 
-        $this->_testFor_length( 683 );
+        $this->_testFor_length( 689 );
         $text = capture_text_get();
         $this->_testFor_pattern( $text, "My Projects" ); // title
-        $this->_testFor_project_link($text,"proid2","project_title2",
-                                                                   "status2");
-        $this->_testFor_project_link($text,"proid3","project_title3",
-                                                                   "status3");
+        $this->_testFor_project_link($text,$row2['proid'],
+                                     $row2['project_title'],$row2['status']);
+        $this->_testFor_project_link($text,$row3['proid'],
+                                     $row3['project_title'],$row3['status']);
 
         // if using a database, then ensure that it didn't fail
         $this->assertEquals(false, $db_config->did_db_fail(),
@@ -1030,21 +1041,18 @@ extends TestCase
         $db_config->add_query( sprintf( $db_q, "fritz" ), 2);
 
         // this is for the snafu query
-        $row = array( 'proid'         => 'proid',
-                      'status'        => 'status',
-                      'project_title' => 'project_title' );
-        $db_config->add_record( $row, 1 );
+        $row1 = $this->_generate_array(array('status','proid',
+                                             'project_title'),1);
+        $db_config->add_record( $row1, 1 );
         $db_config->add_record( false, 1 );
 
         // this is for the fritz query
-        $row = array( 'proid'         => 'proid2',
-                      'status'        => 'status2',
-                      'project_title' => 'project_title2' );
-        $db_config->add_record( $row, 2 );
-        $row = array( 'proid'         => 'proid3',
-                      'status'        => 'status3',
-                      'project_title' => 'project_title3' );
-        $db_config->add_record( $row, 2 );
+        $row2 = $this->_generate_array(array('status','proid',
+                                             'project_title'),2);
+        $db_config->add_record( $row2, 2 );
+        $row3 = $this->_generate_array(array('status','proid',
+                                             'project_title'),3);
+        $db_config->add_record( $row3, 2 );
         $db_config->add_record( false, 2 );
 
 
@@ -1065,10 +1073,11 @@ extends TestCase
         personal_monitored_projects( "snafu" );
         capture_stop();
         
-        $this->_testFor_length( 597 );
+        $this->_testFor_length( 603 );
         $text = capture_text_get();
         $this->_testFor_pattern( $text, "Monitored Projects" ); // title
-        $this->_testFor_project_link($text,"proid","project_title","status");
+        $this->_testFor_project_link($text,$row1['proid'],
+                                     $row1['project_title'], $row1['status']);
 
         capture_reset_text();
         capture_start();
@@ -1076,13 +1085,13 @@ extends TestCase
         personal_monitored_projects( "fritz" );
         capture_stop();
 
-        $this->_testFor_length( 690 );
+        $this->_testFor_length( 696 );
         $text = capture_text_get();
         $this->_testFor_pattern( $text, "Monitored Projects" ); // title
-        $this->_testFor_project_link($text,"proid2","project_title2",
-                                                                   "status2");
-        $this->_testFor_project_link($text,"proid3","project_title3",
-                                                                   "status3");
+        $this->_testFor_project_link($text,$row2['proid'],
+                                     $row2['project_title'], $row2['status']);
+        $this->_testFor_project_link($text,$row3['proid'],
+                                     $row3['project_title'], $row3['status']);
 
         // if using a database, then ensure that it didn't fail
         $this->assertEquals(false, $db_config->did_db_fail(),
