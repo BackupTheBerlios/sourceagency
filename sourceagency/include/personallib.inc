@@ -2,7 +2,7 @@
 #
 # personallib.inc
 #
-# $Id: personallib.inc,v 1.4 2001/10/18 18:20:02 ger Exp $
+# $Id: personallib.inc,v 1.5 2001/10/22 10:06:15 riessen Exp $
 #
 
 ######################################################################
@@ -447,6 +447,8 @@ function personal_my_projects($username) {
 }
 
 
+// ASSUME: this method assumes that html.inc has already been
+// ASSUME: included
 function personal_monitored_projects($username) {
  	global $bx, $sess;
 

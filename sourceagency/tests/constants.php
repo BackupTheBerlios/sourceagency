@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: constants.php,v 1.8 2001/10/18 18:51:01 riessen Exp $
+// $Id: constants.php,v 1.9 2001/10/22 10:06:15 riessen Exp $
 //
 // php library root directory
 $PHP_LIB_DIR = "/www/development/lib/php";
@@ -62,4 +62,19 @@ function capture_text_get() {
     return ($g_cap_text);
 }
 
+// this should be called to begin output capturing
+function capture_start() {
+    ob_start("capture_text");
+}
+
+// this must be called to stop output capturing
+function capture_stop() {
+    ob_end_flush();
+}
+
+// resets the contents of the capture buffer to zero
+function capture_reset_text() {
+    global $g_cap_text;
+    $g_cap_text="";
+}
 ?>
