@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestViewslib.php,v 1.2 2002/05/16 15:04:16 riessen Exp $
+// $Id: TestViewslib.php,v 1.3 2002/05/16 15:13:12 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -30,6 +30,8 @@ extends UnitTest
     }
 
     function testViews_form() {
+
+        $this->_test_to_be_completed();
 //  strlen( $sess->self_url() )
 //                     1=>("<form action=\""
 //                         .ereg_replace( "/", "\/", $sess->self_url() )
@@ -51,7 +53,10 @@ extends UnitTest
         $views = "Sponsors";
         
         $preview = "fubar";
+
+        capture_reset_and_start();
         views_form( "proid" );
+        $text = capture_stop_and_get();
     }
 
     function testViews_insert() {
