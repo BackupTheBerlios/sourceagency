@@ -21,25 +21,18 @@ CREATE TABLE active_sessions (
 # Dumping data for table 'active_sessions'
 #
 
+INSERT INTO active_sessions VALUES ('ee3d600f18f83d534248b5caf0acbea9','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnYXV0aCddID0gJzEnOyAkdGhpcy0+cHRbJ2xhJ10gPSAnMSc7ICRHTE9CQUxTWydhdXRoJ10gPSBuZXcgU291cmNlQWdlbmN5X0F1dGg7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGggPSBhcnJheSgpOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWyd1aWQnXSA9ICdmb3JtJzsgJEdMT0JBTFNbJ2F1dGgnXS0+YXV0aFsncGVybSddID0gJyc7ICRHTE9CQUxTWydhdXRoJ10tPmF1dGhbJ2V4cCddID0gJzIxNDc0ODM2NDcnOyAkR0xPQkFMU1snYXV0aCddLT5hdXRoWydyZWZyZXNoJ10gPSAnMjE0NzQ4MzY0Nyc7ICRHTE9CQUxTWydsYSddID0gJ0VuZ2xpc2gnOyA=','20030510071018');
+INSERT INTO active_sessions VALUES ('5d4d64eb452f52062c37f8a14d389390','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030510071815');
+INSERT INTO active_sessions VALUES ('08c6a1dad56c01fd09ca7f672bae3751','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030510055334');
+INSERT INTO active_sessions VALUES ('457f156097f73422eb5f95bf72083da0','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030510054629');
+INSERT INTO active_sessions VALUES ('966201b2d5f1554b1674281739b59c21','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030510032029');
 INSERT INTO active_sessions VALUES ('4cb3583dbd8dffe8587a2826b1a947d4','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030509184659');
+INSERT INTO active_sessions VALUES ('9b243144cd0905eb9b159976cda37786','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030510023026');
+INSERT INTO active_sessions VALUES ('3e5b525b383b2ab444cb7a88d4502dd7','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030510025514');
 INSERT INTO active_sessions VALUES ('324921244bd085f649e5a8e17eb8d80a','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030509162844');
 INSERT INTO active_sessions VALUES ('d2a6673e0e3730e114e6b52b7fb9c542','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030509135023');
 INSERT INTO active_sessions VALUES ('c8e3ed29b2a956e07d021e0f2ffad702','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030509151526');
-INSERT INTO active_sessions VALUES ('597c4505135af81caf01eb8758855423','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030509023004');
-INSERT INTO active_sessions VALUES ('4740a8dd7bcb89426b8352fae8dab072','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030509024915');
 INSERT INTO active_sessions VALUES ('3648cbf15b24709d620805c8a826e578','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030509085859');
-INSERT INTO active_sessions VALUES ('5439c888a782787d2cd6fb4151931285','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030508134130');
-INSERT INTO active_sessions VALUES ('f4b7981484f47bb77d3b7513b3d179a3','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030508075100');
-INSERT INTO active_sessions VALUES ('9dd5255b000114ece4cec4ea392eea8c','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030507081200');
-INSERT INTO active_sessions VALUES ('8b8c5eea161640c763fdbd5343f8691f','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030507095153');
-INSERT INTO active_sessions VALUES ('24a9d58f1919688b3df2f7e29c0eb224','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030507103754');
-INSERT INTO active_sessions VALUES ('4f6d9c9956562a20dbe51b420e977fe3','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030507104804');
-INSERT INTO active_sessions VALUES ('08d1df77b07ee46d54a71ce19af5064d','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030507130651');
-INSERT INTO active_sessions VALUES ('d135a5969c19e2a7f0340a6825408267','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030507150637');
-INSERT INTO active_sessions VALUES ('29cdaf6ab092ec1a1f69025b675234ed','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030507155636');
-INSERT INTO active_sessions VALUES ('b55d12da4cb6e30f136720aab1639e2d','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030507202356');
-INSERT INTO active_sessions VALUES ('c5bd27115177037e39e374a481b29a11','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030507233406');
-INSERT INTO active_sessions VALUES ('cdc79803391b9a681783ff547f75212b','SourceAgency_Session','U291cmNlQWdlbmN5X1Nlc3Npb246JHRoaXMtPmluID0gJyc7ICR0aGlzLT5wdCA9IGFycmF5KCk7ICR0aGlzLT5wdFsnbGEnXSA9ICcxJzsgJEdMT0JBTFNbJ2xhJ10gPSAnRW5nbGlzaCc7IA==','20030508014536');
 
 #
 # Table structure for table 'auth_user'
@@ -88,6 +81,7 @@ INSERT INTO auth_user VALUES ('a09109e3a7c3b482696589c60c316402','Micro','rudi66
 INSERT INTO auth_user VALUES ('397fe75e863147a5b3edfba4ed1d1d94','skypher','4bssravi4','Leslie Polzer','leslie.polzer@gmx.net',20030309145805,20030309145657,'devel');
 INSERT INTO auth_user VALUES ('d5f8b56f8f11a912ffa399cca20dddd5','hburde1','thisiscool','Holger Burde','hburde@uni-bremen.de',20030329184633,20030329184411,'devel');
 INSERT INTO auth_user VALUES ('7592bae2593d65fcbc381f06752b60c0','bluebay','681020','aventian','bluebay33@sohu.com',20030506152541,20030506152505,'devel');
+INSERT INTO auth_user VALUES ('c6521500e89b452f5e418d89340cb4f7','napalm','dead1234','Florian Shvigrad','napalmbox@hotmail.com',20030510054856,20030510054813,'devel');
 
 #
 # Table structure for table 'categories'
@@ -187,6 +181,7 @@ INSERT INTO configure VALUES (31,NULL,'No','Yes','Yes','nilix','erik');
 INSERT INTO configure VALUES (32,NULL,'No','Yes','Yes',NULL,'308624857');
 INSERT INTO configure VALUES (33,NULL,'No','No','No',NULL,'Tatanka');
 INSERT INTO configure VALUES (34,NULL,'No','No','No',NULL,'hburde1');
+INSERT INTO configure VALUES (35,NULL,'No','Yes','Yes',NULL,'napalm');
 
 #
 # Table structure for table 'consultants'
@@ -271,6 +266,7 @@ INSERT INTO counter VALUES (31,0,0);
 INSERT INTO counter VALUES (32,0,0);
 INSERT INTO counter VALUES (33,0,0);
 INSERT INTO counter VALUES (34,0,0);
+INSERT INTO counter VALUES (35,0,0);
 
 #
 # Table structure for table 'counter_check'
@@ -420,6 +416,7 @@ INSERT INTO description VALUES (31,'Lokalisierung des Scoop CMS','Adaption','Das
 INSERT INTO description VALUES (32,'Reflective memory','Expansion','There are many problems facing the design of a good distributed file system. Transporting many files over the net can easily create sluggish performance and latency, network bottlenecks and server overload can result. The security of data is another important issue: how can we be sure that a client is really authorized to have access to information and how can we prevent data being sniffed off the network? Two further problems facing the design are related to failures. Often client computers are more reliable than the network connecting them and network failures can render a client useless. Similarly a server failure can be very unpleasant, since it can disable all clients from accessing crucial information. This project has paid attention to many of these issues and implemented them as a research prototype.','308624857','< 6 Man Months',0,20030113151547);
 INSERT INTO description VALUES (33,'Collaboration Systems','Documentation','There is a need to deploy a collaborating system. First to do to evaluate the existing solutions. Non public use included.','Tatanka','< 0.25 Man Month',0,20030214020544);
 INSERT INTO description VALUES (34,'cfsadm - Gnome2 GUI for CFS Crypto FS','Other','GNOME2 GUI to handle all of the non-NFS related CFS Setup and maintainance steps.\r\n\r\nOperations :\r\n- Creating new crypto FS (supporting all cmkir options like ciphers, keylen etc.\r\nexcepet for backward compat to 1.3.x)\r\n- Mount, unmount (cattach, cdetach)\r\n- Display CFS Properties\r\n- Remove unneeded CFS entrys\r\n\r\nCFS is a crypto FS (3des,blowfish,..) for *NIX that only depends on NFS. \r\nSee http://www.crypto.com/papers/index.html \r\nfor infos on CFS.','hburde1','< 6 Man Months',0,20030329190348);
+INSERT INTO description VALUES (35,'giFTNET','Development','giFT frond end','napalm','< 0.25 Man Month',0,20030510055011);
 
 #
 # Table structure for table 'developing'
@@ -697,6 +694,7 @@ INSERT INTO history VALUES (32,'308624857','Configure','Project configuration',2
 INSERT INTO history VALUES (32,'308624857','Configure','Project configuration modified',20030113151753);
 INSERT INTO history VALUES (33,'Tatanka','Configure','Project configuration',20030214020615);
 INSERT INTO history VALUES (34,'hburde1','Configure','Project configuration',20030329190450);
+INSERT INTO history VALUES (35,'napalm','Configure','Project configuration',20030510055037);
 
 #
 # Table structure for table 'involved'
@@ -1013,4 +1011,5 @@ INSERT INTO views VALUES (31,'Project Participants','Project Participants','Proj
 INSERT INTO views VALUES (32,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20030113151547);
 INSERT INTO views VALUES (33,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20030214020544);
 INSERT INTO views VALUES (34,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20030329190348);
+INSERT INTO views VALUES (35,'Project Participants','Project Participants','Project Initiator','Registered','Everybody','Everybody','Everybody','Everybody','Everybody',20030510055011);
 
