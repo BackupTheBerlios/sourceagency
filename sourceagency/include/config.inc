@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.13 2001/12/18 20:00:19 grex Exp $
+# $Id: config.inc,v 1.14 2001/12/19 10:42:14 grex Exp $
 #
 ######################################################################
 
@@ -112,6 +112,9 @@ $la_array[] = "German";
 # The texts are sent through the translator before being used on the page.
 #
 ######################################################################
+
+$g_step_text[-1] = "Deleted";
+$g_step_text[0] = "Configuration";
 $g_step_text[1] = "Consultancy";
 $g_step_text[2] = "Technical Specifications";
 $g_step_text[3] = "Milestones";
