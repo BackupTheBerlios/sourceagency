@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: mock_database.php,v 1.23 2002/07/09 11:15:33 riessen Exp $
+# $Id: mock_database.php,v 1.24 2002/07/19 10:18:56 riessen Exp $
 #
 ######################################################################
 
@@ -64,11 +64,16 @@ $g_mkdb_num_rows = array();
 // an array of arrays for storing the values for a row of values
 // The second arrays should be indexed with column names.
 $g_mkdb_next_record_data = array();
-// 
-// the next 3 are indexes into the arrays above
+// affected rows returned values. Based on calls: each call to af(..)
+// increments the pointer into this array
+$g_mkdb_affected_rows = array();
+
+// the next 4 are indexes into the arrays above
 $g_mkdb_cur_num_row_call = array();
 $g_mkdb_cur_query_call = array();
 $g_mkdb_cur_record = array();
+$g_mkdb_cur_aff_rows_call = array();
+
 // ************************
 // Here ends variables that are arrays of arrays ....
 // ************************
@@ -135,11 +140,13 @@ class mock_db_configure
         global $g_mkdb_nr_instance_expected, $g_mkdb_cur_num_row_call,
             $g_mkdb_cur_query_call, $g_mkdb_cur_record, $g_mkdb_queries,
             $g_mkdb_num_rows, $g_mkdb_next_record_data, $g_mkdb_ignore_error,
-            $g_mkdb_instance_counter;
+            $g_mkdb_instance_counter, $g_mkdb_affected_rows, 
+            $g_mkdb_cur_aff_rows_call;
 
         $g_mkdb_instance_counter = 0;
         $g_mkdb_nr_instance_expected = $instance_count;
 
+        $g_mkdb_cur_aff_rows_call = array();
         $g_mkdb_cur_num_row_call = array();
         $g_mkdb_cur_query_call = array();
         $g_mkdb_cur_record = array();
@@ -151,6 +158,7 @@ class mock_db_configure
         $g_mkdb_ignore_errors = array();
 
         for ( $idx = 0; $idx < $g_mkdb_nr_instance_expected; $idx++ ) {
+            $g_mkdb_cur_aff_rows_call[$idx] = 0;
             $g_mkdb_cur_num_row_call[$idx] = 0;
             $g_mkdb_cur_query_call[$idx] = 0;
             $g_mkdb_cur_record[$idx] = 0;
@@ -159,6 +167,7 @@ class mock_db_configure
 
             $g_mkdb_queries[$idx] = array(); 
             $g_mkdb_num_rows[$idx] = array();
+            $g_mkdb_affected_rows[$idx] = array();
             $g_mkdb_next_record_data[$idx] = array();
         }
     }
@@ -167,6 +176,13 @@ class mock_db_configure
     function add_num_row( $row_size, $inst_nr = 0, $index = -1 ) {
         global $g_mkdb_num_rows;
         $this->_add_data_point( $g_mkdb_num_rows,$inst_nr,$row_size,$index );
+    }
+
+    // add an affected row value
+    function add_affected_rows( $aff_rows, $inst_nr = 0, $index = -1 ) {
+        global $g_mkdb_affected_rows;
+        $this->_add_data_point( $g_mkdb_affected_rows, $inst_nr, $aff_rows,
+                                                                     $index );
     }
 
     // add a query string. $query_string must be a string
@@ -329,6 +345,7 @@ extends Assert
     var $instance_number = -1;
     // flag which says which errors should be ignored
     var $ignore_error_flag = MKDB_NO_ERRORS;
+    var $affected_rows;
 
     function mock_database() {
         global $g_mkdb_instance_counter, $g_mkdb_nr_instance_expected,
@@ -350,6 +367,22 @@ extends Assert
     // true if we should be checking for a particular error 
     function _check_for( $error ) {
         return ( ( $this->ignore_error_flag & $error) != $error );
+    }
+
+    // used to set the affected_rows class member, this is called
+    // after each query call
+    function _affected_rows() {
+        global $g_mkdb_affected_rows, $g_mkdb_cur_aff_rows_call;
+
+        $aff_rows = $g_mkdb_affected_rows[$this->instance_number];
+        $cur_aff_rows_call = $g_mkdb_cur_aff_rows_call[$this->instance_number];
+        
+        if ( $cur_aff_rows_call < count($aff_rows) ) {
+            $g_mkdb_cur_aff_rows_call[$this->instance_number]++;
+            return $aff_rows[ $cur_aff_rows_call ];
+        } else {
+            return -1;
+        }
     }
 
     function query( $query_string ) {
@@ -386,6 +419,7 @@ extends Assert
         }
 
         $g_mkdb_cur_query_call[$this->instance_number]++;
+        $this->affected_rows = $this->_affected_rows();
     }
     
     function f( $column_name ) {
@@ -408,18 +442,19 @@ extends Assert
     }
 
     function affected_rows() {
-        // TODO: implement method 'affected_rows' which returns the number
-        // TODO: of rows that were changed by an insert statement
-        // This has one value for each query, i.e. this value is strongly
-        // correlated to the query, unlike the num_rows which is affected
-        // by the next_record call. Inparticular, this should only be set
-        // if the query is an update or insert query.
-        $this->assert( false, "affected_rows: Method not implemented" );
+        return ($this->affected_rows);
     }
 
     function nf() {
-        // TODO: 'number of fields' for current query?
-        $this->assert( false, "nf: Method not implemented" );
+        global $g_mkdb_cur_record;
+
+        $cur_record = $g_mkdb_cur_record[$this->instance_number];
+
+        if ( is_array( $cur_record ) ) {
+            return ( count( $cur_record ) );
+        } else {
+            return 0;
+        }
     }
 
     function num_rows() {
