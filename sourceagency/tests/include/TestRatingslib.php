@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestRatingslib.php,v 1.8 2002/07/19 10:19:17 riessen Exp $
+// $Id: TestRatingslib.php,v 1.9 2002/07/22 11:47:53 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -918,7 +918,7 @@ extends UnitTest
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 7562+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 7562+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test four: one data point(developing), no data points(sponsoring),
@@ -934,7 +934,7 @@ extends UnitTest
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 3620+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 3620+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test four: one data point(developing), no data points(sponsoring),
@@ -950,7 +950,7 @@ extends UnitTest
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 3620+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 3620+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test five: one data point(developing), no data points(sponsoring),
@@ -966,7 +966,7 @@ extends UnitTest
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 3620+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 3620+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test six: no data point(developing), one data point(sponsoring),
@@ -982,7 +982,7 @@ extends UnitTest
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 3616+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 3616+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test seven: no data point(developing), one data point(sponsoring),
@@ -998,7 +998,7 @@ extends UnitTest
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 7552+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 7552+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test eight: no data point(developing), one data point(sponsoring),
@@ -1014,7 +1014,7 @@ extends UnitTest
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 3616+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 3616+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         //
@@ -1034,7 +1034,7 @@ extends UnitTest
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 5709+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 5709+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test ten: one data point(developing), one data point(sponsoring),
@@ -1050,7 +1050,7 @@ extends UnitTest
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 9651+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 9651+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test eleven: one data point(developing), one data point(sponsoring),
@@ -1066,7 +1066,7 @@ extends UnitTest
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 5712+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 5712+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test twelve: one data point(developing), one data point(sponsoring),
@@ -1082,7 +1082,7 @@ extends UnitTest
                                              $a['number'], false, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 9648+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 9648+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
         
         //
@@ -1103,7 +1103,7 @@ extends UnitTest
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 7564+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 7564+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test 14: one data point(developing), no data points(sponsoring),
@@ -1119,7 +1119,7 @@ extends UnitTest
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 3652+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 3652+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test 15: one data point(developing), no data points(sponsoring),
@@ -1135,7 +1135,7 @@ extends UnitTest
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 3652+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 3652+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test 16: one data point(developing), no data points(sponsoring),
@@ -1151,7 +1151,7 @@ extends UnitTest
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 3652+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 3652+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test 17: no data point(developing), one data point(sponsoring),
@@ -1167,7 +1167,7 @@ extends UnitTest
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 3648+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 3648+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test 18: no data point(developing), one data point(sponsoring),
@@ -1183,7 +1183,7 @@ extends UnitTest
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 7554+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 7554+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test 19: no data point(developing), one data point(sponsoring),
@@ -1199,7 +1199,7 @@ extends UnitTest
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 3648+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 3648+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         //
@@ -1219,7 +1219,7 @@ extends UnitTest
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 5772+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 5772+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test 21: one data point(developing), one data point(sponsoring),
@@ -1235,7 +1235,7 @@ extends UnitTest
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 9684+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 9684+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test 22: one data point(developing), one data point(sponsoring),
@@ -1251,7 +1251,7 @@ extends UnitTest
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 5772+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 5772+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
         // test 23: one data point(developing), one data point(sponsoring),
@@ -1267,7 +1267,7 @@ extends UnitTest
                                              $a['number'], true, $d1, $d2 );
         $bx = $this->_create_default_box();
         $db = new DB_SourceAgency;
-        $this->capture_call( $fname, 9678+strlen($sess->self_url()), $a );
+        $this->capture_call( $fname, 9678+(2*strlen($sess->self_url())), $a );
         $this->_checkFor_ratings_form();
 
 
