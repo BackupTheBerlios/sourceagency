@@ -47,7 +47,7 @@ vspace="5" hspace="5" ALT="<?php echo $sys_logo_alt;?>"></a>
 <!-- beta string -->
 <td align="center" valign="middle">
 <center>
-<font font="times" size="+10" color="red">BETA BETA BETA</font><br>
+<font font="times" size="+1" color="red">BETA BETA BETA</font><br>
 This site is being beta tested, 
 please send any and all
  <a href="mailto:sourceagency-support@lists.berlios.de?subject=SourceAgency Beta Feedback&cc=grex@scouts-es.org&cc=lutz.henckel@fokus.fhg.de&cc=riessen@berlios.de"
@@ -66,9 +66,7 @@ width="<?php echo $org_logo_width;?>" align="RIGHT"></a>
 <!-- end logo at right -->
 
 <tr>
-<td COLSPAN="5" BGCOLOR="<?php echo $th_navstrip_bgcolor;?>">
-<img SRC="../images/blank.gif" height="1" width="1">
-</td>
+<td COLSPAN="5" BGCOLOR="<?php echo $th_navstrip_bgcolor;?>"><img SRC="../images/blank.gif" height="2" width="2"></td>
 </tr>
 
 </table>
