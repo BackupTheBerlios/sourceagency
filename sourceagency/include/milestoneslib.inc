@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.5 2002/01/28 02:20:00 riessen Exp $
+# $Id: milestoneslib.inc,v 1.6 2002/03/19 10:10:56 riessen Exp $
 #
 ######################################################################
 
@@ -233,8 +233,6 @@ function milestones_insert($proid,$devid,$number,$goals,$release_day,
                                                  "a" => "1"),
                                            "<b>Propose Milestones</b>")
           ."</b> ]" );
-
-  show_milestones($proid,$devid,$auth->auth["uname"]);
 }
 
 function milestones_modify($proid,$number,$goals,$release_day,
