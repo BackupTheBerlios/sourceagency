@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browse.php3,v 1.5 2002/04/08 21:32:47 grex Exp $
+# $Id: browse.php3,v 1.6 2002/04/08 21:47:49 grex Exp $
 #
 ######################################################################  
 
@@ -49,19 +49,19 @@ $page = 'browse';
   $bx->box_title($t->translate('Categories'));
   $bx->box_body_begin();
 
-  echo html_link('PHP_SELF',array('through' => 'license'),
+  echo html_link('browse.php3',array('through' => 'license'),
                  $t->translate('License'));
-  echo '<br>'.html_link('PHP_SELF',array('through' => 'type'),
+  echo '<br>'.html_link('browse.php3',array('through' => 'type'),
                         $t->translate( 'Type' ));
-  echo '<br>'.html_link('PHP_SELF',array('through' => 'steps'),
+  echo '<br>'.html_link('browse.php3',array('through' => 'steps'),
                         $t->translate( 'Steps' ));
-  echo '<br>'.html_link('PHP_SELF',array('through' => 'volume'),
+  echo '<br>'.html_link('browse.php3',array('through' => 'volume'),
                         $t->translate( 'Volume' ));
-  echo '<br>'.html_link('PHP_SELF',array('through' => 'platform'),
+  echo '<br>'.html_link('browse.php3',array('through' => 'platform'),
                         $t->translate( 'Platform' ));
-  echo '<br>'.html_link('PHP_SELF',array('through' => 'architecture'),
+  echo '<br>'.html_link('browse.php3',array('through' => 'architecture'),
                         $t->translate( 'Architecture' ));
-  echo '<br>'.html_link('PHP_SELF',array('through' => 'environment'),
+  echo '<br>'.html_link('browse.php3',array('through' => 'environment'),
                         $t->translate( 'Environment' ));
   $bx->box_body_end();
   $bx->box_end();
