@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestRatingslib.php,v 1.7 2002/07/09 11:15:34 riessen Exp $
+// $Id: TestRatingslib.php,v 1.8 2002/07/19 10:19:17 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -51,7 +51,19 @@ extends UnitTest
             'show_personal_rating' =>
             ("SELECT rating FROM ratings WHERE proid='%s' AND to_whom='%s'"),
             'show_participants_rating' =>
-            ("SELECT %s FROM %s WHERE proid='%s' AND status='A'")
+            ("SELECT %s FROM %s WHERE proid='%s' AND status='A'"),
+            'ratings_in_history' =>
+            ("INSERT history SET proid='%s', history_user='%s', "
+             ."type='Rating', action='Rating by %s completed'"),
+            'ratings_form_full' =>
+            ("SELECT rating FROM ratings WHERE proid='%s' AND to_whom="
+             ."'%s' AND by_whom='%s' AND on_what='%s'"),
+            'ratings_form_1' =>
+            ("SELECT * FROM developing WHERE proid='%s' AND status='A' AND "
+             ."developer!='%s' ORDER BY devid"),
+            'ratings_form_2' =>
+            ("SELECT * FROM sponsoring WHERE proid='%s' AND status='A' AND "
+             ."sponsor!='%s' ORDER BY spoid"),
             );
         $this->UnitTest( $name );
     }
@@ -667,18 +679,599 @@ extends UnitTest
         $this->_check_db( $db_config );
     }
 
-    function testRatings_form() {
-        $this->_test_to_be_completed();
-    }
-    
-    function testRatings_form_full() {
-        $this->_test_to_be_completed();
+    function testRatings_in_history() {
+        global $db, $t, $bx;
+
+        $fname = 'ratings_in_history';
+        $db_config = new mock_db_configure( 2 );
+        $qs = array( 0 => $this->queries[ $fname ]);
+        $args=$this->_generate_records( array( 'proid', 'history_user' ),10);
+        
+        $db_config->add_query( sprintf( $qs[0], $args[0]['proid'],
+                               $args[0]['history_user'], 
+                               $args[0]['history_user']), 0 );
+        $db_config->add_affected_rows( 0, 0 );
+        $db_config->add_query( sprintf( $qs[0], $args[1]['proid'],
+                               $args[1]['history_user'], 
+                               $args[1]['history_user']), 1 );
+        $db_config->add_affected_rows( 1, 1 );
+
+        // test one, insert failed
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $this->capture_call( $fname, 0, $args[0] );
+
+        // test two, insert succeeds
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $this->capture_call( $fname, 782, $args[1] );
+
+        $this->_check_db( $db_config );
     }
 
-    function testRatings_in_history() {
-        // TODO: need to implement the affected_rows() method for the
-        // TODO: mock_database class in order to test this function
-        $this->_test_to_be_completed();
+    function _config_db_ratings_form_full( &$db_config, $inst_nr, &$qs, 
+                                 $rated_yet, $proid, $username, $dev_or_spo ) {
+        global $auth;
+        include( 'config.inc' );
+        $uname = $auth->auth['uname'];
+        
+        /** which array to use ... **/
+        $ary = array();
+        switch( $dev_or_spo ) {
+            case 'developer':
+                $ary = $sponsor_rates_developer;
+                break;
+            case 'sponsor':
+                $ary = $developer_rates_sponsor;
+                break;
+            default:
+                $this->assert( false, "config_db_ratings_form_full error" );
+        }
+
+        for ( $idx = 0; $idx < count( $ary ); $idx++, $inst_nr++ ) {
+            /** ratings rated yet call **/
+            $db_config->add_query( sprintf( $qs[0], $proid, $username, $uname),
+                                   $inst_nr );
+            $db_config->add_num_row( $rated_yet ? 1 : 0, $inst_nr );
+            if ( $rated_yet ) {
+                ++$inst_nr;
+                $db_config->add_query( sprintf( $qs[1], $proid, $username, 
+                                             $uname, $ary[$idx]), $inst_nr );
+                $db_config->add_record( array( 'rating' => '' ), $inst_nr );
+            }
+        }
+        return $inst_nr;
+    }
+
+    function _checkFor_ratings_form_full() {
+        // TODO: complete this method
+    }
+
+    function testRatings_form_full() {
+        global $bx, $t, $sess, $auth;
+
+        $fname = 'ratings_form_full';
+        $uname = 'this is the username';
+        $auth->set_uname( $uname );
+        $args = $this->_generate_records( array( 'proid', 'username',
+                                                 'dev_or_spo', 'id' ), 10 );
+        $db_config = new mock_db_configure( 18 );
+        $inst_nr = 0;
+
+        $qs = array( 0 => $this->queries['ratings_rated_yet'],
+                     1 => $this->queries[ $fname ] );
+
+        // test one: dev_or_spo == 'developer', ratings_rated_yet returns true
+        $args[0]['dev_or_spo'] = 'developer';
+        $inst_nr =
+             $this->_config_db_ratings_form_full( $db_config, $inst_nr, $qs,
+                                 true, $args[0]['proid'], $args[0]['username'],
+                                                $args[0]['dev_or_spo']);
+        $bx = $this->_create_default_box();
+        $this->capture_call( $fname, 6031+strlen($sess->self_url()), $args[0]);
+        $this->_checkFor_ratings_form_full();
+
+        // test two: dev_or_spo == 'developer', ratings_rated_yet returns false
+        $args[1]['dev_or_spo'] = 'developer';
+        $inst_nr =
+             $this->_config_db_ratings_form_full( $db_config, $inst_nr, $qs,
+                                false, $args[1]['proid'], $args[1]['username'],
+                                                $args[1]['dev_or_spo']);
+        $bx = $this->_create_default_box();
+        $this->capture_call( $fname, 6031+strlen($sess->self_url()), $args[1]);
+        $this->_checkFor_ratings_form_full();
+
+        // test three: dev_or_spo == 'sponsor', ratings_rated_yet returns false
+        $args[2]['dev_or_spo'] = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_form_full( $db_config, $inst_nr, $qs,
+                                false, $args[2]['proid'], $args[2]['username'],
+                                                $args[2]['dev_or_spo']);
+        $bx = $this->_create_default_box();
+        $this->capture_call( $fname, 6023+strlen($sess->self_url()), $args[2]);
+        $this->_checkFor_ratings_form_full();
+
+        // test four: dev_or_spo == 'sponsor', ratings_rated_yet returns true
+        $args[3]['dev_or_spo'] = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_form_full( $db_config, $inst_nr, $qs,
+                                true, $args[3]['proid'], $args[3]['username'],
+                                                $args[3]['dev_or_spo']);
+        $bx = $this->_create_default_box();
+        $this->capture_call( $fname, 6023+strlen($sess->self_url()), $args[3]);
+        $this->_checkFor_ratings_form_full();
+        
+        $this->_check_db( $db_config );
+    }
+
+    function _config_db_ratings_form( &$db_config, $inst_nr, &$qs,
+                                      $proid, $dev_or_spo, $number, $rated_yet,
+                                      &$row_data_1, &$row_data_2 ) {
+        global $auth;
+        $a_name = $auth->auth['uname'];
+        $db_i_global = $inst_nr;
+        $db_config->add_query(sprintf($qs[2], $proid, $a_name ),$db_i_global);
+
+        for ( $idx = 0; $idx < count( $row_data_1 ); $idx++ ) {
+            $db_config->add_record( $row_data_1[$idx], $db_i_global );
+            $devid = $row_data_1[$idx]['devid'];
+            $developer = $row_data_1[$idx]['developer'];
+            $inst_nr++;
+
+            if ( $dev_or_spo == 'developer' && $devid == $number ) {
+                /** configure database to do a ratings_form_full call **/
+                $inst_nr =
+                     $this->_config_db_ratings_form_full( $db_config, $inst_nr,
+                                                      $qs, $rated_yet, $proid,
+                                                      $developer, 'developer');
+                $inst_nr--; // this loop does another ++
+            } else {
+                /** configure database to do a ratings_rated_yet call **/
+                $db_config->add_query( sprintf( $qs[0], $proid, $developer, 
+                                                $a_name), $inst_nr );
+                $db_config->add_num_row( $rated_yet ? 1 : 0, $inst_nr );
+            }
+        }
+        $db_config->add_record( false, $db_i_global );
+
+        $db_config->add_query(sprintf($qs[3], $proid, $a_name ),$db_i_global);
+        for ( $idx = 0; $idx < count( $row_data_2 ); $idx++ ) {
+            $db_config->add_record( $row_data_2[$idx], $db_i_global );
+            $spoid = $row_data_2[$idx]['spoid'];
+            $sponsor = $row_data_2[$idx]['sponsor'];
+            $inst_nr++;
+
+            if ( $dev_or_spo == 'sponsor' && $spoid == $number ) {
+                /** configure database to do a ratings_form_full call **/
+                $inst_nr =
+                     $this->_config_db_ratings_form_full( $db_config, $inst_nr,
+                                                      $qs, $rated_yet, $proid,
+                                                      $sponsor, 'sponsor');
+                $inst_nr--; // this loop does another ++
+            } else {
+                /** configure database to do a ratings_rated_yet call **/
+                $db_config->add_query( sprintf( $qs[0], $proid, $sponsor, 
+                                                $a_name), $inst_nr );
+                $db_config->add_num_row( $rated_yet ? 1 : 0, $inst_nr );
+            }
+        }
+        $db_config->add_record( false, $db_i_global );
+        
+        return ++$inst_nr;
+    }
+    function _checkFor_ratings_form() {
+        // TODO: complete this function
+    }
+    function testRatings_form() {
+        global $bx, $auth, $db, $t, $sess;
+
+        $fname = 'ratings_form';
+        $uname = 'this is the username';
+        $auth->set_uname( $uname );
+
+        $args = $this->_generate_records( array( 'proid', 'dev_or_spo', 
+                                                 'number'), 24 );
+        $qs = array( 0 => $this->queries[ 'ratings_rated_yet' ],
+                     1 => $this->queries[ 'ratings_form_full' ],
+                     2 => $this->queries[ $fname . '_1' ], 
+                     3 => $this->queries[ $fname . '_2' ] );
+                     
+        $db_config = new mock_db_configure( 82 );
+        $inst_nr = 0;
+        
+        // test one: no data points, and not rated
+        $a = $args[0];
+        $d1 = array();
+        $d2 = array();
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], false, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 1527+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test two: no data points, but has been rated
+        $a = $args[0];
+        $d1 = array();
+        $d2 = array();
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], true, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 1527+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test three: one data point(developing), no data points(sponsoring),
+        // test three: not rated, dev_or_spo == 'developer', number == devid
+        $a = $args[1];
+        $d1 = $this->_generate_records( array( 'developer','devid'), 1 );
+        $d2 = array();
+        $a['number'] = $d1[0]['devid'];
+        $a['dev_or_spo'] = 'developer';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], false, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 7562+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test four: one data point(developing), no data points(sponsoring),
+        // test four: not rated, dev_or_spo != 'developer', number == devid
+        $a = $args[2];
+        $d1 = $this->_generate_records( array( 'developer','devid'), 1 );
+        $d2 = array();
+        $a['number'] = $d1[0]['devid'];
+        $a['dev_or_spo'] = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], false, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 3620+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test four: one data point(developing), no data points(sponsoring),
+        // test four: not rated, dev_or_spo != 'developer', number != devid
+        $a = $args[3];
+        $d1 = $this->_generate_records( array( 'developer','devid'), 1 );
+        $d2 = array();
+        $a['number'] = $d1[0]['devid'] . "NO MATCH";
+        $a['dev_or_spo'] = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], false, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 3620+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test five: one data point(developing), no data points(sponsoring),
+        // test five: not rated, dev_or_spo == 'developer', number != devid
+        $a = $args[4];
+        $d1 = $this->_generate_records( array( 'developer','devid'), 1 );
+        $d2 = array();
+        $a['number'] = $d1[0]['devid'] . "NO MATCH";
+        $a['dev_or_spo'] = 'developer';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], false, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 3620+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test six: no data point(developing), one data point(sponsoring),
+        // test six: not rated, dev_or_spo == 'sponsor', number != spoid
+        $a = $args[5];
+        $d1 = array();
+        $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
+        $a['number'] = $d2[0]['spoid'] . "NO MATCH";
+        $a['dev_or_spo'] = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], false, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 3616+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test seven: no data point(developing), one data point(sponsoring),
+        // test seven: not rated, dev_or_spo == 'sponsor', number == spoid
+        $a = $args[6];
+        $d1 = array();
+        $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
+        $a['number'] = $d2[0]['spoid'];
+        $a['dev_or_spo'] = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], false, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 7552+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test eight: no data point(developing), one data point(sponsoring),
+        // test eight: not rated, dev_or_spo != 'sponsor', number == spoid
+        $a = $args[7];
+        $d1 = array();
+        $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
+        $a['number'] = $d2[0]['spoid'];
+        $a['dev_or_spo'] = 'developer';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], false, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 3616+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        //
+        // one data point each
+        //
+
+        // test nine: one data point(developing), one data point(sponsoring),
+        // test nine: not rated, dev_or_spo == 'developer', number == spoid
+        $a = $args[8];
+        $d1 = $this->_generate_records( array( 'developer', 'devid' ), 1 );
+        $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
+        $a['number'] = $d2[0]['spoid'];
+        $a['dev_or_spo'] = 'developer';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], false, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 5709+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test ten: one data point(developing), one data point(sponsoring),
+        // test ten: not rated, dev_or_spo == 'developer', number == devid
+        $a = $args[9];
+        $d1 = $this->_generate_records( array( 'developer', 'devid' ), 1 );
+        $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
+        $a['number'] = $d1[0]['devid'];
+        $a['dev_or_spo'] = 'developer';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], false, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 9651+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test eleven: one data point(developing), one data point(sponsoring),
+        // test eleven: not rated, dev_or_spo == 'sponsor', number == devid
+        $a = $args[10];
+        $d1 = $this->_generate_records( array( 'developer', 'devid' ), 1 );
+        $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
+        $a['number'] = $d1[0]['devid'];
+        $a['dev_or_spo'] = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], false, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 5712+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test twelve: one data point(developing), one data point(sponsoring),
+        // test twelve: not rated, dev_or_spo == 'sponsor', number == spoid
+        $a = $args[11];
+        $d1 = $this->_generate_records( array( 'developer', 'devid' ), 1 );
+        $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
+        $a['number'] = $d2[0]['spoid'];
+        $a['dev_or_spo'] = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], false, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 9648+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+        
+        //
+        // repeat all the tests above except not turn rated, i.e. the user
+        // has been rated
+        //
+
+        // test 13: one data point(developing), no data points(sponsoring),
+        // test 13: rated, dev_or_spo == 'developer', number == devid
+        $a = $args[12];
+        $d1 = $this->_generate_records( array( 'developer','devid'), 1 );
+        $d2 = array();
+        $a['number'] = $d1[0]['devid'];
+        $a['dev_or_spo'] = 'developer';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], true, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 7564+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test 14: one data point(developing), no data points(sponsoring),
+        // test 14: rated, dev_or_spo != 'developer', number == devid
+        $a = $args[13];
+        $d1 = $this->_generate_records( array( 'developer','devid'), 1 );
+        $d2 = array();
+        $a['number'] = $d1[0]['devid'];
+        $a['dev_or_spo'] = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], true, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 3652+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test 15: one data point(developing), no data points(sponsoring),
+        // test 15: rated, dev_or_spo != 'developer', number != devid
+        $a = $args[14];
+        $d1 = $this->_generate_records( array( 'developer','devid'), 1 );
+        $d2 = array();
+        $a['number'] = $d1[0]['devid'] . "NO MATCH";
+        $a['dev_or_spo'] = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], true, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 3652+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test 16: one data point(developing), no data points(sponsoring),
+        // test 16: rated, dev_or_spo == 'developer', number != devid
+        $a = $args[15];
+        $d1 = $this->_generate_records( array( 'developer','devid'), 1 );
+        $d2 = array();
+        $a['number'] = $d1[0]['devid'] . "NO MATCH";
+        $a['dev_or_spo'] = 'developer';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], true, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 3652+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test 17: no data point(developing), one data point(sponsoring),
+        // test 17: rated, dev_or_spo == 'sponsor', number != spoid
+        $a = $args[16];
+        $d1 = array();
+        $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
+        $a['number'] = $d2[0]['spoid'] . "NO MATCH";
+        $a['dev_or_spo'] = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], true, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 3648+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test 18: no data point(developing), one data point(sponsoring),
+        // test 18: not rated, dev_or_spo == 'sponsor', number == spoid
+        $a = $args[17];
+        $d1 = array();
+        $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
+        $a['number'] = $d2[0]['spoid'];
+        $a['dev_or_spo'] = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], true, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 7554+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test 19: no data point(developing), one data point(sponsoring),
+        // test 19: rated, dev_or_spo != 'sponsor', number == spoid
+        $a = $args[18];
+        $d1 = array();
+        $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
+        $a['number'] = $d2[0]['spoid'];
+        $a['dev_or_spo'] = 'developer';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], true, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 3648+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        //
+        // one data point each
+        //
+
+        // test 20: one data point(developing), one data point(sponsoring),
+        // test 20: not rated, dev_or_spo == 'developer', number == spoid
+        $a = $args[19];
+        $d1 = $this->_generate_records( array( 'developer', 'devid' ), 1 );
+        $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
+        $a['number'] = $d2[0]['spoid'];
+        $a['dev_or_spo'] = 'developer';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], true, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 5772+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test 21: one data point(developing), one data point(sponsoring),
+        // test 21: not rated, dev_or_spo == 'developer', number == devid
+        $a = $args[20];
+        $d1 = $this->_generate_records( array( 'developer', 'devid' ), 1 );
+        $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
+        $a['number'] = $d1[0]['devid'];
+        $a['dev_or_spo'] = 'developer';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], true, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 9684+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test 22: one data point(developing), one data point(sponsoring),
+        // test 22: not rated, dev_or_spo == 'sponsor', number == devid
+        $a = $args[21];
+        $d1 = $this->_generate_records( array( 'developer', 'devid' ), 1 );
+        $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
+        $a['number'] = $d1[0]['devid'];
+        $a['dev_or_spo'] = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], true, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 5772+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+        // test 23: one data point(developing), one data point(sponsoring),
+        // test 23: not rated, dev_or_spo == 'sponsor', number == spoid
+        $a = $args[22];
+        $d1 = $this->_generate_records( array( 'developer', 'devid' ), 1 );
+        $d2 = $this->_generate_records( array( 'sponsor','spoid'), 1 );
+        $a['number'] = $d2[0]['spoid'];
+        $a['dev_or_spo'] = 'sponsor';
+        $inst_nr =
+             $this->_config_db_ratings_form( $db_config, $inst_nr, $qs, 
+                                             $a['proid'], $a['dev_or_spo'], 
+                                             $a['number'], true, $d1, $d2 );
+        $bx = $this->_create_default_box();
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 9678+strlen($sess->self_url()), $a );
+        $this->_checkFor_ratings_form();
+
+
+        $this->_check_db( $db_config );
     }
 }
 

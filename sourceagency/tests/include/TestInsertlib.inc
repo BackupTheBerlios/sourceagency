@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestInsertlib.inc,v 1.15 2002/07/04 13:04:16 riessen Exp $
+# $Id: TestInsertlib.inc,v 1.16 2002/07/19 10:19:17 riessen Exp $
 #
 ######################################################################
 
@@ -269,9 +269,55 @@ extends UnitTest
     }
 
     function testInsert_into_database() {
-        // TODO: need to implement the affected rows method of mock_database
-        // TODO: in order to implement the test method for insert_into_database
-        $this->_test_to_be_completed();
+        global $db, $auth, $t;
+        
+        $fname = 'insert_into_database';
+        $uname = 'this is the uname';
+        $auth->set_uname( $uname );
+        $qs = array( 0 => ("INSERT description SET project_title='%s', "
+                           ."type='%s', description='%s',  description_user="
+                           ."'$uname',  volume='%s', status='0', "
+                           ."description_creation=NOW()"),
+                     1 => ("SELECT * FROM description WHERE project_title="
+                           ."'%s'"),
+                     2 => ("INSERT views SET configure='Project Participants',"
+                           ." views='Project Participants',"
+                           ." news='Project Initiator', history='Everybody', "
+                           ."step3='Everybody', step4='Everybody', "
+                           ."step5='Everybody',"
+                           ."cooperation='Everybody',proid=%s"),
+                     3 => ("INSERT counter SET proid=%s"),
+                     4 => ("SELECT * FROM description,auth_user WHERE "
+                           ."description.proid='%s' AND description."
+                           ."description_user=auth_user.username GROUP BY " 
+                           ."description.proid"));
+        $args = $this->_generate_records( array( 'project_title','description',
+                                                 'type', 'volume'), 10 );
+        $db_config = new mock_db_configure( 2 );
+        
+        $db_config->add_query( sprintf( $qs[0], $args[0]['project_title'],
+                                $args[0]['type'], $args[0]['description'], 
+                                $args[0]['volume']), 0 );
+        $db_config->add_affected_rows( 1, 0 );
+        $db_config->add_query( sprintf( $qs[1], $args[0]['project_title']),0);
+        $proid = 'this si the proid';
+        $db_config->add_record( array( 'proid' => $proid ), 0 );
+        $db_config->add_query( sprintf( $qs[2], $proid ), 0 );
+        $db_config->add_query( sprintf( $qs[3], $proid ), 0 );
+
+        /** lib show description **/
+        $db_config->add_query( sprintf( $qs[4], $proid ), 1 );
+        $db_config->add_record( false, 1 );
+        $db_config->add_num_row( 0, 1 );
+
+        /** lib_insertion_information --> is sponsor **/
+        /** lib_insertion_information --> is developer **/
+        $auth->set_perm( '' );
+
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 175, $args[0] );
+
+        $this->_check_db( $db_config );
     }
 }
 

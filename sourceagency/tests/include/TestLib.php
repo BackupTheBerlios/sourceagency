@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.29 2002/07/02 10:40:59 riessen Exp $
+# $Id: TestLib.php,v 1.30 2002/07/19 10:19:17 riessen Exp $
 #
 ######################################################################
 
@@ -42,69 +42,79 @@ extends UnitTest
     var $queries;
 
     function UnitTestLib( $name ) {
-        $this->queries =
-             array( 'calendar_box_1' =>
-                    ("SELECT * FROM description,auth_user WHERE "
-                     . "proid='%s' AND description_user = username"),
-                    'calendar_box_2' =>
-                    ("SELECT SUM(budget) FROM sponsoring WHERE "
-                     . "proid='%s' AND status='A'"),
-                    'licensep' =>
-                    ("SELECT * FROM licenses ORDER BY license ASC"),
-                    'lib_show_description' =>
-                    ("SELECT %s FROM %s"),
-                    'lib_show_comments_on_it' =>
-                    ("SELECT * FROM comments,auth_user WHERE proid='%s' AND "
-                     ."type='%s' AND number='%s' AND ref='%s' AND user_cmt"
-                     ."=username ORDER BY creation_cmt ASC"),
-                    'lib_get_project_step' =>
-                    ("SELECT status FROM description WHERE proid='%s'"),
-                    'show_project_milestones_1' =>
-                    ("SELECT devid FROM developing WHERE proid='%s' "
-                     ."AND status='A'"),
-                    'show_project_milestones_2' => /** show_milestones **/
-                    ("SELECT * FROM sponsoring WHERE proid='%s' "
-                     . "AND sponsor='%s'"),
-                    'show_project_milestones_3' => /** show_milestones **/
-                    ("SELECT developer FROM developing WHERE proid='%s' "
-                     ."AND devid='%s'"),
-                    'show_project_milestones_4' => /** show_milestones **/
-                    ("SELECT * FROM milestones WHERE proid='%s' "
-                     ."AND status='A' AND devid='%s' ORDER BY number"),
-                    'show_project_participants' =>
-                    ("SELECT %s FROM %s WHERE proid='%s' AND status='A'"),
-                    'lib_die' =>
-                    ("SELECT email_usr FROM auth_user WHERE perms "
-                     ."LIKE '%admin%'"),
-                    'lib_insertion_information' => /* is_sponsor/is_develop */
-                    ("SELECT * FROM auth_user WHERE perms LIKE '%%%s%%'"
-                     ." AND username='%s'"),
-                    'lib_count_total' =>
-                    ("SELECT COUNT(*) FROM %s %s"),
-                    'summary_1' =>
-                    ("SELECT * FROM description WHERE proid='%s'"),
-                    'summary_2' =>
-                    ("SELECT COUNT(*) FROM news WHERE proid='%s'"),
-                    'summary_3' =>
-                    ("SELECT COUNT(*) FROM comments WHERE proid='%s' "
-                     . "AND type='general'"),
-                    'summary_4' =>
-                    ("SELECT COUNT(*) FROM comments WHERE proid='%s' "
-                     . "AND type!='general'"),
-                    'summary_5' =>
-                    ("SELECT COUNT(*) FROM sponsoring WHERE proid='%s' "
-                     . "AND status='A'"),
-                    'summary_6' =>
-                    ("SELECT COUNT(*) FROM sponsoring WHERE proid='%s' "
-                     . "AND status='P'"),
-                    'summary_news_1' =>
-                    ("SELECT * FROM news,auth_user WHERE proid='%s' AND "
-                     ."user_news=username ORDER BY creation_news DESC "
-                     ."LIMIT 3"),
-                    'summary_news_2' =>
-                    ("SELECT * FROM comments WHERE proid='%s' AND type='News' "
-                     . "AND number='%s'")
-                 );
+        $this->queries = array( 
+          'calendar_box_1' =>
+          ("SELECT * FROM description,auth_user WHERE "
+           . "proid='%s' AND description_user = username"),
+          'calendar_box_2' =>
+          ("SELECT SUM(budget) FROM sponsoring WHERE "
+           . "proid='%s' AND status='A'"),
+          'licensep' =>
+          ("SELECT * FROM licenses ORDER BY license ASC"),
+          'lib_show_description' =>
+          ("SELECT %s FROM %s"),
+          'lib_show_comments_on_it' =>
+          ("SELECT * FROM comments,auth_user WHERE proid='%s' AND "
+           ."type='%s' AND number='%s' AND ref='%s' AND user_cmt"
+           ."=username ORDER BY creation_cmt ASC"),
+          'lib_get_project_step' =>
+          ("SELECT status FROM description WHERE proid='%s'"),
+          'show_project_milestones_1' =>
+          ("SELECT devid FROM developing WHERE proid='%s' "
+           ."AND status='A'"),
+          'show_project_milestones_2' => /** show_milestones **/
+          ("SELECT * FROM sponsoring WHERE proid='%s' "
+           . "AND sponsor='%s'"),
+          'show_project_milestones_3' => /** show_milestones **/
+          ("SELECT developer FROM developing WHERE proid='%s' "
+           ."AND devid='%s'"),
+          'show_project_milestones_4' => /** show_milestones **/
+          ("SELECT * FROM milestones WHERE proid='%s' "
+           ."AND status='A' AND devid='%s' ORDER BY number"),
+          'show_project_participants' =>
+          ("SELECT %s FROM %s WHERE proid='%s' AND status='A'"),
+          'lib_die' =>
+          ("SELECT email_usr FROM auth_user WHERE perms "
+           ."LIKE '%admin%'"),
+          'lib_insertion_information' => /* is_sponsor/is_develop */
+          ("SELECT * FROM auth_user WHERE perms LIKE '%%%s%%'"
+           ." AND username='%s'"),
+          'lib_count_total' =>
+          ("SELECT COUNT(*) FROM %s %s"),
+          'summary_1' =>
+          ("SELECT * FROM description WHERE proid='%s'"),
+          'summary_2' =>
+          ("SELECT COUNT(*) FROM news WHERE proid='%s'"),
+          'summary_3' =>
+          ("SELECT COUNT(*) FROM comments WHERE proid='%s' "
+           . "AND type='general'"),
+          'summary_4' =>
+          ("SELECT COUNT(*) FROM comments WHERE proid='%s' "
+           . "AND type!='general'"),
+          'summary_5' =>
+          ("SELECT COUNT(*) FROM sponsoring WHERE proid='%s' "
+           . "AND status='A'"),
+          'summary_6' =>
+          ("SELECT COUNT(*) FROM sponsoring WHERE proid='%s' "
+           . "AND status='P'"),
+          'summary_news_1' =>
+          ("SELECT * FROM news,auth_user WHERE proid='%s' AND "
+           ."user_news=username ORDER BY creation_news DESC "
+           ."LIMIT 3"),
+          'summary_news_2' =>
+          ("SELECT * FROM comments WHERE proid='%s' AND type='News' "
+           . "AND number='%s'"),
+          'followup_1' =>
+          ( "SELECT * FROM description,auth_user WHERE description.proid='%s' "
+            . "AND description.description_user=auth_user.username "
+            . "GROUP BY description.proid" ),
+          'followup_2' => /** show_selected_content **/
+          ("SELECT * FROM tech_content,auth_user WHERE proid='%s' AND "
+           ."content_user=username AND tech_content.status='A'"),
+          'followup_3' => /** show_selected_developing **/
+          ("SELECT * FROM developing,auth_user WHERE proid='%s' AND "
+           ."developer=username AND developing.status='A'"),
+          );
         $this->UnitTest( $name );
     }
 
@@ -1273,16 +1283,121 @@ extends UnitTest
         $this->_check_db( $db_config );
     }
 
-    function testTop_bar() {
-        $this->_test_to_be_completed();
+    function testFollowup() {
+        global $bx, $t, $sess, $db;
+
+        $fname = 'followup';
+        $qs = array( 0 => $this->queries[ $fname . '_1' ],
+                     1 => $this->queries[ $fname . '_2' ],
+                     2 => $this->queries[ $fname . '_3' ],
+                     3 => $this->queries[ 'show_project_milestones_2' ],
+                     4 => $this->queries[ 'show_project_milestones_3' ],
+                     5 => $this->queries[ 'show_project_milestones_4' ],
+                     6 => $this->queries[ 'show_project_participants' ],
+                     7 => $this->queries[ 'show_project_milestones_1' ] );
+
+        $args = $this->_generate_records( array( 'proid' ), 10 );
+        $db_config = new mock_db_configure( 6 );
+
+        /** DB Instances:
+            0 --> global db
+            1 --> db_followment
+            2 --> lib_show_description::db_local
+            3 --> show_project_milestones::db_local
+            4 --> show_milestones::db
+            5 --> show_milestones::db (second definition)
+        **/
+        /** lib show description **/
+        $db_config->add_query( sprintf( $qs[0], $args[0]['proid'] ), 2 );
+        $db_config->add_record( false, 2 );
+        $db_config->add_num_row( 0, 2 );
+        /** show selected content **/
+        $db_config->add_query( sprintf( $qs[1], $args[0]['proid']), 0);
+        $d1 = $this->_generate_records( array( 'creation', 'username','skills',
+                                               'platform','architecture',
+                                               'environment','docs',
+                                               'specification'), 10 );
+        $db_config->add_record( $d1[0], 0 );
+        /** show selected developing **/
+        $db_config->add_query( sprintf( $qs[2], $args[0]['proid']), 0);
+        $db_config->add_num_row( 0, 0 );
+        /** show project participants --> sponsor **/
+        $db_config->add_query( sprintf( $qs[6], 'sponsor', 'sponsoring',
+                                                   $args[0]['proid']), 0 );
+        $db_config->add_record( false, 0 );
+        /** show project participants --> developer **/
+        $db_config->add_query( sprintf( $qs[6], 'developer', 'developing',
+                                                   $args[0]['proid']), 0 );
+        $db_config->add_record( false, 0 );
+        /** show project participants --> referee **/
+        $db_config->add_query( sprintf( $qs[6], 'referee', 'referees',
+                                                   $args[0]['proid']), 0 );
+        $db_config->add_record( false, 0 );
+
+        /** show project milestones **/
+        $db_config->add_query( sprintf( $qs[7], $args[0]['proid']), 3 );
+        $devid = 'this is the devid';
+        $db_config->add_record( array( 'devid' => $devid ), 3 );
+        $db_config->add_query( sprintf( $qs[3], $args[0]['proid'], ''), 4 );
+        $db_config->add_num_row( 0, 4 );
+        $db_config->add_query( sprintf( $qs[4], $args[0]['proid'], $devid),4);
+        $developer = 'this is the developer';
+        $db_config->add_record( array( 'developer' => $developer ), 4 );
+        $db_config->add_query( sprintf( $qs[5], $args[0]['proid'], $devid),5);
+        $db_config->add_num_row( 0, 5 );
+
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $this->capture_call( $fname, 4039, $args[0] );
+
+        $this->_check_db( $db_config );
     }
 
-    function testFollowup() {
-        $this->_test_to_be_completed();
+    function testTop_bar() {
+        $db_config = new mock_db_configure( 2 );
+
+        $fname = 'top_bar';
+        $qs = array( 0 => $this->queries[ 'summary_1' ] );
+        $args = $this->_generate_records( array( 'proid', 'page' ), 2 );
+        
+        $db_config->add_query( sprintf( $qs[0], $args[0]['proid'] ), 0 );
+        $db_config->add_num_row( 0, 0 );
+        $db_config->add_query( sprintf( $qs[0], $args[1]['proid'] ), 1 );
+        $db_config->add_num_row( 1, 1 );
+        $db_config->add_record( array( 'project_title' => 'fubar', 
+                                       'status' => 2 ), 1 );
+        // test one
+        $this->capture_call( $fname, 2258, $args[0] );
+        // test two
+        $this->capture_call( $fname, 2564, $args[1] );
+
+        $this->_check_db( $db_config );
     }
 
     function test_draw_top_bar() {
-        $this->_test_to_be_completed();
+        // TODO: complete this test by checking for the various html 
+        // TODO: code bits
+        global $g_step_count;
+        include( 'config.inc' );
+        $fname = '_draw_top_bar';
+        $args = $this->_generate_records( array( 'project_title', 'page',
+                                                 'proid', 'project_status'),
+                                          ($g_step_count+2)*2 );
+
+        $len=array( 2255, 2292, 2329, 2366, 2403, 2440, 2477, 2477, 
+                    2536, 2590, 2646, 2700, 2754, 2808, 2862, 2862 );
+        // tests with the proid being empty
+        $idx = 0;
+        for ( ; $idx < $g_step_count + 2; $idx++ ) {
+            $args[$idx]['proid'] = '';
+            $args[$idx]['project_status'] = $idx;
+            $this->capture_call( $fname, $len[$idx], $args[$idx] );
+        }
+        for ( $jdx = 0; $jdx < $g_step_count + 2; $jdx++, $idx++ ) {
+            $args[$idx]['proid'] = 'this is not empty';
+            $args[$idx]['project_status'] = $jdx;
+            $this->capture_call( $fname, $len[$idx], $args[$idx] );
+        }
     }
 }
 

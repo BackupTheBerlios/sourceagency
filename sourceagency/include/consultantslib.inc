@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: consultantslib.inc,v 1.7 2002/05/13 10:22:09 riessen Exp $
+# $Id: consultantslib.inc,v 1.8 2002/07/19 10:19:17 riessen Exp $
 #
 ######################################################################
 
@@ -179,13 +179,8 @@ function consultants_insert($proid, $user)
     $db->query("INSERT consultants SET proid='$proid',consultant='$user',"
                ."status='P'");
 
-    // WISH: config.inc should not be required another time,
-    // as it is done at the beginning of every page.
-    if ( floor( phpversion() ) >= 4 ) {
-        include_once('config.inc');
-        include_once('monitorlib.inc');
-    } else {
-        include('config.inc');
+    include('config.inc');
+    if ( !function_exists( 'monitor_mail' ) ) {
         include('monitorlib.inc');
     }
 

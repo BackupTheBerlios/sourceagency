@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: ratingslib.inc,v 1.11 2002/07/09 11:15:33 riessen Exp $
+# $Id: ratingslib.inc,v 1.12 2002/07/19 10:19:17 riessen Exp $
 #
 ######################################################################
 
@@ -170,7 +170,7 @@ function ratings_form_full($proid, $username, $dev_or_spo, $id)
         $array = $developer_rates_sponsor;
     } elseif ($dev_or_spo == 'developer') {
         $array = $sponsor_rates_developer;
-    }
+    } /** FIXME: what if dev_or_spo not sponsor or developer?!?! **/
 
     $bx->box_begin();
     $bx->box_title('Rate '.$username);
@@ -195,7 +195,7 @@ function ratings_form_full($proid, $username, $dev_or_spo, $id)
 	$bx->box_column ('right','',$background,'<b>'.$t->translate($array[$i]).'</b>: ');
 	if (!ratings_rated_yet($proid, $username, $auth->auth['uname'])) {
 	    for($j=1;$j<=5;$j++) {
-		$bx->box_column ('center','',$background,html_radio($array[$i],$j,$checked));
+		$bx->box_column ('center','',$background,html_radio($array[$i],$j,false));
 	    }
 	} else {
 	    $db_local = new DB_SourceAgency;

@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: insertlib.inc,v 1.6 2002/05/07 11:26:58 riessen Exp $
+# $Id: insertlib.inc,v 1.7 2002/07/19 10:19:17 riessen Exp $
 #
 ######################################################################
 
@@ -311,10 +311,11 @@ function insert_into_database($project_title, $description, $type, $volume)
 
     lib_insertion_information();
 
-    if ($ml_notify) {
-  	$msg = $t->translate('insert project') . " $project_title "
-           .$t->translate('by') . ' ' . $auth->auth['uname'] . '.';
-      	mailuser('editor', $t->translate('Project inserted'), $msg);
-    }
+    // FIXME: ml_notify is not defined
+//      if ($ml_notify) {
+//    	$msg = $t->translate('insert project') . " $project_title "
+//             .$t->translate('by') . ' ' . $auth->auth['uname'] . '.';
+//        	mailuser('editor', $t->translate('Project inserted'), $msg);
+//      }
 }
 ?>
