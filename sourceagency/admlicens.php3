@@ -1,8 +1,8 @@
 <?php
 
 ######################################################################
-# SourceAgency: Software Announcement & Retrieval System
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
@@ -16,6 +16,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: admlicens.php3,v 1.2 2001/11/09 20:34:08 riessen Exp $
+#
 ######################################################################
 
 page_open(array("sess" => "SourceAgency_Session"));
@@ -28,14 +31,25 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 
 require("header.inc");
 
-$bx = new box("80%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-$be = new box("80%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
-$bs = new box("100%",$th_strip_frame_color,$th_strip_frame_width,$th_strip_title_bgcolor,$th_strip_title_font_color,$th_strip_title_align,$th_strip_body_bgcolor,$th_strip_body_font_color,$th_strip_body_align);
-?>
+$bx = new box("80%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-<?php
-if (($config_perm_admlicens != "all") && (!isset($perm) || !$perm->have_perm($config_perm_admlicens))) {
+$be = new box("80%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_error_font_color,$th_box_body_align);
+
+$bs = new box("100%",$th_strip_frame_color,$th_strip_frame_width,
+              $th_strip_title_bgcolor,$th_strip_title_font_color,
+              $th_strip_title_align,$th_strip_body_bgcolor,
+              $th_strip_body_font_color,$th_strip_body_align);
+
+start_content();
+
+if (($config_perm_admlicens != "all") 
+    && (!isset($perm) || !$perm->have_perm($config_perm_admlicens))) {
   $be->box_full($t->translate("Error"), $t->translate("Access denied"));
 } else {
 
@@ -43,13 +57,17 @@ if (($config_perm_admlicens != "all") && (!isset($perm) || !$perm->have_perm($co
   $bx->box_title($t->translate("License Administration"));
   $bx->box_body_begin();
 
-			          // Insert a new License
+  // Insert a new License
 
   $bs->box_strip($t->translate("Insert a License"));
   echo "<form action=\"".$sess->url("inslic.php3")."\" method=\"POST\">\n";
   echo "<table border=0 cellspacing=0 cellpadding=3 width=100%>\n";
-  echo "<tr><td align=right width=30%>".$t->translate("New License")." (64):</td><td width=70%><input type=\"TEXT\" name=\"license\" size=40 maxlength=64>\n";
-  echo "<tr><td align=right>".$t->translate("License URL")." (255):</td><td><input type=\"TEXT\" name=\"url_lic\" size=40 maxlength=255>\n";
+  echo "<tr><td align=right width=30%>".$t->translate("New License")
+    . " (64):</td><td width=70%><input type=\"TEXT\" name=\"license\" "
+    . "size=40 maxlength=64>\n";
+  echo "<tr><td align=right>".$t->translate("License URL")
+    ." (255):</td><td><input type=\"TEXT\" name=\"url_lic\" size=40 "
+    ."maxlength=255>\n";
   echo "</td></tr>\n";
   echo "<tr><td>&nbsp;</td>\n";
   echo "<td><input type=\"submit\" value=\"".$t->translate("Insert")."\">";
@@ -58,16 +76,19 @@ if (($config_perm_admlicens != "all") && (!isset($perm) || !$perm->have_perm($co
   echo "</table>\n";
   echo "<BR>\n";
 
-
-				          // Rename a License
+  // Rename a License
 
   $bs->box_strip($t->translate("Rename a License"));
   echo "<form action=\"".$sess->url("inslic.php3")."\" method=\"POST\">\n";
   echo "<table border=0 cellspacing=0 cellpadding=3 width=100%>\n";
-  echo "<tr><td align=right width=30%>".$t->translate("License").":</td><td width=70%>\n";
-  print license("The GNU General Public License (GPL)");     // We select the first one to avoid having a blank line
+  echo "<tr><td align=right width=30%>".$t->translate("License")
+    .":</td><td width=70%>\n";
+  print license("The GNU General Public License (GPL)");
+  // We select the first one to avoid having a blank line
   echo "</td></tr>\n";
-  echo "<tr><td align=right>".$t->translate("New License Name")." (64):</td><td><input type=\"TEXT\" name=\"new_license\" size=40 maxlength=64>\n";
+  echo "<tr><td align=right>".$t->translate("New License Name")
+    ." (64):</td><td><input type=\"TEXT\" name=\"new_license\" size=40 "
+    ."maxlength=64>\n";
   echo "</td></tr>\n";
   echo "<tr><td>&nbsp;</td>\n";
   echo "<td><input type=\"submit\" value=\"".$t->translate("Rename")."\">";
@@ -76,15 +97,19 @@ if (($config_perm_admlicens != "all") && (!isset($perm) || !$perm->have_perm($co
   echo "</table>\n";
   echo "<BR>\n";
 
-				          // Change a License's URL
+  // Change a License's URL
 
   $bs->box_strip($t->translate("Change a License URL"));
   echo "<form action=\"".$sess->url("inslic.php3")."\" method=\"POST\">\n";
   echo "<table border=0 cellspacing=0 cellpadding=3 width=100%>\n";
-  echo "<tr><td align=right width=30%>".$t->translate("License").":</td><td width=70%>\n";
-  print license("The GNU General Public License (GPL)");     // We select the first one to avoid having a blank line
+  echo "<tr><td align=right width=30%>".$t->translate("License")
+    .":</td><td width=70%>\n";
+  print license("The GNU General Public License (GPL)");
+  // We select the first one to avoid having a blank line
   echo "</td></tr>\n";
-  echo "<tr><td align=right>".$t->translate("New License URL")." (255):</td><td><input type=\"TEXT\" name=\"new_url\" size=40 maxlength=255>\n";
+  echo "<tr><td align=right>".$t->translate("New License URL")
+    ." (255):</td><td><input type=\"TEXT\" name=\"new_url\" size=40 "
+    ."maxlength=255>\n";
   echo "</td></tr>\n";
   echo "<tr><td>&nbsp;</td>\n";
   echo "<td><input type=\"submit\" value=\"".$t->translate("Change")."\">";
@@ -93,13 +118,15 @@ if (($config_perm_admlicens != "all") && (!isset($perm) || !$perm->have_perm($co
   echo "</table>\n";
   echo "<BR>\n";
 
-					  // Delete a License
+  // Delete a License
 
   $bs->box_strip($t->translate("Delete a License"));
   echo "<form action=\"".$sess->url("inslic.php3")."\" method=\"POST\">\n";
   echo "<table border=0 cellspacing=0 cellpadding=3 width=100%>\n";
-  echo "<tr><td align=right width=30%>".$t->translate("License").":</td><td width=70%>\n";
-  print license("The GNU General Public License (GPL)");     // We select the first one to avoid having a blank line
+  echo "<tr><td align=right width=30%>".$t->translate("License")
+    .":</td><td width=70%>\n";
+  print license("The GNU General Public License (GPL)");
+  // We select the first one to avoid having a blank line
   echo "</td></tr>\n";
   echo "</td></tr>\n";
   echo "<tr><td>&nbsp;</td>\n";
@@ -111,11 +138,8 @@ if (($config_perm_admlicens != "all") && (!isset($perm) || !$perm->have_perm($co
   $bx->box_body_end();
   $bx->box_end();
 }
-?>
 
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 page_close();
 ?>
