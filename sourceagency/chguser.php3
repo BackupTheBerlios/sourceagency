@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: chguser.php3,v 1.12 2002/05/10 12:01:33 grex Exp $
+# $Id: chguser.php3,v 1.13 2002/05/10 12:32:22 grex Exp $
 #
 ######################################################################
 
@@ -77,7 +77,7 @@ while (is_array($HTTP_POST_VARS)
                           .$t->translate('is changed').'.');
             if ($ml_notify) {
                 $message  = $t->translate('Username')
-                                .': '.$auth->auth['uname'].'\n';
+                                .': '.$auth->auth['uname']."\n";
                 $message .= $t->translate('Realname').": $realname\n";
                 $message .= $t->translate('E-Mail').":   $email_usr\n";
 
