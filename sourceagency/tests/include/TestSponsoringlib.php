@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSponsoringlib.php,v 1.2 2002/02/07 12:24:17 riessen Exp $
+# $Id: TestSponsoringlib.php,v 1.3 2002/02/25 16:09:29 riessen Exp $
 #
 ######################################################################
 
@@ -53,7 +53,7 @@ extends UnitTest
     function testSponsoring_form() {
         global $sponsoring_text, $budget, $valid_day, $valid_month, 
             $valid_year, $begin_day, $begin_month, $begin_year, 
-            $finish_day, $finish_month, $finish_year;
+            $finish_day, $finish_month, $finish_year, $sess;
         
         $sponsoring_text = "this is the sponsoring text";
         $budget = "this is the budget";
@@ -65,7 +65,7 @@ extends UnitTest
         capture_reset_and_start();
         sponsoring_form( "proid" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 6408 );
+        $this->_testFor_length( 6408 + strlen( $sess->self_url() ));
 
         $ps=array( 0=>("<td align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
                        ."\"><select name=\"valid_day\">\n<option value=\"1"
