@@ -5,11 +5,16 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestAdmprojectslib.php,v 1.3 2002/06/11 14:11:12 riessen Exp $
+// $Id: TestAdmprojectslib.php,v 1.4 2002/06/13 09:56:14 riessen Exp $
 
 include_once( "../constants.php" );
 
 if ( !defined("BEING_INCLUDED" ) ) {
+    include_once( 'box.inc' );
+    include_once( "translation.inc" );
+    $GLOBALS['t'] = new translation("English");
+    include_once( 'lib.inc');
+    include_once( 'html.inc' );
 }
 
 include_once( 'admprojectslib.inc' );
@@ -255,6 +260,7 @@ extends UnitTest
             }
             $db_config->add_query( sprintf($qs[3],$args[$jdx]['proid']), 
                                    $jdx );
+            $d2[$jdx]['email_usr'] = '';
             $db_config->add_record( $d2[$jdx], $jdx );
             $db = new DB_SourceAgency;
 
