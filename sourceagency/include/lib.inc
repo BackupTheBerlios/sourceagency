@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.22 2002/03/19 17:08:03 riessen Exp $
+# $Id: lib.inc,v 1.23 2002/03/21 12:42:22 riessen Exp $
 #
 ######################################################################
 
@@ -1124,10 +1124,10 @@ function end_content() {
     print "\n\n<!-- end content -->\n\n";
 }
 
-function is_not_set_or_empty( $val ) {
+function is_not_set_or_empty( &$val ) {
     return ( !isset( $val ) || empty( $val ) );
 }
-function is_set_and_not_empty( $val ) {
+function is_set_and_not_empty( &$val ) {
     // this is not the same as !is_not_set_or_empty($val) because
     // a value can be set and empty, and is_not_set_or_empty would
     // return false
