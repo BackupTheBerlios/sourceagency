@@ -1,22 +1,23 @@
 <?php
-
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ===============================================================
 #
 # Copyright (c) 2001 by
-#                Gregorio Robles (grex@scouts-es.org)
+#                Gregorio Robles (grex@scouts-es.org) and
+#                Gerrit Riessen (riessen@open-source-consultants.de)
 #
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
-# TODO: Description is missing 
+# This library contains functionality for sponsor decisions within the project
 #
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: decisionslib.inc,v 1.8 2002/03/20 14:41:33 riessen Exp $
+# $Id: decisionslib.inc,v 1.9 2002/04/18 13:40:24 grex Exp $
 #
 ######################################################################
 
@@ -34,31 +35,33 @@
 #
 #####
 
-function show_decision_consultants($proid) {
-  global $t, $bx, $db, $voted_yet, $your_vote;
+function show_decision_consultants($proid)
+{
+    global $t, $bx, $db;
+    global $voted_yet, $your_vote;
 
-  $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
-  $db->next_record();
-  $decision_value = $db->f("quorum");
+    $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
+    $db->next_record();
+    $decision_value = $db->f("quorum");
 
-  $return_value = 0;
-  $flag = 0; // $flag is one <=> the project is configured to not have consultants
+    $return_value = 0;
+    $flag = 0; // $flag is one <=> the project is configured to not have consultants
 
-  print "<p align=right>You can only vote for one of them\n";
+    print "<p align=right>You can only vote for one of them\n";
 
-  $total_budget = project_budget($proid);
+    $total_budget = project_budget($proid);
 
-  $db->query("SELECT consultants FROM configure WHERE proid='$proid'");
-  $db->next_record();
-  if ($db->f("consultants") == "No") {
+    $db->query("SELECT consultants FROM configure WHERE proid='$proid'");
+    $db->next_record();
+    if ($db->f("consultants") == "No") {
 	$flag = 1;
 	$return_value = 100;
-  }
+    }
 
-  $query = "SELECT * FROM consultants,auth_user WHERE proid='$proid' AND consultant=username ORDER BY creation";
-  $db->query($query);
+    $query = "SELECT * FROM consultants,auth_user WHERE proid='$proid' AND consultant=username ORDER BY creation";
+    $db->query($query);
 
-  if ($db->num_rows() != 0) {
+    if ($db->num_rows() != 0) {
 	$bx->box_begin();
 	$bx->box_title($t->translate("Consultants"));
 	$bx->box_body_begin();
@@ -76,30 +79,38 @@ function show_decision_consultants($proid) {
 	htmlp_form_action("PHP_SELF",array("proid" => $proid),"POST");
 
 	while($db->next_record()) {
-		$i++;
-		if ($i%2 != 0) $bgcolor = "gold";
-		else $bgcolor = "#FFFFFF";
+	    $i++;
+	    if ($i%2 != 0) {
+                $bgcolor = "gold";
+	    } else {
+                $bgcolor = "#FFFFFF";
+	    }
 
-		$db_consultant = new DB_SourceAgency;
-		$db_consultant->query("SELECT SUM(budget) AS sum_consultant FROM sponsoring,decisions WHERE decisions.proid='$proid' AND sponsoring.proid='$proid' AND sponsoring.sponsor=decisions.decision_user AND step='1' AND decision='".$db->f("consultant")."' GROUP BY decision");
-		$db_consultant->next_record();
+	    $db_consultant = new DB_SourceAgency;
+	    $db_consultant->query("SELECT SUM(budget) AS sum_consultant FROM sponsoring,decisions WHERE decisions.proid='$proid' AND sponsoring.proid='$proid' AND sponsoring.sponsor=decisions.decision_user AND step='1' AND decision='".$db->f("consultant")."' GROUP BY decision");
+	    $db_consultant->next_record();
 
-		$bx->box_next_row_of_columns();
+	    $bx->box_next_row_of_columns();
 
-		$bx->box_column("","",$bgcolor,"<b>$i</b>");
-		$bx->box_column("","",$bgcolor,"<b>".lib_nick($db->f("consultant"))."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".show_status($db->f("status"))."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".timestr(mktimestamp($db->f("creation")))."</b>");
-		$voted_yet += ($db_consultant->f("sum_consultant")/$total_budget)*100;
+	    $bx->box_column("","",$bgcolor,"<b>$i</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".lib_nick($db->f("consultant"))."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".show_status($db->f("status"))."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".timestr(mktimestamp($db->f("creation")))."</b>");
+	    $voted_yet += ($db_consultant->f("sum_consultant")/$total_budget)*100;
 
-		$voting = ((round(($db_consultant->f("sum_consultant")/$total_budget)*10000))/100);
-		$bx->box_column("center","",$bgcolor,"<b>".$voting."%</b>");
+	    $voting = ((round(($db_consultant->f("sum_consultant")/$total_budget)*10000))/100);
+	    $bx->box_column("center","",$bgcolor,"<b>".$voting."%</b>");
 
-		if ($voting > $decision_value) $return_value = 1;
+	    if ($voting > $decision_value) {
+                $return_value = 1;
+	    }
 
-		if (!strcmp($your_vote,$db->f("consultant"))) $checked = "checked";
-		else $checked = "";
-		$bx->box_column("center","",$bgcolor,html_radio("your_vote",$db->f("consultant"),$checked));
+	    if (!strcmp($your_vote,$db->f("consultant"))) {
+                $checked = "checked";
+	    } else {
+                $checked = "";
+	    }
+	    $bx->box_column("center","",$bgcolor,html_radio("your_vote",$db->f("consultant"),$checked));
 	}
 
 	$bx->box_next_row_of_columns();
@@ -108,35 +119,39 @@ function show_decision_consultants($proid) {
 	$bx->box_columns_end();
 	$bx->box_body_end();
 	$bx->box_end();
-  }
+    }
 
-  if ($flag) {
+    if ($flag) {
 	print "<p><b>This project is configured to have no consultants.</b>\n";
 	print "<br>You can reach the next step whenever you want.<p>\n";
-  } elseif ($db->num_rows() == 0) {
+    } elseif ($db->num_rows() == 0) {
 	print "<p><b>No decision possible as there are no offerings.</b><p>\n";
-  }
-  return $return_value;
+    } else {
+        die('Error in decisionslib.inc function show_decision_consultants()');
+    }
+    return $return_value;
 }
 
 
-function show_decision_contents($proid) {
-  global $t, $bx, $db, $voted_yet, $your_vote;
+function show_decision_contents($proid)
+{
+    global $t, $bx, $db;
+    global $voted_yet, $your_vote;
 
-  $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
-  $db->next_record();
-  $decision_value = $db->f("quorum");
+    $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
+    $db->next_record();
+    $decision_value = $db->f("quorum");
 
-  $return_value = 0;
+    $return_value = 0;
 
-  print "<p align=right>You can only vote for one of them\n";
+    print "<p align=right>You can only vote for one of them\n";
 
-  $total_budget = project_budget($proid);
+    $total_budget = project_budget($proid);
 
-  $query = "SELECT * FROM tech_content,auth_user WHERE proid='$proid' AND content_user=username ORDER BY creation";
-  $db->query($query);
+    $query = "SELECT * FROM tech_content,auth_user WHERE proid='$proid' AND content_user=username ORDER BY creation";
+    $db->query($query);
 
-  if ($db->num_rows() != 0) {
+    if ($db->num_rows() != 0) {
 	$bx->box_begin();
 	$bx->box_title($t->translate("Proposed contents"));
 	$bx->box_body_begin();
@@ -156,32 +171,40 @@ function show_decision_contents($proid) {
 	htmlp_form_action("PHP_SELF",array("proid" => $proid),"POST");
 
 	while($db->next_record()) {
-		$i++;
-		if ($i%2 != 0) $bgcolor = "gold";
-		else $bgcolor = "#FFFFFF";
+	    $i++;
+	    if ($i%2 != 0) {
+                $bgcolor = "gold";
+	    } else {
+                $bgcolor = "#FFFFFF";
+	    }
 
-		$db_content = new DB_SourceAgency;
-		$db_content->query("SELECT SUM(budget) AS sum_content FROM sponsoring,decisions WHERE decisions.proid='$proid' AND sponsoring.proid='$proid' AND sponsoring.sponsor=decisions.decision_user AND decision='".$db->f("content_id")."' AND step='2' GROUP BY decision");
-		$db_content->next_record();
+  	    $db_content = new DB_SourceAgency;
+	    $db_content->query("SELECT SUM(budget) AS sum_content FROM sponsoring,decisions WHERE decisions.proid='$proid' AND sponsoring.proid='$proid' AND sponsoring.sponsor=decisions.decision_user AND decision='".$db->f("content_id")."' AND step='2' GROUP BY decision");
+	    $db_content->next_record();
 
-		$bx->box_next_row_of_columns();
+	    $bx->box_next_row_of_columns();
 
-		$bx->box_column("","",$bgcolor,"<b>".$db->f("content_id")."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".$db->f("platform")."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".$db->f("architecture")."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".$db->f("environment")."</b>");
-		$bx->box_column("","",$bgcolor,"<b>pop up</b>");
-		$bx->box_column("","",$bgcolor,"<b>".timestr_short(mktimestamp($db->f("creation")))."</b>");
-		$voted_yet += ($db_content->f("sum_content")/$total_budget)*100;
+	    $bx->box_column("","",$bgcolor,"<b>".$db->f("content_id")."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".$db->f("platform")."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".$db->f("architecture")."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".$db->f("environment")."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>pop up</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".timestr_short(mktimestamp($db->f("creation")))."</b>");
+	    $voted_yet += ($db_content->f("sum_content")/$total_budget)*100;
 
-		$voting = ((round(($db_content->f("sum_content")/$total_budget)*10000))/100);
-		$bx->box_column("center","",$bgcolor,"<b>".$voting."%</b>");
+	    $voting = ((round(($db_content->f("sum_content")/$total_budget)*10000))/100);
+	    $bx->box_column("center","",$bgcolor,"<b>".$voting."%</b>");
 
-		if ($voting > $decision_value) $return_value = 1;
+	    if ($voting > $decision_value) {
+                $return_value = 1;
+	    }
 
-		if (!strcmp($your_vote,$db->f("content_id"))) $checked = "checked";
-		else $checked = "";
-		$bx->box_column("center","",$bgcolor,html_radio("your_vote",$db->f("content_id"),$checked));
+	    if (!strcmp($your_vote,$db->f("content_id"))) {
+                $checked = "checked";
+	    } else {
+                $checked = "";
+	    }
+	    $bx->box_column("center","",$bgcolor,html_radio("your_vote",$db->f("content_id"),$checked));
 	}
 
 	$bx->box_next_row_of_columns();
@@ -190,33 +213,35 @@ function show_decision_contents($proid) {
 	$bx->box_columns_end();
 	$bx->box_body_end();
 	$bx->box_end();
-  }
+    }
 
-  if ($db->num_rows() == 0) {
+    if ($db->num_rows() == 0) {
 	print "<p>There have not been posted any technical specification suggestion.\n";
-  }
-  return $return_value;
+    }
+    return $return_value;
 }
 
 
-function show_decision_proposals($proid) {
-  global $t, $bx, $db, $voted_yet, $your_vote;
+function show_decision_proposals($proid)
+{
+    global $t, $bx, $db;
+    global $voted_yet, $your_vote;
 
-  $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
-  $db->next_record();
-  $decision_value = $db->f("quorum");
+    $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
+    $db->next_record();
+    $decision_value = $db->f("quorum");
 
-  print "<p align=right>You can only vote for one of them\n";
-  print "<p align=right>You can only vote those proposals that have all their milestones accepted by you";
+    print "<p align=right>You can only vote for one of them\n";
+    print "<p align=right>You can only vote those proposals that have all their milestones accepted by you";
 
-  $return_value = 0;
+    $return_value = 0;
 
-  $total_budget = project_budget($proid);
+    $total_budget = project_budget($proid);
 
-  $query = "SELECT * FROM tech_content,developing,auth_user WHERE tech_content.proid='$proid' AND developer=username AND tech_content.content_id=developing.content_id AND tech_content.status='A' ORDER BY developing.creation";
-  $db->query($query);
+    $query = "SELECT * FROM tech_content,developing,auth_user WHERE tech_content.proid='$proid' AND developer=username AND tech_content.content_id=developing.content_id AND tech_content.status='A' ORDER BY developing.creation";
+    $db->query($query);
 
-  if ($db->num_rows() != 0) {
+    if ($db->num_rows() != 0) {
 	$bx->box_begin();
 	$bx->box_title($t->translate("Suggested proposals"));
 	$bx->box_body_begin();
@@ -240,38 +265,46 @@ function show_decision_proposals($proid) {
 	htmlp_form_action("PHP_SELF",array("proid" => $proid),"POST");
 
 	while($db->next_record()) {
-		$i++;
-		if ($i%2 != 0) $bgcolor = "gold";
-		else $bgcolor = "#FFFFFF";
+	    $i++;
+	    if ($i%2 != 0) {
+                $bgcolor = "gold";
+	    } else {
+                $bgcolor = "#FFFFFF";
+	    }
 
-		$db_content = new DB_SourceAgency;
-		$db_content->query("SELECT SUM(budget) AS sum_content FROM sponsoring,decisions WHERE decisions.proid='$proid' AND sponsoring.proid='$proid' AND sponsoring.sponsor=decisions.decision_user AND decision='".$db->f("devid")."' AND step='3' GROUP BY decision");
-		$db_content->next_record();
+	    $db_content = new DB_SourceAgency;
+	    $db_content->query("SELECT SUM(budget) AS sum_content FROM sponsoring,decisions WHERE decisions.proid='$proid' AND sponsoring.proid='$proid' AND sponsoring.sponsor=decisions.decision_user AND decision='".$db->f("devid")."' AND step='3' GROUP BY decision");
+	    $db_content->next_record();
 
-		$bx->box_next_row_of_columns();
+	    $bx->box_next_row_of_columns();
 
-		$bx->box_column("","",$bgcolor,"<b>".$db->f("devid")."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".$db->f("developer")."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".$db->f("license")."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".$db->f("cost")."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".html_link("decisions_milestones.php3",array("proid" => $proid, "devid" => $db->f("devid")),"Milestones")."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".decision_accepted_milestones($proid,$db->f("devid"))."%</b>");
-		$bx->box_column("","",$bgcolor,"<b>".timestr_shortest(mktimestamp($db->f("start")))."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".$db->f("duration")." Weeks</b>");
-		$bx->box_column("","",$bgcolor,"<b>".timestr_shortest(mktimestamp($db->f("valid")))."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".timestr_comment(mktimestamp($db->f("creation")))."</b>");
-		$voted_yet += ($db_content->f("sum_content")/$total_budget)*100;
+	    $bx->box_column("","",$bgcolor,"<b>".$db->f("devid")."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".$db->f("developer")."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".$db->f("license")."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".$db->f("cost")."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".html_link("decisions_milestones.php3",array("proid" => $proid, "devid" => $db->f("devid")),"Milestones")."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".decision_accepted_milestones($proid,$db->f("devid"))."%</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".timestr_shortest(mktimestamp($db->f("start")))."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".$db->f("duration")." Weeks</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".timestr_shortest(mktimestamp($db->f("valid")))."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".timestr_comment(mktimestamp($db->f("creation")))."</b>");
+	    $voted_yet += ($db_content->f("sum_content")/$total_budget)*100;
 
-		$voting = ((round(($db_content->f("sum_content")/$total_budget)*10000))/100);
-		$bx->box_column("center","",$bgcolor,"<b>".$voting."%</b>");
+	    $voting = ((round(($db_content->f("sum_content")/$total_budget)*10000))/100);
+	    $bx->box_column("center","",$bgcolor,"<b>".$voting."%</b>");
 
-		if ($voting > $decision_value) $return_value = 1;
+	    if ($voting > $decision_value) {
+                $return_value = 1;
+	    }
 
-		if (decision_accepted_milestones($proid,$db->f("devid")) == "100") {
-			if (!strcmp($your_vote,$db->f("devid"))) $checked = "checked";
-			else $checked = "";
-			$bx->box_column("center","",$bgcolor,html_radio("your_vote",$db->f("devid"),$checked));
-		} else $bx->box_column("center","",$bgcolor,"");
+	    if (decision_accepted_milestones($proid,$db->f("devid")) == "100") {
+		if (!strcmp($your_vote,$db->f("devid"))) {
+                    $checked = "checked";
+		} else {
+                    $checked = "";
+		}
+		$bx->box_column("center","",$bgcolor,html_radio("your_vote",$db->f("devid"),$checked));
+	    } else $bx->box_column("center","",$bgcolor,"");
 	}
 
 	$bx->box_next_row_of_columns();
@@ -280,32 +313,33 @@ function show_decision_proposals($proid) {
 	$bx->box_columns_end();
 	$bx->box_body_end();
 	$bx->box_end();
-  }
+    }
 
-  if ($db->num_rows() == 0) {
+    if ($db->num_rows() == 0) {
 	print "<p>There have not been posted any milestones by the project main developer.\n";
-  }
-  return $return_value;
+    }
+    return $return_value;
 }
 
+function show_decision_milestones($proid, $devid)
+{
+    global $t, $bx, $db;
+    global $voted_yet, $your_vote;
 
-function show_decision_milestones($proid,$devid) {
-  global $t, $bx, $db, $voted_yet, $your_vote;
+    $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
+    $db->next_record();
+    $decision_value = $db->f("quorum");
 
-  $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
-  $db->next_record();
-  $decision_value = $db->f("quorum");
+    $return_value = 0;
 
-  $return_value = 0;
+    $total_budget = project_budget($proid);
 
-  $total_budget = project_budget($proid);
+    print "<p align=right>You can accept all of them if you want\n";
 
-  print "<p align=right>You can accept all of them if you want\n";
+    $query = "SELECT * FROM milestones WHERE proid='$proid' AND devid='$devid' ORDER BY number";
+    $db->query($query);
 
-  $query = "SELECT * FROM milestones WHERE proid='$proid' AND devid='$devid' ORDER BY number";
-  $db->query($query);
-
-  if ($db->num_rows() != 0) {
+    if ($db->num_rows() != 0) {
 	$bx->box_begin();
 	// TODO: link to the page with the proposal of these milestones
 	$bx->box_title($t->translate("Milestones proposed by ".$milestone_user));
@@ -326,40 +360,50 @@ function show_decision_milestones($proid,$devid) {
 	htmlp_form_action("PHP_SELF",array("proid" => $proid, "devid" => $devid),"POST");
 
 	while($db->next_record()) {
-		$i++;
-		if ($i%2 != 0) $bgcolor = "gold";
-		else $bgcolor = "#FFFFFF";
+	    $i++;
+	    if ($i%2 != 0) {
+                $bgcolor = "gold";
+	    } else {
+                $bgcolor = "#FFFFFF";
+	    }
 
-		$bx->box_next_row_of_columns();
+	    $bx->box_next_row_of_columns();
 
-		$db_milestones = new DB_SourceAgency;
-		$db_milestones->query("SELECT SUM(budget) AS sum_milestone FROM sponsoring,decisions_milestones WHERE decisions_milestones.proid='$proid' AND sponsoring.proid='$proid' AND decisions_milestones.devid='$devid' AND sponsoring.sponsor=decisions_milestones.decision_user AND number='".$db->f("number")."' AND decision='Yes' GROUP BY decision");
-		$db_milestones->next_record();
+	    $db_milestones = new DB_SourceAgency;
+	    $db_milestones->query("SELECT SUM(budget) AS sum_milestone FROM sponsoring,decisions_milestones WHERE decisions_milestones.proid='$proid' AND sponsoring.proid='$proid' AND decisions_milestones.devid='$devid' AND sponsoring.sponsor=decisions_milestones.decision_user AND number='".$db->f("number")."' AND decision='Yes' GROUP BY decision");
+	    $db_milestones->next_record();
 
-		$milestone_number = $db->f("number");
+	    $milestone_number = $db->f("number");
 
-		$bx->box_column("","",$bgcolor,"<b>".$db->f("number")."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".$db->f("goals")."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".timestr_middle(mktimestamp($db->f("release")))."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".$db->f("product")."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".$db->f("payment")."%</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".$db->f("number")."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".$db->f("goals")."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".timestr_middle(mktimestamp($db->f("release")))."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".$db->f("product")."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".$db->f("payment")."%</b>");
 
-		$voted_yet += ($db_milestones->f("sum_milestone")/$total_budget)*100;
+	    $voted_yet += ($db_milestones->f("sum_milestone")/$total_budget)*100;
 
-		$voting = ((round(($db_milestones->f("sum_milestone")/$total_budget)*10000))/100);
+	    $voting = ((round(($db_milestones->f("sum_milestone")/$total_budget)*10000))/100);
 
-		if ($voting > $decision_value) { 
-			$bx->box_column("center","",$bgcolor,"<b>Accepted</b>");
-			if ($db->f("status") != "A") decisions_milestone_into_db($proid,$devid,$db->f("number"),"A");
-		} else {
-			$bx->box_column("center","",$bgcolor,"<b>Proposed</b>");
-			if ($db->f("status") != "P") decisions_milestone_into_db($proid,$devid,$db->f("number"),"P");
+	    if ($voting > $decision_value) { 
+		$bx->box_column("center","",$bgcolor,"<b>Accepted</b>");
+		if ($db->f("status") != "A") {
+                    decisions_milestone_into_db($proid,$devid,$db->f("number"),"A");
 		}
-		$bx->box_column("center","",$bgcolor,"<b>".$voting."%</b>");
+	    } else {
+		$bx->box_column("center","",$bgcolor,"<b>Proposed</b>");
+		if ($db->f("status") != "P") {
+                    decisions_milestone_into_db($proid,$devid,$db->f("number"),"P");
+		}
+	    }
+	    $bx->box_column("center","",$bgcolor,"<b>".$voting."%</b>");
 
-		if (!strcmp($GLOBALS["milestone_".$milestone_number],"Yes")) $checked = "checked";
-		else $checked = "";
-		$bx->box_column("center","",$bgcolor,html_checkbox("milestone_".$milestone_number,"Yes",$checked));
+	    if (!strcmp($GLOBALS["milestone_".$milestone_number],"Yes")) {
+                $checked = "checked";
+	    } else {
+                $checked = "";
+	    }
+	    $bx->box_column("center","",$bgcolor,html_checkbox("milestone_".$milestone_number,"Yes",$checked));
 	}
 
 	$bx->box_next_row_of_columns();
@@ -368,33 +412,35 @@ function show_decision_milestones($proid,$devid) {
 	$bx->box_columns_end();
 	$bx->box_body_end();
 	$bx->box_end();
-  }
+    }
 
-  if ($db->num_rows() == 0) {
+    if ($db->num_rows() == 0) {
 	print "<p><b>No decision possible as there are no offerings.</b><p>\n";
-  }
-  return $return_value;
+    }
+    return $return_value;
 }
 
 
-function show_decision_referees($proid) {
-  global $t, $bx, $db, $voted_yet, $your_vote;
+function show_decision_referees($proid)
+{
+    global $t, $bx, $db;
+    global $voted_yet, $your_vote;
 
 
-  $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
-  $db->next_record();
-  $decision_value = $db->f("quorum")/2 + 50;
+    $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
+    $db->next_record();
+    $decision_value = $db->f("quorum")/2 + 50;
 
-  $return_value = 0;
+    $return_value = 0;
 
-  print "<p align=right>You can only vote for one of them\n";
+    print "<p align=right>You can only vote for one of them\n";
 
-  $total_budget = project_budget($proid);
+    $total_budget = project_budget($proid);
 
-  $query = "SELECT * FROM referees,auth_user WHERE proid='$proid' AND referee=username ORDER BY creation";
-  $db->query($query);
+    $query = "SELECT * FROM referees,auth_user WHERE proid='$proid' AND referee=username ORDER BY creation";
+    $db->query($query);
 
-  if ($db->num_rows() != 0) {
+    if ($db->num_rows() != 0) {
 	$bx->box_begin();
 	$bx->box_title($t->translate("Referees"));
 	$bx->box_body_begin();
@@ -412,36 +458,44 @@ function show_decision_referees($proid) {
 	htmlp_form_action("PHP_SELF",array("proid" => $proid),"POST");
 
 	while($db->next_record()) {
-		$i++;
-		if ($i%2 != 0) $bgcolor = "gold";
-		else $bgcolor = "#FFFFFF";
+	    $i++;
+	    if ($i%2 != 0) {
+                $bgcolor = "gold";
+	    } else {
+                $bgcolor = "#FFFFFF";
+	    }
 
-		$db_referee = new DB_SourceAgency;
-		$db_referee->query("SELECT SUM(budget) AS sum_referee FROM sponsoring,decisions WHERE decisions.proid='$proid' AND sponsoring.proid='$proid' AND sponsoring.sponsor=decisions.decision_user AND decision='".$db->f("referee")."' AND step='4' GROUP BY decision");
-		$db_referee->next_record();
+	    $db_referee = new DB_SourceAgency;
+	    $db_referee->query("SELECT SUM(budget) AS sum_referee FROM sponsoring,decisions WHERE decisions.proid='$proid' AND sponsoring.proid='$proid' AND sponsoring.sponsor=decisions.decision_user AND decision='".$db->f("referee")."' AND step='4' GROUP BY decision");
+	    $db_referee->next_record();
 
-		$bx->box_next_row_of_columns();
+	    $bx->box_next_row_of_columns();
 
-		$bx->box_column("","",$bgcolor,"<b>$i</b>");
-		$bx->box_column("","",$bgcolor,"<b>".lib_nick($db->f("username"))."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".show_status($db->f("status"))."</b>");
-		$bx->box_column("","",$bgcolor,"<b>".timestr(mktimestamp($db->f("creation")))."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>$i</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".lib_nick($db->f("username"))."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".show_status($db->f("status"))."</b>");
+	    $bx->box_column("","",$bgcolor,"<b>".timestr(mktimestamp($db->f("creation")))."</b>");
 
-		if (decision_developer_voted($proid,$db->f("username"))) {
-			$voted_yet += ($db_referee->f("sum_referee")/$total_budget)*100 + 50;
-			$voting = ((round(($db_referee->f("sum_referee")/$total_budget)*10000))/200) + 50;
-		} else {
-			$voted_yet += ($db_referee->f("sum_referee")/$total_budget)*100;
-			$voting = ((round(($db_referee->f("sum_referee")/$total_budget)*10000))/200);
-		}
+	    if (decision_developer_voted($proid,$db->f("username"))) {
+		$voted_yet += ($db_referee->f("sum_referee")/$total_budget)*100 + 50;
+		$voting = ((round(($db_referee->f("sum_referee")/$total_budget)*10000))/200) + 50;
+	    } else {
+		$voted_yet += ($db_referee->f("sum_referee")/$total_budget)*100;
+		$voting = ((round(($db_referee->f("sum_referee")/$total_budget)*10000))/200);
+	    }
 
-		$bx->box_column("center","",$bgcolor,"<b>".$voting."%</b>");
+	    $bx->box_column("center","",$bgcolor,"<b>".$voting."%</b>");
 
-		if ($voting > $decision_value) $return_value = 1;
+	    if ($voting > $decision_value) {
+                $return_value = 1;
+	    }
 
-		if (!strcmp($your_vote,$db->f("referee"))) $checked = "checked";
-		else $checked = "";
-		$bx->box_column("center","",$bgcolor,html_radio("your_vote",$db->f("referee"),$checked));
+	    if (!strcmp($your_vote,$db->f("referee"))) {
+                $checked = "checked";
+	    } else {
+                $checked = "";
+	    }
+	    $bx->box_column("center","",$bgcolor,html_radio("your_vote",$db->f("referee"),$checked));
 	}
 
 	$bx->box_next_row_of_columns();
@@ -450,12 +504,12 @@ function show_decision_referees($proid) {
 	$bx->box_columns_end();
 	$bx->box_body_end();
 	$bx->box_end();
-  }
+    }
 
-  if ($db->num_rows() == 0) {
+    if ($db->num_rows() == 0) {
 	print "<p>There have not been posted any milestones by the project main developer.\n";
-  }
-  return $return_value;
+    }
+    return $return_value;
 }
 
 
@@ -468,130 +522,139 @@ function show_decision_referees($proid) {
 #
 #####
 
-function show_decision_step5($proid,$milestone_number,$count) {
-  global $t, $bx, $db, $voted_yet, $decision;
+function show_decision_step5($proid,$milestone_number,$count)
+{
+    global $t, $bx, $db;
+    global $voted_yet, $decision;
 
-  $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
-  $db->next_record();
-  $decision_value = $db->f("quorum");
+    $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
+    $db->next_record();
+    $decision_value = $db->f("quorum");
+ 
+    $return_value = 0;
+    $total_budget = project_budget($proid);
 
-  $return_value = 0;
-  $total_budget = project_budget($proid);
+    $db->query("SELECT * FROM milestones WHERE proid='$proid' AND number='$milestone_number'");
+    $db->next_record();
 
-  $db->query("SELECT * FROM milestones WHERE proid='$proid' AND number='$milestone_number'");
-  $db->next_record();
+    $bx->box_begin();
+    $bx->box_title("Decision on milestone number ".$milestone_number);
+    $bx->box_body_begin();
+    $bx->box_columns_begin(2);
 
-  $bx->box_begin();
-  $bx->box_title("Decision on milestone number ".$milestone_number);
-  $bx->box_body_begin();
-  $bx->box_columns_begin(2);
+    $bx->box_column("right","40%","","<b>Release date</b>:");
+    $bx->box_column("left","","",timestr_middle(mktimestamp($db->f("release"))));
 
-  $bx->box_column("right","40%","","<b>Release date</b>:");
-  $bx->box_column("left","","",timestr_middle(mktimestamp($db->f("release"))));
+    $bx->box_next_row_of_columns();
 
-  $bx->box_next_row_of_columns();
+    $bx->box_column("right","","","<b>Product</b>:");
+    $bx->box_column("left","","",$db->f("product"));
 
-  $bx->box_column("right","","","<b>Product</b>:");
-  $bx->box_column("left","","",$db->f("product"));
+    $bx->box_next_row_of_columns();
 
-  $bx->box_next_row_of_columns();
+    $bx->box_column("right","","","<b>Payment</b>:");
+    $bx->box_column("left","","",$db->f("payment")."%");
 
-  $bx->box_column("right","","","<b>Payment</b>:");
-  $bx->box_column("left","","",$db->f("payment")."%");
+    $bx->box_next_row_of_columns();
 
-  $bx->box_next_row_of_columns();
+    $bx->box_column("right","","","<b>Goals</b>");
+    $bx->box_column("left","","",$db->f("goals"));
 
-  $bx->box_column("right","","","<b>Goals</b>");
-  $bx->box_column("left","","",$db->f("goals"));
+    $bx->box_next_row_of_columns();
 
-  $bx->box_next_row_of_columns();
+    $voting=decisions_step5_votes($proid,$milestone_number,$count,"accept");
+    $bx->box_column("right","","","<b>Accepted</b>");
+    $bx->box_column("left","","",$voting."%");
 
-  $voting=decisions_step5_votes($proid,$milestone_number,$count,"accept");
-  $bx->box_column("right","","","<b>Accepted</b>");
-  $bx->box_column("left","","",$voting."%");
+    $bx->box_next_row_of_columns();
 
-  $bx->box_next_row_of_columns();
+    $voting+=decisions_step5_votes($proid,$milestone_number,$count,"minor");
+    $bx->box_column("right","","","<b>Minor modifications should be done</b>:");
+    $bx->box_column("left","","",decisions_step5_votes($proid,$milestone_number,$count,"minor")."%");
 
-  $voting+=decisions_step5_votes($proid,$milestone_number,$count,"minor");
-  $bx->box_column("right","","","<b>Minor modifications should be done</b>:");
-  $bx->box_column("left","","",decisions_step5_votes($proid,$milestone_number,$count,"minor")."%");
+    $bx->box_next_row_of_columns();
 
-  $bx->box_next_row_of_columns();
+    $voting+=decisions_step5_votes($proid,$milestone_number,$count,"severe");
+    $bx->box_column("right","","","<b>Severe modifications should be done</b>:");
+    $bx->box_column("left","","",decisions_step5_votes($proid,$milestone_number,$count,"severe")."%");
 
-  $voting+=decisions_step5_votes($proid,$milestone_number,$count,"severe");
-  $bx->box_column("right","","","<b>Severe modifications should be done</b>:");
-  $bx->box_column("left","","",decisions_step5_votes($proid,$milestone_number,$count,"severe")."%");
+    if ($voting > $decision_value) {
+        $return_value =1;
+    }
 
-  if ($voting > $decision_value) $return_value =1;
+    htmlp_form_action("PHP_SELF",array("proid" => $proid),"POST");
 
-  htmlp_form_action("PHP_SELF",array("proid" => $proid),"POST");
+    $bx->box_next_row_of_columns();
 
-  $bx->box_next_row_of_columns();
+    $bx->box_column ("right","30%","","<b>".$t->translate("Decision")."</b>: ");
+    $bx->box_column ("left","70%","",followup_referee_decision($decision));
 
-  $bx->box_column ("right","30%","","<b>".$t->translate("Decision")."</b>: ");
-  $bx->box_column ("left","70%","",followup_referee_decision($decision));
+    $bx->box_next_row_of_columns();
+    $bx->box_colspan (2,"center","white",html_form_submit("vote","vote"));
+    htmlp_form_end();
 
-  $bx->box_next_row_of_columns();
-  $bx->box_colspan (2,"center","white",html_form_submit("vote","vote"));
-  htmlp_form_end();
+    $bx->box_columns_end();
+    $bx->box_body_end();
+    $bx->box_end();
 
-  $bx->box_columns_end();
-  $bx->box_body_end();
-  $bx->box_end();
-
-  return $return_value;
+    return $return_value;
 }
 
-function project_budget($proid) {
-  global $db;
+function project_budget($proid)
+{
+    global $db;
 
-  $query = "SELECT SUM(budget) FROM sponsoring WHERE proid='$proid' AND status='A'";
-  $db->query($query);
-  $db->next_record();
-  return $db->f("SUM(budget)");
+    $query = "SELECT SUM(budget) FROM sponsoring WHERE proid='$proid' AND status='A'";
+    $db->query($query);
+    $db->next_record();
+    return $db->f("SUM(budget)");
 }
 
-function your_quota($proid) {
-  global $db, $auth;
+function your_quota($proid)
+{
+    global $db, $auth;
 
-  $query = "SELECT budget FROM sponsoring WHERE proid='$proid' AND status='A' AND sponsor='".$auth->auth["uname"]."'";
-  $db->query($query);
-  $db->next_record();
+    $query = "SELECT budget FROM sponsoring WHERE proid='$proid' AND status='A' AND sponsor='".$auth->auth["uname"]."'";
+    $db->query($query);
+    $db->next_record();
 
-  print "<p>Your quota: <b>".$db->f("budget")."</b> euros (<b>".(round(($db->f("budget")/project_budget($proid))*10000)/100)."%</b> of the total project budget)\n";
+    print "<p>Your quota: <b>".$db->f("budget")."</b> euros (<b>".(round(($db->f("budget")/project_budget($proid))*10000)/100)."%</b> of the total project budget)\n";
 }
 
-function put_decision_into_database($proid,$step,$your_vote,$what,$table) {
-	global $db,$auth;
+function put_decision_into_database($proid,$step,$your_vote,$what,$table)
+{
+    global $db,$auth;
 
-	$db->query("SELECT DISTINCT($what) FROM $table");
-	while ($db->next_record()) {
-		if (!strcmp($your_vote,$db->f($what))) { 
-			$db->query("SELECT * FROM decisions WHERE proid='$proid' AND step = '$step' AND decision_user='".$auth->auth["uname"]."'");
-			if ($db->num_rows() == 0) $db->query("INSERT decisions SET proid='$proid', step ='$step', decision_user='".$auth->auth["uname"]."', decision='$your_vote'"); 
-			else {
-				$db->next_record();
-				if(!strcmp($your_vote,$db->f("decision"))) print "You have already voted that guy\n";
-				else {
-					$db->query("UPDATE decisions SET  decision='$your_vote' WHERE proid='$proid' AND step='$step' AND decision_user='".$auth->auth["uname"]."'");
-					print "Vote changed. Old: <b>".$db->f("decision")."</b> New: <b>".$your_vote."</b>";
-				}
-			}
+    $db->query("SELECT DISTINCT($what) FROM $table");
+    while ($db->next_record()) {
+	if (!strcmp($your_vote,$db->f($what))) { 
+	    $db->query("SELECT * FROM decisions WHERE proid='$proid' AND step = '$step' AND decision_user='".$auth->auth["uname"]."'");
+	    if ($db->num_rows() == 0) {
+                $db->query("INSERT decisions SET proid='$proid', step ='$step', decision_user='".$auth->auth["uname"]."', decision='$your_vote'"); 
+	     } else {
+		$db->next_record();
+		if(!strcmp($your_vote,$db->f("decision"))) {
+                    print "You have already voted that guy\n";
+		} else {
+		    $db->query("UPDATE decisions SET  decision='$your_vote' WHERE proid='$proid' AND step='$step' AND decision_user='".$auth->auth["uname"]."'");
+		    print "Vote changed. Old: <b>".$db->f("decision")."</b> New: <b>".$your_vote."</b>";
 		}
+	    }
 	}
+    }
 
-  include("monitorlib.inc");
-  include("config.inc");
-  monitor_mail($proid,"decisions", "Decision", "Decision made in project $proid\n Sponsor ".$auth->auth["uname"]." has made a decision (step $step)\n\n You can see it at: $sys_urldecisions.php3?proid=$proid");
+    include("monitorlib.inc");
+    include("config.inc");
+    monitor_mail($proid,"decisions", "Decision", "Decision made in project $proid\n Sponsor ".$auth->auth["uname"]." has made a decision (step $step)\n\n You can see it at: $sys_urldecisions.php3?proid=$proid");
 }
 
-function put_into_next_step($proid,$project_status,$what,$table) {
+function put_into_next_step($proid,$project_status,$what,$table)
+{
+    $db_local = new DB_SourceAgency;
+    $db_quota = new DB_SourceAgency;
 
-  $db_local = new DB_SourceAgency;
-  $db_quota = new DB_SourceAgency;
-
-  $db_local->query("SELECT $what,creation FROM $table WHERE proid='$proid'");
-  while ($db_local->next_record()) {
+    $db_local->query("SELECT $what,creation FROM $table WHERE proid='$proid'");
+    while ($db_local->next_record()) {
 	$db_quota->query("SELECT SUM(budget) FROM sponsoring,decisions WHERE sponsor=decision_user AND decision='".$db_local->f($what)."' AND sponsoring.proid='$proid' AND decisions.proid='$proid' AND step='$project_status'");
 	$db_quota->next_record();
 	if ($db_quota->f("SUM(budget)") > project_budget($proid)/2) { 
