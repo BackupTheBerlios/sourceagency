@@ -45,7 +45,7 @@ $bx->box_column_start("left","65%","");
 // I18N
 echo ( "<br>\n" 
        . "You have entered SourceAgency, the Open Source projects "
-       . "exchange at <a href=\"http://www.berlios.de\">BerliOS</a>.\n";
+       . "exchange at <a href=\"http://www.berlios.de\">BerliOS</a>.\n"
        . "<p>In SourceAgency you can sponsor projects if you commit as a "
        . "sponsor or let your projects be sponsored if you are an Open "
        . "Source developer.\n");
