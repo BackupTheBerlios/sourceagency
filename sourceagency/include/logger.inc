@@ -18,35 +18,32 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: logger.inc,v 1.4 2001/11/09 20:13:14 riessen Exp $
+# $Id: logger.inc,v 1.5 2001/12/13 16:41:01 riessen Exp $
 #
 ######################################################################
 
-$g_logger_file_pointer = -1;
-
 class Logger {
+    var $logger_file_pointer = -1;
+
     function Logger() {
     }
 
     // called in the header 
     function open() {
-        global $g_logger_file_pointer;
-        $g_logger_file_pointer = fopen( "/tmp/sourceagency.log", "a+" );
+        $this->logger_file_pointer = fopen( "/tmp/sourceagency.log", "a+" );
     }
 
     function log( $msg ) {
-        global $g_logger_file_pointer;
-        if ( $g_logger_file_pointer > -1 ) {
-            fwrite( $g_logger_file_pointer, "[" . date("D M j G:i:s T Y")
+        if ( $this->logger_file_pointer > -1 ) {
+            fwrite( $this->logger_file_pointer, "[" . date("D M j G:i:s T Y")
                                                        . "]: " . $msg . "\n" );
         }
     }
 
     // called in the footer
     function close() {
-        global $g_logger_file_pointer;
-        if ( $g_logger_file_pointer > -1 ) {
-            fclose( $g_logger_file_pointer );
+        if ( $this->logger_file_pointer > -1 ) {
+            fclose( $this->logger_file_pointer );
         }
     }
 }
