@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestHtml.php,v 1.22 2002/05/22 11:50:33 riessen Exp $
+# $Id: TestHtml.php,v 1.23 2002/05/22 13:10:23 riessen Exp $
 #
 ######################################################################
 
@@ -102,6 +102,11 @@ extends UnitTest
         // a total of five tests
         //
         global $sess;
+        // this is a workaround for a bug(?) in session.inc which 
+        // resets the QUERY_STRING after calling add_query(..) but not
+        // before calling self_url(...)
+        $GLOBALS['QUERY_STRING'] = "";
+
         $args=$this->_generate_records(array('url','paras','txt','css',),5);
 
         $args[0]['url'] = 'fubar';           $args[0]['css'] = '';

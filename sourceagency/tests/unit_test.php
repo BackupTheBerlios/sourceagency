@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.14 2002/05/22 12:15:02 riessen Exp $
+# $Id: unit_test.php,v 1.15 2002/05/22 13:10:23 riessen Exp $
 #
 ######################################################################
 
@@ -156,7 +156,6 @@ extends TestCase
     function _testFor_html_link( $text, $addr='PHP_SELF', $paras=array(), 
                                  $link_text='', $css='', $msg='') {
         global $sess;
-        print "<b>[".$sess->self_url()."]</b>";
         $str = sprintf('<a href="%%s" class="%s">%s</a>',$css,$link_text);
         
         $str = sprintf( $str, ($addr == 'PHP_SELF' ? $sess->self_url()
