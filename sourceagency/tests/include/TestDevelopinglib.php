@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDevelopinglib.php,v 1.2 2002/06/06 08:18:27 riessen Exp $
+// $Id: TestDevelopinglib.php,v 1.3 2002/06/06 14:27:33 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -53,7 +53,8 @@ extends UnitTest
         while ( list( , $val ) = each( $v ) ) {
             capture_reset_and_start();
             $this->set_text( developing_select_cooperation( $val ) );
-            $this->assertEquals(0,strlen(capture_stop_and_get()),"Test $val");
+            $this->assertEquals(0,strlen(capture_stop_and_get()),
+                                "Test $val: " . capture_text_get());
             $this->_testFor_html_select( 'cooperation' );
             $this->_testFor_html_select_option( 'No', ($val=='No'), 
                                                 $t->translate('No'));
@@ -66,7 +67,8 @@ extends UnitTest
         for ( $idx = -10; $idx < 110; $idx++ ) {
             capture_reset_and_start();
             $this->set_text( select_duration( $idx ) );
-            $this->assertEquals(0,strlen(capture_stop_and_get()),"test $idx");
+            $this->assertEquals(0,strlen(capture_stop_and_get()),
+                                "test $idx: " . capture_text_get());
             // if something is selected, then strings is longer
             $this->_testFor_string_length(($idx<1||$idx>100 ? 2936:2945));
             $this->_testFor_html_select( 'duration' );
