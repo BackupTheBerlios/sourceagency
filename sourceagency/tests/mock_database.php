@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: mock_database.php,v 1.13 2002/01/11 13:37:00 riessen Exp $
+# $Id: mock_database.php,v 1.14 2002/01/28 02:18:01 riessen Exp $
 #
 ######################################################################
 
@@ -197,7 +197,7 @@ class mock_db_configure
         global $g_mkdb_failed, $g_mkdb_failure_text, $g_mkdb_instance_counter,
             $g_mkdb_nr_instance_expected, $g_mkdb_cur_query_call,
             $g_mkdb_queries, $g_mkdb_next_record_data, $g_mkdb_cur_record,
-            $g_mkdb_ignore_error;
+            $g_mkdb_ignore_error, $g_mkdb_num_rows, $g_mkdb_cur_num_row_call;
 
         $this->_did_db_fail_called();
 
@@ -208,6 +208,22 @@ class mock_db_configure
                      . " but created: " . $g_mkdb_instance_counter . "<br>\n");
             $g_mkdb_failed = true;
         } else {
+            // check whether every instance used all of it's num_row values
+            for ( $idx = 0; $idx < $g_mkdb_instance_counter; $idx++ ) {
+                $exp_num_rows = count( $g_mkdb_num_rows[$idx] );
+                $act_num_rows = $g_mkdb_cur_num_row_call[$idx];
+                if ( $exp_num_rows != $act_num_rows 
+                     && (($g_mkdb_ignore_error[$idx] & MKDB_NUM_ROWS) 
+                         != MKDB_NUM_ROWS)) {
+                    $g_mkdb_failure_text
+                         .= ("<br>\nInstance " . $idx . " mismatch "
+                             ."in num rows: not all used, expected = "
+                             . $exp_num_rows . ", actual = "
+                             . $act_num_rows . "<br>\n" );
+                    $g_mkdb_failed = true;
+                }
+            }
+
             // check whether every instance also used all of it's queries,
             // this detects whether more queries were defined than used.
             // this check can be turned off using MKDB_QUERY_COUNT
@@ -402,9 +418,9 @@ extends Assert
     // test fails
     function fail( $message ) {
         global $g_mkdb_failed, $g_mkdb_failure_text;
-        $g_mkdb_failure_text .= sprintf( "******** mock_database, instance: "
+        $g_mkdb_failure_text .= sprintf( "FAILURE: mock_database, instance: "
                                          . $this->instance_number
-                                         ." FAILURE: ****<br>\n%s<br>\n"
+                                         ." ****<br>\n%s<br>\n"
                                          ."**********<br>\n",
                                          ($message ? $message
                                          : "No Message Give"));
