@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.41 2002/05/31 12:39:38 riessen Exp $
+# $Id: lib.inc,v 1.42 2002/06/11 12:59:55 riessen Exp $
 #
 ######################################################################
 
@@ -1502,7 +1502,9 @@ function lib_die($error_message)
                                  .'system administrators.'));
 
     /* Mails the sys admins */
-    include('monitorlib.inc');
+    if ( !function_exists( 'mailuser' ) ) {
+        include('monitorlib.inc');
+    }
     mailuser('admin', 'An error has ocurred', $error_message);
 }
 ?>
