@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: configurelib.inc,v 1.6 2002/05/08 09:49:37 riessen Exp $
+# $Id: configurelib.inc,v 1.7 2002/06/20 12:06:01 riessen Exp $
 #
 ######################################################################
 
@@ -93,10 +93,11 @@ function configure_preview($proid) {
     $bx->box_body_begin();
     $timestamp = time();
     echo "<b>";
-    $db_local = new DB_SourceAgency;
-    $db_local->query("SELECT email_usr FROM auth_user WHERE username='"
-                     .$auth->auth["uname"]."'");
-    $db_local->next_record();
+    // TODO: results are not used, can be removed.
+//      $db_local = new DB_SourceAgency;
+//      $db_local->query("SELECT email_usr FROM auth_user WHERE username='"
+//                       .$auth->auth["uname"]."'");
+//      $db_local->next_record();
     lib_pnick($auth->auth["uname"]);
     echo " - ".timestr($timestamp)."</b><br>&nbsp;\n";
     if (is_sponsor()) {
@@ -258,8 +259,7 @@ function select_quorum($selected) {
 
   $ret = html_select("quorum");
   for ( $i = 55; $i < 100; $i+=5 ) {
-      $select = ( $i == $selected ? "selected" : "" );
-      $ret .= html_select_option($i, $select, $i."%" );
+      $ret .= html_select_option($i, ($i == $selected), $i."%" );
   }
   $ret .= html_select_end();
 
