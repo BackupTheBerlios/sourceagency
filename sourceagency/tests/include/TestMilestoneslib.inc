@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMilestoneslib.inc,v 1.26 2002/07/02 10:40:59 riessen Exp $
+# $Id: TestMilestoneslib.inc,v 1.27 2002/07/17 12:40:49 riessen Exp $
 #
 ######################################################################
 
@@ -42,33 +42,32 @@ extends UnitTest
     var $queries;
 
     function UnitTestMilestoneslib( $name ) {
-        $this->queries =
-             array( 'select_milestone_number' =>
-                    ("SELECT number FROM milestones WHERE proid='%s' "
-                     . "ORDER BY number"),
-                    'milestones_insert_1' =>
-                    ("INSERT milestones SET proid='%s',devid='%s',"
-                     . "number='%s',goals='%s',release='%s',"
-                     . "product='%s',payment='%s',status='P',"
-                     . "creation=NOW()"),
-                    'milestones_insert_2' =>
-                    ("SELECT * FROM milestones WHERE number='%s' AND proid"
-                     ."='%s'"),
-                    'show_milestones_1' =>
-                    ("SELECT * FROM sponsoring WHERE proid='%s' AND sponsor"
-                     ."='%s'"),
-                    'show_milestones_2' =>
-                    ("SELECT developer FROM developing WHERE proid='%s' AND "
-                     ."devid='%s'"),
-                    'show_milestones_3' =>
-                    ("SELECT * FROM milestones WHERE proid='%s'  AND "
-                     ."devid='%s' ORDER BY number"),
-                    'show_milestones_4' =>
-                    ("SELECT * FROM milestones WHERE proid='%s' AND "
-                     . "status='A' AND devid='%s' ORDER BY number"),
-                    'select_milestone_payment' =>
-                    ("SELECT payment,number FROM milestones WHERE "
-                     . "proid='%s' AND devid='%s'"));
+        $this->queries = array( 
+            'select_milestone_number' =>
+            ("SELECT number FROM milestones WHERE proid='%s' ORDER BY number"),
+            'milestones_insert_1' =>
+            ("INSERT milestones SET proid='%s',devid='%s',number='%s',goals"
+             ."='%s',release='%s',product='%s',payment='%s',status='P',"
+             . "creation=NOW()"),
+            'milestones_insert_2' =>
+            ("SELECT * FROM milestones WHERE number='%s' AND proid='%s'"),
+            'show_milestones_1' =>
+            ("SELECT * FROM sponsoring WHERE proid='%s' AND sponsor='%s'"),
+            'show_milestones_2' =>
+            ("SELECT developer FROM developing WHERE proid='%s' AND "
+             ."devid='%s'"),
+            'show_milestones_3' =>
+            ("SELECT * FROM milestones WHERE proid='%s'  AND devid='%s' "
+             ."ORDER BY number"),
+            'show_milestones_4' =>
+            ("SELECT * FROM milestones WHERE proid='%s' AND status='A' AND "
+             ."devid='%s' ORDER BY number"),
+            'select_milestone_payment' =>
+            ("SELECT payment,number FROM milestones WHERE proid='%s' AND "
+             ."devid='%s'"),
+            'milestones_modify' =>
+            ("UPDATE milestones SET goals='%s',release='%s',product='%s',"
+             ."payment='%s',status='M' WHERE proid='%s' AND number='%s'"));
         
         $this->UnitTest( $name );
     }
@@ -225,8 +224,7 @@ extends UnitTest
         $this->_testFor_box_column('center','14%','','<b>'
                                         .$t->translate('Status').'</b>');
         
-        // FIXME: need to check the rest of the table
-        $this->_test_to_be_completed();
+        // TODO: need to check the rest of the table
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -521,22 +519,21 @@ extends UnitTest
         $this->_testFor_html_form_hidden('devid',$args['devid']);
         $this->_checkFor_columns( 2 );
         $this->_checkFor_submit_preview_buttons();
-        $tv=array( array( 'Number', '<b>%s</b>: ' )
-                   => select_milestone_number($args['proid'],$args['devid'],
-                                                                  $number),
-                   array( 'Goals', '<b>%s</b> (255): ') 
-                   => html_textarea('goals',40,7,'virtual',255,
-                                  $goals),
-                   array( 'Release Date', '<b>%s</b>: ' )
-                   => select_date('release',$release_day,
-                                $release_month,$release_year),
-                   array( 'Product', '<b>%s</b>: ' )
-                   => select_from_config('product','milestone_product_array',
-                                       $product),
-                   array( 'Payment', '<b>%s %</b>: ' )
-                   => select_milestone_payment($args['proid'],
-                                                  $args['devid'],$payment,''));
-        while ( list( $key, $val ) = each ( $tv ) ) {
+        $tv=array( select_milestone_number($args['proid'],$args['devid'],
+                                              $number)
+                   => array( 'Number', '<b>%s</b>: ' ),
+                   html_textarea('goals',40,7,'virtual',255, $goals)
+                   => array( 'Goals', '<b>%s</b> (255): '),
+                   select_date('release',$release_day,$release_month,
+                               $release_year)
+                   => array( 'Release Date', '<b>%s</b>: ' ),
+                   select_from_config('product','milestone_product_array',
+                                      $product)
+                   => array( 'Product', '<b>%s</b>: ' ),
+                   select_milestone_payment($args['proid'],
+                                               $args['devid'],$payment,'')
+                   => array( 'Payment', '<b>%s %%</b>: ' ));
+        while ( list( $val, $key ) = each ( $tv ) ) {
             $this->_checkFor_column_titles( array( $key[0] ), 'right', 
                                             '30%','', $key[1] );
             $this->_checkFor_column_values( array( $val ) );
@@ -546,18 +543,147 @@ extends UnitTest
     }
 
     function testMilestones_modify() {
-        $this->_test_to_be_completed();
+        global $db, $t;
+
+        $fname = 'milestones_modify';
+        $qs = array( 0 => $this->queries[ $fname ] );
+
+        $db_config = new mock_db_configure( 1 );
+
+        $args=$this->_generate_array( array('proid', 'number', 'goals',
+                                            'release_day', 'release_month',
+                                            'release_year', 'product',
+                                            'payment'), 10 );
+        // test one
+        $release = date_to_timestamp($args['release_day'],
+                                 $args['release_month'],$args['release_year']);
+
+        $db_config->add_query( sprintf( $qs[0], $args['goals'], $release,
+                                          $args['product'], $args['payment'], 
+                                          $args['proid'], $args['number']), 0);
+        $db = new DB_SourceAgency;
+        $this->capture_call( $fname, 106, $args );
+
+        $str = ( '<p align=right>[ '
+                 .html_link('step3_edit.php3',
+                            array('proid' => $args['proid'],'a' => '1'),
+                            '<b>'.$t->translate('Propose Milestones')
+                            .'</b>').' ]</p>');
+        $this->assertEquals( $str, $this->get_text() );
+        $this->_check_db( $db_config );
     }
 
     function testMilestones_modify_form() {
-        $this->_test_to_be_completed();
+        global $bx, $t, $sess;
+        global $number, $goals, $release_day, $release_month,
+            $release_year, $product, $payment, $creation;
+        
+        $number = 'this sit he number';
+        $goals = 'this is the goals';
+        $release_day = 'thsi siteh releasae fay';
+        $release_month = 'this is the release month';
+        $release_year = 'this is the release year';
+        $product = 'tjhsi is the product';
+        $payment = 'thjs isther payment';
+        $creation = 'tjhsi site creation';
+
+        $db_config = new mock_db_configure( 4 );
+        $qs = array( 0 => $this->queries[ 'select_milestone_number' ],
+                     1 => $this->queries[ 'select_milestone_payment' ] );
+        $args = $this->_generate_array( array( 'proid', 'devid' ), 10 );
+
+        /** select milestone payment, two calls **/
+        $db_config->add_query(sprintf($qs[1],$args['proid'],$args['devid']),1);
+        $db_config->add_record( false, 1 );
+        $db_config->add_query(sprintf($qs[1],$args['proid'],$args['devid']),3);
+        $db_config->add_record( false, 3 );
+        /** select milestone number, two calls **/
+        $db_config->add_query( sprintf( $qs[0], $args['proid'] ), 0 );
+        $db_config->add_query( sprintf( $qs[0], $args['proid'] ), 2 );
+        for ( $idx = 0; $idx < 7; $idx++ ) {
+            $db_config->add_num_row( 0, 0 );
+            $db_config->add_num_row( 0, 2 );
+        }
+
+        $bx = $this->_create_default_box();
+        $this->capture_call( 'milestones_modify_form', 
+                             7168 + strlen( $sess->self_url() ), $args );
+
+        $this->_checkFor_a_form( 'PHP_SELF', array('proid'=>$args['proid']),
+                                 'POST' );
+        $this->_checkFor_a_box( 'Modifying Milestones' );
+        $this->_testFor_html_form_hidden( 'creation', $creation );
+        $this->_testFor_html_form_hidden( 'devid', $args['devid'] );
+        $this->_checkFor_columns( 2 );
+        $this->_checkFor_submit_preview_buttons();
+
+        $tv = array( select_milestone_number($args['proid'],$args['devid'],
+                                                    $number)
+                     => array( 'Number', '<b>%s</b>: ' ),
+                     html_textarea('goals',40,7,'virtual',255,$goals)
+                     => array( 'Goals', '<b>%s</b> (255): ' ),
+                     select_date('release',$release_day,$release_month,
+                                 $release_year)
+                     => array( 'Release Date', '<b>%s</b>: ' ),
+                     select_from_config('product','milestone_product_array',
+                                        $product)
+                     => array( 'Product', '<b>%s</b>: ' ),
+                     select_milestone_payment($args['proid'],$args['devid'],
+                                                         $payment,$number)
+                     => array( 'Payment', '<b>%s</b>: ' ));
+        while( list( $val, $key ) = each( $tv ) ) {
+            $this->_checkFor_column_titles( array( $key[0] ), 'right', '30%',
+                                            '', $key[1] );
+            $this->_checkFor_column_values( array( $val ) );
+        }
+        $this->_check_db( $db_config );
     }
 
     function testMilestones_preview() {
-        $this->_test_to_be_completed();
-    }
+        global $t, $bx;
+        global $number, $goals, $release_day, $release_month,
+            $release_year, $product, $payment;
 
-    
+        $number = 'this ist he number';
+        $goals = 'this sithe goals';
+        $release_day = 'this is the rlease day';
+        $release_month = 'this sithe release month';
+        $release_year = 'tjhis ist he rrealace year';
+        $product = 'this sithe priodut';
+        $payment = 'thius si the patment';
+
+        $args=$this->_generate_array( array( 'proid', 'devid' ), 10 );
+
+        $bx = $this->_create_default_box();
+        $this->capture_call( 'milestones_preview', 3146, $args );
+
+        $this->_checkFor_a_box( 'PREVIEW', '<center><b>%s</b></center>' );
+        $this->_checkFor_a_box( 'Proposing Milestones' );
+        $this->_checkFor_columns( 6 );
+        $tStamp = mktimestamp(date_to_timestamp($release_day,
+                                              $release_month, $release_year));
+        $tv = array( 1=>array( array( 'Number', 'center', '7%' ),
+                               array( "<b>$number</b>", 'center' )),
+                     2=>array( array( 'Goals', '', '53%' ),
+                               array( "<b>$goals</b>", '' )),
+                     3=>array( array( 'Release Date', 'center', '16%' ),
+                               array( '<b>'.timestr_middle($tStamp).'</b>', 
+                                      'center') ),
+                     4=>array( array( 'Product', 'center', '12%' ),
+                               array( "<b>$product</b>", 'center' )),
+                     5=>array( array( 'Payment', 'center', '8%' ),
+                               array( "<b>$payment %</b>", 'center' ) ),
+                     6=>array( array( 'Status', 'center', '14%' ),
+                               array( "<b>".$t->translate( 'Proposed').
+                                      "</b>",'center')));
+        while ( list( , $v ) = each( $tv ) ) {
+            $key = $v[0];
+            $val = $v[1];
+            $this->_testFor_box_column( $key[1], $key[2], '',
+                              sprintf( '<b>%s</b>', $t->translate( $key[0] )));
+            $this->_testFor_box_column( $val[1], '', 'gold', $val[0] );
+        }
+    }
 }
 
 define_test_suite( __FILE__ );
