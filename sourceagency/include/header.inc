@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: header.inc,v 1.9 2002/05/07 19:14:29 grex Exp $
+# $Id: header.inc,v 1.10 2002/05/07 19:35:17 grex Exp $
 #
 ######################################################################
 
@@ -64,15 +64,15 @@ require('top_strip.inc');
 require('top_title.inc');
 ?>
 
-<table BORDER=0 CELLSPACING=0 CELLPADDING=0 WIDTH="100%" >
-<tr VALIGN=TOP BGCOLOR="<?php echo $th_body_bgcolor;?>">
-<td BGCOLOR="<?php echo $th_nav_bgcolor;?>">
+<table border=0 cellspacing=0 cellpadding=0 width="100%" >
+<tr valign="top" bgcolor="<?php echo $th_body_bgcolor;?>">
+<td bgcolor="<?php echo $th_nav_bgcolor;?>">
 <?php
 require('menubar.inc');
 ?>
 </td>
 
-<td WIDTH="10"><img SRC="images/blank.gif" BORDER=0 height=1 width=10></td>
+<td width="10"><img src="images/blank.gif" border=0 height=1 width=10></td>
 
-<td WIDTH="99%">
+<td width="99%">
 <p>&nbsp;
