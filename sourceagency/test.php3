@@ -186,9 +186,9 @@ include("config.inc");
         ?>
         <li>Database configuration:
           <ul>
-           <li> Host <b><?php $db->Host ?></b>
-           <li> Database <b><?php $db->SourceAgency ?></b>
-           <li> User <b><?php $db->User ?></b>
+           <li> Host <b><?php echo $db->Host ?></b>
+           <li> Database <b><?php echo $db->Database ?></b>
+           <li> User <b><?php echo $db->User ?></b>
            <li> Password <b>??????</b>
           </ul>
 	</UL>
