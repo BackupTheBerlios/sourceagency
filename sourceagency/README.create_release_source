@@ -1,0 +1,26 @@
+
+This readme contains some notes about copying the files for making a release
+tree. I.e. copying files from beta to htdocs directly.
+
+The intention is to have a beta site .../htdocs/beta in which all changes
+are first tested. Once all changes have been accepted, the files may be 
+copied into the .../htdocs directory directory, thereby becoming a part of
+the release site (i.e. http://sourceagency.berlios.de).
+
+Before the files are copied, the CVS repository should be tagged so that 
+all files in .../htdocs are part of a tagged release.
+
+1. remove all CVS directories in the directories that were copied, e.g. in
+   images, html, include, faq ... This is to prevent code from being committed
+   from the htdocs directory.
+2. Need to make a number of changes to specific files:
+   - html/include/top_title.inc and include/top_title.inc:
+     - need to remove the "BETA BETA BETA" table-square 
+     - increase the width of the table-square before the BETA square to 99%
+   - html/include/config.inc and include/config.inc:
+     - $sys_url needs to be set sourceagency.berlios.de instead of 
+	sourceagency.berlios.de/beta
+
+--
+Gerrit Riessen
+
