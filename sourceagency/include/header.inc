@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: header.inc,v 1.6 2002/02/19 16:49:34 riessen Exp $
+# $Id: header.inc,v 1.7 2002/05/07 17:30:47 grex Exp $
 #
 ######################################################################
 
@@ -48,6 +48,9 @@ $db = new DB_SourceAgency;
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
    <meta http-equiv="expires" content="0">
+   <meta name="Author" content="<?php echo $config_meta_author;?>">
+   <meta name="Description" content="<?php echo $config_meta_description;?>">
+   <meta name="KeyWords" content="<?php echo $config_meta_keywords;?>">
    <title><?php echo $sys_name;?> - <?php echo $t->translate($sys_title);?>
    </title>
 <link rel="stylesheet" type="text/css" href="berlios.css">

@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.23 2002/04/18 10:35:29 grex Exp $
+# $Id: config.inc,v 1.24 2002/05/07 17:30:47 grex Exp $
 #
 ######################################################################
 
@@ -375,6 +375,15 @@ $th_strip_body_font_color = '';
 
 $config_show_appsperpage = 10;
 $config_show_numberofdays = 7;
+
+/**
+ * HTML Metainformation
+ * 
+ */
+
+$config_meta_author = 'BerliOS';
+$config_meta_description = 'SourceAgency is a Open Source project planning and exchange portal. It is the place where Open Source Software (OSS) obtains financial support and OSS developers have the chance to be paid for their work.';
+$config_meta_keywords = 'Open Source, Free Software, projects, GPL, Applications, development, BerliOS, sponsoring, financial support';
 
 ######################################################################
 # Email Notification
