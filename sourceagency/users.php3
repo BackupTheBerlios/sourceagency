@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: users.php3,v 1.5 2002/04/17 12:33:18 riessen Exp $
+# $Id: users.php3,v 1.6 2002/04/30 12:43:42 riessen Exp $
 #
 ######################################################################
 
@@ -127,5 +127,5 @@ if ( ($config_perm_users != 'all')
 
 end_content();
 require('footer.inc');
-page_close();
+@page_close();
 ?>
