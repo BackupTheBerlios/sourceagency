@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: Spanish-lang.inc,v 1.2 2002/05/06 21:58:08 grex Exp $
+# $Id: Spanish-lang.inc,v 1.3 2002/05/07 10:28:53 grex Exp $
 #
 ######################################################################
 
@@ -109,7 +109,7 @@ function translate_real($phrase) {
         case 'Logged in': $tmp = 'Logged in'; break;
         case 'Login': $tmp = 'Login'; break;
         case 'Logout': $tmp = 'Logout'; break;
-        case 'Milestones': $tmp = 'Meilensteine'; break;
+        case 'Milestones': $tmp = 'Hitos'; break;
         case 'Modification': $tmp = 'Modificaci&oacute;n'; break;
         case 'Monitor This Project': $tmp = 'Seguir este proyecto'; break;
         case 'Monitored Projects': $tmp = 'Proyectos seguidos'; break;
@@ -224,7 +224,7 @@ function translate_real($phrase) {
         case 'general comments': $tmp = 'Comentarios generales'; break;
         case 'history': $tmp = 'Historia'; break;
         case 'in': $tmp = 'en'; break;
-        case 'milestones': $tmp = 'Meilensteine'; break;
+        case 'milestones': $tmp = 'hitos'; break;
         case 'news for this project': $tmp = 'noticias en este proyecto'; break;
         case 'news': $tmp = 'noticias'; break;
         case 'news_edit': $tmp = 'Edición de noticias'; break;
@@ -242,7 +242,7 @@ function translate_real($phrase) {
         case 'status': $tmp = 'estado'; break;
         case 'step': $tmp = "paso"; break;
         case 'step1_edit': $tmp = 'Proposici&oaacute;n de consultores'; break;
-        case 'step3_edit': $tmp = 'Definici&oacute;n de milestones'; break;
+        case 'step3_edit': $tmp = 'Definici&oacute;n de hitos'; break;
         case 'summary': $tmp = 'Resumen'; break;
         case 'times': $tmp = 'veces'; break;
         case 'to this': $tmp = 'a este'; break;
@@ -251,31 +251,32 @@ function translate_real($phrase) {
 
             /** explanations for the various steps a project has **/
         case "step_1_explanation": {
-            $tmp = "Help for sponsors on making a propper project submission."; 
+            $tmp = 'Ayude a que los patrocinadores puedan tener un proceso correcto.';
             break;
         }
         case "step_2_explanation": {
-            $tmp = ( "This project may have different specifications. "
-                     ."Developers can make their developing proposals to "
-                     ."that specifications." );
+            $tmp = ( "Este proyecto puede tener diferentes especificaciones. "
+                     ."Los desarrolladores pueden hacer sus porpuestas de desarrollo "
+                     ."a esas especificaciones." );
             break;
         }
         case "step_3_explanation": {
-            $tmp = "Project milestones proposed by developers.";
+            $tmp = "Hitos del proyecto propuestas por los desarrolladores.";
             break;
         }
         case "step_4_explanation": {
-            $tmp = ( "Developers can propose themselves as referees. Sponsors "
-                     ."and developers will elect one of them." );
+            $tmp = ( "Los desarrolladores pueden proponerse como &aacute;rbitros. Los "
+                     ."patrocinadores y los desarrolladores del proyecto elegir&aacute;n "
+                     ."a uno de ellos.");
             break;
         }
         case "step_5_explanation": {
-            $tmp = ( "Milestone delivery and other tasks related to the "
-                     ."project follow-up." );
+            $tmp = ( "Entrega de hitos y otras tareas relacionadas con el"
+                     ."seguimiento del proyecto." );
             break;
         }
         case "step_6_explanation": {
-            $tmp = "Final rating between sponsors and developers.";
+            $tmp = "Puntuaci&oacute;n final entre desarrolladores y patrocinadores.";
             break;
         }
         
