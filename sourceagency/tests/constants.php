@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: constants.php,v 1.14 2001/11/20 14:09:50 riessen Exp $
+# $Id: constants.php,v 1.15 2001/12/13 16:51:42 riessen Exp $
 #
 ######################################################################
 
@@ -44,8 +44,11 @@ include_once( "mock_database.php" );
 include_once( "mock_auth.php" );
 
 function _filename_to_classname( $filename ) {
+  // needed to add this for PHP4.1.0 -- __FILE__ includes the
+  // absolute path
+  $basename = basename( $filename );
   // .php3, .php, .php4 are all removed
-  $basename = preg_replace( "/[.]php.?$/", "", $filename );
+  $basename = preg_replace( "/[.]php.?$/", "", $basename );
   // remove .inc extension
   $basename = preg_replace( "/[.]inc$/", "", $basename );
   
