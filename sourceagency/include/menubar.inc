@@ -18,10 +18,11 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: menubar.inc,v 1.6 2002/04/15 15:54:17 riessen Exp $
+# $Id: menubar.inc,v 1.7 2002/04/17 11:04:03 riessen Exp $
 #
 ######################################################################
 
+global $PHP_SELF;
 ?>
 
 <!-- BerliOS menu -->
