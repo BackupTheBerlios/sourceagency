@@ -28,28 +28,32 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require("milestoneslib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-
-<?php
-
+start_content();
 $page = "milestones";
 
 if (check_permission($proid,$page)) {
-  top_bar($proid,$page);
-
-  print "Milestone suggestions and agreement.\n";
-
-  print "<p align=right>[ <b>".html_link("step3_edit.php3",array("proid" => $proid),"<b>Propose Milestones</b>")."</b> ]";
-
-  $db->query("SELECT DISTINCT(devid) FROM milestones WHERE proid='$proid'");
-  while($db->next_record()) {
-	if (isset($auth) && !empty($auth)) $who = $auth->auth["uname"];
-	else $who = "";
+    top_bar($proid,$page);
+    
+    print "Milestone suggestions and agreement.\n";
+    
+    print ("<p align=right>[ <b>"
+           .html_link("step3_edit.php3",array("proid" => $proid),
+                      "<b>Propose Milestones</b>")."</b> ]");
+    
+    $db->query("SELECT DISTINCT(devid) FROM milestones WHERE proid='$proid'");
+    while($db->next_record()) {
+        if ( is_set_and_not_empty( $auth ) ) {
+            $who = $auth->auth["uname"];
+        } else {
+            $who = "";
+        }
 	show_milestones($proid,$db->f("devid"),$who);
-  }
+    }
 
   print "<p><b>About what you can see and what not</b>\n";
   print "<ul><li>Non-involved (registered and unregistered) users can see only the accepted milestones.\n";
@@ -58,16 +62,13 @@ if (check_permission($proid,$page)) {
   print "</ul>\n";
 
   if (is_accepted_sponsor($proid)) {
-  	print "<p align=right>[ <b>".html_link("decisions.php3",array("proid" => $proid),"Decide!")."</b> ]\n";
+      print ( "<p align=right>[ <b>"
+              .html_link("decisions.php3",array("proid" => $proid),
+                         "Decide!")."</b> ]\n");
   }
-
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 page_close();
 ?>

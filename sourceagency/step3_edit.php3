@@ -28,13 +28,12 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 require("header.inc");
 require("milestoneslib.inc");
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
-?>
+$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_body_font_color,$th_box_body_align);
 
-<!-- content -->
-
-<?php
-
+start_content();
 $page = "step3_edit";
 
 if (check_permission($proid,$page)) {
@@ -43,27 +42,25 @@ if (check_permission($proid,$page)) {
   print "The main developer can propose the milestone planning.\n";
   print "<br><p>\n";
 
-  if (!isset($devid) || empty($devid)) {
-  	$db->query("SELECT devid FROM developing WHERE proid='$proid' AND developer='".$auth->auth["uname"]."'");
-  	$db->next_record();
-  	$devid = $db->f("devid");
+  if ( is_not_set_or_empty( $devid ) ) {
+      $db->query("SELECT devid FROM developing WHERE proid='$proid' "
+                 ."AND developer='".$auth->auth["uname"]."'");
+      $db->next_record();
+      $devid = $db->f("devid");
   }
 
-  if (!isset($submit) || empty($submit)) {
-	if (isset($preview) && !empty($preview)) milestones_preview($proid,$devid);
-	form_milestones($proid,$devid);
+  if ( is_not_set_or_empty( $submit ) ) {
+      if ( is_set_and_not_empty( $preview )) {
+          milestones_preview($proid,$devid);
+      }
+      form_milestones($proid,$devid);
   } else {
-	milestones_insert($proid,$devid,$number,$goals,$release_day,$release_month,$release_year,$product,$payment);
+      milestones_insert($proid,$devid,$number,$goals,$release_day,
+                        $release_month,$release_year,$product,$payment);
   }
-
-
 }
 
-?>
-
-<!-- end content -->
-
-<?php
+end_content();
 require("footer.inc");
 page_close();
 ?>
