@@ -39,7 +39,7 @@ $page = "views_edit";
 if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
-  print "Project information access configuration.\n";
+  print $t->translate("Project information access configuration").".\n";
 
   if ( is_not_set_or_empty( $submit ) ) {
       if ( is_set_and_not_empty( $preview ) ) {

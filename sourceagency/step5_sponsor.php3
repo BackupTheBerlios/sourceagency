@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: step5_sponsor.php3,v 1.8 2002/05/06 12:46:35 riessen Exp $
+# $Id: step5_sponsor.php3,v 1.9 2002/05/07 11:48:54 riessen Exp $
 #
 ######################################################################  
 
@@ -83,14 +83,15 @@ if (check_permission($proid, $page)) {
 		      '</li><li>'.$t->translate('<b>Severe</b>: The sponsors is very unhappy with the results of the current milestone and rejects it. The project referee will be switched.').
 		      '</li></ul><p>');
      } else {
-         print '<b>TODO: explanation</b> If you see this line... then developers are in trouble!\n';
-         print '<p>possible actions:\n';
-         print "<ul>\n";
-         print "<li>Delay all milestones x days</li>\n";
-         print "<li>stop proyect</li>\n";
-         print "<li>....</li>\n";
-         print "</ul>\n";
-         print "And everything has to be done in a democratic way!!!\n";
+         // TODO: add explanation
+         //print '<b>TODO: explanation</b> If you see this line... then developers are in trouble!\n';
+//           print '<p>possible actions:\n';
+//           print "<ul>\n";
+//           print "<li>Delay all milestones x days</li>\n";
+//           print "<li>stop proyect</li>\n";
+//           print "<li>....</li>\n";
+//           print "</ul>\n";
+//           print "And everything has to be done in a democratic way!!!\n";
     }
 
 /*

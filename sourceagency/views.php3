@@ -39,12 +39,13 @@ $page = "views";
 if (check_permission($proid,$page)) {
   top_bar($proid,$page);
 
-  print "Project information access configuration.\n";
+  print $t->translate("Project information access configuration").".\n";
 
-  print "<p align=right>[ <b>".html_link("views_edit.php3",
-                                         array("proid" => $proid),
-                                         "Configure the information "
-                                         ."access for this project")
+  print "<p align=right>[ <b>"
+    .html_link("views_edit.php3",
+               array("proid" => $proid),
+               $t->translate("Configure the information access for "
+                             ."this project"))
     ."</b> ] &nbsp;<p>\n";
  
 

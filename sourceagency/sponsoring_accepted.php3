@@ -48,28 +48,34 @@ if (check_proid($proid)) {
              ."WHERE proid='$proid' AND sponsor='$sponsor'");
 
   if ($db->affected_rows()) {
-	print ( "Sponsoring involvement by <b>$sponsor</b> has "
-                ."been accepted.<p>\n" );
+	print ( $t->translate('Sponsoring involvement by')
+                 ." <b>$sponsor</b> "
+                 .$t->translate('has been accepted')
+                 .".<p>\n" );
   } else {
-	print "There has been a database error.<p>\n";
+	print $t->translate('There has been a database error').".<p>\n";
   }
 
   htmlp_link("sponsoring.php3",array("proid" => $proid),
-             "Back to the Sponsoring Involvement Page");
+             $t->translate("Back to the Sponsoring Involvement Page"));
 
   // Send mail to the ones that monitor this project
   include("monitorlib.inc");
   include("config.inc");
-  monitor_mail($proid,"sponsoring", "Sponsoring involvement accepted "
-                           ."for project $proid", "An event has happened.");
+  monitor_mail($proid, "sponsoring", 
+               $t->translate('Sponsoring involvement accepted for project')
+               ." $proid", $t->translate('An event has happened').".");
 
   // mail new sponsor that he has been accepted
   $db->query("SELECT email_usr FROM auth_user WHERE username='$sponsor'");
   $db->next_record();
-  $message = ("\nHi,$sponsor\n\nYour sponsoring involvement for project "
-              ."$proid has been accepted.\n\n");
+  $message = ("\n".$t->translate("Hi").",$sponsor\n\n"
+              .$t->translate("Your sponsoring involvement for project")
+              ." $proid "
+              .$t->translate("has been accepted").".\n\n");
+
   mail($db->f("email_usr"),"[".$GLOBALS["sys_name"]
-  ."] Sponsoring involvement accepted", $message,"From: "
+  ."] ".$t->translate("Sponsoring involvement accepted"), $message,"From: "
   .$GLOBALS["ml_fromaddr"]."\nReply-To: "
   .$GLOBALS["ml_replyaddr"]."\nX-Mailer: PHP");  
 

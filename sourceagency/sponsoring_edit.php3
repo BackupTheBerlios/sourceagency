@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: sponsoring_edit.php3,v 1.7 2002/04/11 13:23:53 riessen Exp $
+# $Id: sponsoring_edit.php3,v 1.8 2002/05/07 11:48:54 riessen Exp $
 #
 ######################################################################  
 
@@ -81,15 +81,16 @@ if (check_permission($proid, $page)) {
             $finish_year = $ary['year'];
         }
 
-        print "Sponsors can modify their sponsoring wish using this form.\n";
-        print "<br><p>\n";
+        print $t->translate("Sponsors can modify their sponsoring wish "
+                            ."using this form") . ".\n<br><p>\n";
 
         sponsoring_form($proid);
     } else {
         /** Check that budget is positive **/
         if ( $budget <= 0 ) {
-            generate_failed_box( "Sponsoring", 
-                                 "Budget must be greater than zero" );
+            generate_failed_box( $t->translate("Sponsoring"), 
+                                 $t->translate("Budget must be greater "
+                                               ."than zero"));
         } else {
             sponsoring_insert($proid, $auth->auth['uname'], $sponsoring_text,
                               $budget, $valid_day, $valid_month, $valid_year,
