@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lang.inc,v 1.13 2002/04/02 15:04:22 riessen Exp $
+# $Id: lang.inc,v 1.14 2002/04/03 10:32:54 riessen Exp $
 #
 ######################################################################
 
@@ -42,23 +42,28 @@ if ($sess->is_registered("la")) {
 }
 
 switch($la) {
-case "English":
-    $locale = "en_EN";
-    include("English-lang.inc");
-    break;
-case "German":  
-    $locale = "de_DE";
-    include("German-lang.inc");
-    break;
-case "Spanish":
-    $locale = "es_ES";
-    include("Spanish-lang.inc");
-    break;
-default:
-    $locale = "en_EN";
-    include("English-lang.inc");
-    break;
+    case "English":
+        $locale = "en_EN";
+        include("English-lang.inc");
+        break;
+    case "German":  
+        $locale = "de_DE";
+        include("German-lang.inc");
+        break;
+    case "Spanish":
+        $locale = "es_ES";
+        include("Spanish-lang.inc");
+        break;
+    case "Unknown":
+        $locale = "en_EN";
+        include( "Unknown-lang.inc" );
+        break;
+    default:
+        $locale = "en_EN";
+        include("English-lang.inc");
+        break;
 }
 
 setlocale (LC_TIME, $locale);
+
 ?>
