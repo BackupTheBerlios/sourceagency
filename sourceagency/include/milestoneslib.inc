@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.4 2001/11/29 15:38:20 grex Exp $
+# $Id: milestoneslib.inc,v 1.5 2002/01/28 02:20:00 riessen Exp $
 #
 ######################################################################
 
@@ -40,6 +40,8 @@ function show_milestones($proid,$devid,$who_wants_to_see) {
   $db->query($query);
   $db->next_record();
   $milestone_user = $db->f("developer");
+  // reset the status if the milestone user is the same as the
+  // user trying to view the milestones
   if (!strcmp($milestone_user,$who_wants_to_see))  {
     $status=""; 
   }
@@ -118,6 +120,7 @@ function show_milestones($proid,$devid,$who_wants_to_see) {
 	$bx->box_end();
   }
 }
+
 
 function milestones_preview($proid,$devid) {
   global $t, $bx, $number, $goals, $release_day, 
@@ -330,6 +333,7 @@ function select_milestone_number($proid,$devid,$selected) {
 
   $return = html_select("number");
 
+  // TODO: why is there a '5 +' here ?!?!
   for ($i=1; $i <= 5 + $db->num_rows(); $i++) {
 	$ok = 1;
 	reset($array);

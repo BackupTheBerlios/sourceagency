@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: newslib.inc,v 1.4 2001/11/29 15:38:34 grex Exp $
+# $Id: newslib.inc,v 1.5 2002/01/28 02:20:00 riessen Exp $
 #
 ######################################################################
 
@@ -94,6 +94,7 @@ function news_modify_form($proid) {
   $bx->box_end();
 }
 
+// FIXME: $proid argument is not directly used in the function ....
 function news_preview($proid) {
   global $t, $bx, $auth, $sess, $subject, $text;;
 
@@ -103,6 +104,7 @@ function news_preview($proid) {
   $bx->box_body_begin();
   $timestamp = time();
   echo "<b>";
+  // FIXME: what is the purpose of doing a db query here?
   $db_local = new DB_SourceAgency;
   $db_local->query("SELECT email_usr FROM auth_user WHERE username='"
                    . $auth->auth["uname"]."'");
@@ -151,11 +153,19 @@ function news_insert($proid,$user,$subject,$text) {
   $db->query("INSERT news SET proid='$proid',user_news='$user',"
              . "subject_news='$subject',text_news='$text'");
 
-  include("monitorlib.inc");
+  if ( floor( phpversion() ) >= 4 ) {
+    // this change allows unt test to test this and news_modify
+    include_once("monitorlib.inc");
+  } else {
+    include("monitorlib.inc");
+  }
   include("config.inc");
+
   monitor_mail($proid,"news", "New News", "New News on project $proid\n "
-  . "Subject: $subject\n by $user\n\n You can see it at: "
-  . "$sys_urlcomments.php3?proid=$proid&type=$type_cmt&number=$number&id=$id");
+  . "Subject: $subject\n by $user\n\n You can see it at: ");
+  // FIXME: the variables used in the following aren't defined ....
+  // FIXME: $type_cmt, $number and $id
+//  . "$sys_url"."comments.php3?proid=$proid&type=$type_cmt&number=$number&id=$id");
 
   newsshow($proid);
 }
@@ -167,13 +177,19 @@ function news_modify($proid,$user,$subject,$text,$creation) {
              . "text_news='$text' WHERE proid='$proid' AND "
              . "creation_news='$creation'");
 
-  include("monitorlib.inc");
-  include("config.inc");
+  if ( floor( phpversion() ) >= 4 ) {
+    // this change allows unt test to test this and news_modify
+    include_once("monitorlib.inc");
+  } else {
+    include("monitorlib.inc");
+  }
+    include("config.inc");
 
   monitor_mail($proid,"news", "News Modified", "Modification on News on "
-  . "project $proid\n Subject: $subject\n by $user\n\n You can see it "
-  . "at: $sys_urlcomments.php3?proid=$proid&type=$type_cmt"
-  . "&number=$number&id=$id");
+  . "project $proid\n Subject: $subject\n by $user\n\n You can see it ");
+  // FIXME: $type_cmt, $number and $id all undefined
+//    . "at: $sys_url"."comments.php3?proid=$proid&type=$type_cmt"
+//    . "&number=$number&id=$id");
 
   newsshow($proid);
 }

@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: monitorlib.inc,v 1.2 2001/11/07 18:48:53 riessen Exp $
+# $Id: monitorlib.inc,v 1.3 2002/01/28 02:20:00 riessen Exp $
 #
 ######################################################################
 
@@ -45,6 +45,7 @@ function monitor_form($proid) {
   $bx->box_end();
 }
 
+// FIXME: $proid is not used ... can it be removed?
 function monitor_preview($proid) {
   global $t, $bx, $auth, $sess, $importance;
 
@@ -54,6 +55,7 @@ function monitor_preview($proid) {
   $bx->box_body_begin();
   $timestamp = time();
   echo "<b>";
+  // FIXME: what is the purpose of this query?
   $db_local = new DB_SourceAgency;
   $db_local->query("SELECT email_usr FROM auth_user WHERE username='".$auth->auth["uname"]."'");
   $db_local->next_record();
@@ -71,6 +73,7 @@ function monitor_show($proid) {
   $db->query($query);
   if ($db->num_rows() != 0) {
   	$bx->box_begin();
+        //FIXME: "All these" instead of "All this"
   	$bx->box_title($t->translate("All this users are monitor this project"));
   	$bx->box_body_begin();
   	$bx->box_columns_begin(5);
@@ -130,6 +133,7 @@ function monitor_modify($proid,$username,$importance,$creation) {
   monitor_show($proid);
 }
 
+// FIXME: this function does not appear to be used ....
 function nlmsg($period) {
   global $db;
 
@@ -284,13 +288,10 @@ function select_importance($selected) {
   global $auth;
 
   $return = html_select("importance");
-  if($selected=="low") $select="selected";
-  $return .= html_select_option("low",$select,"low");
-  if($selected=="medium") $select="selected";
-  $return .= html_select_option("medium",$select,"medium");
-  if($selected=="high") $select="selected";
-  $return .= html_select_option("high",$select,"high");
-  $return .=htmlp_select_end();
+  $return .= html_select_option("low",$selected=="low","low");
+  $return .= html_select_option("medium",$selected=="medium","medium");
+  $return .= html_select_option("high",$selected=="high","high");
+  $return .= html_select_end();
 
   return($return);
 }
