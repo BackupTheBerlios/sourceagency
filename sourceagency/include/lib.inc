@@ -1,4 +1,5 @@
 <?php
+
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ===============================================================
@@ -18,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.8 2001/11/07 18:48:53 riessen Exp $
+# $Id: lib.inc,v 1.9 2001/11/08 16:17:41 riessen Exp $
 #
 ######################################################################
 
@@ -30,10 +31,6 @@ function mktimestamp($time) {
     $timestamp = mktime(substr($time,8,2),substr($time,10,2),substr($time,12,2),substr($time,4,2),substr($time,6,2),substr($time,0,4));
     return $timestamp;
 }
-
-#
-#
-#
 
 function timestr($timestamp) {
     global $t;
@@ -703,8 +700,7 @@ function lib_show_description($query) {
 function select_from_config($name,$array_name,$selected) {
         $array_value="";
 	
-	/* FIXME - FIXME - FIXME */
-	/* I don't know why this doesn't work with arrays */
+	/* FIXME: I don't know why this doesn't work with arrays */
 
 	include("config.inc");
 	switch ($array_name) {

@@ -9,7 +9,7 @@
 #                Gregorio Robles (grex@scouts-es.org)
 #                Gerrit Riessen (riessen@open-source-consultants.de)
 #
-# BerliOS SourceWell: http://sourcewell.berlios.de
+# BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
 # TODO: description missing
@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: footer.inc,v 1.3 2001/11/07 18:48:52 riessen Exp $
+# $Id: footer.inc,v 1.4 2001/11/08 16:17:41 riessen Exp $
 #
 ######################################################################
 

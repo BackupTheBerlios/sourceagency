@@ -1,10 +1,24 @@
 <?php
-// TestBox.php
-// 
-// Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
-// Copyright (C) 2001 Gerrit Riessen
-// 
-// $Id: TestBox.php,v 1.4 2001/10/31 12:23:16 riessen Exp $
+######################################################################
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
+#
+# Copyright (c) 2001 by
+#                Gerrit Riessen (riessen@open-source-consultants.de)
+#
+# BerliOS SourceAgency: http://sourceagency.berlios.de
+# BerliOS - The OpenSource Mediator: http://www.berlios.de
+#
+# Unit test class for the functions contained in the 
+# include/box.php
+#
+# This program is free software. You can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: TestBox.php,v 1.5 2001/11/08 16:17:42 riessen Exp $
+#
+######################################################################
 
 include_once( "../constants.php" );
 

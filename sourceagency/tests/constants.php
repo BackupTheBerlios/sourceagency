@@ -1,11 +1,25 @@
 <?php
-// constants.php
-// 
-// Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
-// Copyright (C) 2001 Gerrit Riessen
-// 
-// $Id: constants.php,v 1.12 2001/10/31 12:23:15 riessen Exp $
-//
+######################################################################
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
+#
+# Copyright (c) 2001 by
+#                Gerrit Riessen (riessen@open-source-consultants.de)
+#
+# BerliOS SourceAgency: http://sourceagency.berlios.de
+# BerliOS - The OpenSource Mediator: http://www.berlios.de
+#
+# Unit test class for the functions contained in the 
+# include/security.inc
+#
+# This program is free software. You can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: constants.php,v 1.13 2001/11/08 16:17:42 riessen Exp $
+#
+######################################################################
+
 // php library root directory
 $env_php_lib_dir = getenv( "PHP_LIB_DIR" );
 if ( ! $env_php_lib_dir || $env_php_lib_dir == "" ) {

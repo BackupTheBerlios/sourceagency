@@ -5,9 +5,14 @@
  * Copyright (c) 1998,1999 SH Online Dienst GmbH
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: session.inc,v 1.1 2001/10/10 18:12:26 ger Exp $
+ * $Id: session.inc,v 1.2 2001/11/08 16:17:41 riessen Exp $
  *
  */ 
+######################################################################
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
+#
+######################################################################
 
 class Session {
   var $classname = "Session";         ## Needed for object serialization.

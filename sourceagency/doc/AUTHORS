@@ -6,5 +6,10 @@ thesis at the Technical University of Berlin in contact with BerliOS.
 
 Lutz Henckel <lutz.henckel@fokus.gmd.de>
 Lutz Henckel is the project manager of the BerliOS team. He is known for his
-earlier home page "Woven Goods for Linux", which has evolved to what BerliOS is today.
+earlier home page "Woven Goods for Linux", which has evolved to what BerliOS 
+is today.
 
+Gerrit Riessen <gerrit.riessen@open-source-consultants.de>
+Responsible for the Unit Tests and general maintance of the SourceAgency 
+code. Working part time at BerliOS, trying to bring in some concepts from
+Extreme Programming into Open Source projects.

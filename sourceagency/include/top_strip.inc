@@ -1,14 +1,14 @@
 <?php
 
 ######################################################################
-# SourceWell: Software Announcement & Retrieval System
-# ================================================
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
 #
 # Copyright (c) 2001 by
 #                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
 #                Gregorio Robles (grex@scouts-es.org)
 #
-# BerliOS SourceWell: http://sourcewell.berlios.de
+# BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
 #
 # This file shows a strip at the top of the page
@@ -16,6 +16,9 @@
 # This program is free software. You can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: top_strip.inc,v 1.2 2001/11/08 16:17:41 riessen Exp $
+#
 ######################################################################
 
 ?>

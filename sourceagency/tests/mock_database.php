@@ -1,10 +1,23 @@
 <?php
-// mock_database.php
-// 
-// Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
-// Copyright (C) 2001 Gerrit Riessen
-// 
-// $Id: mock_database.php,v 1.8 2001/10/30 14:49:24 riessen Exp $
+######################################################################
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
+#
+# Copyright (c) 2001 by
+#                Gerrit Riessen (riessen@open-source-consultants.de)
+#
+# BerliOS SourceAgency: http://sourceagency.berlios.de
+# BerliOS - The OpenSource Mediator: http://www.berlios.de
+#
+# Imitate the DB_SourceAgency class.
+#
+# This program is free software. You can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: mock_database.php,v 1.9 2001/11/08 16:17:42 riessen Exp $
+#
+######################################################################
 
 //
 // For an explanation of this class, see:
