@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: chguser.php3,v 1.8 2002/05/10 11:56:34 grex Exp $
+# $Id: chguser.php3,v 1.9 2002/05/10 11:59:36 grex Exp $
 #
 ######################################################################
 
@@ -106,7 +106,7 @@ $db->query("SELECT * FROM auth_user WHERE username='".$auth->auth['uname']."'");
 $db->next_record();
 
 $bx->box_column('right',  '50%', '', '<b>'.$t->translate('Username').':</b>');
-$bx->box_column('left', '50%', '', html_input_text('username', $db->f('username'), 20, 32));
+$bx->box_column('left', '50%', '', html_input_text('username', 20, 32, $db->f('username')));
 
 $bx->box_next_row_of_columns();
 
@@ -121,22 +121,22 @@ $bx->box_column('left', '50%', '', html_input_password('cpassword', 20, 32, $db-
 $bx->box_next_row_of_columns();
 
 $bx->box_column('right', '50%', '', '<b>'.$t->translate('Real Name').':</b>');
-$bx->box_column('left', '50%', '', html_input_text('realname', $db->f('realname'), 20, 64));
+$bx->box_column('left', '50%', '', html_input_text('realname', 20, 64, $db->f('realname')));
 
 $bx->box_next_row_of_columns();
 
 $bx->box_column('right', '50%', '', '<b>'.$t->translate('E-mail').':</b>');
-$bx->box_column('left', '50%', '', html_input_text('email_usr', $db->f('$email_usr'), 20, 128));
+$bx->box_column('left', '50%', '', html_input_text('email_usr', 20, 128, $db->f('$email_usr')));
 
 $bx->box_next_row_of_columns();
 
 $bx->box_column('right', '50%', '', '<b>'.$t->translate('Creation').':</b>');
-$bx->box_column('left', '50%', '', timestr($db->f('creation_usr')));
+$bx->box_column('left', '50%', '', timestr(mktimestemp($db->f('creation_usr'))));
 
 $bx->box_next_row_of_columns();
 
 $bx->box_column('right', '50%', '', '<b>'.$t->translate('Last Modification').':</b>');
-$bx->box_column('left', '50%', '', timestr($db->f('modification_usr')));
+$bx->box_column('left', '50%', '', timestr(mktimestemp($db->f('modification_usr'))));
 
 $bx->box_next_row_of_columns();
 
