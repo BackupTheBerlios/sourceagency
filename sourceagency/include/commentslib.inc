@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: commentslib.inc,v 1.6 2002/05/07 12:28:36 riessen Exp $
+# $Id: commentslib.inc,v 1.7 2002/05/08 09:46:13 riessen Exp $
 #
 ######################################################################
 
@@ -74,28 +74,18 @@ function comments_show($proid, $type_cmt, $number, $cmt_id, $ref)
 {
     global $t, $bx, $db, $sess;
 
-    if (isset($number) && !empty($number)) {
-        $number_selection = "AND number='$number'";
-    } else {
-        $number_selection = "AND number='0'";
-    }
+    $number_selection = ("AND number='"
+                         .(is_set_and_not_empty( $number ) ? $number : 0)."'");
 
-    if (isset($cmt_id) && !empty($cmt_id)) {
-        $id_selection = "AND id='$cmt_id'";
-    } else {
-        $id_selection = '';
-    }
+    $id_selection = (is_set_and_not_empty($cmt_id) ? "AND id='$cmt_id'" : '');
 
-    if (isset($ref) && !empty($ref)) {
-        $ref_selection = "AND ref='$ref'";
-    } else {
-        $ref_selection = "AND ref='0'";
-    }
+    $ref_selection = "AND ref='".(is_set_and_not_empty($ref) ? $ref:0)."'";
 
     $db->query("SELECT * FROM comments, auth_user WHERE proid='$proid' "
                ."AND type='$type_cmt' ".$number_selection." ".$id_selection
                ." ".$ref_selection." AND user_cmt=username ORDER BY "
                ."creation_cmt ASC");
+
     while($db->next_record()) {
 	htmlp_anchor($db->f('id'));
     	$bx->box_begin();
