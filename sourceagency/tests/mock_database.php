@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: mock_database.php,v 1.14 2002/01/28 02:18:01 riessen Exp $
+# $Id: mock_database.php,v 1.15 2002/02/07 12:23:21 riessen Exp $
 #
 ######################################################################
 
@@ -360,11 +360,13 @@ extends Assert
     }
 
     function affected_rows() {
-      // TODO: implement method 'affected_rows' which returns the number
-      // TODO: of rows that were changed by an insert statement
+        // TODO: implement method 'affected_rows' which returns the number
+        // TODO: of rows that were changed by an insert statement
     }
     function nf() {
-      // TODO: implement method 'nf' which appears to be an alias for num_rows
+        // TODO: implement method 'nf' which appears to be an alias for
+        // TODO: num_rows ... Correction: it's probably the 'number of fields'
+        // TODO: function
     }
     function num_rows() {
         global $g_mkdb_num_rows, $g_mkdb_cur_num_row_call;
@@ -381,10 +383,14 @@ extends Assert
             $this->assert($cur_num_row_call < count($num_rows),
                           "mock_database(num_rows): no more rows available,"
                           . " call = " . $cur_num_row_call);
-        }
 
-        $g_mkdb_cur_num_row_call[$this->instance_number]++;
-        return $num_rows[ $cur_num_row_call ];
+            $g_mkdb_cur_num_row_call[$this->instance_number]++;
+            return $num_rows[ $cur_num_row_call ];
+        } else {
+            // this avoids a warning about index numbers if the data
+            // isn't defined.
+            return -1;
+        }
     }
     
     function next_record() {
