@@ -1,11 +1,24 @@
 <?php
-// TestMonitorlib.php
-// 
-// Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
-// Copyright (C) 2002 Gerrit Riessen
-// This code is licensed under the GNU Public License.
-// 
-// $Id: TestMonitorlib.php,v 1.2 2002/02/01 08:40:52 riessen Exp $
+######################################################################
+# SourceAgency: Open Source Project Mediation & Management System
+# ===============================================================
+#
+# Copyright (c) 2001 by
+#                Gerrit Riessen (riessen@open-source-consultants.de)
+#
+# BerliOS SourceAgency: http://sourceagency.berlios.de
+# BerliOS - The OpenSource Mediator: http://www.berlios.de
+#
+# Unit test class for the functions contained in the 
+# include/monitorlib.inc
+#
+# This program is free software. You can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 or later of the GPL.
+#
+# $Id: TestMonitorlib.php,v 1.3 2002/02/07 12:24:17 riessen Exp $
+#
+######################################################################
 
 include_once( "../constants.php" );
 
