@@ -13,16 +13,26 @@ several developers are working on a single system and no one developer
 has an overview of the entire system but every developer is able to
 modify every part of the system.
 
-It is therefore in important that unit tests have a wide test coverage
-and attempt to test all functionality of a particular function or
-method. Thus unit tests are also a good indication of whether a
-function tries to do too much: a unit test is difficult to write or
-becomes too long.
+It is therefore is important that unit tests have a wide test coverage,
+attempting to test all functionality of a particular function or
+method. Unit tests also provide a good indication of whether a
+function tries to do too much: if unit test is difficult to write or
+becomes too long then the function being tested is mostly likely too 
+complex.
 
 Unit tests are single methods of a unit-test-class where each
 unit-test-class tests exactly one target class. In the case of PHP,
 this becomes a single include file, e.g. html.inc or lib.inc, and each
-unit test method tests exactly one function of that file.
+unit test method tests exactly one function of that file. For more
+information on unit tests: www.junit.org (specifically deals with unit
+tests for java, but also provides a overview on unit tests).
+
+Extreme Programming, where unit tests originate from, says that tests
+should be written before the function to be defined is written,
+i.e. test first coding. This doesn't have to be the case, and having
+tests that were written after the function is better than no tests at
+all! It is also important to maintain tests as functionality is added
+or modified: all unit tests should be running at 100% at all times!
 
 PhpUnit is required: the file phpunit.php should be in the
 directory defined by the environmental variable PHP_LIB_DIR. This
@@ -495,19 +505,69 @@ line 32: check that the mock database did not fail.
 
 3. What to test for?
 --------------------
-As the three examples above hopefully showed, tested should be the main
-functionality and to a point where any modifications of the main functionality
-of a function will cause an error in the unit test.
+As the above three examples show, unit tests should test functions for
+robustness and cover all functionality offered by the function being tested.
+
+Generally this means testing any output generated indirectly or
+directly by the function, i.e. HTML code, testing any errors checks
+for argument values or general error checks performed by the function
+and testing any interactions the function has with other parts of the
+system, i.e. database queries.
+
+It is also sometimes important to check that the function breaks,
+i.e. that specific things fail when using the function. For example,
+that a login function does not allow uses with a wrong password
+accesses. 
+
+Tip: sometimes when an assert fails, it might be a good idea to
+changes the assert so that failure is expected instead of changing the
+assert to perform correctly.
 
 
 4. Utilities
 ------------
-capture.php:
-mock_database.php:
-mock_auth.php:
-unit_test.php:
+All the following files are stored in the tests directory of the
+SourceAgency CVS repository. Their intention is to support the
+creation and execution of unit tests.
+
+* RunAllTests.php:
+  PHP script that can be executed directly using php version 4 or greater and
+  which recursively searchs all sub-directories for unit test files,
+  i.e. those with filenames beginning with 'Test' and having an .php or .inc
+  extension. Should be executed directly in the tests directory.
+
+* capture.php:
+  Utility file containing the text capturing routines. This file can be
+  included directly by a unit tests but is already included by the
+  constants.php file.
+
+* mock_database.php:
+  Contains the mock_database class which in turn is used to define the
+  DB_SourceAgency class which replaces the original DB_SourceAgency class for
+  the purposes of the unit tests. It may be included by a unit test class
+  directly but is included indirectly by including the constants.php file.
+
+* mock_auth.php:
+  Defines a mock replacement for the authorisation class 'Auth'. This allows
+  the setting of the 'uname' and 'perm' properties. Can be included directly
+  but is indirectly included by the constants.php file.
+
+* unit_test.php:
+  Defines the UnitTest class which should be the base class for all unit test
+  classes.
+
+5. Resources
+------------
+1. PhpUnit 
+   - http://sourceforge.net/projects/phpunit
+2. German article about test driven development
+   - http://www.frankwestphal.de/TestgetriebeneEntwicklung.html
+3. JUnit and general information about Unit Tests
+   - http://www.junit.org
+4. Latest versions of this Readme
+   - http://cvs.berlios.de/cgi-bin/cvsweb.cgi/sourceagency/tests/README?cvsroot=sourceagency
 
 --
 Gerrit Riessen, Gerrit.Riessen@open-source-consultants.de
 Copyright (C) 2002 Gerrit Riessen
-$Id: README,v 1.2 2002/02/11 18:09:58 riessen Exp $
+$Id: README,v 1.3 2002/02/13 12:13:41 riessen Exp $
