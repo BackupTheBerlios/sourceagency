@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestFaqlib.php,v 1.2 2002/06/06 08:18:27 riessen Exp $
+// $Id: TestFaqlib.php,v 1.3 2002/06/06 09:31:37 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -57,7 +57,7 @@ extends UnitTest
         }
         $this->_testFor_html_form_hidden( 'create', 2 );
         $this->_testFor_html_form_submit( $t->translate( 'Create' ) );
-        $this->_testFor_string_length( 2315 );
+        $this->_testFor_string_length( 2315 + strlen( $sess->self_url() ));
     }
 
     function testFaqmod() {
@@ -98,7 +98,7 @@ extends UnitTest
         $this->_testFor_html_form_hidden( 'modify', 2 );
         $this->_testFor_html_form_hidden( 'faqid', $d[0]['faqid'] );
         $this->_testFor_html_form_submit( $t->translate( 'Modify' ) );
-        $this->_testFor_string_length( 2356 );
+        $this->_testFor_string_length( 2356 + strlen( $sess->self_url() ));
         $this->_check_db( $db_config );
     }
 

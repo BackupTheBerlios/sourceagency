@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDecisionslib.php,v 1.2 2002/06/06 08:18:27 riessen Exp $
+// $Id: TestDecisionslib.php,v 1.3 2002/06/06 09:31:37 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -49,7 +49,7 @@ extends UnitTest
     }
 
     function testAre_you_sure_message() {
-        global $bx, $t;
+        global $bx, $t, $sess;
         $proid = 'this is the proid';
         $bx = $this->_create_default_box();
         capture_reset_and_start();
@@ -66,7 +66,7 @@ extends UnitTest
         $this->_checkFor_column_values( array( $str ) );
         $this->_testFor_html_form_submit($t->translate('Yes'),'Yes');
         $this->_testFor_html_form_submit($t->translate('No'),'No');
-        $this->_testFor_string_length( 1500 );
+        $this->_testFor_string_length( 1500 + strlen( $sess->self_url() ));
     }
     function testAre_you_sure_message_step5() {
         $this->_test_to_be_completed();
@@ -265,12 +265,16 @@ extends UnitTest
         your_quota( $proid );
         $this->set_text( capture_stop_and_get() );
 
+        $search=array( "/.* in <b>/s", "/<\/b> on .*/s" );
+        $replace=array( "", "" );
+        $file = preg_replace( $search, $replace, $this->get_text() );
+
         $ps = array( 0 => '<b>Warning<\/b>:  Division by zero in <b>',
                      1 => ( '<p>Your quota: <b>'.$d[1]['budget']
                             .'<\/b> euros [(]<b>0%<\/b> of the total' ) );
 
         $this->_testFor_patterns( $ps, 2 );
-        $this->_testFor_string_length( 213 );
+        $this->_testFor_string_length( 151 + strlen( $file ));
 
         $this->_check_db( $db_config );
     }

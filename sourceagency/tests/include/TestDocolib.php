@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDocolib.php,v 1.2 2002/06/06 08:18:27 riessen Exp $
+// $Id: TestDocolib.php,v 1.3 2002/06/06 09:31:37 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -56,7 +56,7 @@ extends UnitTest
             $this->pop_msg();
         }
         $this->_testFor_html_form_submit( $t->translate( 'Create' ) );
-        $this->_testFor_string_length( 2786 );
+        $this->_testFor_string_length( 2786 + strlen( $sess->self_url() ));
     }
 
     function testDoco_mod() {
@@ -91,7 +91,7 @@ extends UnitTest
         $this->_testFor_html_form_hidden( 'modify', 2 );
         $this->_testFor_html_form_submit( $t->translate( 'Modify' ) );
 
-        $this->_testFor_string_length( 2811 );
+        $this->_testFor_string_length( 2811 + strlen( $sess->self_url() ));
         $this->_check_db( $db_config );
     }
 
