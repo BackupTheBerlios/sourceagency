@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestInsertlib.inc,v 1.3 2002/04/23 10:03:31 riessen Exp $
+# $Id: TestInsertlib.inc,v 1.4 2002/04/24 16:39:05 riessen Exp $
 #
 ######################################################################
 
@@ -111,7 +111,7 @@ extends UnitTest
         capture_reset_and_start();
         project_title_not_set();
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 807, "test 1" );
+        $this->_testFor_captured_length( 816, "test 1" );
 
         $patterns = array( 0=>"<font color=\"#000000\"><b>Error<\/b><\/font>",
 
@@ -119,7 +119,8 @@ extends UnitTest
                                ." specified.<br>Please select <a href=\""
                                ."insform.php3[?]description=this[+]is[+]the"
                                ."[+]description[&]type=this[+]is[+]the[+]type"
-                               ."[&]volume=this[+]is[+]the[+]volume\">New "
+                               ."[&]volume=this[+]is[+]the[+]volume\" "
+                               ."class=\"\">New "
                                ."Projects<\/a>[ \n]+<\/font>"));
         $this->_testFor_patterns( $text, $patterns, 2 );
     }
@@ -134,7 +135,7 @@ extends UnitTest
         capture_reset_and_start();
         description_not_set();
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 817, "test 1" );
+        $this->_testFor_captured_length( 826, "test 1" );
         
         $patterns = array( 0=>"<font color=\"#000000\"><b>Error<\/b><\/font>",
                            1=>("<font color=\"#FF2020\">[ \n]+No Project "
@@ -142,7 +143,8 @@ extends UnitTest
                                ."href=\"insform.php3[?]project_title=this[+]is"
                                ."[+]the[+]project[+]title[&]type=this[+]is[+]"
                                ."the[+]type[&]volume=this[+]is[+]the[+]"
-                               ."volume\">New Projects<\/a>[ \n]+<\/font>"));
+                               ."volume\" class=\"\">New Projects"
+                               ."<\/a>[ \n]+<\/font>"));
         $this->_testFor_patterns( $text, $patterns, 2 );
     }
 
@@ -185,12 +187,13 @@ extends UnitTest
         $this->assertEquals( 0, no_other_project_with_same_title( 
             $pt[1]["project_title"] ));
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 743, "test 2" );
-        $this->_testFor_pattern( $text, ("<font color=\"#FF2020\">[ \n]+Another "
+        $this->_testFor_captured_length( 752, "test 2" );
+        $this->_testFor_pattern( $text, ("<font color=\"#FF2020\">[ \n]+"
+                                         ."Another "
                                          ."project with that title already "
                                          ."exists.<br>Please select <a href"
-                                         ."=\"insform.php3\">New Projects"
-                                         ."<\/a>"), "test 2");
+                                         ."=\"insform.php3\" class=\"\">"
+                                         ."New Projects<\/a>"), "test 2");
 
         //
         // third call, num_row == 2

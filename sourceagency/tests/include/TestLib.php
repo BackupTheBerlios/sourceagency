@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.17 2002/04/23 12:09:09 riessen Exp $
+# $Id: TestLib.php,v 1.18 2002/04/24 16:39:05 riessen Exp $
 #
 ######################################################################
 
@@ -412,11 +412,11 @@ extends UnitTest
         $text = capture_stop_and_get();
         $pats = array( 0=>("<b>by description_user_0<\/b>"),
                        1=>("<a href=\"summary.php3\?proid="
-                           ."proid_0\">project_title_0<\/a>" ),
+                           ."proid_0\" class=\"\">project_title_0<\/a>" ),
                        2=>("<b>Description<\/b>: description_0"),
                        3=>("<b>Volume<\/b>: volume_0" ));
         $this->_testFor_patterns($text, $pats, 4 );
-        $this->_testFor_captured_length( 722, "test 1" );
+        $this->_testFor_captured_length( 731, "test 1" );
 
         capture_reset_and_start();
         lib_show_description( sprintf( $db_q[0], "X", "Y") );
@@ -489,16 +489,19 @@ extends UnitTest
         lib_show_comments_on_it( $dat[1]["proid"],$dat[1]["cmt_type"],
                                  $dat[1]["num"], $dat[1]["cmt_id"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 436, "test 2" );
+        $this->_testFor_captured_length( 463, "test 2" );
 
         $ps=array(0=>("<li><a href=\"comments[.]php3\?proid=proid_1&type="
-                      ."cmt_type_1&number=num_1&ref=cmt_id_1\">subject_cmt_0"
+                      ."cmt_type_1&number=num_1&ref=cmt_id_1\" class=\"\">"
+                      ."subject_cmt_0"
                       ."<\/a> by <b>user_cmt_0<\/b> on <b><\/b>\n<ul>"),
                   1=>("<li><a href=\"comments[.]php3\?proid=proid_1&type="
-                      ."cmt_type_1&number=num_1&ref=id_0\">subject_cmt_2<\/a>"
+                      ."cmt_type_1&number=num_1&ref=id_0\" class=\"\">"
+                      ."subject_cmt_2<\/a>"
                       ." by <b>user_cmt_2<\/b> on <b><\/b>\n<p>\n<\/ul>"),
                   2=>("<li><a href=\"comments[.]php3\?proid=proid_1&type="
-                      ."cmt_type_1&number=num_1&ref=cmt_id_1\">subject_cmt_1"
+                      ."cmt_type_1&number=num_1&ref=cmt_id_1\" class=\"\">"
+                      ."subject_cmt_1"
                       ."<\/a> by <b>user_cmt_1<\/b> on <b><\/b>\n<p>"
                       ."\n<\/ul>"));
         $this->_testFor_patterns( $text, $ps, 3 );

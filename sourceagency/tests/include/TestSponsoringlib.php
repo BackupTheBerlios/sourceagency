@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSponsoringlib.php,v 1.8 2002/04/23 10:04:21 riessen Exp $
+# $Id: TestSponsoringlib.php,v 1.9 2002/04/24 16:39:05 riessen Exp $
 #
 ######################################################################
 
@@ -219,7 +219,7 @@ extends UnitTest
         $db = new DB_SourceAgency;
         show_sponsorings( $db_d[1]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 983, "test 2" );
+        $this->_testFor_captured_length( 992, "test 2" );
         $ps=array( 0=>"<b>by username_0<\/b> - <\/b>\n",
                    1=>"<p><b>Max. sum of money:<\/b> budget_0 euros\n",
                    2=>"<br><b>Status:<\/b> Deleted\n",
@@ -235,8 +235,8 @@ extends UnitTest
                        ."sponsoring_text_0\n"),
                    8=>("<a href=\"comments_edit.php3[?]proid=proid_1&type="
                        ."Sponsoring&number=spoid_0&ref=0&subject=Comment"
-                       ."[+]on[+]Sponsor[+]Involvement[+]%23spoid_0\">"
-                       ."Comment it!<\/a>"));
+                       ."[+]on[+]Sponsor[+]Involvement[+]%23spoid_0\" "
+                       ."class=\"\">Comment it!<\/a>"));
         $this->_testFor_patterns( $text, $ps, 9, "test 2" );
 
         // third call, is_accepted_sponsor returns true after being called
@@ -244,7 +244,7 @@ extends UnitTest
         $db = new DB_SourceAgency;
         show_sponsorings( $db_d[2]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1284, "test 3" );
+        $this->_testFor_captured_length( 1302, "test 3" );
         $ps=array(0=>("<font color=\"#000000\"><b>Sponsor Involvement<\/b>"
                       ."<\/font>\n"),
                   1=>"<b>by username_1<\/b> - <\/b>\n",
@@ -259,12 +259,12 @@ extends UnitTest
                   7=>("<p><b>Comments to the involvement:<\/b> "
                       ."sponsoring_text_1\n"),
                   8=>("<b><a href=\"sponsoring_accepted.php3[?]proid="
-                      ."proid_2&sponsor=username_1\">Accept this sponsor "
-                      ."involvement<\/a>"),
+                      ."proid_2&sponsor=username_1\" class=\"\">Accept "
+                      ."this sponsor involvement<\/a>"),
                   9=>("<a href=\"comments_edit.php3[?]proid=proid_2&type="
                       ."Sponsoring&number=spoid_1&ref=0&subject=Comment[+]"
-                      ."on[+]Sponsor[+]Involvement[+]%23spoid_1\">Comment "
-                      ."it!<\/a>"));
+                      ."on[+]Sponsor[+]Involvement[+]%23spoid_1\" "
+                      ."class=\"\">Comment it!<\/a>"));
         $this->_testFor_patterns( $text, $ps, 10, "test 3" );
 
         // fourth call, is_accepted_sponsor is called and returns false
@@ -272,7 +272,7 @@ extends UnitTest
         $db = new DB_SourceAgency;
         show_sponsorings( $db_d[3]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1018, "test 4" );
+        $this->_testFor_captured_length( 1027, "test 4" );
         $ps=array( 0=>("<font color=\"#000000\"><b>Sponsor Involvement<\/b>"
                        ."<\/font>\n"),
                    1=>"<b>by username_2<\/b> - <\/b>\n",
@@ -288,8 +288,8 @@ extends UnitTest
                        ."sponsoring_text_2\n"),
                    8=>("<a href=\"comments_edit.php3[?]proid=proid_3&type"
                        ."=Sponsoring&number=spoid_2&ref=0&subject=Comment"
-                       ."[+]on[+]Sponsor[+]Involvement[+]%23spoid_2\">"
-                       ."Comment it!<\/a>"));
+                       ."[+]on[+]Sponsor[+]Involvement[+]%23spoid_2\" "
+                       ."class=\"\">Comment it!<\/a>"));
         $this->_testFor_patterns( $text, $ps, 9, "test 4" );
 
         // finally check that everything went smoothly with the DB
@@ -526,10 +526,11 @@ extends UnitTest
                            $args[0]["f_day"], $args[0]["f_month"],
                            $args[0]["f_year"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 433, "test 1" );
+        $this->_testFor_captured_length( 442, "test 1" );
         $this->_testFor_pattern( $text, ("<a href=\"personal[.]php3[?]"
                                          ."username=this[+]is[+]the[+]"
-                                         ."username\">Personal Page<\/a>"));
+                                         ."username\" class=\"\">Personal "
+                                         ."Page<\/a>"));
 
         // second call, status = A and is not project initiator
         $db = new DB_SourceAgency;
@@ -543,11 +544,12 @@ extends UnitTest
                            $args[1]["f_day"], $args[1]["f_month"],
                            $args[1]["f_year"] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 132, "test 2" );
+        $this->_testFor_captured_length( 141, "test 2" );
         $this->_testFor_pattern( $text, ("<p><b>Congratulations<\/b>. You "
                                          ."are the first sponsor. You can "
                                          ."<a href=\"configure_edit.php3[?]"
-                                         ."proid=proid_1\">configure this "
+                                         ."proid=proid_1\" class=\"\">"
+                                         ."configure this "
                                          ."project<\/a>"));
         
         

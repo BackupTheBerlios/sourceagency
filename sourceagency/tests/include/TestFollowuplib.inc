@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowuplib.inc,v 1.6 2002/04/23 12:05:57 riessen Exp $
+# $Id: TestFollowuplib.inc,v 1.7 2002/04/24 16:39:05 riessen Exp $
 #
 ######################################################################\
 
@@ -52,49 +52,49 @@ extends UnitTest
                    1=>("<b><b>by username_one<\/b>"),
                    2=>("<td align=\"right\" width=\"30%\" bgcolor=\""
                        ."#FFFFFF\">[ \n]+<b>Milestone number:<\/b>[ \n]+"
-                       ."<\/td>[ \n]+<!-- "
-                       ."Column finishes -->[ \n]+<!-- New Column starts -->"
+                       ."<\/td>[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment
                        ."[ \n]+<td align=\"left\" width=\"70%\" bgcolor=\""
                        ."#FFFFFF\">[ \n]+milestone_0[ \n]+<\/td>"),
                    3=>("<td align=\"right\" width=\"30%\" bgcolor=\""
                        ."#FFFFFF\">[ \n]+<b>Goals:<\/b>[ \n]+<\/td>[ \n]+"
-                       ."<!-- Column "
-                       ."finishes -->[ \n]+<!-- New Column starts -->"
+                       .$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment
                        ."[ \n]+<td "
                        ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
                        ."\">[ \n]+<\/td>"),
                    4=>("<td align=\"right\" width=\"30%\" bgcolor=\""
                        ."#FFFFFF\">[ \n]+<b>Release Date:<\/b>[ \n]+"
-                       ."<\/td>[ \n]+<!-- "
-                       ."Column finishes -->[ \n]+<!-- New Column starts -->"
+                       ."<\/td>[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment
                        ."[ \n]+<td align=\"left\" width=\"70%\" bgcolor=\""
                        ."#FFFFFF\">[ \n]+<\/td>"),
                    5=>("<td align=\"right\" width=\"30%\" bgcolor=\""
                        ."#FFFFFF\">[ \n]+<b>Product:<\/b>[ \n]+<\/td>"
-                       ."[ \n]+<!-- Column "
-                       ."finishes -->[ \n]+<!-- New Column starts -->"
+                       ."[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment
                        ."[ \n]+<td "
                        ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
                        ."\">[ \n]+<\/td>"),
                    6=>("<td align=\"right\" width=\"30%\" bgcolor="
                        ."\"#FFFFFF\">[ \n]+<b>Payment:<\/b>[ \n]+<\/td>"
-                       ."[ \n]+<!-- Column "
-                       ."finishes -->[ \n]+<!-- New Column starts -->"
+                       ."[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment
                        ."[ \n]+<td "
                        ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
                        ."\">[ \n]+<\/td>"),
                    7=>("<td align=\"right\" width=\"30%\" bgcolor="
                        ."\"#FFFFFF\">[ \n]+<b>Location:<\/b>[ \n]+<\/td>"
-                       ."[ \n]+<!-- Column "
-                       ."finishes -->[ \n]+<!-- New Column starts -->"
+                       ."[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment
                        ."[ \n]+<td "
                        ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\""
-                       .">[ \n]+<a href=\"this is the location\">this is the "
-                       ."location<\/a>"),
+                       .">[ \n]+<a href=\"this is the location\" "
+                       ."class=\"\">this is the location<\/a>"),
                    8=>("<td align=\"right\" width=\"30%\" bgcolor=\""
                        ."#FFFFFF\">[ \n]+<b>Count:<\/b>[ \n]+<\/td>[ \n]+"
-                       ."<!-- Column "
-                       ."finishes -->[ \n]+<!-- New Column starts -->"
+                       .$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment
                        ."[ \n]+<td "
                        ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF"
                        ."\">[ \n]+this is the count[ \n]+<\/td>"));
@@ -105,50 +105,51 @@ extends UnitTest
                    1=>("<b><b>by username_two<\/b>"),
                    2=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
                        ."\">[ \n]+<b>Count:<\/b>[ \n]+<\/td>[ \n]+"
-                       ."<!-- Column finishes -->"
-                       ."[ \n]+<!-- New Column starts -->[ \n]+"
+                       .$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment."[ \n]+"
                        ."<td align=\"left\" "
                        ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+this is the "
                        ."count[ \n]+<\/td>"),
                    3=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
                        ."\">[ \n]+<b>Location:<\/b>[ \n]+<\/td>[ \n]+"
-                       ."<!-- Column finishes "
-                       ."-->[ \n]+<!-- New Column starts -->[ \n]+"
+                       .$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment."[ \n]+"
                        ."<td align=\"left\""
                        ." width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+"
                        ."<a href=\"this "
-                       ."is the location\">this is the location<\/a>"),
+                       ."is the location\" class=\"\">this is the "
+                       ."location<\/a>"),
                    4=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
                        ."\">[ \n]+<b>Payment:<\/b>[ \n]+<\/td>[ \n]+"
-                       ."<!-- Column finishes -->"
-                       ."[ \n]+<!-- New Column starts -->[ \n]+"
+                       .$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment."[ \n]+"
                        ."<td align=\"left\" "
                        ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+"
                        ."payment_0[ \n]+<\/td>"),
                    5=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
                        ."\">[ \n]+<b>Product:<\/b>[ \n]+<\/td>[ \n]+"
-                       ."<!-- Column finishes -->"
-                       ."[ \n]+<!-- New Column starts -->[ \n]+"
+                       .$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment."[ \n]+"
                        ."<td align=\"left\" "
                        ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+product_0"
                        ."[ \n]+<\/td>\n"),
                    6=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
                        ."\">[ \n]+<b>Release Date:<\/b>[ \n]+<\/td>[ \n]+"
-                       ."<!-- Column finishes"
-                       ." -->[ \n]+<!-- New Column starts -->[ \n]+"
+                       .$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment."[ \n]+"
                        ."<td align=\"left\""
                        ." width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+<\/td>"),
                    7=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
                        ."\">[ \n]+<b>Goals:<\/b>[ \n]+<\/td>[ \n]+"
-                       ."<!-- Column finishes -->"
-                       ."[ \n]+<!-- New Column starts -->[ \n]+"
+                       .$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment."[ \n]+"
                        ."<td align=\"left\" "
                        ."width=\"70%\" bgcolor=\"#FFFFFF\">[ \n]+"
                        ."goals_0[ \n]+<\/td>"),
                    8=>("<td align=\"right\" width=\"30%\" bgcolor=\"#FFFFFF"
                        ."\">[ \n]+<b>Milestone number:<\/b>[ \n]+<\/td>"
-                       ."[ \n]+<!-- Column "
-                       ."finishes -->[ \n]+<!-- New Column starts -->"
+                       ."[ \n]+".$this->p_regexp_html_comment
+                       ."[ \n]+".$this->p_regexp_html_comment
                        ."[ \n]+<td "
                        ."align=\"left\" width=\"70%\" bgcolor=\"#FFFFFF\">"
                        ."[ \n]+"
@@ -189,7 +190,7 @@ extends UnitTest
         $db = new DB_SourceAgency;
         followup_devel_preview($proid[0]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 3729 + strlen(timestr(time())), 
+        $this->_testFor_captured_length( 3738 + strlen(timestr(time())), 
                                          "test 1");
         
         $pats = array_merge( $this->_com_pats_1, array( 
@@ -206,7 +207,7 @@ extends UnitTest
         $count = "this is the count";
         followup_devel_preview($proid[1]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 3754 + strlen(timestr(time())), 
+        $this->_testFor_captured_length( 3763 + strlen(timestr(time())), 
                                          "test 2" );
  
         $pats = array_merge( $this->_com_pats_2, array( 
@@ -253,7 +254,7 @@ extends UnitTest
         $db = new DB_SourceAgency;
         followup_referee_preview($proid[0]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 4153 + strlen(timestr(time())),
+        $this->_testFor_captured_length( 4162 + strlen(timestr(time())),
                                          "test 1");
 
         $pats = array_merge( $this->_com_pats_1, array( 
@@ -278,7 +279,7 @@ extends UnitTest
         $decision = "this is the decision";
         followup_referee_preview($proid[1]["proid"]);
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 4178 + strlen(timestr(time())),
+        $this->_testFor_captured_length( 4187 + strlen(timestr(time())),
                                          "test 2" );
 
         $pats = array_merge( $this->_com_pats_2, array( 

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestNewslib.php,v 1.12 2002/04/23 12:27:28 riessen Exp $
+# $Id: TestNewslib.php,v 1.13 2002/04/24 16:39:05 riessen Exp $
 #
 ######################################################################
 
@@ -280,7 +280,7 @@ extends UnitTest
         capture_reset_and_start();
         newsshow( $proid[1] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 788, "test 2" );
+        $this->_testFor_captured_length( 797, "test 2" );
 
         $ps=array( 0=>("<font color=\"#000000\"><b>News: "
                        ."subject_news_0<\/b><\/font>"),
@@ -293,7 +293,7 @@ extends UnitTest
                        ."comments_edit.php3[?]proid="
                        ."proid_1[&]type=News[&]number="
                        ."creation_news_0[&]ref=0[&]subject="
-                       ."Re%3Asubject_news_0\">Comment "
+                       ."Re%3Asubject_news_0\" class=\"\">Comment "
                        ."This News!<\/a> []]<\/FONT>\n"));
         $this->_testFor_patterns( $text, $ps, 3 );
 
@@ -305,7 +305,7 @@ extends UnitTest
         capture_reset_and_start();
         newsshow( $proid[2] );
         $text = capture_stop_and_get();
-        $this->_testFor_captured_length( 1722, "test 3" );
+        $this->_testFor_captured_length( 1749, "test 3" );
 
         $ps=array( 0=>("<font color=\"#000000\"><b>News: "
                        ."subject_news_1<\/b><\/font>"),
@@ -318,7 +318,7 @@ extends UnitTest
                        ."comments_edit.php3[?]proid="
                        ."proid_2[&]type=News[&]number="
                        ."creation_news_1[&]ref=0[&]subject="
-                       ."Re%3Asubject_news_1\">Comment "
+                       ."Re%3Asubject_news_1\" class=\"\">Comment "
                        ."This News!<\/a> []]<\/FONT>\n"),
                    3=>("<font color=\"#000000\"><b>News: "
                        ."subject_news_2<\/b><\/font>"),
@@ -331,11 +331,11 @@ extends UnitTest
                        ."comments_edit.php3[?]proid="
                        ."proid_2[&]type=News[&]number="
                        ."creation_news_2[&]ref=0[&]subject="
-                       ."Re%3Asubject_news_2\">Comment "
+                       ."Re%3Asubject_news_2\" class=\"\">Comment "
                        ."This News!<\/a> []]<\/FONT>\n"),
                    6=>("<li><a href=\"comments.php3[?]"
                        ."proid=proid_2[&]type=News[&]"
-                       ."number=creation_news_2[&]ref=0\">"
+                       ."number=creation_news_2[&]ref=0\" class=\"\">"
                        ."subject_cmt_3<\/a> by <b>"
                        ."user_cmt_3<\/b> on <b><\/b>\n"));
         $this->_testFor_patterns( $text, $ps, 7 );
