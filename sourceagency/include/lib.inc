@@ -75,8 +75,14 @@ function license($selected) {
   $db_local = new DB_SourceAgency;
   $db_local->query("SELECT * FROM licenses ORDER BY license ASC");
   while ($db_local->next_record()) {
-	if (!strcmp($db_local->f("license"),$selected)) $return .= html_select_option($db_local->f("license"),"selected",$db_local->f("license"));
-	else $return .= html_select_option($db_local->f("license"),"",$db_local->f("license"));
+	if (!strcmp($db_local->f("license"),$selected)) {
+          $return .= html_select_option($db_local->f("license"),
+                         "selected",$db_local->f("license"));
+        }
+	else {
+          $return .= html_select_option($db_local->f("license"),"",
+                               $db_local->f("license"));
+        }
   }
   $return .= html_select_end();
 
@@ -90,13 +96,20 @@ function license($selected) {
 // 
 
 function licensep($selected) {
-
+  // FIXME: this should use the license(..) function instead of 
+  // FIXME: repeating the code 
   htmlp_select("license");
   $db_local = new DB_SourceAgency;
   $db_local->query("SELECT * FROM licenses ORDER BY license ASC");
   while ($db_local->next_record()) {
-	if (!strcmp($db_local->f("license"),$selected)) htmlp_select_option($db_local->f("license"),"selected",$db_local->f("license"));
-	else htmlp_select_option($db_local->f("license"),"",$db_local->f("license"));
+	if (!strcmp($db_local->f("license"),$selected)) { 
+            htmlp_select_option($db_local->f("license"),"selected",
+               $db_local->f("license"));
+        }
+	else {
+          htmlp_select_option($db_local->f("license"),"",
+                              $db_local->f("license"));
+        }
   }
   htmlp_select_end();
 }
@@ -121,43 +134,79 @@ function show_more($iter,$maxiter,$url,$urlquery) {
   $maxiter= Floor($maxiter);
 
   if ($iter > 3) {
-    echo "<a href=\"".$sess->url($url).$sess->add_query($urlquery).$sess->add_query(array("iter" => 0))."\">&lt;&lt;</a>\n";
+    echo "<a href=\"" . $sess->url($url) . $sess->add_query($urlquery)
+          . $sess->add_query(array("iter" => 0)) . "\">&lt;&lt;</a>\n";
   }
 
   $number = $iter - 3;
-  if ($number < 0) $number = 0;
+  if ($number < 0) {
+    $number = 0;
+  }
   if ($iter > 2) {
-    echo "<a href=\"".$sess->url($url).$sess->add_query($urlquery).$sess->add_query(array("iter" => $number))."\">&lt;</a>\n";
+    echo "<a href=\"" . $sess->url($url) . $sess->add_query($urlquery)
+      . $sess->add_query(array("iter" => $number)) . "\">&lt;</a>\n";
   }
 
   switch ($iter) {
-    case 0: $bias=0; break;
-    case 1: $bias=1; break;
-    case ($maxiter-1): if ($iter>3) {$bias=3;} else {$bias=2;} break;
-    case ($maxiter): if ($iter>4) {$bias=4;} else {$bias=2;} break;
-    default: $bias=2; break;
+  case 0: {
+    $bias=0; 
+    break;
   }
+  case 1: {
+    $bias=1; 
+    break;
+  }
+  case ($maxiter-1): {
+    if ($iter>3) {
+      $bias=3;
+    } else {
+      $bias=2;
+    } 
+    break;
+  }
+  case ($maxiter): {
+    if ($iter>4) {
+      $bias=4;
+    } else {
+      $bias=2;
+    } 
+    break;
+  }
+  default: {
+    $bias=2; 
+    break;
+  }
+  } /* switch */
 
   for($i=$iter-$bias;$i<$maxiter+1 && $i<($iter+5-$bias);$i++) {
     $number1 = $i*10 +1;
     $number2 = $number1 + 9;
-    $number = strval($number1)."-".strval($number2);
+    $number = strval($number1) . "-" . strval($number2);
     if ($i != $iter) {
-      echo "<a href=\"".$sess->url($url).$sess->add_query($urlquery).$sess->add_query(array("iter" => $i))."\">&nbsp;$number</a>\n";
+      echo "<a href=\"" . $sess->url($url) . $sess->add_query($urlquery)
+         . $sess->add_query(array("iter" => $i)) . "\">&nbsp;$number</a>\n";
     }
-    else echo "<B>&nbsp;$number</B>\n"; 
+    else {
+      echo "<B>&nbsp;$number</B>\n"; 
+    }
    }
 
   $number = $iter + 5 - $bias;
-  if ($number > $maxiter+$bias) $number =$maxiter+$bias;
+  if ($number > $maxiter+$bias) {
+    $number = $maxiter + $bias;
+  }
   if ($iter < $maxiter-4+$bias) {
-    echo "<a href=\"".$sess->url($url).$sess->add_query($urlquery).$sess->add_query(array("iter" => $number))."\"> &gt;</a>\n";
+    echo "<a href=\"" . $sess->url($url) . $sess->add_query($urlquery) 
+      . $sess->add_query(array("iter" => $number)) . "\"> &gt;</a>\n";
   }
 
   $number = $iter + 10 - $bias;
-  if ($number > $maxiter) $number = $maxiter;
+  if ($number > $maxiter) {
+    $number = $maxiter;
+  }
   if ($iter < $maxiter-5 +$bias) {
-    echo "<a href=\"".$sess->url($url).$sess->add_query($urlquery).$sess->add_query(array("iter" => $number))."\"> &gt;&gt;</a>\n";
+    echo "<a href=\"" . $sess->url($url) . $sess->add_query($urlquery)
+       . $sess->add_query(array("iter" => $number)) . "\"> &gt;&gt;</a>\n";
   }
 
    echo "</td>\n";
@@ -165,36 +214,42 @@ function show_more($iter,$maxiter,$url,$urlquery) {
 }
 
 function wrap($string,$width=75,$break=" ") {
-	$out = "";
-	$lin = "";
-	$tok = strtok($string,$break);
-	while ($tok) {
-		if ((strlen($lin) + strlen($tok)) > $width) {
-			$out .= $lin."\n";
-			$lin = "";
-		}
-		if (strlen($lin) > 0)
-			$lin .= " ";
-		$lin .= $tok;
-		$tok = strtok (" ");
-	}
-	$out .= $lin;
-	return $out;
+  $out = "";
+  $lin = "";
+  $tok = strtok($string,$break);
+  while ($tok) {
+    if ((strlen($lin) + strlen($tok)) > $width) {
+      $out .= $lin."\n";
+      $lin = "";
+    }
+    if (strlen($lin) > 0) {
+      $lin .= " ";
+    }
+    $lin .= $tok;
+    $tok = strtok (" ");
+  }
+  $out .= $lin;
+  return $out;
 }
 
 function typestr($type) {
-	global $t;
-	if ($type == "A")
-		$str = $t->translate("Adaption");
-	if ($type == "E")
-		$str = $t->translate("Expansion");
-	if ($type == "C")
-		$str = $t->translate("Documentation");
-	if ($type == "D")
-		$str = $t->translate("Development");
-	if ($type == "O")
-		$str = $t->translate("Other");
-	return $str;
+  global $t;
+  if ($type == "A") {
+    $str = $t->translate("Adaption");
+  }
+  if ($type == "E") {
+    $str = $t->translate("Expansion");
+  }
+  if ($type == "C") {
+    $str = $t->translate("Documentation");
+  }
+  if ($type == "D") {
+    $str = $t->translate("Development");
+  }
+  if ($type == "O") {
+    $str = $t->translate("Other");
+  }
+  return $str;
 }
 
 function increasecnt($id, $type) {
@@ -247,7 +302,10 @@ function top_bar($proid, $page) {
   $db_top->query("SELECT * FROM description WHERE proid='$proid'");
   $db_top->next_record();
 
-$btop = new box("100%",$th_box_frame_color,1,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
+  $btop = new box("100%",$th_box_frame_color,1,$th_box_title_bgcolor,
+                  $th_box_title_font_color,$th_box_title_align,
+                  $th_box_body_bgcolor,$th_box_body_font_color,
+                  $th_box_body_align);
 
   $db_top = new DB_SourceAgency;
   $db_top->query("SELECT * FROM description WHERE proid='$proid'");
@@ -257,7 +315,8 @@ $btop = new box("100%",$th_box_frame_color,1,$th_box_title_bgcolor,$th_box_title
   $btop->box_body_begin();
   $btop->box_columns_begin(2);
 		// 1st column (left one)
-  $btop->box_column("left","","","<FONT size=\"+2\"><B> ".$db_top->f("project_title")." - $page</B></FONT>");
+  $btop->box_column("left","","","<FONT size=\"+2\"><B> "
+                    . $db_top->f("project_title") . " - $page</B></FONT>");
 		// 2nd column (right one)
   $btop->box_column_start("right","","");
 

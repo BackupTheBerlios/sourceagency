@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestLib.php,v 1.1 2001/10/15 15:44:21 ger Exp $
+// $Id: TestLib.php,v 1.2 2001/10/16 08:56:42 ger Exp $
 
 require_once( "../constants.php" );
 
@@ -133,7 +133,62 @@ extends TestCase
                              select_date( "fubar", "-1", "-1", "-1" ));
     }
 
-    
+    function testMktimestamp() {
+      $this->assertEquals( 999856800, mktimestamp( "20010907120000" ) );
+      $this->assertEquals( 999856812, mktimestamp( "20010907120012" ) );
+      $this->assertEquals( 999856813, mktimestamp( "20010907120013" ) );
+    }
+
+    function testTimestr() {
+      $this->assertEquals( "Monday, 15. October 2001, 19:09:48 CEST",
+                           timestr( 1003165788 ) );
+      $this->assertEquals( "Monday, 15. October 2001, 19:09:58 CEST",
+                           timestr( 1003165798 ) );
+
+      $this->assertEquals( "15. October 2001",
+                           timestr_middle( 1003165798 ) );
+      $this->assertEquals( "16. October 2001",
+                           timestr_middle( 1003187798 ) );
+
+      $this->assertEquals( "Mon,15.Oct,19:09:48",
+                           timestr_short( 1003165788 ) );
+      $this->assertEquals( "Mon,15.Oct,19:09:58",
+                           timestr_short( 1003165798 ) );
+      
+      $this->assertEquals( "15. Oct 2001, 19:09",
+                           timestr_comment( 1003165788 ) );
+      $this->assertEquals( "15. Oct 2001, 19:09",
+                           timestr_comment( 1003165798 ) );
+
+      $this->assertEquals( "15. Oct",
+                           timestr_shortest( 1003165788 ) );
+      $this->assertEquals( "15. Oct",
+                           timestr_shortest( 1003165798 ) );
+      
+    }
+
+    function testTypestr() {
+      global $t;
+      $this->assertEquals( $t->translate("Adaption"),      typestr( "A" ) );
+      $this->assertEquals( $t->translate("Expansion"),     typestr( "E" ) );
+      $this->assertEquals( $t->translate("Documentation"), typestr( "C" ) );
+      $this->assertEquals( $t->translate("Development"),   typestr( "D" ) );
+      $this->assertEquals( $t->translate("Other"),         typestr( "O" ) );
+      $this->assertEquals( "", typestr( "What?" ) );
+      $this->assertEquals( "", typestr( "" ) );
+    }
+
+    function testShow_status() {
+      $this->assertEquals( "Proposed", show_status( 'P' ) );
+      $this->assertEquals( "Negotiating", show_status( 'N' ) );
+      $this->assertEquals( "Accepted", show_status( 'A' ) );
+      $this->assertEquals( "Rejected", show_status( 'R' ) );
+      $this->assertEquals( "Deleted", show_status( 'D' ) );
+      $this->assertEquals( "Modified", show_status( 'M' ) );
+      $this->assertEquals( "Proposed", show_status( '' ) );
+      $this->assertEquals( "Proposed", show_status( 'asdasd' ) );
+      $this->assertEquals( "Proposed", show_status( 'm' ) );
+    }
 }
 
 define_test_suite( __FILE__ );
