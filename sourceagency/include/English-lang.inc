@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: English-lang.inc,v 1.12 2002/04/02 12:41:30 grex Exp $
+# $Id: English-lang.inc,v 1.13 2002/04/02 12:43:44 grex Exp $
 #
 ######################################################################
 
@@ -65,5 +65,6 @@ function translate_real($phrase) {
         break;
     default:   $tmp = "$phrase";  break;
     }
+    return($tmp);
 }
 ?>

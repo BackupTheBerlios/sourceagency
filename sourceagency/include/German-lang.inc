@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: German-lang.inc,v 1.7 2002/04/02 12:41:30 grex Exp $
+# $Id: German-lang.inc,v 1.8 2002/04/02 12:43:44 grex Exp $
 #
 ######################################################################
 
@@ -110,5 +110,6 @@ function translate_real($phrase) {
         $l->log( "translating (German unknown) '" . $phrase . "'" );
         break;
     }
+    return($tmp);
 }
 ?>
