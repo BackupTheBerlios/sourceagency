@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.37 2002/04/25 06:36:23 grex Exp $
+# $Id: lib.inc,v 1.38 2002/05/02 12:01:39 riessen Exp $
 #
 ######################################################################
 
@@ -579,7 +579,7 @@ function summary($proid)
 
     $bx->box_begin();
     $bx->box_body_begin();
-    $bx->box_columns_begin(2);
+    $bx->box_columns_begin(2, 'top');
 
     $bx->box_column_start('right','65%','');
 
@@ -1123,27 +1123,28 @@ function followup($proid)
  */
 function show_status($char)
 {
+    global $t;
     switch ($char) {
     case 'P':
-        return 'Proposed';
+        return $t->translate('Proposed');
         break;
     case 'N':
-        return 'Negotiating';
+        return $t->translate('Negotiating');
         break;
     case 'A':
-        return 'Accepted';
+        return $t->translate('Accepted');
         break;
     case 'R':
-        return 'Rejected';
+        return $t->translate('Rejected');
         break;
     case 'D':
-        return 'Deleted';
+        return $t->translate('Deleted');
         break;
     case 'M':
-        return 'Modified';
+        return $t->translate('Modified');
         break;
     default:
-        return 'Proposed';
+        return $t->translate('Proposed');
         break;
     }
 }
