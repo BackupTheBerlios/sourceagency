@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: mock_auth.php,v 1.3 2001/11/08 16:17:42 riessen Exp $
+# $Id: mock_auth.php,v 1.4 2002/05/13 10:30:32 riessen Exp $
 #
 ######################################################################
 
@@ -33,13 +33,33 @@ class Auth
     function set_perm( $perm ) {
         $this->_set_attribute( 'perm', $perm );
     }
+    function unset_perm() {
+        $this->_unset_attribute( 'perm' );
+    }
+    function unset_uname() {
+        $this->_unset_attribute( 'uname' );
+    }
 
     function _set_attribute( $att_name, $att_value ) {
         $this->auth[$att_name] = $att_value;
     }
+    function _unset_attribute( $att_name = false ) {
+        if ( $att_name ) {
+            unset( $this->auth[ $att_name ] );
+        } else {
+            $this->auth = array();
+        }
+    }
 }
 
-$auth = new Auth;
-global $auth;
+function auth_unset() {
+    unset( $GLOBALS['auth'] );
+}
+
+function auth_set() {
+    $GLOBALS['auth'] = new Auth;
+}
+
+auth_set();
 
 ?>
