@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: constants.php,v 1.22 2002/04/15 15:31:11 riessen Exp $
+# $Id: constants.php,v 1.23 2002/05/13 10:29:42 riessen Exp $
 #
 ######################################################################
 
@@ -57,10 +57,11 @@ if ( !defined("BEING_INCLUDED" ) ) {
 include_once("phpunit.php");
 // strange really: this file is at the same level as the constants BUT
 // because constants is included in the tests, need to prefix an "../"
-include_once( "mock_database.php" );
-include_once( "mock_auth.php" );
-include_once( "unit_test.php" );
-include_once( "capture.php" );
+include_once( 'mock_database.php' );
+include_once( 'mock_auth.php' );
+include_once( 'mock_perm.php' );
+include_once( 'unit_test.php' );
+include_once( 'capture.php' );
 
 function _filename_to_classname( $filename ) {
   // needed to add this for PHP4.1.0 -- __FILE__ includes the
