@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.2 2002/01/09 16:15:48 riessen Exp $
+# $Id: unit_test.php,v 1.3 2002/01/11 13:37:49 riessen Exp $
 #
 ######################################################################
 
@@ -39,6 +39,8 @@ extends TestCase
         }
     }
 
+    // this should also accept a $text argument instead of taking the
+    // length from the captured text ...
     function _testFor_length( $length, $msg = "Length mismatch" ) {
         $this->assertEquals( $length, capture_text_length(), $msg );
     }
@@ -49,7 +51,12 @@ extends TestCase
         $this->assertRegexp( "/" . $pattern . "/", $text, $msg);
     }
 
-    function &_generate_array( $keynames, $postfix ) {
+    function _check_db( $db_config ) {
+        $this->assert( !$db_config->did_db_fail(), 
+                       $db_config->error_message());
+    }
+
+    function &_generate_array( $keynames = array(), $postfix = 0 ) {
         $rVal = array();
         foreach ( $keynames as $val ) {
             $rVal[$val] = $val . "_" . $postfix;
