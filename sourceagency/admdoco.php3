@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: admdoco.php3,v 1.1 2002/04/18 10:35:10 grex Exp $
+# $Id: admdoco.php3,v 1.2 2002/04/18 10:41:41 grex Exp $
 #
 ######################################################################  
 
@@ -83,8 +83,6 @@ if (($config_perm_admdoco != 'all')
         $bx->box_body_end();
         $bx->box_end();
     }
-    $bx->box_body_end();
-    $bx->box_end();
 }
 
 end_content();
