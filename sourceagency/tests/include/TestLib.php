@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestLib.php,v 1.2 2001/10/16 08:56:42 ger Exp $
+// $Id: TestLib.php,v 1.3 2001/10/16 12:47:45 ger Exp $
 
 require_once( "../constants.php" );
 
@@ -31,34 +31,32 @@ extends TestCase
     }
 
     function testMonth() {
-        // this tests the function month defined in lib.inc, this 
-        // requirest the $t global variable. This assumes that the
-        // translation language is set to English
-        $this->assertEquals( "January",   month( 1  ) );
-        $this->assertEquals( "February",  month( 2  ) );
-        $this->assertEquals( "March",     month( 3  ) );
-        $this->assertEquals( "April",     month( 4  ) );
-        $this->assertEquals( "May",       month( 5  ) );
-        $this->assertEquals( "June",      month( 6  ) );
-        $this->assertEquals( "July",      month( 7  ) );
-        $this->assertEquals( "August",    month( 8  ) );
-        $this->assertEquals( "September", month( 9  ) );
-        $this->assertEquals( "October",   month( 10 ) );
-        $this->assertEquals( "November",  month( 11 ) );
-        $this->assertEquals( "December",  month( 12 ) );
+        global $t;
+        $this->assertEquals($t->translate("January"),   month( 1  ) );
+        $this->assertEquals($t->translate("February"),  month( 2  ) );
+        $this->assertEquals($t->translate("March"),     month( 3  ) );
+        $this->assertEquals($t->translate("April"),     month( 4  ) );
+        $this->assertEquals($t->translate("May"),       month( 5  ) );
+        $this->assertEquals($t->translate("June"),      month( 6  ) );
+        $this->assertEquals($t->translate("July"),      month( 7  ) );
+        $this->assertEquals($t->translate("August"),    month( 8  ) );
+        $this->assertEquals($t->translate("September"), month( 9  ) );
+        $this->assertEquals($t->translate("October"),   month( 10 ) );
+        $this->assertEquals($t->translate("November"),  month( 11 ) );
+        $this->assertEquals($t->translate("December"),  month( 12 ) );
 
-        $this->assertEquals( "January",   month( "1"  ) );
-        $this->assertEquals( "February",  month( "2"  ) );
-        $this->assertEquals( "March",     month( "3"  ) );
-        $this->assertEquals( "April",     month( "4"  ) );
-        $this->assertEquals( "May",       month( "5"  ) );
-        $this->assertEquals( "June",      month( "6"  ) );
-        $this->assertEquals( "July",      month( "7"  ) );
-        $this->assertEquals( "August",    month( "8"  ) );
-        $this->assertEquals( "September", month( "9"  ) );
-        $this->assertEquals( "October",   month( "10" ) );
-        $this->assertEquals( "November",  month( "11" ) );
-        $this->assertEquals( "December",  month( "12" ) );
+        $this->assertEquals($t->translate("January"),   month( "1"  ) );
+        $this->assertEquals($t->translate("February"),  month( "2"  ) );
+        $this->assertEquals($t->translate("March"),     month( "3"  ) );
+        $this->assertEquals($t->translate("April"),     month( "4"  ) );
+        $this->assertEquals($t->translate("May"),       month( "5"  ) );
+        $this->assertEquals($t->translate("June"),      month( "6"  ) );
+        $this->assertEquals($t->translate("July"),      month( "7"  ) );
+        $this->assertEquals($t->translate("August"),    month( "8"  ) );
+        $this->assertEquals($t->translate("September"), month( "9"  ) );
+        $this->assertEquals($t->translate("October"),   month( "10" ) );
+        $this->assertEquals($t->translate("November"),  month( "11" ) );
+        $this->assertEquals($t->translate("December"),  month( "12" ) );
     }
 
     function testDate_to_Timestamp() {
@@ -134,60 +132,79 @@ extends TestCase
     }
 
     function testMktimestamp() {
-      $this->assertEquals( 999856800, mktimestamp( "20010907120000" ) );
-      $this->assertEquals( 999856812, mktimestamp( "20010907120012" ) );
-      $this->assertEquals( 999856813, mktimestamp( "20010907120013" ) );
+        $this->assertEquals( 999856800, mktimestamp( "20010907120000" ) );
+        $this->assertEquals( 999856812, mktimestamp( "20010907120012" ) );
+        $this->assertEquals( 999856813, mktimestamp( "20010907120013" ) );
     }
 
     function testTimestr() {
-      $this->assertEquals( "Monday, 15. October 2001, 19:09:48 CEST",
-                           timestr( 1003165788 ) );
-      $this->assertEquals( "Monday, 15. October 2001, 19:09:58 CEST",
-                           timestr( 1003165798 ) );
-
-      $this->assertEquals( "15. October 2001",
-                           timestr_middle( 1003165798 ) );
-      $this->assertEquals( "16. October 2001",
-                           timestr_middle( 1003187798 ) );
-
-      $this->assertEquals( "Mon,15.Oct,19:09:48",
-                           timestr_short( 1003165788 ) );
-      $this->assertEquals( "Mon,15.Oct,19:09:58",
-                           timestr_short( 1003165798 ) );
-      
-      $this->assertEquals( "15. Oct 2001, 19:09",
-                           timestr_comment( 1003165788 ) );
-      $this->assertEquals( "15. Oct 2001, 19:09",
-                           timestr_comment( 1003165798 ) );
-
-      $this->assertEquals( "15. Oct",
-                           timestr_shortest( 1003165788 ) );
-      $this->assertEquals( "15. Oct",
-                           timestr_shortest( 1003165798 ) );
-      
+        $this->assertEquals( "Monday, 15. October 2001, 19:09:48 CEST",
+                             timestr( 1003165788 ) );
+        $this->assertEquals( "Monday, 15. October 2001, 19:09:58 CEST",
+                             timestr( 1003165798 ) );
+        
+        $this->assertEquals( "15. October 2001",
+                             timestr_middle( 1003165798 ) );
+        $this->assertEquals( "16. October 2001",
+                             timestr_middle( 1003187798 ) );
+        
+        $this->assertEquals( "Mon,15.Oct,19:09:48",
+                             timestr_short( 1003165788 ) );
+        $this->assertEquals( "Mon,15.Oct,19:09:58",
+                             timestr_short( 1003165798 ) );
+        
+        $this->assertEquals( "15. Oct 2001, 19:09",
+                             timestr_comment( 1003165788 ) );
+        $this->assertEquals( "15. Oct 2001, 19:09",
+                             timestr_comment( 1003165798 ) );
+        
+        $this->assertEquals( "15. Oct",
+                             timestr_shortest( 1003165788 ) );
+        $this->assertEquals( "15. Oct",
+                             timestr_shortest( 1003165798 ) );
+        
     }
-
+    
     function testTypestr() {
-      global $t;
-      $this->assertEquals( $t->translate("Adaption"),      typestr( "A" ) );
-      $this->assertEquals( $t->translate("Expansion"),     typestr( "E" ) );
-      $this->assertEquals( $t->translate("Documentation"), typestr( "C" ) );
-      $this->assertEquals( $t->translate("Development"),   typestr( "D" ) );
-      $this->assertEquals( $t->translate("Other"),         typestr( "O" ) );
-      $this->assertEquals( "", typestr( "What?" ) );
-      $this->assertEquals( "", typestr( "" ) );
+        global $t;
+        $this->assertEquals( $t->translate("Adaption"),      typestr( "A" ) );
+        $this->assertEquals( $t->translate("Expansion"),     typestr( "E" ) );
+        $this->assertEquals( $t->translate("Documentation"), typestr( "C" ) );
+        $this->assertEquals( $t->translate("Development"),   typestr( "D" ) );
+        $this->assertEquals( $t->translate("Other"),         typestr( "O" ) );
+        $this->assertEquals( "", typestr( "What?" ) );
+        $this->assertEquals( "", typestr( "" ) );
+    }
+    
+    function testShow_status() {
+        $this->assertEquals( "Proposed", show_status( 'P' ) );
+        $this->assertEquals( "Negotiating", show_status( 'N' ) );
+        $this->assertEquals( "Accepted", show_status( 'A' ) );
+        $this->assertEquals( "Rejected", show_status( 'R' ) );
+        $this->assertEquals( "Deleted", show_status( 'D' ) );
+        $this->assertEquals( "Modified", show_status( 'M' ) );
+        $this->assertEquals( "Proposed", show_status( '' ) );
+        $this->assertEquals( "Proposed", show_status( 'asdasd' ) );
+        $this->assertEquals( "Proposed", show_status( 'm' ) );
     }
 
-    function testShow_status() {
-      $this->assertEquals( "Proposed", show_status( 'P' ) );
-      $this->assertEquals( "Negotiating", show_status( 'N' ) );
-      $this->assertEquals( "Accepted", show_status( 'A' ) );
-      $this->assertEquals( "Rejected", show_status( 'R' ) );
-      $this->assertEquals( "Deleted", show_status( 'D' ) );
-      $this->assertEquals( "Modified", show_status( 'M' ) );
-      $this->assertEquals( "Proposed", show_status( '' ) );
-      $this->assertEquals( "Proposed", show_status( 'asdasd' ) );
-      $this->assertEquals( "Proposed", show_status( 'm' ) );
+    function testWrap() {
+        $expect = array();
+        $expect[] = "fubar"; 
+        $expect[] = "snafu";
+        $expect[] = "fritz";
+        $expect[] = "hello";
+        $expect[] = "world";
+        
+        $this->assertEquals( implode( " ", $expect ), 
+                             wrap( implode(" ", $expect) ));
+        $this->assertEquals( implode( "\n", $expect ),
+                             wrap( implode(" ", $expect), 5 ));
+        $this->assertEquals( implode( "\n", $expect ),
+                             wrap( implode("\n", $expect), 5, "\n" ));
+        
+        $this->assertEquals( "a\nbc\n12345\nabc",
+                             wrap( "a bc 12345 abc", 2, " " ));
     }
 }
 
