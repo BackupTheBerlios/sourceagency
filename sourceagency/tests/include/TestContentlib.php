@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestContentlib.php,v 1.3 2002/06/14 09:14:12 riessen Exp $
+// $Id: TestContentlib.php,v 1.4 2002/06/20 12:07:16 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -119,9 +119,8 @@ extends UnitTest
         reset( $v );
         unset( $v['Documentation'] );
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        content_preview( $proid );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( 'content_preview', 994 + strlen(timestr(time())),
+                             array( $proid ) );
 
         $this->_checkFor_a_box( 'Technical Content' );
         $this->_testFor_lib_nick( $auth->auth['uname'] );
@@ -130,7 +129,6 @@ extends UnitTest
             $str .= '<b>'.$t->translate( $key ).':</b> '.$val."\n";
             $this->_testFor_pattern( $this->_to_regexp( $str ) );
         }
-        $this->_testFor_string_length( 994 + strlen( timestr( time() ) ) );
         $this->assertNotRegexp('/'.$t->translate('Documentation').'/',
                                                       $this->get_text());
     }

@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConsultantslib.php,v 1.10 2002/06/14 09:14:12 riessen Exp $
+// $Id: TestConsultantslib.php,v 1.11 2002/06/20 12:07:16 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -68,22 +68,18 @@ extends UnitTest
         // first test: no data to list, print error message
         $db = new DB_SourceAgency;
         $bx = new box;
-        capture_reset_and_start();
-        show_consultants( $dat[0]["proid"] );
-        $this->set_text( capture_stop_and_get() );
         $this->set_msg( "test 1" );
+        $this->capture_call( 'show_consultants', 64, &$dat[0] );
 
-        $this->_testFor_string_length( 64 );
         $this->_testFor_pattern( "No developers have offered "
                                   ."themselves as consultants yet" );
 
         // second test: three pieces of data
         $db = new DB_SourceAgency;
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        show_consultants( $dat[1]["proid"] );
-        $this->set_text( capture_stop_and_get() );
         $this->set_msg( 'test 2' );
+        $this->capture_call( 'show_consultants', 3573, &$dat[1] );
+        
         $this->_checkFor_a_box( 'Consultants' );
         $this->_checkFor_columns( 4 );
         $this->_checkFor_column_titles(array("Number","Username",
@@ -102,7 +98,6 @@ extends UnitTest
                                 .'</b>'), '', '', $colors[ $idx % 2] );
         }
 
-        $this->_testFor_string_length( 3573 );
         $this->_check_db( $db_config );
     }
 
@@ -115,9 +110,8 @@ extends UnitTest
         $auth->set_perm("this is the permission");
 
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        consultants_form( $proid );
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( 'consultants_form',2184+strlen($sess->self_url()),
+                             array( $proid ) );
 
         $this->_checkFor_a_box( 'Offer yourself as project consultant' );
 
@@ -132,7 +126,6 @@ extends UnitTest
                          html_form_submit($t->translate('Submit'),'submit')),
                          'left', '55%', '' );
         $this->_testFor_box_next_row_of_columns();
-        $this->_testFor_string_length( 2184 + strlen( $sess->self_url() ));
     }
 
     function testConsultants_wanted() {
@@ -155,26 +148,16 @@ extends UnitTest
 
         // first test: project is configured to have consultants
         $db = new DB_SourceAgency;
-        capture_reset_and_start();
-        $this->assertEquals(1, consultants_wanted($dat[0]["proid"]),"test 1");
-        $this->assert( strlen( capture_stop_and_get() ) == 0, 'test 1' );
+        $this->assertEquals( 1, $this->capture_call( 'consultants_wanted', 0, 
+                                                       &$dat[0] ), 'test 1');
 
         // second test: project is configured to have no consultants
         $db = new DB_SourceAgency;
-        capture_reset_and_start();
-        $this->assertEquals(0, consultants_wanted($dat[1]["proid"]),"test 2");
-        $this->set_text( capture_stop_and_get() );
-
-        include( 'config.inc' ); // for th_box_{error|title}_font_color
-        $this->_testFor_box_title($t->translate('No consultants wanted'),
-                                    $th_box_title_font_color,
-                                    $th_box_title_bgcolor,
-                                    $th_box_title_align );
-        $this->_testFor_box_body( $t->translate("This project does "
-                                                 ."not require "
-                                                 ."any consultants"), 
-                                   $th_box_error_font_color );
-        $this->_testFor_string_length( 728 );
+        $this->assertEquals( 0, $this->capture_call( 'consultants_wanted', 728,
+                                                       &$dat[1] ), 'test 2');
+        $this->_checkFor_error_box( 'No consultants wanted',
+                                    'This project does not require any '
+                                    .'consultants');
         $this->_check_db( $db_config );
     }
 
@@ -200,16 +183,13 @@ extends UnitTest
 
         $db = new DB_SourceAgency;
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        consultants_insert( $dat[0]["proid"], $dat[0]["user"]);
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( 'consultants_insert', 1494, &$dat[0] );
         
         // the basics for show_consultants(...), assume that the rest
         // is also present
         $this->_checkFor_a_box( 'Consultants' );
         $this->_checkFor_columns( 4 );
 
-        $this->_testFor_string_length( 1494 );
         $this->_check_db( $db_config );
     }
 }

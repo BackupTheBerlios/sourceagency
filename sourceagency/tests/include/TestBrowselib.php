@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestBrowselib.php,v 1.6 2002/06/14 09:14:12 riessen Exp $
+// $Id: TestBrowselib.php,v 1.7 2002/06/20 12:07:16 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -200,9 +200,7 @@ extends UnitTest
     function test_browse_not_yet() {
         global $bx;
         $bx = $this->_create_default_box();
-        capture_reset_and_start();
-        _browse_not_yet();
-        $this->set_text( capture_stop_and_get() );
+        $this->capture_call( '_browse_not_yet', 680 );
         $this->_checkFor_a_box( 'Not yet available' );
     }
 

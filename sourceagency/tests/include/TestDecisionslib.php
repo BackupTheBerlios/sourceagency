@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDecisionslib.php,v 1.5 2002/06/14 09:14:12 riessen Exp $
+// $Id: TestDecisionslib.php,v 1.6 2002/06/20 12:07:16 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -205,22 +205,19 @@ extends UnitTest
 
         // test one: num rows returns zero
         $db = new DB_SourceAgency;
-        capture_reset_and_start();
-        call_user_func_array( 'you_have_already_voted', $args[0] );
-        $this->assertEquals( $not_voted, capture_stop_and_get(), "test 1" );
+        $this->capture_call( 'you_have_already_voted', 44, &$args[0] );
+        $this->assertEquals( $not_voted, $this->get_text(), "test 1");
 
         // test two: num rows returns 1
         $db = new DB_SourceAgency;
-        capture_reset_and_start();
-        call_user_func_array( 'you_have_already_voted', $args[1] );
-        $this->assertEquals( $voted, capture_stop_and_get(), "test 2" );
+        $this->capture_call( 'you_have_already_voted', 44, $args[1] );
+        $this->assertEquals( $voted, $this->get_text(), "test 2" );
 
         // FIXME: this is a error: num_rows == 2 and the function tells
         // FIXME: us that we haven't voted ....
         $db = new DB_SourceAgency;
-        capture_reset_and_start();
-        call_user_func_array( 'you_have_already_voted', $args[2] );
-        $this->assertEquals( $not_voted, capture_stop_and_get(), "test 3" );
+        $this->capture_call( 'you_have_already_voted', 44, $args[2] );
+        $this->assertEquals( $not_voted, $this->get_text(), "test 3" );
 
         $this->_check_db( $db_config );
     }
