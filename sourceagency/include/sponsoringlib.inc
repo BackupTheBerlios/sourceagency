@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: sponsoringlib.inc,v 1.9 2002/05/07 12:28:36 riessen Exp $
+# $Id: sponsoringlib.inc,v 1.10 2002/05/28 08:57:18 riessen Exp $
 #
 ######################################################################
 
@@ -166,7 +166,7 @@ function show_sponsorings($proid)
           .$db->f('budget')." euros\n";
         echo '<br><b>'.$t->translate('Status').':</b> '
           .show_status($db->f('status'))."\n";
-        echo '<br><b>'.$t->translate('Validity').'</b> '
+        echo '<br><b>'.$t->translate('Validity').':</b> '
           .timestr_middle(mktimestamp($db->f('valid')))."\n";
         echo '<br><b>'.$t->translate('Begin wished').':</b> '
           .timestr_middle(mktimestamp($db->f('begin')))."\n";
@@ -240,7 +240,7 @@ function sponsoring_preview($proid='')
     echo ' - '.timestr($timestamp)."</b>\n";
     echo '<p><b>'.$t->translate('Max. sum of money').":</b> $budget euros\n";
     echo '<br><b>'.$t->translate('Status').":</b> Proposed\n";
-    echo '<br><b>'.$t->translate('Validity').'</b> '
+    echo '<br><b>'.$t->translate('Validity').':</b> '
       .timestr_middle(mktimestamp(date_to_timestamp($valid_day,$valid_month,
       $valid_year)))."\n";
     echo '<br><b>'.$t->translate('Begin wished').':</b> '
