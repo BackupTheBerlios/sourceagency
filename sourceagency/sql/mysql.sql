@@ -145,6 +145,7 @@ DROP TABLE IF EXISTS decisions_step5;
 CREATE TABLE decisions_step5 (
    proid bigint(20) unsigned DEFAULT '0' NOT NULL,
    number int(8) unsigned NOT NULL,
+   time int(3) unsigned NOT NULL,
    decision_user  varchar(16) NOT NULL,
    decision varchar(16) NOT NULL
 );

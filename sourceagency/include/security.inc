@@ -542,11 +542,12 @@ function step5_iteration($proid) {
 	$current_iteration = 0;
 
 	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT iteration FROM follow_up WHERE proid='$proid'");
+	$db_local->query("SELECT milestone_number,iteration FROM follow_up WHERE proid='$proid'");
 	if ($db_local->num_rows() == 0) return 0;
 	else {
-		while ($db_local->next_record());
-		if ($current_milestone < $db_local->f("milestone_number")) $current_iteration = $db_local->f("iteration");
+		while ($db_local->next_record()) {
+			if ($current_milestone < $db_local->f("milestone_number")) $current_iteration = $db_local->f("iteration");
+		}
 	}
 	return $current_iteration;
 }

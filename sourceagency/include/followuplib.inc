@@ -202,7 +202,7 @@ function followup_location($proid,$milestone_number) {
 function followup_insert($proid,$milestone_number,$iteration,$location,$time) {
   global $db;
 
-  if ($iteration=="1" && $time == 1) {
+  if ($milestone_number == 1 && $iteration == 0) {
 	$db->query("INSERT follow_up SET proid='$proid',milestone_number='$milestone_number',iteration='$iteration',location='$location',time='$time'");
   } else {
 	$db->query("UPDATE follow_up SET iteration='$iteration', location='$location', time='$time' WHERE proid='$proid' AND milestone_number='$milestone_number'");

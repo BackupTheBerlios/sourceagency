@@ -60,22 +60,22 @@ if (check_permission($proid,$page)) {
 	$voted_yet=0;
 
 	if (!strcmp($vote,"vote")) {
-		put_decision_step5_into_database($proid,$decision,$milestone_number);
+		put_decision_step5_into_database($proid,$decision,$milestone_number,$time);
   	}
 
   	// If the sponsor has already voted, then we look for his vote
 
   	if(!isset($decision) || empty($decision)) {
-		$db->query("SELECT decision FROM decisions_step5 WHERE proid='$proid' AND decision_user='".$auth->auth["uname"]."' AND number='$milestone_number'");
+		$db->query("SELECT decision FROM decisions_step5 WHERE proid='$proid' AND decision_user='".$auth->auth["uname"]."' AND number='$milestone_number' AND time='$time'");
 		$db->next_record();
 		$decision=$db->f("decision");
   	}
 
-	$quorum = show_decision_step5($proid,$milestone_number);
+	$quorum = show_decision_step5($proid,$milestone_number,$time);
   }
   if ($quorum || (isset($Yes) && !empty($Yes))) {
 	if ($No || !isset($Yes) || empty($Yes)) are_you_sure_message_step5($proid);
-	else decisions_step5_sponsors($proid,$milestone_number,$decision_value);
+	else decisions_step5_sponsors($proid,$milestone_number,$time);
   }
 
 /*

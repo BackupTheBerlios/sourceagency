@@ -457,12 +457,12 @@ function show_decision_referees($proid) {
 #
 # function show_decision_step5($proid,$milestone_number)
 #
-# returns '1' if one if the decission has sufficient quorum
+# returns '1' if one if the decision has sufficient quorum
 # else returns '0'
 #
 #####
 
-function show_decision_step5($proid,$milestone_number) {
+function show_decision_step5($proid,$milestone_number,$time) {
   global $t, $bx, $db, $voted_yet, $decision;
 
   $db->query("SELECT quorum FROM configure WHERE proid='$proid'");
@@ -476,7 +476,7 @@ function show_decision_step5($proid,$milestone_number) {
   $db->next_record();
 
   $bx->box_begin();
-  $bx->box_title("Decission on milestone number ".$milestone_number);
+  $bx->box_title("Decision on milestone number ".$milestone_number);
   $bx->box_body_begin();
   $bx->box_columns_begin(2);
 
@@ -500,21 +500,21 @@ function show_decision_step5($proid,$milestone_number) {
 
   $bx->box_next_row_of_columns();
 
-  $voting=decisions_step5_votes($proid,$milestone_number,"accept");
+  $voting=decisions_step5_votes($proid,$milestone_number,$time,"accept");
   $bx->box_column("right","","","<b>Accepted</b>");
   $bx->box_column("left","","",$voting."%");
 
   $bx->box_next_row_of_columns();
 
-  $voting+=decisions_step5_votes($proid,$milestone_number,"light");
+  $voting+=decisions_step5_votes($proid,$milestone_number,$time,"light");
   $bx->box_column("right","","","<b>Light modifications should be done</b>:");
-  $bx->box_column("left","","",decisions_step5_votes($proid,$milestone_number,"light")."%");
+  $bx->box_column("left","","",decisions_step5_votes($proid,$milestone_number,$time,"light")."%");
 
   $bx->box_next_row_of_columns();
 
-  $voting+=decisions_step5_votes($proid,$milestone_number,"severe");
+  $voting+=decisions_step5_votes($proid,$milestone_number,$time,"severe");
   $bx->box_column("right","","","<b>Severe modifications should be done</b>:");
-  $bx->box_column("left","","",decisions_step5_votes($proid,$milestone_number,"severe")."%");
+  $bx->box_column("left","","",decisions_step5_votes($proid,$milestone_number,$time,"severe")."%");
 
   if ($voting > $decision_value) $return_value =1;
 
@@ -677,17 +677,17 @@ function decision_milestone_insert($proid,$devid,$decision_user,$number,$decisio
 */
 }
 
-function put_decision_step5_into_database($proid,$your_vote,$milestone_number) {
+function put_decision_step5_into_database($proid,$your_vote,$milestone_number,$time) {
 	global $db,$auth;
 
-	$db->query("SELECT * FROM decisions_step5 WHERE proid='$proid' AND decision_user='".$auth->auth["uname"]."'");
+	$db->query("SELECT * FROM decisions_step5 WHERE proid='$proid' AND decision_user='".$auth->auth["uname"]."' AND number='$milestone_number' AND time='$time'");
 
-	if ($db->num_rows() == 0) $db->query("INSERT decisions_step5 SET proid='$proid', decision_user='".$auth->auth["uname"]."', number='$milestone_number', decision='$your_vote'"); 
+	if ($db->num_rows() == 0) $db->query("INSERT decisions_step5 SET proid='$proid', decision_user='".$auth->auth["uname"]."', number='$milestone_number', time='$time', decision='$your_vote'"); 
 	else {
 		$db->next_record();
 		if(!strcmp($your_vote,$db->f("decision"))) print "You have already voted that\n";
 		else {
-			$db->query("UPDATE decisions_step5 SET  decision='$your_vote' WHERE proid='$proid' AND decision_user='".$auth->auth["uname"]."' AND number='$milestone_number'");
+			$db->query("UPDATE decisions_step5 SET  decision='$your_vote' WHERE proid='$proid' AND decision_user='".$auth->auth["uname"]."' AND number='$milestone_number' AND time='$time'");
 			print "Vote changed. Old: <b>".$db->f("decision")."</b> New: <b>".$your_vote."</b>";
 		}
 	}
@@ -697,10 +697,10 @@ function put_decision_step5_into_database($proid,$your_vote,$milestone_number) {
 	monitor_mail($proid,"decision_step_5", "Decision met in step 5 (follow-up) on project $proid", "Decision met by $decision_user\n\n You can see it at: $sys_urldecisions.php3?proid=$proid");
 }
 
-function decisions_step5_votes($proid,$milestone_number,$decision) {
+function decisions_step5_votes($proid,$milestone_number,$time,$decision) {
 
   $db_local = new DB_SourceAgency;
-  $db_local->query("SELECT SUM(budget) AS sum_step5 FROM sponsoring,decisions_step5 WHERE decisions_step5.proid='$proid' AND sponsoring.proid='$proid' AND sponsoring.sponsor=decisions_step5.decision_user AND decisions_step5.number='$milestone_number' AND decision='$decision' GROUP BY decision");
+  $db_local->query("SELECT SUM(budget) AS sum_step5 FROM sponsoring,decisions_step5 WHERE decisions_step5.proid='$proid' AND sponsoring.proid='$proid' AND sponsoring.sponsor=decisions_step5.decision_user AND decisions_step5.number='$milestone_number' AND time='$time' AND decision='$decision' GROUP BY decision");
   if ($db_local->num_rows() == 0) return 0;
   $db_local->next_record();
   return 100*$db_local->f("sum_step5")/project_budget($proid);
@@ -710,7 +710,7 @@ function are_you_sure_message_step5($proid) {
   global $bx, $t;
 
 	$bx->box_begin();
- 	$bx->box_title("<b>".$t->translate("Warning! The decission has been made")."</b>");
+ 	$bx->box_title("<b>".$t->translate("Warning! The decision has been made")."</b>");
 	$bx->box_body_begin();
 	$bx->box_columns_begin(2);
 
@@ -723,13 +723,13 @@ function are_you_sure_message_step5($proid) {
 	$bx->box_end();
 }
 
-function decisions_step5_sponsors($proid,$milestone_number) {
+function decisions_step5_sponsors($proid,$milestone_number,$time) {
 
   $db_quota = new DB_SourceAgency;
 
 		// accepted
 
-  $db_quota->query("SELECT SUM(budget) FROM sponsoring,decisions_step5 WHERE sponsor=decision_user AND decision='accept' AND sponsoring.proid='$proid' AND decisions_step5.proid='$proid' AND decisions_step5.number='$milestone_number'");
+  $db_quota->query("SELECT SUM(budget) FROM sponsoring,decisions_step5 WHERE sponsor=decision_user AND decision='accept' AND time='$time' AND sponsoring.proid='$proid' AND decisions_step5.proid='$proid' AND decisions_step5.number='$milestone_number'");
   $db_quota->next_record();
   if ($db_quota->f("SUM(budget)") > $decision_value) { 
 	$db_quota->query("UPDATE follow_up SET iteration='5' WHERE proid='$proid' AND milestone_number='$milestone_number'");
@@ -739,7 +739,7 @@ function decisions_step5_sponsors($proid,$milestone_number) {
 
 		// light problems
 
-	 $db_quota->query("SELECT SUM(budget) FROM sponsoring,decisions_step5 WHERE sponsor=decision_user AND decision='light' AND sponsoring.proid='$proid' AND sponsoring.proid='$proid' AND decisions_step5.number='$milestone_number'");
+	 $db_quota->query("SELECT SUM(budget) FROM sponsoring,decisions_step5 WHERE sponsor=decision_user AND decision='light' AND time='$time' AND sponsoring.proid='$proid' AND sponsoring.proid='$proid' AND decisions_step5.number='$milestone_number'");
   	$db_quota->next_record();
 	if ($db_quota->f("SUM(budget)") > $decision_value) { 
 		$db_quota->query("SELECT * FROM follow_up WHERE proid='$proid' AND milestone_number='$milestone_number'");
@@ -750,7 +750,7 @@ function decisions_step5_sponsors($proid,$milestone_number) {
 
 		// severe problems
 
-		 $db_quota->query("SELECT SUM(budget) FROM sponsoring,decisions_step5 WHERE sponsor=decision_user AND decision='severe' AND sponsoring.proid='$proid' AND sponsoring.proid='$proid' AND decisions_step5.number='$milestone_number'");
+		 $db_quota->query("SELECT SUM(budget) FROM sponsoring,decisions_step5 WHERE sponsor=decision_user AND decision='severe'  AND time='$time' AND sponsoring.proid='$proid' AND sponsoring.proid='$proid' AND decisions_step5.number='$milestone_number'");
   		$db_quota->next_record();
 		if ($db_quota->f("SUM(budget)") > $decision_value) { 
 			$db_quota->query("UPDATE follow_up SET iteration='2' WHERE proid='$proid' AND milestone_number='$milestone_number'");

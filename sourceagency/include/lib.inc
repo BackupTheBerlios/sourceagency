@@ -787,12 +787,12 @@ function lib_select_yes_or_no($name,$selected) {
 }
 
 function lib_nick($nick) {
-	return "<b>".$nick."</b>";
+	return "<b>by ".$nick."</b>";
 //	html_link("mailto:nomail@noplace.no","",$nick);
 }
 
 function lib_pnick($nick) {
-	print "<b>".$nick."</b>";
+	print "<b>by ".$nick."</b>";
 //	htmlp_link("mailto:nomail@noplace.no","",$nick);
 }
 
