@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.5 2002/02/01 08:40:52 riessen Exp $
+# $Id: unit_test.php,v 1.6 2002/04/22 14:20:16 riessen Exp $
 #
 ######################################################################
 
@@ -40,19 +40,25 @@ extends TestCase
         }
     }
 
-    // this should also accept a $text argument instead of taking the
-    // length from the captured text ...
-    function _testFor_string_length( $str, $len, $msg = "Length mismatch" ) {
-        $this->assertEquals( $len, strlen( $str ), $msg );
+    function _check_length( $exp, $act, $msg = '' ) {
+        $this->assertEquals( $exp, $act, $msg . ' (Length Mismatch)' );
     }
-    function _testFor_length( $length, $msg = "Length mismatch" ) {
-        $this->assertEquals( $length, capture_text_length(), $msg );
+    function _testFor_string_length( $str, $len, $msg = '' ) {
+        $this->_check_length( $len, strlen( $str ), $msg );
+    }
+    function _testFor_length( $length, $msg = '' ) {
+        // TODO: replace the use of this function with _captured_length
+        $this->_check_length( capture_text_length(), $length, $msg );
+    }
+    function _testFor_captured_length( $length, $msg = '' ) {
+        $this->_check_length( capture_text_length(), $length, $msg );
     }
     function _testFor_line( $text, $line ) {
         $this->_testFor_pattern( $text, $line . "\n" );
     }
-    function _testFor_pattern( $text, $pattern, $msg = "pattern not found" ) {
-        $this->assertRegexp( "/" . $pattern . "/", $text, $msg);
+    function _testFor_pattern( $text, $pattern, $msg = '' ) {
+        $this->assertRegexp( "/" . $pattern . "/", $text, 
+                                                $msg . ' (Pattern not Found)');
     }
     function _testFor_patterns( $text, $pattern_array, $check_size = -1 ) {
         reset( $pattern_array );
