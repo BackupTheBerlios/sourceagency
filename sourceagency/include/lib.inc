@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.33 2002/04/20 13:17:40 grex Exp $
+# $Id: lib.inc,v 1.34 2002/04/20 13:18:24 grex Exp $
 #
 ######################################################################
 
@@ -1519,7 +1519,6 @@ function lib_die($error_message)
 
     /* Mails the sys admins */
     include('monitorlib.inc');
-    mailuser('admin', 'An error has ocurred', $error_message)
-
+    mailuser('admin', 'An error has ocurred', $error_message);
 }
 ?>
