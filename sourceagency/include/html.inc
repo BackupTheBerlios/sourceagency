@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: html.inc,v 1.8 2002/04/09 00:04:59 grex Exp $
+# $Id: html.inc,v 1.9 2002/04/18 10:58:11 grex Exp $
 #
 ######################################################################
 
@@ -105,7 +105,7 @@ function htmlp_image($file, $border, $width, $height, $alternate)
  *
  * @access  public
  */ 
-function html_form_action($file, $query, $type='POST')
+function html_form_action($file, $query='', $type='POST')
 {
     global $sess;
     
