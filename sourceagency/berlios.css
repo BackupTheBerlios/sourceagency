@@ -1,30 +1,30 @@
 <?php
 	require("config.inc");
 	$ua = "$HTTP_USER_AGENT";
-	$fsn = "small";
-	$h1 = "large";
-	$h2 = "medium";
-	$h3 = "small";
-	$h4 = "x-small";
-	$h5 = "xx-small";
-	$h6 = "xx-small";
-	if (ereg("MSIE", "$ua")) {
-		$fsn = "x-small";
-		$h1 = "large";
-		$h2 = "medium";
-		$h3 = "small";
-		$h4 = "x-small";
-		$h5 = "xx-small";
-		$h6 = "xx-small";
-	}
+	$fsn = "10pt";
+	$h1 = "14pt";
+	$h2 = "12pt";
+	$h3 = "10pt";
+	$h4 = "9pt";
+	$h5 = "8pt";
+	$h6 = "8pt";
 	if (ereg("X11", "$ua")) {
-		$fsn = "medium";
-                $h1 = "x-large";
-                $h2 = "large";
-                $h3 = "medium";
-                $h4 = "small";
-                $h5 = "x-small";
-                $h6 = "xx-small";
+		$fsn = "12pt";
+        $h1 = "16pt";
+        $h2 = "14pt";
+        $h3 = "12pt";
+        $h4 = "10pt";
+        $h5 = "8pt";
+        $h6 = "6pt";
+	}
+	if (ereg("Gecko", "$ua")) {
+		$fsn = "10pt";
+        $h1 = "14pt";
+        $h2 = "12pt";
+        $h3 = "10pt";
+        $h4 = "9pt";
+        $h5 = "8pt";
+        $h6 = "8pt";
 	}
 ?>
 BODY { background-color: #FFFFFF }
