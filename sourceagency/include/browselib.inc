@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.11 2002/04/20 13:07:50 grex Exp $
+# $Id: browselib.inc,v 1.12 2002/04/30 01:23:13 grex Exp $
 #
 ######################################################################
 
@@ -79,6 +79,9 @@ function browse_through($through)
         break;
     case 'programming':
         _browse_not_yet();
+        break;
+    case 'project_name':
+        _browse_project_name();
         break;
     }
     $bx->box_body_end();
@@ -592,5 +595,65 @@ function _browse_output($query)
         lib_show_description("SELECT * FROM description WHERE proid='"
                              .$db->f("proid")."'");
     }
+}
+
+/**
+ * Browses through the projects by its name
+ *
+ * @global  object    $t             Translation object
+ * @global  object    $bx            Box object
+ * @global  object    $db            PHPLib database object
+ *
+ * @access  private
+ */
+function _browse_project_name()
+{
+    global $bx, $db, $t;
+
+    $alphabet = array ('A','B','C','D','E','F','G','H','I','J','K','L',
+	   	       'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+    
+    $bx->box_begin();
+    $bx->box_title($t->translate('Projects ordered alphabetically'));
+    $bx->box_body_begin();
+    $i = 1;
+    
+    $bx->box_columns_begin(3);
+    $bx->box_column('right','6%','','<b>'.$t->translate('No').'</b>');
+    $bx->box_column('center','20%','','<b>#&nbsp;'.$t->translate('Projects')
+                    .'</b>');
+    $bx->box_column('left','70%','','<b>'.$t->translate('Project Name').'</b>');
+    $bx->box_next_row_of_columns();
+    
+    while (list(, $ltr) = each($alphabet)) {
+  	if ($i%2 != 0) {
+            $bgcolor = 'gold';
+        } else {
+            $bgcolor = '#FFFFFF';
+        }
+
+  	$db2 = new DB_SourceAgency;
+  	$db2->query("SELECT COUNT(*) FROM description WHERE status='A'"
+                     ." AND  project_title LIKE '%$ltr'");
+  	$db2->next_record();
+  	$num = '['.sprintf('%03d',$db2->f('COUNT(*)')).']';
+  	$bx->box_column('right','',$bgcolor,$i);
+	if ($num != '[000]') {
+            $bx->box_column('center','',
+                            $bgcolor,
+                            html_link('browse.php3', 
+                                      array('through'=>'project_name', 
+                                            'project_name' => $ltr),
+                                      $num));
+        } else {
+            $bx->box_column('center','', $bgcolor, $num);
+        }
+  	$bx->box_column('left','', $bgcolor, html_link($ltr,'',$ltr));
+  	$bx->box_next_row_of_columns();
+  	$i++;
+    }
+    $bx->box_columns_end();
+    $bx->box_body_end();
+    $bx->box_end();
 }
 ?>

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browse.php3,v 1.7 2002/04/10 13:02:48 grex Exp $
+# $Id: browse.php3,v 1.8 2002/04/30 01:23:13 grex Exp $
 #
 ######################################################################  
 
@@ -63,6 +63,8 @@ echo '<br>'.html_link('browse.php3',array('through' => 'architecture'),
                       $t->translate( 'Architecture' ));
 echo '<br>'.html_link('browse.php3',array('through' => 'environment'),
                       $t->translate( 'Environment' ));
+echo '<br>'.html_link('browse.php3',array('through' => 'project_name'),
+                      $t->translate( 'project_name' ));
 $bx->box_body_end();
 $bx->box_end();
 $bx->box_column_finish();
