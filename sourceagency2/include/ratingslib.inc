@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: ratingslib.inc,v 1.1 2003/11/21 12:56:02 helix Exp $
+# $Id: ratingslib.inc,v 1.2 2003/11/21 15:02:59 helix Exp $
 #
 ######################################################################
 
@@ -187,7 +187,7 @@ function ratings_form_full($proid, $username, $dev_or_spo, $id)
 
     for($i=0; $i<sizeof($array); $i++) {
 	if ($i%2==0) {
-            $background='gold';
+            $background='DFDFDF';
         } else {
             $background='#FFFFFF';
         }
@@ -260,7 +260,7 @@ function ratings_form_empty($proid, $username, $dev_or_spo, $number)
     $bx->box_column ('','','white','&nbsp;');
     $bx->box_next_row_of_columns();
     for($i=0;$i<sizeof($array);$i++) {
-        $background = ( $i % 2 == 0 ? 'gold' : '#FFFFFF' );
+        $background = ( $i % 2 == 0 ? 'DFDFDF' : '#FFFFFF' );
         /** FIXME: the values contained in $array are not used ?!?!? **/
 	$bx->box_column ('','',$background,'&nbsp;');
 	$bx->box_next_row_of_columns();
@@ -309,7 +309,7 @@ function ratings_form_rated($proid, $username, $dev_or_spo, $number)
     $bx->box_column ('','','white','&nbsp;');
     $bx->box_next_row_of_columns();
     for($i=0;$i<sizeof($array);$i++) {
-        $background = ( $i % 2 == 0 ? 'gold' : '#FFFFFF' );
+        $background = ( $i % 2 == 0 ? 'DFDFDF' : '#FFFFFF' );
 
 	if ($i==floor(sizeof($array)/2)) {
             $bx->box_column ('','',$background,

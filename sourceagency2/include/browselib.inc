@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.1 2003/11/21 12:56:02 helix Exp $
+# $Id: browselib.inc,v 1.2 2003/11/21 15:02:59 helix Exp $
 #
 ######################################################################
 
@@ -98,7 +98,7 @@ function browse_licenses()
 {
     global $bx, $db, $t;
     
-    $db->query('SELECT DISTINCT * FROM licenses');
+    $db->query('SELECT DISTINCT * FROM licenses ORDER BY license ASC');
     
     $bx->box_begin();
     $bx->box_title($t->translate('Licenses'));
@@ -112,7 +112,7 @@ function browse_licenses()
     $bx->box_column('left','70%','','<b>'.$t->translate('License').'</b>');
     $bx->box_next_row_of_columns();
     
-    $colors = array( 1 => 'gold', 0 => '#FFFFFF' );
+    $colors = array( 1 => 'DFDFDF', 0 => '#FFFFFF' );
 
     while($db->next_record()) {
         $bgcolor = $colors[ $i % 2 ];

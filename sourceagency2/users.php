@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: users.php,v 1.1 2003/11/21 12:55:58 helix Exp $
+# $Id: users.php,v 1.2 2003/11/21 15:02:59 helix Exp $
 #
 ######################################################################
 
@@ -95,7 +95,7 @@ if ( ($config_perm_users != 'all')
     $bx->box_next_row_of_columns();
 
     $i = 1;
-    $colors = array( 0 => '#FFFFFF', 1 => 'gold' );
+    $colors = array( 0 => '#FFFFFF', 1 => 'DFDFDF' );
     while($db->next_record()) {
         $bgcolor = $colors[ $i%2 ];
 

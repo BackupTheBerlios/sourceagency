@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: refereeslib.inc,v 1.1 2003/11/21 12:56:02 helix Exp $
+# $Id: refereeslib.inc,v 1.2 2003/11/21 15:02:59 helix Exp $
 #
 ######################################################################
 
@@ -91,7 +91,7 @@ function show_referees($proid)
 
 	while($db->next_record()) {
 	    $i++;
-            $bgcolor = ( $i%2 != 0 ? 'gold' : '#FFFFFF' );
+            $bgcolor = ( $i%2 != 0 ? 'DFDFDF' : '#FFFFFF' );
 
  	    $bx->box_next_row_of_columns();
 

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: historylib.inc,v 1.1 2003/11/21 12:56:01 helix Exp $
+# $Id: historylib.inc,v 1.2 2003/11/21 15:02:59 helix Exp $
 #
 ######################################################################
 
@@ -142,7 +142,7 @@ function show_history($history)
     $bx->box_column('','','','<b>'.$t->translate('User').'</b>');
 
     for ($i = sizeof($history)-1; $i > -1; $i--) {
-        $bgcolor = ($i%2 != 0 ? 'gold' : '#FFFFFF' );
+        $bgcolor = ($i%2 != 0 ? 'DFDFDF' : '#FFFFFF' );
 
 	$bx->box_next_row_of_columns();
 
