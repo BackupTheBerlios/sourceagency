@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.13 2002/05/22 11:50:33 riessen Exp $
+# $Id: unit_test.php,v 1.14 2002/05/22 12:15:02 riessen Exp $
 #
 ######################################################################
 
@@ -102,12 +102,23 @@ extends TestCase
         return $rVal;
     }
 
+    // because version_compare is only available after version 4.1.0,
+    // define our own! This only returns true if v1 is greater than v2
+    function v_gt( $v1, $v2 ) {
+        $a_v1 = explode( ".", $v1 );
+        $a_v2 = explode( ".", $v2 );
+        return ( $a_v1[0] > $a_v2[0] 
+                   || ($a_v1[0] == $a_v2[0] && $a_v1[1] > $a_v2[1])
+                   || ($a_v1[0] == $a_v2[0] && $a_v1[1] == $a_v2[1] 
+                                                     && $a_v1[2] > $a_v2[2] ));
+    }
+
     // this is a wrapper function because versions 4.0.6 and 4.1.X have
     // different ways of calling methods on objects, and to avoid deprecation
     // warnings from appearing in captured output, this wrapper is required.
     // Before version 4.0.4p1 is the complete functionality not available!
     function _call_method( $method, $args = array(), $obj = 0 ) {
-        if ( version_compare( "4.0.5", phpversion(), ">" ) ) {
+        if ( $this->v_gt( "4.0.5", phpversion() ) ) {
             /* less than 4.0.5 */
             $this->assert(false,"This version of php does not support "
                           . "class introspection (".phpversion().")");
@@ -125,7 +136,7 @@ extends TestCase
             return;
         }
 
-        if ( version_compare( "4.1.0", phpversion(), ">" ) ) {
+        if ( $this->v_gt( "4.1.0", phpversion() ) ) {
             /* between 4.0.5(inclusive) and 4.1.0 */
             return call_user_method_array( $method, &$obj, $args );
         } else {
@@ -145,7 +156,7 @@ extends TestCase
     function _testFor_html_link( $text, $addr='PHP_SELF', $paras=array(), 
                                  $link_text='', $css='', $msg='') {
         global $sess;
-        
+        print "<b>[".$sess->self_url()."]</b>";
         $str = sprintf('<a href="%%s" class="%s">%s</a>',$css,$link_text);
         
         $str = sprintf( $str, ($addr == 'PHP_SELF' ? $sess->self_url()
