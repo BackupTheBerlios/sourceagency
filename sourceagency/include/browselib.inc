@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: browselib.inc,v 1.17 2002/04/30 11:24:41 riessen Exp $
+# $Id: browselib.inc,v 1.18 2002/04/30 11:31:26 riessen Exp $
 #
 ######################################################################
 
@@ -560,7 +560,7 @@ function browse_list($by, $what)
         break;
     case 'project_name':
         $query = 'SELECT * FROM description WHERE status > 0'
-                     ." AND  project_title LIKE '". $project_name . "%'";
+                     ." AND  project_title LIKE '". $what . "%'";
         break;
     default:
         lib_die('Error in browselib.inc function browse_list. $by not specified');  
