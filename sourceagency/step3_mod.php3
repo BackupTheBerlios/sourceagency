@@ -66,6 +66,7 @@ if (check_permission($proid,$page)) {
     } else {
 	milestones_modify($proid,$number,$goals,$release_day,
                           $release_month,$release_year,$product,$payment);
+        show_milestones($proid,$devid,$auth->auth["uname"]);
     }
 }
 

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.6 2002/03/19 10:10:56 riessen Exp $
+# $Id: milestoneslib.inc,v 1.7 2002/03/19 10:41:14 riessen Exp $
 #
 ######################################################################
 
@@ -217,9 +217,20 @@ function form_milestones($proid,$devid) {
 }
 
 
+function milestones_propose_milestone( $proid ) {
+  global $t;
+  
+  print ( "<p align=right>[ <b>".html_link("step3_edit.php3",
+                                           array("proid" => $proid,"a" => "1"),
+                                           "<b>"
+                                           .$t->translate("Propose Milestones")
+                                           ."</b>")
+          ."</b> ]" );
+}
+
 function milestones_insert($proid,$devid,$number,$goals,$release_day,
                            $release_month,$release_year,$product,$payment) {
-  global $db,$auth;
+  global $db;
 
   $release = date_to_timestamp($release_day,$release_month,$release_year);
 
@@ -228,16 +239,13 @@ function milestones_insert($proid,$devid,$number,$goals,$release_day,
              . "product='$product',payment='$payment',status='P',"
              . "creation=NOW()");
 
-  print ( "<p align=right>[ <b>".html_link("step3_edit.php3",
-                                           array("proid" => $proid,
-                                                 "a" => "1"),
-                                           "<b>Propose Milestones</b>")
-          ."</b> ]" );
+  milestones_propose_milestone( $proid );
 }
+
 
 function milestones_modify($proid,$number,$goals,$release_day,
                            $release_month,$release_year,$product,$payment) {
-  global $db, $auth, $devid;
+  global $db;
 
   $release = date_to_timestamp($release_day,$release_month,$release_year);
 
@@ -245,13 +253,7 @@ function milestones_modify($proid,$number,$goals,$release_day,
              . "product='$product',payment='$payment',status='M' WHERE "
              . "proid='$proid' AND number='$number'");
 
-  print ( "<p align=right>[ <b>".html_link("step3_edit.php3",
-                                           array("proid" => $proid,
-                                                 "a" => "1"),
-                                           "<b>Propose Milestones</b>")
-          ."</b> ]" );
-
-  show_milestones($proid,$devid,$auth->auth["uname"]);
+  milestones_propose_milestone( $proid );
 }
 
 
