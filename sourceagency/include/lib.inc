@@ -1,12 +1,13 @@
 <?php
-
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ===============================================================
 #
 # Copyright (c) 2001 by
-#                Gregorio Robles (grex@scouts-es.org) and
-#                Lutz Henckel (lutz.henckel@fokus.gmd.de)
+#                Gregorio Robles (grex@scouts-es.org),
+#                Lutz Henckel (lutz.henckel@fokus.gmd.de) and
+#                Gerrit Riessen (Gerrit.Riessen@open-source-consultants.de)
 #
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
@@ -19,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.25 2002/03/27 12:56:30 riessen Exp $
+# $Id: lib.inc,v 1.26 2002/04/09 00:29:47 grex Exp $
 #
 ######################################################################
 
@@ -27,31 +28,37 @@
 # Returns time in timestamp format 
 #
 
-function mktimestamp($time) {
+function mktimestamp($time)
+{
     $timestamp = mktime(substr($time,8,2),substr($time,10,2),
                         substr($time,12,2),substr($time,4,2),
                         substr($time,6,2),substr($time,0,4));
     return $timestamp;
 }
 
-function timestr($timestamp) {
-    return strftime("%A, %e. %B %Y, %H:%M:%S %Z", $timestamp);
+function timestr($timestamp)
+{
+    return strftime('%A, %e. %B %Y, %H:%M:%S %Z', $timestamp);
 }
 
-function timestr_middle($timestamp) {
-    return strftime("%e. %B %Y", $timestamp);
+function timestr_middle($timestamp)
+{
+    return strftime('%e. %B %Y', $timestamp);
 }
 
-function timestr_short($timestamp){
-    return strftime("%a,%e.%b,%H:%M:%S", $timestamp);
+function timestr_short($timestamp)
+{
+    return strftime('%a,%e.%b,%H:%M:%S', $timestamp);
 }
 
-function timestr_comment($timestamp){
-    return strftime("%e. %b %Y, %H:%M", $timestamp);
+function timestr_comment($timestamp)
+{
+    return strftime('%e. %b %Y, %H:%M', $timestamp);
 }
 
-function timestr_shortest($timestamp){
-    return strftime("%e. %b", $timestamp);
+function timestr_shortest($timestamp)
+{
+    return strftime('%e. %b', $timestamp);
 }
 
 // 
@@ -60,18 +67,18 @@ function timestr_shortest($timestamp){
 //  $selected ist the SELECTED license
 // 
 
-function license($selected) {
-
-    $return = html_select("license");
+function license($selected)
+{
+    $return = html_select('license');
     $db_local = new DB_SourceAgency;
-    $db_local->query("SELECT * FROM licenses ORDER BY license ASC");
+    $db_local->query('SELECT * FROM licenses ORDER BY license ASC');
     // TODO: potential bug if there are no licenses in the database
     while ($db_local->next_record()) {
 
-        $return .= html_select_option($db_local->f("license"),
-                                      !strcmp($db_local->f("license"),
+        $return .= html_select_option($db_local->f('license'),
+                                      !strcmp($db_local->f('license'),
                                               $selected),
-                                      $db_local->f("license"));
+                                      $db_local->f('license'));
     }
     $return .= html_select_end();
 
@@ -84,7 +91,8 @@ function license($selected) {
 //  $selected ist the SELECTED license
 // 
 
-function licensep($selected) {
+function licensep($selected)
+{
     print license( $selected );
 }
 
@@ -97,13 +105,14 @@ function licensep($selected) {
 ## $urlquery contains an array with the paramaters for the new page
 ##            (everything after the ?)
 
-function show_more($iter,$maxiter,$url,$urlquery) {
+function show_more($iter,$maxiter,$url,$urlquery)
+{
     global $sess;
 
     $iter /=10;
-    echo "<table border=0 width=600><tr>";
+    echo '<table border=0 width=600><tr>';
     echo "<td>&nbsp;</td>\n";
-    echo "<td align=right>";
+    echo '<td align=right>';
 
     $maxiter= Floor($maxiter);
 
@@ -122,40 +131,35 @@ function show_more($iter,$maxiter,$url,$urlquery) {
     }
 
     switch ($iter) {
-        case 0: {
-            $bias=0; 
-            break;
-        }
-        case 1: {
-            $bias=1; 
-            break;
-        }
-        case ($maxiter-1): {
-            if ($iter>3) {
-                $bias=3;
-            } else {
-                $bias=2;
-            } 
-            break;
-        }
-        case ($maxiter): {
-            if ($iter>4) {
-                $bias=4;
-            } else {
-                $bias=2;
-            } 
-            break;
-        }
-        default: {
-            $bias=2; 
-            break;
-        }
-    } /* switch */
+    case 0:
+        $bias=0; 
+        break;
+    case 1:
+        $bias=1; 
+        break;
+    case ($maxiter-1):
+        if ($iter>3) {
+            $bias=3;
+        } else {
+            $bias=2;
+        } 
+        break;
+    case ($maxiter):
+        if ($iter>4) {
+            $bias=4;
+        } else {
+            $bias=2;
+        } 
+        break;
+    default:
+        $bias=2; 
+        break;
+    }
 
     for($i=$iter-$bias;$i<$maxiter+1 && $i<($iter+5-$bias);$i++) {
         $number1 = $i*10 +1;
         $number2 = $number1 + 9;
-        $number = strval($number1) . "-" . strval($number2);
+        $number = strval($number1) . '-' . strval($number2);
         if ($i != $iter) {
             echo "<a href=\"" . $sess->url($url) . $sess->add_query($urlquery)
                 . $sess->add_query(array("iter" => $i)) 
@@ -186,103 +190,61 @@ function show_more($iter,$maxiter,$url,$urlquery) {
     }
 
     echo "</td>\n";
-    echo "</tr></table><BR>";
+    echo '</tr></table><BR>';
 }
 
-function wrap($string,$width=75,$break=" ") {
-    $out = "";
-    $lin = "";
+function wrap($string,$width=75,$break=' ')
+{
+    $out = '';
+    $lin = '';
     $tok = strtok($string,$break);
     while ($tok) {
         if ((strlen($lin) + strlen($tok)) > $width) {
             $out .= $lin."\n";
-            $lin = "";
+            $lin = '';
         }
         if (strlen($lin) > 0) {
-            $lin .= " ";
+            $lin .= ' ';
         }
         $lin .= $tok;
-        $tok = strtok (" ");
+        $tok = strtok (' ');
     }
     $out .= $lin;
     return $out;
 }
 
-function typestr($type) {
+function typestr($type)
+{
     global $t;
     switch($type) {
     case 'A':
-        $str = $t->translate("Adaption");
+        $str = $t->translate('Adaption');
         break;
     case 'E': 
-        $str = $t->translate("Expansion");
+        $str = $t->translate('Expansion');
         break;
     case 'C': 
-        $str = $t->translate("Documentation");
+        $str = $t->translate('Documentation');
         break;
     case 'D':
-        $str = $t->translate("Development");
+        $str = $t->translate('Development');
         break;
     case 'O':
-        $str = $t->translate("Other");
+        $str = $t->translate('Other');
         break;
     default:
-        $str = $t->translate("Other");
+        $str = $t->translate('Other');
         break;
     }
     return $str;
 }
 
-function increasecnt($id, $type) {
-    // TODO: function 'increasecnt' is defined by never used, 
-    // TODO: can it be removed?
-    global $db;
-
-    $db_local = new DB_SourceAgency;
-    $db_local->query("SELECT * FROM counter WHERE proid='$id'");
-
-    // If application in table and first access today update counters
-    $first = checkcnt($id, $GLOBALS[REMOTE_ADDR], $type);
-
-    $db_local->next_record();
-    if ($first == 1) {
-        $counter = $db_local->f($type) + 1;
-        $db->query("UPDATE counter SET $type='$counter' WHERE proid='$id'");
-    }
-}
-
-function checkcnt($id, $ipaddr, $type) {
-    global $db;
-
-    $ret = 1;
-
-    // Delete all entries from yesterday
-    $today = date("Y-m-d");
-    $tables = "counter_check";
-    $where = "DATE_FORMAT(creation_cnt,'%Y-%m-%d') != '$today'";
-    $db->query("DELETE FROM $tables WHERE $where");
-
-    $columns = "*";
-    $where = "proid='$id' AND cnt_type='$type' AND ipaddr='$ipaddr'";
-    $db->query("SELECT $columns FROM $tables WHERE $where");
-
-    if ($db->num_rows() > 0) {
-        // If remote host already accessed the apps link,
-        // don't increase corresponding counter
-        $ret = 0;
-    } else {
-        // Include entry for remote host
-        $set = "proid='$id',cnt_type='$type',ipaddr='$ipaddr'";
-        $db->query("INSERT $tables SET $set");
-    }
-    return $ret;
-}
-
-function draw_top_bar( $project_title, $page, $proid = "", 
-                       $project_status = 0 ) {
+function draw_top_bar( $project_title, $page, $proid = '', 
+                       $project_status = 0 )
+{
     global $t, $g_step_text, $g_step_count;
-    require("config.inc"); // needed for th_XXXXX variables
-    $btop = new box("100%",$th_box_frame_color,1,$th_box_title_bgcolor,
+    require('config.inc'); // needed for th_XXXXX variables
+    $btop = new box('100%',$th_box_frame_color,1,$th_box_title_bgcolor,
                     $th_box_title_font_color,$th_box_title_align,
                     $th_box_body_bgcolor,$th_box_body_font_color,
                     $th_box_body_align);
@@ -292,48 +254,48 @@ function draw_top_bar( $project_title, $page, $proid = "",
     $btop->box_columns_begin(2);
 
     // 1st column (left one)
-    $btop->box_column("left","","","<FONT size=\"+2\"><B> "
-                      . $project_title . " - " . $t->translate($page) 
-                      . "</B></FONT>");
+    $btop->box_column('left','','',"<FONT size=\"+2\"><B> "
+                      . $project_title . ' - ' . $t->translate($page) 
+                      . '</B></FONT>');
 
     // 2nd column (right one)
-    $btop->box_column_start("right","","");
+    $btop->box_column_start('right','','');
 
     // Actions listed and linked
     // The current page has border = 1
 
     if ( empty( $proid ) ) {
-        htmlp_image("ic/agrey.png",abs(!strcmp("summary",$page)),
-                    24,24,$t->translate("Summary"));
-        htmlp_image("ic/bgrey.png",abs(!strcmp("news",$page)),
-                    24,24,$t->translate("News"));
-        htmlp_image("ic/cgrey.png",abs(!strcmp("comments",$page)),
-                    24,24,$t->translate("General Comments"));
-        htmlp_image("ic/dgrey.png",abs(!strcmp("sponsoring",$page)),
-                    24,24,$t->translate("Sponsor Collaboration"));
-        htmlp_image("ic/egrey.png",abs(!strcmp("history",$page)),
-                    24,24,$t->translate("Project History"));
+        htmlp_image('ic/agrey.png',abs(!strcmp('summary',$page)),
+                    24,24,$t->translate('Summary'));
+        htmlp_image('ic/bgrey.png',abs(!strcmp('news',$page)),
+                    24,24,$t->translate('News'));
+        htmlp_image('ic/cgrey.png',abs(!strcmp('comments',$page)),
+                    24,24,$t->translate('General Comments'));
+        htmlp_image('ic/dgrey.png',abs(!strcmp('sponsoring',$page)),
+                    24,24,$t->translate('Sponsor Collaboration'));
+        htmlp_image('ic/egrey.png',abs(!strcmp('history',$page)),
+                    24,24,$t->translate('Project History'));
     } else {
-        htmlp_link("summary.php3",array("proid" => $proid),
-                   html_image("ic/a.png",abs(!strcmp("summary",$page)),
-                              36,36,$t->translate("Summary")));
-        htmlp_link("news.php3",array("proid" => $proid),
-                   html_image("ic/b.png",abs(!strcmp("news",$page)),
-                              36,36,$t->translate("News")));
-        htmlp_link("comments.php3",array("proid" => $proid),
-                   html_image("ic/c.png",abs(!strcmp("comments",$page)),
-                              36,36,$t->translate("General Comments")));
-        htmlp_link("sponsoring.php3",array("proid" => $proid),
-                   html_image("ic/d.png",abs(!strcmp("sponsoring",$page)),
-                              36,36,$t->translate("Sponsor Collaboration")));
-        htmlp_link("history.php3",array("proid" => $proid),
-                   html_image("ic/e.png",abs(!strcmp("history",$page)),
-                              36,36,$t->translate("Project History")));
+        htmlp_link('summary.php3',array('proid' => $proid),
+                   html_image('ic/a.png',abs(!strcmp('summary',$page)),
+                              36,36,$t->translate('Summary')));
+        htmlp_link('news.php3',array('proid' => $proid),
+                   html_image('ic/b.png',abs(!strcmp('news',$page)),
+                              36,36,$t->translate('News')));
+        htmlp_link('comments.php3',array('proid' => $proid),
+                   html_image('ic/c.png',abs(!strcmp('comments',$page)),
+                              36,36,$t->translate('General Comments')));
+        htmlp_link('sponsoring.php3',array('proid' => $proid),
+                   html_image('ic/d.png',abs(!strcmp('sponsoring',$page)),
+                              36,36,$t->translate('Sponsor Collaboration')));
+        htmlp_link('history.php3',array('proid' => $proid),
+                   html_image('ic/e.png',abs(!strcmp('history',$page)),
+                              36,36,$t->translate('Project History')));
     }
 
     // Blank space that
     // limits actions from states
-    htmlp_image("blank.gif",0,36,36,"");
+    htmlp_image('blank.gif',0,36,36,'');
 
     // Project steps
     // In grey future steps
@@ -341,18 +303,18 @@ function draw_top_bar( $project_title, $page, $proid = "",
     for( $i = 1; $i < $g_step_count + 1; $i++) {
         $alt_text = $t->translate( $g_step_text[ $i ] );
 	if ($i <= $project_status ) {
-            htmlp_link("step$i.php3",array("proid" => $proid),
+            htmlp_link("step$i.php3",array('proid' => $proid),
                        html_image("ic/$i.png",abs(!strcmp($i,$page)),
                                   36,36,$alt_text));
 	} else {
-            htmlp_image("ic/".$i."grey.png",abs(!strcmp($i,$page)),
+            htmlp_image('ic/'.$i.'grey.png',abs(!strcmp($i,$page)),
                         24,24,$alt_text);
 	}
     }
 
     $btop->box_next_row_of_columns();
 
-    $btop->box_colspan (2,"","#000000",html_image("blank.gif",0,1,1,""));
+    $btop->box_colspan (2,'','#000000',html_image('blank.gif',0,1,1,''));
     $btop->box_columns_end();
     $btop->box_body_end();
     $btop->box_end();
@@ -360,44 +322,41 @@ function draw_top_bar( $project_title, $page, $proid = "",
     print "<br><p>\n";
 }
 
-function top_bar($proid, $page) {
+function top_bar($proid, $page)
+{
     global $t;
-
-// FIXME: is it correct to remove one query?
-//      $db_top = new DB_SourceAgency;
-//      $db_top->query("SELECT * FROM description WHERE proid='$proid'");
-//      $db_top->next_record();
 
     $db_top = new DB_SourceAgency;
     $db_top->query("SELECT * FROM description WHERE proid='$proid'");
 
     if ( $db_top->num_rows() == 0 ) {
-        draw_top_bar( $t->translate("Invalid Project Id"), $page );
+        draw_top_bar( $t->translate('Invalid Project Id'), $page );
     } else {
         $db_top->next_record();
-        draw_top_bar( $db_top->f("project_title"), $page, 
-                      $proid, $db_top->f("status") );
+        draw_top_bar( $db_top->f('project_title'), $page, 
+                      $proid, $db_top->f('status') );
     
     }
 }
 
 
-function summary($proid) {
-    global $bx,$sess,$t,$g_step_count;
+function summary($proid)
+{
+    global $bx, $sess, $t, $g_step_count;
 
     $db_summary = new DB_SourceAgency;
     $db_summary->query("SELECT * FROM description WHERE proid='$proid'");
     $db_summary->next_record();
-    $status = $db_summary->f("status");
+    $status = $db_summary->f('status');
 
     $bx->box_begin();
     $bx->box_body_begin();
     $bx->box_columns_begin(2);
 
-    $bx->box_column_start("right","65%","");
+    $bx->box_column_start('right','65%','');
 
     $bx->box_begin();
-    $bx->box_title($t->translate("General Actions (anytime and anywhere)"));
+    $bx->box_title($t->translate('General Actions (anytime and anywhere)'));
     $bx->box_body_begin();
 
 
@@ -406,73 +365,73 @@ function summary($proid) {
 
     $db_summary->query("SELECT COUNT(*) FROM news WHERE proid='$proid'");
     $db_summary->next_record();
-    htmlp_link("news.php3",array("proid" => $proid),
-               html_image("ic/b.png",0,48,48,
-                          $t->translate("News")) . "&nbsp;"
-               . $t->translate("News"));
-    print ( "( <B>" . $db_summary->f("COUNT(*)")
-            . "</B> "
-            . $t->translate("news for this project")
+    htmlp_link('news.php3',array('proid' => $proid),
+               html_image('ic/b.png',0,48,48,
+                          $t->translate('News')) . '&nbsp;'
+               . $t->translate('News'));
+    print ( '( <B>' . $db_summary->f('COUNT(*)')
+            . '</B> '
+            . $t->translate('news for this project')
             . " )<hr>\n" );
 
     // Commments
-    htmlp_link("comments.php3",array("proid" => $proid),
-               html_image("ic/c.png",0,48,48,
-                          $t->translate("Comments"))
-               . "&nbsp;".$t->translate("General Comments"));
+    htmlp_link('comments.php3',array('proid' => $proid),
+               html_image('ic/c.png',0,48,48,
+                          $t->translate('Comments'))
+               . '&nbsp;'.$t->translate('General Comments'));
 
     $db_summary->query("SELECT COUNT(*) FROM comments WHERE proid='$proid' "
                        . "AND type='general'");
     $db_summary->next_record();
-    print "( <B>".$db_summary->f("COUNT(*)")."</B> "
-        . $t->translate("general comments");
+    print '( <B>'.$db_summary->f('COUNT(*)').'</B> '
+        . $t->translate('general comments');
 
     $db_summary->query("SELECT COUNT(*) FROM comments WHERE proid='$proid' "
                        . "AND type!='general'");
     $db_summary->next_record();
-    print ( ", <B>".$db_summary->f("COUNT(*)")
-            . "</B> "
-            . $t->translate("other comments on this project")
+    print ( ', <B>'.$db_summary->f('COUNT(*)')
+            . '</B> '
+            . $t->translate('other comments on this project')
             . " )<hr>\n" );
 
     // Sponsor Involvement
 
-    htmlp_link("sponsoring.php3",array("proid" => $proid),
-               html_image("ic/d.png",0,48,48,$t->translate("News"))
-               . "&nbsp;".$t->translate("Sponsoring collaboration"));
+    htmlp_link('sponsoring.php3',array('proid' => $proid),
+               html_image('ic/d.png',0,48,48,$t->translate('News'))
+               . '&nbsp;'.$t->translate('Sponsoring collaboration'));
     $db_summary->query("SELECT COUNT(*) FROM sponsoring WHERE proid='$proid' "
                        . "AND status='A'");
     $db_summary->next_record();
-    print ( "( <B>" . $db_summary->f("COUNT(*)")
-            . "</B> "
-            . $t->translate("accepted sponsoring collaborations")
-            .", " );
+    print ( '( <B>' . $db_summary->f('COUNT(*)')
+            . '</B> '
+            . $t->translate('accepted sponsoring collaborations')
+            .', ' );
 
     $db_summary->query("SELECT COUNT(*) FROM sponsoring WHERE proid='$proid' "
                        . "AND status='P'");
     $db_summary->next_record();
-    print (" <B>"
-           .$db_summary->f("COUNT(*)")
-           . "</B> "
-           .$t->translate("non-accepted sponsoring proposals for this project")
-           ." )<BR><I>"
-           .$t->translate("This is interesting if you are a sponsor "
-                          ."and you are interested in joining this project")
+    print (' <B>'
+           .$db_summary->f('COUNT(*)')
+           . '</B> '
+           .$t->translate('non-accepted sponsoring proposals for this project')
+           .' )<BR><I>'
+           .$t->translate('This is interesting if you are a sponsor '
+                          .'and you are interested in joining this project')
            .".</I><hr>\n");
 
     // Project History
-    htmlp_link("history.php3",array("proid" => $proid),
-               html_image("ic/e.png",0,48,48,"News")."&nbsp;"
-               .$t->translate("Project History"));
-    print ("<BR><i>"
+    htmlp_link('history.php3',array('proid' => $proid),
+               html_image('ic/e.png',0,48,48,'News').'&nbsp;'
+               .$t->translate('Project History'));
+    print ('<BR><i>'
            .$t->translate("You'll find here all what has been posted to "
-                          ."the project (news, comments, content suggestions"
-                          .", etc.) in chronological order")
+                          .'the project (news, comments, content suggestions'
+                          .', etc.) in chronological order')
            ."</i>.<br>&nbsp;\n" );
 
     $bx->box_body_end();
 
-    $bx->box_title($t->translate("Step specific actions (only at its time)"));
+    $bx->box_title($t->translate('Step specific actions (only at its time)'));
     $bx->box_body_begin();
 
     // Project steps linked and explained
@@ -484,65 +443,65 @@ function summary($proid) {
     $bx->box_end();
 
     $bx->box_column_finish();
-    $bx->box_column_start("right","35%","");
+    $bx->box_column_start('right','35%','');
 
     $bx->box_begin();
-    $bx->box_title($t->translate("Step information"));
+    $bx->box_title($t->translate('Step information'));
     $bx->box_body_begin();
     step_information ($proid,$status);
 
     $bx->box_body_end();
 
-    $bx->box_title($t->translate("Be informed"));
+    $bx->box_title($t->translate('Be informed'));
     $bx->box_body_begin();
 
-    print ( "<br>" . html_link("monitor_edit.php3",array("proid" => $proid),
-                               html_image("ic/check.png",0,16,15,
-                                          "ic/check.png")
-                               . " ".$t->translate("Monitor This Project"))
-            . " ". $t->translate("Receive an email update when something "
-                                 ."happens in this project")
+    print ( '<br>' . html_link('monitor_edit.php3',array('proid' => $proid),
+                               html_image('ic/check.png',0,16,15,
+                                          'ic/check.png')
+                               . ' '.$t->translate('Monitor This Project'))
+            . ' '. $t->translate('Receive an email update when something '
+                                 .'happens in this project')
             . "<p>\n" );
 
     $bx->box_body_end();
 
-    $bx->box_title($t->translate("Project Information"));
+    $bx->box_title($t->translate('Project Information'));
     $bx->box_body_begin();
     calendar_box($proid);
     $bx->box_body_end();
 
-    $bx->box_title($t->translate("Actions by involved users"));
+    $bx->box_title($t->translate('Actions by involved users'));
     $bx->box_body_begin();
 
-    print ("<br>" . html_link("configure.php3",array("proid" => $proid),
-                              html_image("ic/check.png",0,16,15,"ic/check.png")
-                              . " "
-                              .$t->translate("Project configurations"))
-           . " "
-           .$t->translate("Configure the project parameters")
+    print ('<br>' . html_link('configure.php3',array('proid' => $proid),
+                              html_image('ic/check.png',0,16,15,'ic/check.png')
+                              . ' '
+                              .$t->translate('Project configurations'))
+           . ' '
+           .$t->translate('Configure the project parameters')
            .".\n&nbsp;<p>" );
 
-    print ( html_link("views.php3",array("proid" => $proid),
-                      html_image("ic/check.png",0,16,15,"ic/check.png")
-                      . " "
-                      .$t->translate("Information access configuration"))
-            . " "
-            . $t->translate("Configure the information access to the "
+    print ( html_link('views.php3',array('proid' => $proid),
+                      html_image('ic/check.png',0,16,15,'ic/check.png')
+                      . ' '
+                      .$t->translate('Information access configuration'))
+            . ' '
+            . $t->translate('Configure the information access to the '
                             ."project's data")
             .".\n&nbsp;<p>" );
 
-    print ( html_link("decisions.php3",array("proid" => $proid),
-                      html_image("ic/check.png",0,16,15,"ic/check.png")
-                      . " "
-                      .$t->translate("Decisions on this step"))
-            . " "
-            .$t->translate("Sponsors can make the current decision "
-                           ."following this link")
+    print ( html_link('decisions.php3',array('proid' => $proid),
+                      html_image('ic/check.png',0,16,15,'ic/check.png')
+                      . ' '
+                      .$t->translate('Decisions on this step'))
+            . ' '
+            .$t->translate('Sponsors can make the current decision '
+                           .'following this link')
             .".\n&nbsp;<p><br>" );
 
     $bx->box_body_end();
 
-    $bx->box_title($t->translate("Latest News"));
+    $bx->box_title($t->translate('Latest News'));
     $bx->box_body_begin();
     summary_news($proid);
     $bx->box_body_end();
@@ -554,22 +513,23 @@ function summary($proid) {
     $bx->box_end();
 }
 
-function step_information ($proid,$step) {
+function step_information($proid, $step)
+{
     global $bx, $t, $g_step_explanation;
 
     $bx->box_begin();
     $bx->box_body_begin();
     $bx->box_columns_begin(2);
   
-    $bx->box_column("","","","<b>"
-                    .$t->translate("Step information")
-                    ."</b>: "
-                    .$t->translate("Step")." $step<br>\n"
+    $bx->box_column('','','','<b>'
+                    .$t->translate('Step information')
+                    .'</b>: '
+                    .$t->translate('Step')." $step<br>\n"
                     . $t->translate( $g_step_explanation[$step] ));
 
-    $bx->box_column("","","",html_link("step".$step.".php3",
-                                       array("proid" => $proid),
-                                       html_image("ic/".$step.".png",0,48,48,
+    $bx->box_column('','','',html_link('step'.$step.'.php3',
+                                       array('proid' => $proid),
+                                       html_image('ic/'.$step.'.png',0,48,48,
                                                   $step)));
 
     $bx->box_columns_end();
@@ -578,7 +538,8 @@ function step_information ($proid,$step) {
 }
 
 // this function is used in the summary page
-function calendar_box($proid) {
+function calendar_box($proid)
+{
     global $bx, $t;
 
     $db_general = new DB_SourceAgency;
@@ -590,56 +551,57 @@ function calendar_box($proid) {
     
     $bx->box_columns_begin(2);
     
-    $bx->box_column ("left","55%","","<b>"
-                     .$t->translate("Project Owner(s)")
-                     .":</b>");
-    $bx->box_column ("left","45%","",
-                     "&nbsp;" . $db_general->f("description_user"));
+    $bx->box_column ('left','55%','','<b>'
+                     .$t->translate('Project Owner(s)')
+                     .':</b>');
+    $bx->box_column ('left','45%','',
+                     '&nbsp;' . $db_general->f('description_user'));
     
     $bx->box_next_row_of_columns();
-    $bx->box_colspan (2,"","","");
+    $bx->box_colspan (2,'','','');
     $bx->box_next_row_of_columns();
     
-    $bx->box_column ("left","","","<b>"
-                     .$t->translate("Project Type")
-                     .":</b>");
-    $bx->box_column ("left","","","&nbsp;".$db_general->f("type"));
+    $bx->box_column ('left','','','<b>'
+                     .$t->translate('Project Type')
+                     .':</b>');
+    $bx->box_column ('left','','','&nbsp;'.$db_general->f('type'));
     
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ("left","","","<b>"
-                     .$t->translate("Project Nature")
-                     .":</b>");
+    $bx->box_column ('left','','','<b>'
+                     .$t->translate('Project Nature')
+                     .':</b>');
     // the nature is whether the project is a developing or a sponsored
     // project. we work it out from the permissions on the project initiator
     // if they are a devel, then it must be a developing.
-    $perms = $db_general->f("perms");
-    $nature = ( ereg( "devel", $perms ) ? 1 : 0 );
-    $nature += ( ereg( "sponsor", $perms ) ? 2 : 0 );
-    switch ( $nature ) {
-        case 1:
-            $nature = "Developing"; 
-            break;
-        case 2:
-            $nature = "Sponsoring";
-            break;
-        case 3:
-            $nature = "Developing and Sponsoring"; 
-            break;
-        default:
-            $nature = "Unknown";
+    $perms = $db_general->f('perms');
+    $nature = ( ereg( 'devel', $perms ) ? 1 : 0 );
+    $nature += ( ereg( 'sponsor', $perms ) ? 2 : 0 );
+
+    switch ($nature) {
+    case 1:
+        $nature = 'Developing'; 
+        break;
+    case 2:
+        $nature = 'Sponsoring';
+        break;
+    case 3:
+        $nature = 'Developing and Sponsoring'; 
+        break;
+    default:
+        $nature = 'Unknown';
     }
-    $bx->box_column ("left","","", "&nbsp;" . $t->translate($nature));
+    $bx->box_column ('left','','', '&nbsp;' . $t->translate($nature));
     
     $bx->box_next_row_of_columns();
 
-    $bx->box_column ("left","","","<b>"
-                     .$t->translate("Project Volume")
-                     .":</b>");
-    $bx->box_column ("left","","","&nbsp;".$db_general->f("volume"));
+    $bx->box_column ('left','','','<b>'
+                     .$t->translate('Project Volume')
+                     .':</b>');
+    $bx->box_column ('left','','','&nbsp;'.$db_general->f('volume'));
     
     $bx->box_next_row_of_columns();
-    $bx->box_colspan (2,"","","");
+    $bx->box_colspan (2,'','','');
     $bx->box_next_row_of_columns();
     
     $db_local = new DB_SourceAgency;
@@ -648,28 +610,28 @@ function calendar_box($proid) {
     $db_local->next_record();
     $budget = ( $db_local->num_rows() == 0 ? 0 : $db_local->f("SUM(budget)") );
     
-    $bx->box_column ("left","","","<b>"
-                     .$t->translate("Current project budget")
-                     .":</b>");
-    $bx->box_column ("left","","","$budget euro");
+    $bx->box_column ('left','','','<b>'
+                     .$t->translate('Current project budget')
+                     .':</b>');
+    $bx->box_column ('left','','',"$budget euro");
     
     $bx->box_next_row_of_columns();
-    $bx->box_colspan (2,"","","");
+    $bx->box_colspan (2,'','','');
     $bx->box_next_row_of_columns();
     
-    $bx->box_column ("left","","","<b>"
-                     .$t->translate("Creation")
-                     .":</b>");
+    $bx->box_column ('left','','','<b>'
+                     .$t->translate('Creation')
+                     .':</b>');
     
-    $tStamp = mktimestamp($db_general->f("description_creation"));
-    $bx->box_column ("left","","", "&nbsp;" . timestr_middle($tStamp));
+    $tStamp = mktimestamp($db_general->f('description_creation'));
+    $bx->box_column ('left','','', '&nbsp;' . timestr_middle($tStamp));
     
 /* 
 // TODO: Not finished yet
 $bx->box_next_row_of_columns();
 
-$bx->box_column ("left","","","<b>Propossed Calendars</b>");
-$bx->box_column ("left","","","&nbsp;");
+$bx->box_column ('left','','','<b>Propossed Calendars</b>');
+$bx->box_column ('left','','','&nbsp;');
 */
     
     $bx->box_columns_end();
@@ -677,8 +639,9 @@ $bx->box_column ("left","","","&nbsp;");
     print "<br>\n";
 }
 
-function summary_news($proid) {
-    global $sess,$t;
+function summary_news($proid)
+{
+    global $sess, $t;
 
     $db_summ_news = new DB_SourceAgency;
     $db_summ_news->query("SELECT * FROM news,auth_user WHERE "
@@ -695,26 +658,26 @@ function summary_news($proid) {
                                     . "AND number='" 
                                     . $db_summ_news->f("creation_news") . "'");
 
-	print "&nbsp;";
-	htmlp_link("news.php3",array("proid" => $proid),
-                   "<b>" . $db_summ_news->f("subject_news") . "</b><br>");
+	print '&nbsp;';
+	htmlp_link('news.php3',array('proid' => $proid),
+                   '<b>' . $db_summ_news->f('subject_news') . '</b><br>');
 
-        $timestamp = mktimestamp($db_summ_news->f("creation_news"));
+        $timestamp = mktimestamp($db_summ_news->f('creation_news'));
 
         print ( "<b><font size=\"-1\">&nbsp;"
-                . lib_nick($db_summ_news->f("user_news")) . " - "
+                . lib_nick($db_summ_news->f('user_news')) . ' - '
                 . timestr_comment($timestamp) . "</b></font><br>\n" );
 
 	if ($db_comments_on_news->num_rows() > 0) {
             print ( "&nbsp;<font size=-1>[ "
                     . $db_comments_on_news->num_rows() . " ");
-            htmlp_link("comments.php3",
-                       array("proid"  => $proid, 
-                             "type"   => "News", 
-                             "number" => $db_summ_news->f("creation_news"),
-                             "ref"    => "0"), 
-                       $t->translate("comments"));
-            print( $t->translate("on it")." ]</font>\n" );
+            htmlp_link('comments.php3',
+                       array('proid'  => $proid, 
+                             'type'   => 'News', 
+                             'number' => $db_summ_news->f('creation_news'),
+                             'ref'    => '0'), 
+                       $t->translate('comments'));
+            print( $t->translate('on it')." ]</font>\n" );
 	}
 	print "<p>\n";
     }
@@ -774,35 +737,29 @@ function select_from_config($name,$array_name,$selected) {
     // WISH: the problem is that I have not encountered how it works!
 
     switch ($array_name) {
-        case "project_types": {
-            $array = $project_types; 
-            break;
-        }
-        case "project_volume": {
-            $array = $project_volume; 
-            break;
-        }
-        case "platform_array": {
-            $array = $platform_array; 
-            break;
-        }
-        case "architecture_array": {
-            $array = $architecture_array; 
-            break;
-        }
-        case "environment_array": {
-            $array = $environment_array; 
-            break;
-        }
-        case "milestone_product_array": {
-            $array = $milestone_product_array; 
-            break;
-        }
-        case "comments_type_array": {
-            $array = $comments_type_array; 
-            break;
-        }
-        /** FIXME: No default case **/
+    case "project_types":
+        $array = $project_types; 
+        break;
+    case "project_volume":
+        $array = $project_volume; 
+        break;
+    case "platform_array":
+        $array = $platform_array; 
+        break;
+    case "architecture_array":
+        $array = $architecture_array; 
+        break;
+    case "environment_array":
+        $array = $environment_array; 
+        break;
+    case "milestone_product_array":
+        $array = $milestone_product_array; 
+        break;
+    case "comments_type_array":
+        $array = $comments_type_array; 
+        break;
+    default:
+        die('Error in function select_from_config() in lib.inc. Specified type has no array');
     }
     
     $output = html_select($name)."\n";
@@ -816,7 +773,8 @@ function select_from_config($name,$array_name,$selected) {
     return($output);
 }
 
-function followup($proid) {
+function followup($proid)
+{
     global $bx,$sess,$t,$auth;
     
     $db_followment = new DB_SourceAgency;
@@ -856,40 +814,35 @@ function followup($proid) {
     $bx->box_end();
 }
 
-function show_status($char) {
+function show_status($char)
+{
     switch ($char) {
-        case 'P': {
-            return "Proposed";
-            break;
-        }
-        case 'N': {
-            return "Negotiating";
-            break;
-        }
-        case 'A': {
-            return "Accepted";
-            break;
-        }
-        case 'R': {
-            return "Rejected";
-            break;
-        }
-        case 'D': {
-            return "Deleted";
-            break;
-        }
-        case 'M': {
-            return "Modified";
-            break;
-        }
-        default: {
-            return "Proposed";
-            break;
-        }
+    case 'P':
+        return "Proposed";
+        break;
+    case 'N':
+        return "Negotiating";
+        break;
+    case 'A':
+        return "Accepted";
+        break;
+    case 'R':
+        return "Rejected";
+        break;
+    case 'D':
+        return "Deleted";
+        break;
+    case 'M':
+        return "Modified";
+        break;
+    default:
+        return "Proposed";
+        break;
     }
 }
 
-function show_project_participants($proid,$participant_type) {
+function show_project_participants($proid, $participant_type)
+{
     global $t, $bx, $db;
     
     $bx->box_begin();
@@ -897,19 +850,17 @@ function show_project_participants($proid,$participant_type) {
     $bx->box_body_begin();
     
     switch ($participant_type) {
-        case "sponsor": {
-            $table = "sponsoring"; 
-            break;
-        }
-        case "developer": {
-            $table = "developing"; 
-            break;
-        }
-        case "referee": {
-            $table = "referees"; 
-            break;
-        }
-        /** FIXME: missing a default case **/
+    case "sponsor":
+        $table = "sponsoring"; 
+        break;
+    case "developer":
+        $table = "developing"; 
+        break;
+    case "referee":
+        $table = "referees"; 
+        break;
+    default:
+        die('Error in function show_project_participants() in lib.inc: No correct project participant passed');  
     }
     
     $query = ( "SELECT $participant_type FROM $table WHERE "
@@ -926,7 +877,8 @@ function show_project_participants($proid,$participant_type) {
 }
 
 // REFACTOR: could be moved to html.inc ????
-function lib_comment_it($proid,$type,$number,$ref,$subject,$text) {
+function lib_comment_it($proid,$type,$number,$ref,$subject,$text)
+{
     global $sess;
     
     print "<FONT SIZE=-1>[ ";
@@ -939,7 +891,8 @@ function lib_comment_it($proid,$type,$number,$ref,$subject,$text) {
 }
 
 // REFACTOR: could be moved to html.inc ????
-function lib_previous_comment($proid,$type,$number,$ref,$text) {
+function lib_previous_comment($proid,$type,$number,$ref,$text)
+{
     global $sess;
     
     print "<FONT SIZE=-1>[ ";
@@ -950,7 +903,8 @@ function lib_previous_comment($proid,$type,$number,$ref,$text) {
     print " ]</FONT>\n";
 }
 
-function lib_show_comments_on_it($proid,$type_cmt,$number,$cmt_id) {
+function lib_show_comments_on_it($proid, $type_cmt, $number, $cmt_id)
+{
 
     if (isset($number) && !empty($number)) {
         $number_selection = "AND number='$number'";
@@ -959,26 +913,25 @@ function lib_show_comments_on_it($proid,$type_cmt,$number,$cmt_id) {
         $number_selection = "AND number='0'";
     }
 
-    // FIXME: this is confusing: this $db is not the global one ....
-    $db = new DB_SourceAgency;
-    $db->query("SELECT * FROM comments,auth_user WHERE proid='$proid' AND "
+    $db2 = new DB_SourceAgency;
+    $db2->query("SELECT * FROM comments,auth_user WHERE proid='$proid' AND "
                ."type='" . $type_cmt . "' " . $number_selection
                . " AND ref='$cmt_id' AND user_cmt=username "
                . "ORDER BY creation_cmt ASC");
 
-    if ($db->num_rows() > 0) {
+    if ($db2->num_rows() > 0) {
 	echo "<ul>\n";
-  	while($db->next_record()) {
+  	while($db2->next_record()) {
             echo "<li>". html_link("comments.php3",
                                    array("proid"  => $proid, 
                                          "type"   => $type_cmt, 
                                          "number" => $number, 
                                          "ref"    => $cmt_id),
-                                   $db->f("subject_cmt"))
-                . " by <b>" . $db->f("user_cmt")."</b> on <b>"
-                . timestr_comment( mktimestamp($db->f("creation_cmt") ))
+                                   $db2->f("subject_cmt"))
+                . " by <b>" . $db2->f("user_cmt")."</b> on <b>"
+                . timestr_comment( mktimestamp($db2->f("creation_cmt") ))
                 . "</b>\n";
-            lib_show_comments_on_it($proid,$type_cmt,$number,$db->f("id"));
+            lib_show_comments_on_it($proid,$type_cmt,$number,$db2->f("id"));
   	}
   	echo "</ul>\n";
     }
@@ -986,7 +939,8 @@ function lib_show_comments_on_it($proid,$type_cmt,$number,$cmt_id) {
 }
 
 function select_date($selection_name, $selected_day,
-                     $selected_month, $selected_year) {
+                     $selected_month, $selected_year)
+{
 
     global $config_first_year, $config_last_year;
     $return = html_select($selection_name."_day");
@@ -1013,49 +967,61 @@ function select_date($selection_name, $selected_day,
     return($return);
 }
 
-function month($number) {
+function month($number)
+{
     global $t;
 
     switch ($number) {
-	case 1:	        return($t->translate("January"));
-	case 2:	        return($t->translate("February"));
-	case 3:	        return($t->translate("March"));
-	case 4:		return($t->translate("April"));
-	case 5:		return($t->translate("May"));
-	case 6:		return($t->translate("June"));
-	case 7:		return($t->translate("July"));
-	case 8:		return($t->translate("August"));
-	case 9:		return($t->translate("September"));
-	case 10:	return($t->translate("October"));
-	case 11:	return($t->translate("November"));
-	case 12:	return($t->translate("December"));
+    case 1:
+ 	return($t->translate("January"));
+    case 2:
+        return($t->translate("February"));
+    case 3:
+        return($t->translate("March"));
+    case 4:
+	return($t->translate("April"));
+    case 5:
+	return($t->translate("May"));
+    case 6:
+	return($t->translate("June"));
+    case 7:
+	return($t->translate("July"));
+    case 8:
+	return($t->translate("August"));
+    case 9:
+	return($t->translate("September"));
+    case 10:
+        return($t->translate("October"));
+    case 11:
+        return($t->translate("November"));
+    case 12:
+	return($t->translate("December"));
     }
 }
 
-function date_to_timestamp($day,$month,$year) {
-
+function date_to_timestamp($day, $month, $year)
+{
     if ($day < 10 && strlen($day) < 2 ) {
         $day = "0" . $day;
     }
     if ($month < 10 && strlen($month) < 2) {
         $month = "0" . $month;
     }
-
     return ($year . $month . $day . "120000");
 }
 
-function timestamp_to_date($timestamp) {
-
+function timestamp_to_date($timestamp)
+{
     // TODO: precondition ensuring that the timestamp is the right length
     $array["year"]  = substr($timestamp,0,4);
     $array["month"] = substr($timestamp,4,2);
     $array["day"]   = substr($timestamp,6,2);
 
     return($array);
-
 }
 
-function lib_select_yes_or_no($name,$selected) {
+function lib_select_yes_or_no($name, $selected)
+{
     global $t;
 
     $return = html_select($name);
@@ -1069,16 +1035,17 @@ function lib_select_yes_or_no($name,$selected) {
     return($return);
 }
 
-function lib_nick($nick) {
+function lib_nick($nick)
+{
     global $t;     
     return "<b>".$t->translate("by")." ".$nick."</b>";
 }
-
 function lib_pnick($nick) {
-    print lib_nick( $nick );
+    print lib_nick($nick);
 }
 
-function lib_insertion_information() {
+function lib_insertion_information()
+{
     global $bx, $auth, $t;
 
     if (is_sponsor()) {
@@ -1105,9 +1072,8 @@ function lib_insertion_information() {
     }
 }
 
-function show_project_milestones($proid) {
-
-
+function show_project_milestones($proid)
+{
     $db_local = new DB_SourceAgency;
     $db_local->query("SELECT devid FROM developing WHERE proid='$proid' "
                      ."AND status='A'");
@@ -1117,7 +1083,8 @@ function show_project_milestones($proid) {
     show_milestones($proid,$db_local->f("devid"),"");
 }
 
-function lib_insertion_finished() {
+function lib_insertion_finished()
+{
     global $auth;
     // NOI18N: need to use translation here
     echo "<b>Congratulations. You are finished with the insertion "
@@ -1140,15 +1107,19 @@ function start_content() {
     print "\n\n<!-- content -->\n\n";
 }
 
-function end_content() {
+function end_content()
+{
     // see comment for start_content
     print "\n\n<!-- end content -->\n\n";
 }
 
-function is_not_set_or_empty( &$val ) {
+function is_not_set_or_empty(&$val)
+{
     return ( !isset( $val ) || empty( $val ) );
 }
-function is_set_and_not_empty( &$val ) {
+
+function is_set_and_not_empty(&$val)
+{
     // this is not the same as !is_not_set_or_empty($val) because
     // a value can be set and empty, and is_not_set_or_empty would
     // return false
