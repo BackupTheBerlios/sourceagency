@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: admprojectslib.inc,v 1.8 2002/05/07 09:25:59 riessen Exp $
+# $Id: admprojectslib.inc,v 1.9 2002/05/07 11:16:05 riessen Exp $
 #
 ######################################################################
 
@@ -269,7 +269,7 @@ function admprojects_insert($proid, $status)
                      .$t->translate( 'has been reviewed succesfully'). '.');
 
     } else {
-        $message = ( $t->translate( 'Project' ). ' ' $project_title . ' '
+        $message = ( $t->translate( 'Project' ). ' ' . $project_title . ' '
                      .$t->translate('has not been accepted' ). ".\n"
                      .$t->translate('Please, contact the system '
                                     .'administrators for furhter details')
