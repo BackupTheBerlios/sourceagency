@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: refereeslib.inc,v 1.4 2002/05/06 13:09:40 riessen Exp $
+# $Id: refereeslib.inc,v 1.5 2002/06/06 14:26:28 riessen Exp $
 #
 ######################################################################
 
@@ -180,11 +180,13 @@ function referees_insert($proid, $user)
     $db->query("INSERT referees SET proid='$proid',referee='$user',"
                ."status='P'");
 
-    include('monitorlib.inc');
+    if ( !function_exists( 'monitor_mail' ) ) {
+        include('monitorlib.inc');
+    }
     // WISH: config.inc should not be required another time,
     // as it is done at the beginning of every page.
     include('config.inc');
-    monitor_mail($proid,'referees', 'New referee proposed for project $proid',
+    monitor_mail($proid, 'referee', 'New referee proposed for project $proid',
                  'Event has happened');
 
     show_referees($proid);
