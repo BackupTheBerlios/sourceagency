@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMonitorlib.php,v 1.5 2002/04/12 14:25:33 riessen Exp $
+# $Id: TestMonitorlib.php,v 1.6 2002/04/23 10:03:52 riessen Exp $
 #
 ######################################################################
 
@@ -57,26 +57,26 @@ extends UnitTest
     function testSelect_importence() {
 
         $ret = select_importance( "low" );
-        $this->_testFor_string_length( $ret, 126 );
+        $this->_testFor_string_length( $ret, 164, "test 1" );
         $pats=array(0=>"option selected value=\"low\"",
                     1=>"option value=\"medium\"",
                     2=>"option value=\"high\"" );
         $this->_testFor_patterns( $ret, $pats, 3 );
 
         $ret = select_importance( "medium" );
-        $this->_testFor_string_length( $ret, 126 );
+        $this->_testFor_string_length( $ret, 164, "test 2" );
         $pats[0] = "option value=\"low\"";
         $pats[1] = "option selected value=\"medium\"";
         $this->_testFor_patterns( $ret, $pats, 3 );
 
         $ret = select_importance( "high" );
-        $this->_testFor_string_length( $ret, 126 );
+        $this->_testFor_string_length( $ret, 164, "test 3" );
         $pats[1] = "option value=\"medium\"";
         $pats[2] = "option selected value=\"high\"";
         $this->_testFor_patterns( $ret, $pats, 3 );
 
         $ret = select_importance( "fubar" );
-        $this->_testFor_string_length( $ret, 117 );
+        $this->_testFor_string_length( $ret, 155, "test 4" );
         $pats[2] = "option value=\"high\"";
         $this->_testFor_patterns( $ret, $pats, 3 );
     }
@@ -121,7 +121,7 @@ extends UnitTest
         monitor_mail( $row[0]["proid"], $row[0]["type"], $row[0]["subject"],
                       $row[0]["message"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 0 );
+        $this->_testFor_captured_length( 0, "test 1" );
 
         // 
         // second call, middle propriety
@@ -130,7 +130,7 @@ extends UnitTest
         monitor_mail( $row[1]["proid"], $row[1]["type"], $row[1]["subject"],
                       $row[1]["message"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 0 );
+        $this->_testFor_captured_length( 0, "test 2" );
         
         // 
         // third call, middle propriety
@@ -139,7 +139,7 @@ extends UnitTest
         monitor_mail( $row[2]["proid"], $row[2]["type"], $row[2]["subject"],
                       $row[2]["message"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 0 );
+        $this->_testFor_captured_length( 0, "test 3" );
 
         // finally check that everything went smoothly with the DB
         $this->_check_db( $db_config );
@@ -185,7 +185,7 @@ extends UnitTest
         capture_reset_and_start();
         monitor_show( $proid[0] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 41 );
+        $this->_testFor_captured_length( 41, "test 1" );
         $this->_testFor_pattern( $text, ("<p>Nobody is monitoring this "
                                          ."project[.]<p>\n"));
         // 
@@ -195,33 +195,31 @@ extends UnitTest
         capture_reset_and_start();
         monitor_show( $proid[1] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 3881 );
+        $this->_testFor_captured_length( 5170, "test 2" );
         
         $color = array( 0 => "gold", 1 => "#FFFFFF" );
 
         for ( $idx = 0; $idx < 4; $idx++ ) {
-            $this->_testFor_pattern( $text, ("<td align=\"center\" width="
-                                             ."\"\" bgcolor=\""
-                                             .$color[$idx%2]."\"><b>"
-                                             .($idx+1)."<\/b><\/td>"));
-
-            $this->_testFor_pattern( $text, ("<td align=\"center\" width="
-                                             ."\"\" bgcolor=\"".$color[$idx%2]
-                                             ."\"><b><b>by "
-                                             . $row[$idx]["username"]
-                                             ."<\/b><\/b><\/td>"));
-
-            $this->_testFor_pattern( $text, ("<td align=\"center\" width="
-                                             ."\"\" bgcolor=\"".$color[$idx%2]
-                                             ."\"><b>"
-                                             .$row[$idx]["perms"]
-                                             ."<\/b><\/td>"));
-
-            $this->_testFor_pattern( $text, ("<td align=\"center\" width="
-                                             ."\"\" bgcolor=\"".$color[$idx%2]
-                                             ."\"><b>"
-                                             .$row[$idx]["importance"]
-                                             ."<\/b><\/td>"));
+            $ps=array( 0=> ("<td align=\"center\" width="
+                            ."\"\" bgcolor=\""
+                            .$color[$idx%2]."\">[ \n]+<b>"
+                            .($idx+1)."<\/b>[ \n]+<\/td>"),
+                       1=> ("<td align=\"center\" width="
+                            ."\"\" bgcolor=\"".$color[$idx%2]
+                            ."\">[ \n]+<b><b>by "
+                            . $row[$idx]["username"]
+                            ."<\/b><\/b>[ \n]+<\/td>"),
+                       2=> ("<td align=\"center\" width="
+                            ."\"\" bgcolor=\"".$color[$idx%2]
+                            ."\">[ \n]+<b>"
+                            .$row[$idx]["perms"]
+                            ."<\/b>[ \n]+<\/td>"),
+                       3=> ("<td align=\"center\" width="
+                            ."\"\" bgcolor=\"".$color[$idx%2]
+                            ."\">[ \n]+<b>"
+                            .$row[$idx]["importance"]
+                            ."<\/b>[ \n]+<\/td>"));
+            $this->_testFor_patterns( $text, $ps, 4, 'index: ' . $idx );
         }
 
         // finally check that everything went smoothly with the DB
@@ -240,9 +238,10 @@ extends UnitTest
         capture_reset_and_start();
         monitor_preview( $row[0]["proid"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 800 + strlen( timestr( time() )));
+        $this->_testFor_captured_length( 898 + strlen( timestr( time() )), 
+                                         "test 1");
 
-        $this->_testFor_pattern( $text, "<b>by uname_0<\/b>" );
+        $this->_testFor_pattern( $text, "<b>by uname_0<\/b>", "test 1" );
     }
     
     function testMonitor_form() {
@@ -255,18 +254,19 @@ extends UnitTest
         $importance = "low";
         monitor_form( "proid_0" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1477 + strlen( $sess->self_url() ));
+        $this->_testFor_captured_length( 1812 + strlen( $sess->self_url() ), 
+                                         "test 1");
 
-        $this->_testFor_pattern( $text, ("<select name=\"importance\">\n"
-                                         ."<option selected value=\"low\">"
-                                         ."low\n<option value=\"medium\">"
-                                         ."medium\n<option value=\"high\">"
-                                         ."high\n<\/select>"));
-        $this->_testFor_pattern( $text, ("<form action=\""
-                                         .ereg_replace( "/", "\/", 
-                                                        $sess->self_url() )
-                                         ."[?]proid=proid_0\" "
-                                         ."method=\"POST\">"));
+        $ps=array( 0=>("<select name=\"importance\" size=\"0\">"
+                       ."[ \n]+<option selected value=\"low\">low"
+                       ."[ \n]+<option value=\"medium\">medium"
+                       ."[ \n]+<option value=\"high\">high"
+                       ."[ \n]+<\/select>"),
+                   1=>("<form action=\""
+                       .ereg_replace( "/", "\/", $sess->self_url() )
+                       ."[?]proid=proid_0\" "
+                       ."method=\"POST\">"));
+        $this->_testFor_patterns( $text, $ps, 2, "test 1" );
 
         //
         // second call
@@ -275,19 +275,20 @@ extends UnitTest
         $importance = "medium";
         monitor_form( "proid_1" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1477 + strlen( $sess->self_url() ) );
+        $this->_testFor_captured_length( 1812 + strlen( $sess->self_url()),
+                                         "test 2" );
 
-        $this->_testFor_pattern( $text, ("<select name=\"importance\">\n"
-                                         ."<option value=\"low\">"
-                                         ."low\n<option selected "
-                                         ."value=\"medium\">"
-                                         ."medium\n<option value=\"high\">"
-                                         ."high\n<\/select>"));
-        $this->_testFor_pattern( $text, ("<form action=\""
-                                         .ereg_replace( "/", "\/", 
-                                                        $sess->self_url() )
-                                         ."[?]proid=proid_1\" "
-                                         ."method=\"POST\">"));
+        $ps=array( 0=>("<select name=\"importance\" size=\"0\">"
+                       ."[ \n]+<option value=\"low\">low"
+                       ."[ \n]+<option selected value=\"medium\">medium"
+                       ."[ \n]+<option value=\"high\">high"
+                       ."[ \n]+<\/select>"),
+                   1=>("<form action=\""
+                       .ereg_replace( "/", "\/", $sess->self_url() )
+                       ."[?]proid=proid_1\" "
+                       ."method=\"POST\">"));
+        $this->_testFor_patterns( $text, $ps, 2, "test 2" );
+
         //
         // third call
         //
@@ -295,18 +296,19 @@ extends UnitTest
         $importance = "fubar";
         monitor_form( "proid_2" );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 1468 + strlen( $sess->self_url() ) );
+        $this->_testFor_captured_length( 1803 + strlen($sess->self_url()), 
+                                         "test 3" );
 
-        $this->_testFor_pattern( $text, ("<select name=\"importance\">\n"
-                                         ."<option value=\"low\">"
-                                         ."low\n<option value=\"medium\">"
-                                         ."medium\n<option value=\"high\">"
-                                         ."high\n<\/select>"));
-        $this->_testFor_pattern( $text, ("<form action=\""
-                                         .ereg_replace( "/", "\/", 
-                                                        $sess->self_url() )
-                                         ."[?]proid=proid_2\" "
-                                         ."method=\"POST\">"));
+        $ps=array( 0=> ("<select name=\"importance\" size=\"0\">"
+                        ."[ \n]+<option value=\"low\">low"
+                        ."[ \n]+<option value=\"medium\">medium"
+                        ."[ \n]+<option value=\"high\">high"
+                        ."[ \n]+<\/select>"),
+                   1=> ("<form action=\""
+                        .ereg_replace( "/", "\/", $sess->self_url() )
+                        ."[?]proid=proid_2\" "
+                        ."method=\"POST\">"));
+        $this->_testFor_patterns( $text, $ps, 2, "test 3" );
     }
 }
 
