@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestRatingslib.php,v 1.12 2002/07/23 14:21:55 riessen Exp $
+// $Id: TestRatingslib.php,v 1.13 2002/07/23 14:22:38 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -108,7 +108,7 @@ extends UnitTest
         $this->set_text( capture_stop_and_get() );
         $this->assertRegexp( '/Undefined variable:  array/',
                              $GLOBALS['err_msg'] );
-        $this->_testFor_string_length( 1451 + strlen($sess->self_url() );
+        $this->_testFor_string_length( 1451 + strlen($sess->self_url() ));
 
         // test two: sponsor
         $args[1]['dev_or_spo'] = 'sponsor';
