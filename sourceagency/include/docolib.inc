@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: docolib.inc,v 1.1 2002/04/19 10:20:59 grex Exp $
+# $Id: docolib.inc,v 1.2 2002/04/19 10:26:14 grex Exp $
 #
 ######################################################################
 
@@ -141,6 +141,8 @@ function doco_mod($db)
                      '<b>'.$t->translate('Page (without extension)').'</b> (64): ');
     $bx->box_column ('left', '70%', '',
                      html_input_text('page', 40, 64, $db->f('page')));
+
+    $bx->box_next_row_of_columns();
 
     $bx->box_column ('right','30%','',
                      '<b>'.$t->translate('Header').'</b> (255): ');
