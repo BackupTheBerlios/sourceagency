@@ -54,7 +54,7 @@ if ($db->num_rows() == 0) {
 	$numiter = (($db->f("COUNT(*)")-1)/10);
 
   	$query  = ( "SELECT * FROM description,auth_user WHERE "
-                    "description.proid='".$db->f("proid")."' AND "
+                    ."description.proid='".$db->f("proid")."' AND "
                     ."description.description_user=auth_user.username "
                     ."AND description.status > '0' GROUP BY "
                     ."description.proid");
