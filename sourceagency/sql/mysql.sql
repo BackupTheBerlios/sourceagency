@@ -210,6 +210,36 @@ CREATE TABLE counter_check (
 # Dumping data for table 'counter_check'
 #
 
+# --------------------------------------------------------
+#
+# Table structure for table 'doco'
+#
+DROP TABLE IF EXISTS doco;
+CREATE TABLE doco (
+   docoid int(8) unsigned DEFAULT '0' NOT NULL auto_increment,
+   language varchar(24) NOT NULL,
+   page varchar(64) NOT NULL,
+   header varchar(255) NOT NULL,
+   doco blob NOT NULL,
+   UNIQUE docid (docoid)
+);
+
+#
+# Dumping data for table 'doco'
+#
+
+INSERT INTO doco VALUES ('1', 'English', 'index', 'SourceAgency: Front Page', 'SourceAgency is a Open Source project exchange. It is the place where developers meet sponsors, and sponsors can describe the software requirements.<p> Two nature-types of projects are available: developing and sponsoring.<ul><li>Developing are those projects that are being developed by developers and are looking for finanical sponsorship.<li>Sponsoring projects are ones where sponsor(s) are looking for a developer group to develop a needed solution for them.</ul><p> All projects developed using the SourceAgency/Berlios platform are Open Source projects and use Open Source Licenses.');
+INSERT INTO doco VALUES ('2', 'English', 'faq', 'Frequently Asked Questions', 'The FAQ page provides answers to some common questions.<p> Questions can be asked by sending the SourceAgency  developers <a href=\"mailto:sourceagency-support@lists.berlios.de?subject=FAQ Question\">feedback</a>!');
+INSERT INTO doco VALUES ('3', 'English', 'login', 'Login Page', 'Here registered users may login. If you are not a registered user, then you can register <a href=\"register.php3\">here</a>');
+INSERT INTO doco VALUES ('4', 'English', 'doco', 'Documentation Page', 'Page specific documentation is generated using this page. Each pages documentation can be accessed using the \"What this\" link on the left hand side menubar.');
+INSERT INTO doco VALUES ('5', 'English', 'users', 'User Listing', 'Listing of the different types of registered users. This  allows developers to directly contact sponsors and sponsors  to directly contact developers.<p> Three listings available:<ul> <li><a href=\"users.php3\">All Users</a> <li><a href=\"users.php3?type=devel\">All Developers</a> <li><a href=\"users.php3?type=sponsor\">All Sponsors</a> </ul>');
+INSERT INTO doco VALUES ('6', 'English', 'browse', 'Project Browsing', 'All currently registered and accepted projects can be browsed based on several different categories based on the projects configuration.<p> Projects matching a category are listed below the category listing.');
+INSERT INTO doco VALUES ('7', 'English', 'licenses', 'Open Source License Listing', 'Provides a listing of all accepted Open Source licenses. Each project must choice a license for each Technical Content made to a project. <p>As SourceAgency only provides support for the development of Open Source Software, therefore all licenses are Open Source licenses approved by the <a href=\"http://opensource.org\">Open Source Initiative (OSI)</a>.');
+INSERT INTO doco VALUES ('8', 'English', 'insform', 'Project Register Form', 'Here registered user may enter new project descriptions.<p>The nature of the project is defined by the type of user: developer enter descriptions of developing projects, while sponsors enter descriptions of sponsoring projects.');
+INSERT INTO doco VALUES ('9', 'English', 'remind', 'Password Reminder', 'Registered user may have their forgotten password sent to their email address.');
+INSERT INTO doco VALUES ('10', 'English', 'chguser', 'Change User Information', 'Registered users may change their personal information using this page.');
+#INSERT INTO doco VALUES ('', 'English', '', '', '');
+#INSERT INTO doco VALUES ('', 'English', '', '', '');
 
 # --------------------------------------------------------
 #

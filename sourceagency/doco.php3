@@ -1,12 +1,11 @@
 <?php
-
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 ######################################################################
 # SourceAgency: Open Source Project Mediation & Management System
 # ===============================================================
 #
 # Copyright (c) 2002 by
-#                Lutz Henckel (lutz.henckel@fokus.gmd.de),
-#                Gregorio Robles (grex@scouts-es.org)
+#                Gregorio Robles (grex@scouts-es.org) and
 #                Gerrit Riessen (Gerrit.Riessen@open-source-consultants.de)
 #
 # BerliOS SourceAgency: http://sourceagency.berlios.de
@@ -18,57 +17,55 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: doco.php3,v 1.2 2002/04/15 15:53:06 riessen Exp $
+# $Id: doco.php3,v 1.3 2002/04/18 10:04:15 grex Exp $
 #
 ######################################################################
 
-page_open(array("sess" => "SourceAgency_Session"));
-if (isset($auth) && !empty($auth->auth["perm"])) {
+page_open(array('sess' => 'SourceAgency_Session'));
+if (isset($auth) && !empty($auth->auth['perm'])) {
   page_close();
-  page_open(array("sess" => "SourceAgency_Session",
-                  "auth" => "SourceAgency_Auth",
-                  "perm" => "SourceAgency_Perm"));
+  page_open(array('sess' => 'SourceAgency_Session',
+                  'auth' => 'SourceAgency_Auth',
+                  'perm' => 'SourceAgency_Perm'));
 }
 
-require("header.inc");
+require('header.inc');
+
+$be = new box('80%',$th_box_frame_color,$th_box_frame_width,
+              $th_box_title_bgcolor,$th_box_title_font_color,
+              $th_box_title_align,$th_box_body_bgcolor,
+              $th_box_error_font_color,$th_box_body_align);
 
 start_content();
 
 if ( is_not_set_or_empty( $page ) ) {
-    generate_failed_box( "Page not Specified", "Page was not specified for "
-                         ."documentation is required" );
+    generate_failed_box( 'Page not Specified', 'Page was not specified for '
+                         .'documentation is required' );
 } else {
 
     $basename = basename( $page );
-    // remove any extensions that may be left over (inc, php, php3)
-    $basename = preg_replace( "/[.](inc|php).?$/", "", $basename );
+    /* remove any extensions that may be left over (inc, php, php3) */
+    $basename = preg_replace('/[.](inc|php).?$/', '', $basename);
 
-    $page_name = $t->translate( $basename . "-page-name" );
-    if ( $page_name == $basename."-page-name" ) {
-        $page_name = $basename;
-    }
-    $doco = $t->translate( $basename . "-doco" );
-    
-    require("config.inc");
-
-    if ( $doco == $basename . "-doco" ) {
-        $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
-                      $th_box_title_bgcolor,$th_box_title_font_color,
-                      $th_box_title_align,$th_box_body_bgcolor,
-                      $th_box_error_font_color,$th_box_body_align);
-
-        $be->box_full( $page_name, $t->translate( "Has no documentation" ));
+    $db->query("SELECT * FROM doco WHERE page='$basename' AND language='$la'");
+    if ($db->num_rows() == 0) {
+        /* no doc in that language */
+        /* let's see if there is at least some documentation in English */
+        $db->query("SELECT * FROM doco WHERE page='$basename' AND language='English'");
+        if ($db->num_rows() == 0) {
+            $be->box_full($basename, $t->translate('Has no documentation'));
+        } else {
+            $db->next_record();
+            $be->box_strip('Our apologies. Documentation only available in English.');
+            $be->box_full($db->f('header', $db->f('doco'));
+	}
     } else {
-        $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
-                      $th_box_title_bgcolor,$th_box_title_font_color,
-                      $th_box_title_align,$th_box_body_bgcolor,
-                      $th_box_body_font_color,$th_box_body_align);
-        $be->box_full( $page_name, $doco );
+        $db->next_record();
+        $be->box_full( $db->f('header', $db->f('doco'));
     }
 }
 
 end_content();
-require("footer.inc");
+require('footer.inc');
 page_close();
-
 ?>
