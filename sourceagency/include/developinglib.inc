@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: developinglib.inc,v 1.4 2002/03/27 16:12:58 grex Exp $
+# $Id: developinglib.inc,v 1.5 2002/03/27 17:04:41 grex Exp $
 #
 ######################################################################
 
@@ -36,16 +36,17 @@
  *  developer varchar(16) NOT NULL:
  *      Username of the developer who proposes it
  *  cost int(8) NOT NULL:
+ *      Total amount of money required for developing this project
  *  license varchar(64) NOT NULL:
  *      Project License (@see license table)
  *  status char(1) NOT NULL:
- *      Status of this developing proposal
+ *      Status of this developing proposal (accepted, rejected, pending)
  *  cooperation varchar(64) NOT NULL:
  *      If cooperation is wanted (not functional yet) (TODO)
  *  valid bigint(14) NOT NULL:
  *      Date until this developing proposal is valid
  *  start bigint(14) NOT NULL:
- *      Start date for this proposal
+ *      Start date for the development
  *  duration int(4) NOT NULL:
  *      Project duration (in weeks)
  *  creation timestamp(14):
@@ -121,7 +122,8 @@ function show_developings($proid, $content_id)
  */
 function developing_preview($proid)
 {
-    global $t, $bx, $auth, $cost, $license, $cooperation, $valid_day, $valid_month, $valid_year, $start_day, $start_month, $start_year, $duration;
+    global $t, $bx, $auth;
+    global $cost, $license, $cooperation, $valid_day, $valid_month, $valid_year, $start_day, $start_month, $start_year, $duration;
 
     $bx->box_begin();
     $bx->box_title('<center><b>'.$t->translate('PREVIEW').'</b></center>');
@@ -167,7 +169,8 @@ function developing_preview($proid)
  */
 function developing_form($proid, $content_id)
 {
-    global $bx, $t, $sess, $cost, $license, $cooperation, $valid_day, $valid_month, $valid_year, $start_day, $start_month, $start_year, $duration;
+    global $bx, $t, $sess;
+    global $cost, $license, $cooperation, $valid_day, $valid_month, $valid_year, $start_day, $start_month, $start_year, $duration;
 
     $bx->box_begin();
     $bx->box_title($t->translate('Developement proposal'));
@@ -243,7 +246,8 @@ function developing_form($proid, $content_id)
  */
 function developing_modify_form($proid, $content_id)
 {
-    global $bx, $t, $sess, $cost, $license, $cooperation, $valid_day, $valid_month, $valid_year, $start_day, $start_month, $start_year, $duration, $creation;
+    global $bx, $t, $sess;
+    global $cost, $license, $cooperation, $valid_day, $valid_month, $valid_year, $start_day, $start_month, $start_year, $duration, $creation;
 
     $bx->box_begin();
     $bx->box_title($t->translate('Developement proposal modification'));
