@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: doco.php3,v 1.5 2002/04/18 10:06:37 grex Exp $
+# $Id: doco.php3,v 1.6 2002/04/18 11:18:23 riessen Exp $
 #
 ######################################################################
 
@@ -36,6 +36,11 @@ $be = new box('80%',$th_box_frame_color,$th_box_frame_width,
               $th_box_title_align,$th_box_body_bgcolor,
               $th_box_error_font_color,$th_box_body_align);
 
+$box_doco = new box('80%',$th_box_frame_color,$th_box_frame_width,
+                    $th_box_title_bgcolor,$th_box_title_font_color,
+                    $th_box_title_align,$th_box_body_bgcolor,
+                    $th_box_body_font_color,$th_box_body_align);
+
 start_content();
 
 if ( is_not_set_or_empty( $page ) ) {
@@ -51,17 +56,19 @@ if ( is_not_set_or_empty( $page ) ) {
     if ($db->num_rows() == 0) {
         /* no doc in that language */
         /* let's see if there is at least some documentation in English */
-        $db->query("SELECT * FROM doco WHERE page='$basename' AND language='English'");
+        $db->query("SELECT * FROM doco WHERE page='$basename' "
+                   ."AND language='English'");
         if ($db->num_rows() == 0) {
-            $be->box_full($basename, $t->translate('Has no documentation'));
+            $be->box_full($page, $t->translate('Has no documentation'));
         } else {
             $db->next_record();
-            $be->box_strip('Our apologies. Documentation only available in English.');
-            $be->box_full($db->f('header'), $db->f('doco'));
+            $box_doco->box_strip('Our apologies. Documentation only available '
+                                 .'in English.');
+            $box_doco->box_full($db->f('header'), $db->f('doco'));
 	}
     } else {
         $db->next_record();
-        $be->box_full( $db->f('header'), $db->f('doco'));
+        $box_doco->box_full( $db->f('header'), $db->f('doco'));
     }
 }
 
