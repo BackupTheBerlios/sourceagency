@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.3 2001/11/06 19:15:46 riessen Exp $
+# $Id: config.inc,v 1.4 2001/11/06 19:32:08 riessen Exp $
 #
 ######################################################################
 
@@ -44,6 +44,8 @@ $sys_url = "http://sourceagency.berlios.de/beta/";
 $sys_logo_image = "images/berlios.jpg";
 $sys_logo_alt = "BerliOS";
 $sys_logo_width = "238";
+// FIXME: typo here: height instead of heigth, this needs to be
+// FIXME: changed wherever it's referenced
 $sys_logo_heigth = "104";
 
 ######################################################################
@@ -62,6 +64,8 @@ $org_url = "http://www.fokus.fhg.de/";
 $org_logo_image = "images/logo_fokus.gif";
 $org_logo_alt = $org_name;
 $org_logo_width = "66";
+// FIXME: typo here: height instead of heigth, this needs to be
+// FIXME: changed wherever it's referenced
 $org_logo_heigth = "73";
 
 ######################################################################
