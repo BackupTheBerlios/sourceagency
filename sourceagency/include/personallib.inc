@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: personallib.inc,v 1.11 2001/11/15 18:07:44 riessen Exp $
+# $Id: personallib.inc,v 1.12 2001/11/29 15:40:52 grex Exp $
 #
 ######################################################################
 
@@ -91,13 +91,10 @@ function personal_related_projects($username,$status) {
 
 	$db_local = new DB_SourceAgency;
 
-        // FIXME: security.lib::is_sponsor does not accept argument
-	if (is_sponsor($username)) {
+	if (is_sponsor()) {
             $user_type = "sponsor";
             $table = "sponsoring";
-	} elseif (is_developer($username)) { 
-            // FIXME: security.lib::is_developer does not accept
-            // FIXME: argument
+	} elseif (is_developer()) { 
             $user_type = "developer";
             $table = "developing";
 	} /** FIXME: this sets table to "" when the user is admin or editer
@@ -197,9 +194,10 @@ function personal_comments_long($username) {
 	if ($db_local->num_rows() == 0) {
             print "no comments posted\n";
         }
-	$i=0; // FIXME: where was $i set or is set?
+
+	$count=0;
 	print "<ul>\n";
-	while ($db_local->next_record()) {
+	while ($db_local->next_record() && $count < 10) {
 		print "<br><li>";
 		$db_count = new DB_SourceAgency;
 		$db_count->query("SELECT COUNT(*) FROM comments WHERE "
@@ -226,10 +224,11 @@ function personal_comments_long($username) {
                                   array("proid" => $db_count->f("proid")), 
                                   $db_count->f("project_title"))
                        ."<br>\n");
+		$count++;
 	}
 	print "</ul>\n<p align=right>\n";
-        // FIXME: $i is never set, this isn't necessary
-	if ($i>10) {
+
+	if ($db_local->num_rows() > 10) {
           htmlp_link("personal_comments.php3",
                      array("username" => $username),
                      "See all the comments...");
@@ -250,11 +249,11 @@ function personal_news_short($username) {
 	$db_local = new DB_SourceAgency;
 	$db_local->query("SELECT * FROM news WHERE user_news='$username'");
 	if ($db_local->num_rows() == 0) print "no news posted\n";
-	$i=0;
+
+	$count=0;
 	print "<ul>\n";
-        // FIXME: this returns too many results, 6 instead of 5 -- is this
-        // FIXME: correct behaviour?
-	while ($db_local->next_record() AND $i<6) {
+
+	while ($db_local->next_record() AND $count<5) {
 		print "<br><li>";
 		$db_count = new DB_SourceAgency;
 		$db_count->query("SELECT COUNT(*) FROM comments WHERE proid='"
@@ -277,11 +276,11 @@ function personal_news_short($username) {
                         . html_link("summary.php3",
                                     array("proid" => $db_count->f("proid")), 
                                     $db_count->f("project_title"))."<br>\n");
-                $i++;
+                $count++;
 	}
 	print "</ul>\n<p align=right>\n";
-        // FIXME: if $i changes above, then change this also
-	if ($i>5) {
+
+	if ($db_local->num_rows() > 5) {
             htmlp_link("personal_news.php3",
                        array("username" => $username),
                        "See all the comments...");
@@ -293,21 +292,19 @@ function personal_news_short($username) {
 /**
  * REFACTOR: combine the above and below into one common function
  */
-// FIXME: this routine displays comments, shouldn't it be called
-// FIXME: personal_comments_long ???
+
 function personal_news_long($username) {
  	global $bx, $sess;
 
 	$bx->box_begin();
-	$bx->box_title("All Comments by ".$username);
+	$bx->box_title("All news by ".$username);
 	$bx->box_body_begin();
 
 	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT * FROM comments WHERE user_cmt='$username' "
-                         ."AND comments.proid");
-	if ($db_local->num_rows() == 0) print "no comments posted\n";
-        // FIXME: where does $i get set???, is $i used?
-	$i=0; 
+	$db_local->query("SELECT * FROM news WHERE user_news='$username' "
+                         ."AND news.proid");
+	if ($db_local->num_rows() == 0) print "no news posted\n";
+
 	print "<ul>\n";
 	while ($db_local->next_record()) {
 		print "<br><li>";
@@ -334,10 +331,6 @@ function personal_news_long($username) {
                                   $db_count->f("project_title"))."<br>\n");
 	}
 	print"</ul>\n<p align=right>\n";
-	if ($i>10) {
-          htmlp_link("personal_news.php3",
-                     array("username" => $username),"See all the news...");
-        }
 	$bx->box_body_end();
 	$bx->box_end();
 }
