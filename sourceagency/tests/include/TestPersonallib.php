@@ -4,7 +4,7 @@
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2001 Gerrit Riessen
 // 
-// $Id: TestPersonallib.php,v 1.6 2001/10/24 15:31:44 riessen Exp $
+// $Id: TestPersonallib.php,v 1.7 2001/10/24 16:36:22 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -123,34 +123,35 @@ extends TestCase
         $user3 = "fritz"; $status3 = "R";
         
         $db_config = new mock_db_configure;
+        $db_config->set_nr_instance_expected( 3 );
         $db_q = ("SELECT * FROM consultants,description WHERE "
                  . "consultant='%s' AND consultants.status"
                  . "='%s' AND consultants.proid="
                  . "description.proid");
-        $db_config->add_query( sprintf( $db_q, $user1, $status1 ));
-        $db_config->add_query( sprintf( $db_q, $user2, $status2 ));
-        $db_config->add_query( sprintf( $db_q, $user3, $status3 ));
+        $db_config->add_query( sprintf( $db_q, $user1, $status1 ), 0);
+        $db_config->add_query( sprintf( $db_q, $user2, $status2 ), 1);
+        $db_config->add_query( sprintf( $db_q, $user3, $status3 ), 2);
         
-        $db_config->add_num_row(0);
-        $db_config->add_num_row(1);
-        $db_config->add_num_row(2);
+        $db_config->add_num_row(0, 0);
+        $db_config->add_num_row(1, 1);
+        $db_config->add_num_row(2, 2);
 
         // this is for the snafu query
         $row1 = array( 'status'        => 'project_status',
                        'proid'         => 'project_id',
                        'project_title' => 'project_title' );
-        $db_config->add_record( $row1 );
-        $db_config->add_record( false );
+        $db_config->add_record( $row1, 1 );
+        $db_config->add_record( false, 1 );
         // this is for the fritz query
         $row2 = array( 'status'        => 'project_status2',
                        'proid'         => 'project_id2',
                        'project_title' => 'project_title2' );
-        $db_config->add_record( $row2 );
+        $db_config->add_record( $row2, 2 );
         $row3 = array( 'status'        => 'project_status3',
                        'proid'         => 'project_id3',
                        'project_title' => 'project_title3' );
-        $db_config->add_record( $row3 );
-        $db_config->add_record( false );
+        $db_config->add_record( $row3, 2 );
+        $db_config->add_record( false, 2 );
         
         //
         // fubar query
@@ -215,33 +216,35 @@ extends TestCase
         $user3 = "fritz"; $status3 = "R";
         
         $db_config = new mock_db_configure;
+        $db_config->set_nr_instance_expected( 3 );
+
         $db_q = ("SELECT * FROM referees,description WHERE "
                  . "referee='%s' AND referees.status='%s'"
                  . " AND referees.proid=description.proid");
-        $db_config->add_query( sprintf( $db_q, $user1, $status1 ));
-        $db_config->add_query( sprintf( $db_q, $user2, $status2 ));
-        $db_config->add_query( sprintf( $db_q, $user3, $status3 ));
+        $db_config->add_query( sprintf( $db_q, $user1, $status1 ), 0);
+        $db_config->add_query( sprintf( $db_q, $user2, $status2 ), 1);
+        $db_config->add_query( sprintf( $db_q, $user3, $status3 ), 2);
 
-        $db_config->add_num_row(0);
-        $db_config->add_num_row(1);
-        $db_config->add_num_row(2);
+        $db_config->add_num_row(0, 0);
+        $db_config->add_num_row(1, 1);
+        $db_config->add_num_row(2, 2);
 
         // this is for the snafu query
         $row1 = array( 'status'        => 'project_status',
                        'proid'         => 'project_id',
                        'project_title' => 'project_title' );
-        $db_config->add_record( $row1 );
-        $db_config->add_record( false );
+        $db_config->add_record( $row1, 1 );
+        $db_config->add_record( false, 1 );
         // this is for the fritz query
         $row2 = array( 'status'        => 'project_status2',
                        'proid'         => 'project_id2',
                        'project_title' => 'project_title2' );
-        $db_config->add_record( $row2 );
+        $db_config->add_record( $row2, 2 );
         $row3 = array( 'status'        => 'project_status3',
                        'proid'         => 'project_id3',
                        'project_title' => 'project_title3' );
-        $db_config->add_record( $row3 );
-        $db_config->add_record( false );
+        $db_config->add_record( $row3, 2 );
+        $db_config->add_record( false, 2 );
 
         //
         // fubar query
@@ -307,36 +310,38 @@ extends TestCase
         $user3 = "fritz"; $status3 = "R";
 
         $db_config = new mock_db_configure;
+        $db_config->set_nr_instance_expected( 3 );
+
         $db_q = ("SELECT * FROM cooperation,description,developing "
                  . "WHERE cooperation.developer='%s' AND "
                  . "cooperation.status='%s' AND "
                  . "cooperation.devid = developing.devid AND "
                  . "developing.proid=description.proid");
         
-        $db_config->add_query( sprintf( $db_q, $user1, $status1 ));
-        $db_config->add_query( sprintf( $db_q, $user2, $status2 ));
-        $db_config->add_query( sprintf( $db_q, $user3, $status3 ));
+        $db_config->add_query( sprintf( $db_q, $user1, $status1 ), 0);
+        $db_config->add_query( sprintf( $db_q, $user2, $status2 ), 1);
+        $db_config->add_query( sprintf( $db_q, $user3, $status3 ), 2);
 
-        $db_config->add_num_row(0);
-        $db_config->add_num_row(1);
-        $db_config->add_num_row(2);
+        $db_config->add_num_row(0, 0);
+        $db_config->add_num_row(1, 1);
+        $db_config->add_num_row(2, 2);
         
         // this is for the snafu query
         $row1 = array( 'proid'         => 'proid',
                        'devid'         => 'devid',
                        'project_title' => 'project_title' );
-        $db_config->add_record( $row1 );
-        $db_config->add_record( false );
+        $db_config->add_record( $row1, 1 );
+        $db_config->add_record( false, 1 );
         // this is for teh fritz query
         $row2 = array( 'proid'         => 'proid2',
                        'devid'         => 'devid2',
                        'project_title' => 'project_title2' );
-        $db_config->add_record( $row2 );
+        $db_config->add_record( $row2, 2 );
         $row3 = array( 'proid'         => 'proid3',
                        'devid'         => 'devid3',
                        'project_title' => 'project_title3' );
-        $db_config->add_record( $row3 );
-        $db_config->add_record( false );
+        $db_config->add_record( $row3, 2 );
+        $db_config->add_record( false, 2 );
         
         capture_start();
         // here next_record will not be called
@@ -392,37 +397,38 @@ extends TestCase
     function testPersonal_my_projects() {
 
         $db_config = new mock_db_configure;
+        $db_config->set_nr_instance_expected( 3 );
 
         $db_q = ("SELECT * FROM description WHERE "
                  . "description_user='%s' ORDER BY "
                  . "description_creation DESC");
         
-        $db_config->add_query( sprintf( $db_q, "fubar" ));
-        $db_config->add_query( sprintf( $db_q, "snafu" ));
-        $db_config->add_query( sprintf( $db_q, "fritz" ));
+        $db_config->add_query( sprintf( $db_q, "fubar" ), 0);
+        $db_config->add_query( sprintf( $db_q, "snafu" ), 1);
+        $db_config->add_query( sprintf( $db_q, "fritz" ), 2);
 
-        $db_config->add_num_row(0);
-        $db_config->add_num_row(1);
-        $db_config->add_num_row(2);
+        $db_config->add_num_row(0, 0);
+        $db_config->add_num_row(1, 1);
+        $db_config->add_num_row(2, 2);
         
         // fubar query does not call next_record()
         // this is for the snafu query
         $row = array( 'proid'         => 'proid',
                       'status'        => 'status',
                       'project_title' => 'project_title' );
-        $db_config->add_record( $row );
-        $db_config->add_record( false );
+        $db_config->add_record( $row, 1 );
+        $db_config->add_record( false, 1 );
 
         // this is for the fritz query
         $row = array( 'proid'         => 'proid2',
                       'status'        => 'status2',
                       'project_title' => 'project_title2' );
-        $db_config->add_record( $row );
+        $db_config->add_record( $row, 2 );
         $row = array( 'proid'         => 'proid3',
                       'status'        => 'status3',
                       'project_title' => 'project_title3' );
-        $db_config->add_record( $row );
-        $db_config->add_record( false );
+        $db_config->add_record( $row, 2 );
+        $db_config->add_record( false, 2 );
 
         capture_start();
         // here next_record will not be called
@@ -471,32 +477,33 @@ extends TestCase
                  .".username='%s' ORDER BY creation DESC");
 
         $db_config = new mock_db_configure;
+        $db_config->set_nr_instance_expected( 3 );
 
-        $db_config->add_num_row(0);
-        $db_config->add_num_row(1);
-        $db_config->add_num_row(2);
+        $db_config->add_num_row(0, 0);
+        $db_config->add_num_row(1, 1);
+        $db_config->add_num_row(2, 2);
 
-        $db_config->add_query( sprintf( $db_q, "fubar" ));
-        $db_config->add_query( sprintf( $db_q, "snafu" ));
-        $db_config->add_query( sprintf( $db_q, "fritz" ));
+        $db_config->add_query( sprintf( $db_q, "fubar" ), 0);
+        $db_config->add_query( sprintf( $db_q, "snafu" ), 1);
+        $db_config->add_query( sprintf( $db_q, "fritz" ), 2);
 
         // this is for the snafu query
         $row = array( 'proid'         => 'proid',
                       'status'        => 'status',
                       'project_title' => 'project_title' );
-        $db_config->add_record( $row );
-        $db_config->add_record( false );
+        $db_config->add_record( $row, 1 );
+        $db_config->add_record( false, 1 );
 
         // this is for the fritz query
         $row = array( 'proid'         => 'proid2',
                       'status'        => 'status2',
                       'project_title' => 'project_title2' );
-        $db_config->add_record( $row );
+        $db_config->add_record( $row, 2 );
         $row = array( 'proid'         => 'proid3',
                       'status'        => 'status3',
                       'project_title' => 'project_title3' );
-        $db_config->add_record( $row );
-        $db_config->add_record( false );
+        $db_config->add_record( $row, 2 );
+        $db_config->add_record( false, 2 );
 
 
         capture_start();
