@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: mock_database.php,v 1.17 2002/05/13 10:31:05 riessen Exp $
+# $Id: mock_database.php,v 1.18 2002/05/15 09:00:12 riessen Exp $
 #
 ######################################################################
 
@@ -204,64 +204,65 @@ class mock_db_configure
 
         $this->_did_db_fail_called();
 
+        // check instance count
         if ( $g_mkdb_instance_counter != $g_mkdb_nr_instance_expected ) {
             $g_mkdb_failure_text 
                  .= ("<br>\n<br>\n*** Instance creation count mismatch "
                      ."***<br>\nExpected: " . $g_mkdb_nr_instance_expected 
                      . " but created: " . $g_mkdb_instance_counter . "<br>\n");
             $g_mkdb_failed = true;
-        } else {
-            // check whether every instance used all of it's num_row values
-            for ( $idx = 0; $idx < $g_mkdb_instance_counter; $idx++ ) {
-                $exp_num_rows = count( $g_mkdb_num_rows[$idx] );
-                $act_num_rows = $g_mkdb_cur_num_row_call[$idx];
-                if ( $exp_num_rows != $act_num_rows 
-                     && (($g_mkdb_ignore_error[$idx] & MKDB_NUM_ROWS) 
-                         != MKDB_NUM_ROWS)) {
-                    $g_mkdb_failure_text
-                         .= ("<br>\nInstance " . $idx . " mismatch "
-                             ."in num rows: not all used, expected = "
-                             . $exp_num_rows . ", actual = "
-                             . $act_num_rows . "<br>\n" );
-                    $g_mkdb_failed = true;
-                }
+        } 
+
+        // check whether every instance used all of it's num_row values
+        for ( $idx = 0; $idx < $g_mkdb_instance_counter; $idx++ ) {
+            $exp_num_rows = count( $g_mkdb_num_rows[$idx] );
+            $act_num_rows = $g_mkdb_cur_num_row_call[$idx];
+            if ( $exp_num_rows != $act_num_rows 
+                       && (($g_mkdb_ignore_error[$idx] & MKDB_NUM_ROWS) 
+                                            != MKDB_NUM_ROWS)) {
+                $g_mkdb_failure_text
+                     .= ("<br>\nInstance " . $idx . " mismatch "
+                         ."in num rows: not all used, expected = "
+                         . $exp_num_rows . ", actual = "
+                         . $act_num_rows . "<br>\n" );
+                $g_mkdb_failed = true;
             }
+        }
 
-            // check whether every instance also used all of it's queries,
-            // this detects whether more queries were defined than used.
-            // this check can be turned off using MKDB_QUERY_COUNT
-            for ( $idx = 0; $idx < $g_mkdb_instance_counter; $idx++ ) {
-                $query_count_actual = $g_mkdb_cur_query_call[$idx];
-                $query_count_expected = count( $g_mkdb_queries[$idx] );
-
-                if ( $query_count_expected != $query_count_actual 
-                    && (($g_mkdb_ignore_error[$idx] & MKDB_QUERY_COUNT) 
-                        != MKDB_QUERY_COUNT)) {
-                    $g_mkdb_failure_text
-                         .= ("<br>\nInstance " . $idx . " did not use"
-                             ." all of its defined queries: expected = "
-                             . $query_count_expected . ", actual = "
-                             . $query_count_actual . "<br>\n" );
-                    $g_mkdb_failed = true;
-                }
+        // check whether every instance also used all of it's queries,
+        // this detects whether more queries were defined than used.
+        // this check can be turned off using MKDB_QUERY_COUNT
+        for ( $idx = 0; $idx < $g_mkdb_instance_counter; $idx++ ) {
+            $query_count_actual = $g_mkdb_cur_query_call[$idx];
+            $query_count_expected = count( $g_mkdb_queries[$idx] );
+            
+            if ( $query_count_expected != $query_count_actual 
+                       && (($g_mkdb_ignore_error[$idx] & MKDB_QUERY_COUNT) 
+                           != MKDB_QUERY_COUNT)) {
+                $g_mkdb_failure_text
+                     .= ("<br>\nInstance " . $idx . " did not use"
+                         ." all of its defined queries: expected = "
+                         . $query_count_expected . ", actual = "
+                         . $query_count_actual . "<br>\n" );
+                $g_mkdb_failed = true;
             }
-
-            // check whether all rows for the next_record method were used up
-            // this check can be turned off using the MKDB_RECORD_COUNT
-            for ( $idx = 0; $idx < $g_mkdb_instance_counter; $idx++ ) {
-                $next_record_data = $g_mkdb_next_record_data[$idx];
-                $cur_record = $g_mkdb_cur_record[$idx];
-                
-                if ( $cur_record < count( $next_record_data )
-                     && (($g_mkdb_ignore_error[$idx] & MKDB_RECORD_COUNT) 
-                         != MKDB_RECORD_COUNT)) {
-                    $g_mkdb_failure_text
-                         .= ("<br>\nInstance " . $idx . " did not use"
-                             ." all of its defined records: available = "
-                             . count( $next_record_data ) . ", used = "
-                             . $cur_record . "<br>\n" );
-                    $g_mkdb_failed = true;
-                }
+        }
+        
+        // check whether all rows for the next_record method were used up
+        // this check can be turned off using the MKDB_RECORD_COUNT
+        for ( $idx = 0; $idx < $g_mkdb_instance_counter; $idx++ ) {
+            $next_record_data = $g_mkdb_next_record_data[$idx];
+            $cur_record = $g_mkdb_cur_record[$idx];
+            
+            if ( $cur_record < count( $next_record_data )
+                          && (($g_mkdb_ignore_error[$idx] & MKDB_RECORD_COUNT) 
+                              != MKDB_RECORD_COUNT)) {
+                $g_mkdb_failure_text
+                     .= ("<br>\nInstance " . $idx . " did not use"
+                         ." all of its defined records: available = "
+                         . count( $next_record_data ) . ", used = "
+                         . $cur_record . "<br>\n" );
+                $g_mkdb_failed = true;
             }
         }
         
