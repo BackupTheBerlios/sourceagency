@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMilestoneslib.inc,v 1.13 2002/04/22 13:11:01 riessen Exp $
+# $Id: TestMilestoneslib.inc,v 1.14 2002/04/23 11:48:15 riessen Exp $
 #
 ######################################################################
 
@@ -66,7 +66,7 @@ extends UnitTest
         milestones_propose_milestone( "" );
         $text = capture_stop_and_get();
         
-        $this->_testFor_length( 89, "test 1" );
+        $this->_testFor_captured_length( 89, "test 1" );
 
         $pats[5] = "[?]proid=[&]a=1";
         $this->_testFor_patterns( $text, $pats, 6 );
@@ -75,7 +75,7 @@ extends UnitTest
         milestones_propose_milestone( "this_is_the_proid" );
         $text = capture_stop_and_get();
         
-        $this->_testFor_length( 106, "test 2" );
+        $this->_testFor_captured_length( 106, "test 2" );
 
         $pats[5] = "[?]proid=this_is_the_proid[&]a=1";
         $this->_testFor_patterns( $text, $pats, 6 );
@@ -151,7 +151,7 @@ extends UnitTest
         show_milestones( $dat[0]["proid"], $dat[0]["devid"],
                          $dat[0]["sponsor"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 0, "test 1" );
+        $this->_testFor_captured_length( 0, "test 1" );
 
         //
         // second call, the status part of the third query is present
@@ -160,7 +160,7 @@ extends UnitTest
         show_milestones( $dat[1]["proid"], $dat[1]["devid"],
                          $dat[1]["sponsor"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 0, "test 2" );
+        $this->_testFor_captured_length( 0, "test 2" );
 
         //
         // third call, two records of data
@@ -169,7 +169,7 @@ extends UnitTest
         show_milestones( $dat[2]["proid"], $dat[2]["devid"],
                          $dat[2]["sponsor"] );
         $text = capture_stop_and_get();
-        $this->_testFor_length( 4697, "test 3" );
+        $this->_testFor_captured_length( 4697, "test 3" );
         $pats = array( 0=> ("<td align=\"center\" width=\"7%\" bgcolor=\""
                             ."#FFFFFF\">[ \n]*<b>Number<\/b>[ \n]*<\/td>"),
                        1=> ("<td align=\"\" width=\"53%\" bgcolor=\""
@@ -249,7 +249,7 @@ extends UnitTest
                            $dat[0]["goals"], $dat[0]["rday"], $dat[0]["rmon"],
                            $dat[0]["ryear"], $dat[0]["prod"], $dat[0]["pay"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 94, "test 1" );
+        $this->_testFor_captured_length( 94, "test 1" );
         $pats = array( 0 => (sprintf( $ln, $dat[0]["pid"])));
         $this->_testFor_patterns( $text, $pats, 1 );
 
@@ -268,7 +268,7 @@ extends UnitTest
                            $dat[1]["goals"], $dat[1]["rday"], $dat[1]["rmon"],
                            $dat[1]["ryear"], $dat[1]["prod"], $dat[1]["pay"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 761, "test 2" );
+        $this->_testFor_captured_length( 761, "test 2" );
         $pats = array( 0 => (sprintf( $ln, $dat[1]["pid"])),
                        1 => $t->translate("Insert Failed" ),
                        2 => $t->translate("No Goals defined."));
@@ -287,7 +287,7 @@ extends UnitTest
                            $dat[2]["goals"], $dat[2]["rday"], $dat[2]["rmon"],
                            $dat[2]["ryear"], $dat[2]["prod"], $dat[2]["pay"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 776, "test 3" );
+        $this->_testFor_captured_length( 776, "test 3" );
 
         $pats = array( 0 => (sprintf( $ln, $dat[2]["pid"])),
                        1 => $t->translate("Insert Failed" ),
@@ -305,7 +305,7 @@ extends UnitTest
                            $dat[3]["goals"], $dat[3]["rday"], $dat[3]["rmon"],
                            $dat[3]["ryear"], $dat[3]["prod"], $dat[3]["pay"]);
         $text = capture_stop_and_get();
-        $this->_testFor_length( 773, "test 4" );
+        $this->_testFor_captured_length( 773, "test 4" );
         $pats = array( 0 => (sprintf( $ln, $dat[3]["pid"])),
                        1 => $t->translate("Insert Failed" ),
                        2 => $t->translate("Number parameter was not set."));
