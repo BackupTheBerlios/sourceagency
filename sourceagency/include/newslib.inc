@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: newslib.inc,v 1.3 2001/11/07 18:48:53 riessen Exp $
+# $Id: newslib.inc,v 1.4 2001/11/29 15:38:34 grex Exp $
 #
 ######################################################################
 
@@ -153,10 +153,9 @@ function news_insert($proid,$user,$subject,$text) {
 
   include("monitorlib.inc");
   include("config.inc");
-  // FIXME: in the URL is 'numbe=' a typo?????
   monitor_mail($proid,"news", "New News", "New News on project $proid\n "
   . "Subject: $subject\n by $user\n\n You can see it at: "
-  . "$sys_urlcomments.php3?proid=$proid&type=$type_cmt&numbe=$number&id=$id");
+  . "$sys_urlcomments.php3?proid=$proid&type=$type_cmt&number=$number&id=$id");
 
   newsshow($proid);
 }
@@ -171,11 +170,10 @@ function news_modify($proid,$user,$subject,$text,$creation) {
   include("monitorlib.inc");
   include("config.inc");
 
-  // FIXME: in the URL is 'numbe=' a typo?????
   monitor_mail($proid,"news", "News Modified", "Modification on News on "
   . "project $proid\n Subject: $subject\n by $user\n\n You can see it "
   . "at: $sys_urlcomments.php3?proid=$proid&type=$type_cmt"
-  . "&numbe=$number&id=$id");
+  . "&number=$number&id=$id");
 
   newsshow($proid);
 }

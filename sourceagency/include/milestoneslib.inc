@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.3 2001/11/07 18:48:53 riessen Exp $
+# $Id: milestoneslib.inc,v 1.4 2001/11/29 15:38:20 grex Exp $
 #
 ######################################################################
 
@@ -54,9 +54,9 @@ function show_milestones($proid,$devid,$who_wants_to_see) {
 	$total_payment = 0;
 
 	$bx->box_begin();
+	// TODO: it would be nice to have a link to the proposal these milestones refere to
 	$bx->box_title($t->translate("Milestones proposed by "
-                                     . $milestone_user)
-                       . " (FIXME: Link to proposal)" );
+                                     . $milestone_user));
 	$bx->box_body_begin();
 	$bx->box_columns_begin(6);
 
