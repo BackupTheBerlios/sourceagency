@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: box.inc,v 1.8 2002/04/19 23:57:01 grex Exp $
+# $Id: box.inc,v 1.9 2002/05/02 11:12:41 riessen Exp $
 #
 ######################################################################
 
@@ -106,6 +106,12 @@ class box {
     var $box_body_align;
 
     /**
+     * Vertical align for the body
+     * @var string
+     */
+    var $box_body_valign;
+
+    /**
      * Constructor
      *
      * @param   string  $
@@ -123,7 +129,10 @@ class box {
      *
      * @access  public
      */
-    function box($box_width='', $frame_color='#000000', $frame_width='1', $title_bgcolor='#CCCCCC', $title_font_color='#000000', $title_align='', $body_bgcolor='#FFFFFF', $body_font_color='#000000', $body_align='')
+    function box($box_width='', $frame_color='#000000', $frame_width='1', 
+                 $title_bgcolor='#CCCCCC', $title_font_color='#000000', 
+                 $title_align='', $body_bgcolor='#FFFFFF', 
+                 $body_font_color='#000000', $body_align='', $body_valign='')
     {
         $this->box_width = $box_width;
 	$this->box_frame_color = $frame_color;
@@ -134,6 +143,7 @@ class box {
 	$this->box_body_bgcolor = $body_bgcolor;
 	$this->box_body_font_color = $body_font_color;
 	$this->box_body_align = $body_align;
+        $this->box_body_valign = $body_align;
     }
    
     /**
@@ -144,9 +154,13 @@ class box {
     function box_begin()
     {
 	echo "\n<!-- box begin -->\n";
-    	echo "<table border=0 cellspacing=0 cellpadding=0 bgcolor=\"$this->box_frame_color\" width=\"$this->box_width\" align=center>\n";
-	echo "<tr><td>\n";
-	echo "<table border=0 cellspacing=\"$this->box_frame_width\" cellpadding=3 align=\"center\" width=\"100%\">\n";
+    	echo '<table border="0" cellspacing="0" cellpadding="0" bgcolor=';
+        echo "\"$this->box_frame_color\" width=\"$this->box_width\" ";
+        echo "align=\"center\">\n<tr><td>\n";
+	echo '<table border="0" cellspacing=';
+        echo "\"$this->box_frame_width\" ";
+        echo 'cellpadding="3" align="center" width="100%">';
+        echo "\n";
     }
 
     /**
@@ -211,7 +225,7 @@ class box {
     {
        	echo "   <!-- box body begin -->\n";
 	echo "   <tr bgcolor=\"$this->box_body_bgcolor\">\n";
-        echo "         <td align=\"$this->box_body_align\"><font color=\"$this->box_body_font_color\">\n";
+        echo "         <td align=\"$this->box_body_align\" valign=\"$this->box_body_valign\"><font color=\"$this->box_body_font_color\">\n";
     }
 
     /**
@@ -396,6 +410,11 @@ class box {
        	echo '         '.$text;
        	echo "         </td>\n";
        	echo "         <!-- Column spanned over $number_of_columns columns finished -->\n";
+    }
+
+    function box_set_body_valign( $valign = '' )
+    {
+        $this->box_body_valign = $valign;
     }
 }
 ?>
