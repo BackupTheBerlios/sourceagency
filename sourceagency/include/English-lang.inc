@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: English-lang.inc,v 1.7 2001/11/09 20:27:08 riessen Exp $
+# $Id: English-lang.inc,v 1.8 2001/11/14 12:27:05 riessen Exp $
 #
 ######################################################################
 
@@ -32,8 +32,12 @@ $l->log( "translating '" . $phrase . "'" );
 
 switch($phrase) {
     
+    /** these are various page titles **/
     case "comments_edit": $tmp = "Edit Comments"; break;
     case "comments_mod": $tmp = "Modify Comments"; break;
+    case "consultants": $tmp = "Consultants"; break;
+    case "summary": $tmp = "Summary"; break;
+
     default:   $tmp = "$phrase";  break;
 }
 ?>
