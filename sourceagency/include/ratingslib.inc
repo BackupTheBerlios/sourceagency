@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: ratingslib.inc,v 1.5 2002/03/24 12:06:22 grex Exp $
+# $Id: ratingslib.inc,v 1.6 2002/03/27 14:10:18 grex Exp $
 #
 ######################################################################
 
@@ -81,6 +81,12 @@
  * @param   int       $proid         Project id
  * @param   string    $dev_or_spo    If the one who is rating is developer or sponsor
  * @param   int       $number        Sponsor id or Developer id
+ *
+ * @global  object    $t             Translation object
+ * @global  object    $bx            Box object
+ * @global  object    $db            PHPLib database object
+ * @global  object    $auth          PHPLib authentication object
+ *
  * @access  public
  */
 
@@ -145,6 +151,13 @@ function ratings_form($proid, $dev_or_spo, $number)
  * @param   string    $username      Username of the person to be rated
  * @param   string    $dev_or_spo    User type of the person to be rated (developer/sponsor)
  * @param   int       $id            Sponsor id or developer id
+ *
+ * @global  object    $t             Translation object
+ * @global  object    $bx            Box object
+ * @global  object    $db            PHPLib database object
+ * @global  object    $auth          PHPLib authentication object
+ * @global  object    $sess          PHPLib session object
+ *
  * @access  public
  */
 
@@ -220,6 +233,11 @@ function ratings_form_full($proid, $username, $dev_or_spo, $id)
  * @param   string    $username      Username of the person to be rated
  * @param   string    $dev_or_spo    User type of the person to be rated (developer/sponsor)
  * @param   int       $id            Sponsor id or Developer id
+ *
+ * @global  object    $t             Translation object
+ * @global  object    $bx            Box object
+ * @global  object    $sess          PHPLib session object
+ *
  * @access  public
  */
 
@@ -268,6 +286,11 @@ function ratings_form_empty($proid, $username, $dev_or_spo, $number)
  * @param   string    $username      Username of the person to be rated
  * @param   string    $dev_or_spo    User type of the person to be rated (developer/sponsor)
  * @param   int       $number        Sponsor id or Developer id
+ *
+ * @global  object    $t             Translation object
+ * @global  object    $bx            Box object
+ * @global  object    $sess          PHPLib session object
+ *
  * @access  public
  */
 
@@ -320,6 +343,10 @@ function ratings_form_rated($proid, $username, $dev_or_spo, $number)
  * @param   string    $dev_or_spo    User type of the person to be rated (developer/sponsor)
  * @param   int       $number        Sponsor id or Developer id
  * @param   string    $username      Username of the person that is rating
+ *
+ * @global  object    $db            PHPLib database object
+ * @global  object    $auth          PHPLib authentication object
+ *
  * @access  public
  */
 
@@ -380,6 +407,11 @@ function ratings_insert($proid,  $dev_or_spo,  $number,  $by_whom)
  * (we receive as a global variable if we want a developer or a sponsor)
  *
  * @param   int       $proid         Project id
+ *
+ * @global  string    $dev_or_spo    Contains if the user is 'developer' or 'sponsor'
+ * @global  object    $db            PHPLib database object
+ * @global  object    $auth          PHPLib authentication object
+ *
  * @access  public
  */
 
@@ -414,6 +446,11 @@ function ratings_look_for_first_one($proid)
  *
  * @param   int       $proid         Project id
  * @param   int       $number        Sponsor id or Developer id
+ *
+ * @global  string    $dev_or_spo    Contains if the user is 'developer' or 'sponsor'
+ * @global  object    $db            PHPLib database object
+ * @global  object    $auth          PHPLib authentication object
+ *
  * @access  public
  */
 
@@ -475,6 +512,11 @@ function ratings_rated_yet($proid, $to_whom, $by_whom)
  *
  * @param   int       $proid         Project id
  * @param   string    $participant_type     Whether the user is developer, sponsor or referee
+ *
+ * @global  object    $t             Translation object
+ * @global  object    $bx            Box object
+ * @global  object    $db            PHPLib database object
+ *
  * @access  public
  * @see show_personal_rating()
  */
@@ -514,6 +556,10 @@ function show_participants_rating($proid, $participant_type)
  *
  * @param   int       $proid         Project id
  * @param   string    $username      Username
+ *
+ * @global  object    $t             Translation object
+ * @global  object    $bx            Box object
+ *
  * @access  public
  * @see show_personal_rating()
  */
@@ -557,6 +603,11 @@ function ratings_form_finish($proid)
  *
  * @param   int       $proid         Project id
  * @param   string    $history_user  Username of the user who is rating
+ *
+ * @global  object    $t             Translation object
+ * @global  object    $bx            Box object
+ * @global  object    $db            PHPLib database object
+ *
  * @access  public
  */
 
