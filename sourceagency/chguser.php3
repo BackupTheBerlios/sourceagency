@@ -17,12 +17,9 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: chguser.php3,v 1.2 2001/11/12 13:00:05 riessen Exp $
+# $Id: chguser.php3,v 1.3 2001/11/19 17:50:50 riessen Exp $
 #
 ######################################################################
-
-// FIXME: is the page chguser.php3 even used in the SourceAgency site?
-// FIXME: if not, then it's high time to remove it ....
 
 page_open(array("sess" => "SourceAgency_Session",
                 "auth" => "SourceAgency_Auth",
