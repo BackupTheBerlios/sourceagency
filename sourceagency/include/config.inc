@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: config.inc,v 1.15 2001/12/19 10:51:42 grex Exp $
+# $Id: config.inc,v 1.16 2002/02/19 16:46:00 riessen Exp $
 #
 ######################################################################
 
@@ -57,12 +57,12 @@ $sys_logo_height = "104";
 # org_logo_heigth  Height of the image of your Organisation
 ######################################################################
 
-$org_name = "GMD FOKUS";
+$org_name = "FOKUS";
 $org_url = "http://www.fokus.fhg.de/";
-$org_logo_image = "images/logo_fokus.gif";
+$org_logo_image = "images/logo_fokus.png";
 $org_logo_alt = $org_name;
-$org_logo_width = "66";
-$org_logo_height = "73";
+$org_logo_width = "60";
+$org_logo_height = "60";
 
 ######################################################################
 # Top Strip
