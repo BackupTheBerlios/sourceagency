@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: html.inc,v 1.11 2002/04/19 23:52:23 grex Exp $
+# $Id: html.inc,v 1.12 2002/04/20 00:01:35 grex Exp $
 #
 ######################################################################
 
@@ -110,11 +110,11 @@ function html_form_action($file, $query='', $type='POST')
     global $sess;
     
     if ($file == 'PHP_SELF') {
-        $output = ( '<form action="'.$sess->self_url()
+        $output = ( "\n".'<form action="'.$sess->self_url()
                     .$sess->add_query($query).'" method="'.$type.'">');
 
     } else {
-        $output = ( '<form action="'.$sess->url($file)
+        $output = ( "\n".'<form action="'.$sess->url($file)
                     .$sess->add_query($query).'" method="'.$type.'">' );
     }
     return($output);
@@ -137,7 +137,7 @@ function htmlp_form_action($file, $query='', $type='POST')
  */ 	
 function html_form_hidden($name, $value)
 {
-    return ( '<input type="hidden" name="'.$name.'" value="'.$value.'">');
+    return ( "\n".'    <input type="hidden" name="'.$name.'" value="'.$value.'">');
 }
 function htmlp_form_hidden($name, $value)
 {

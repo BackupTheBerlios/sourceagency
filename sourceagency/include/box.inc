@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: box.inc,v 1.7 2002/04/19 23:52:23 grex Exp $
+# $Id: box.inc,v 1.8 2002/04/19 23:57:01 grex Exp $
 #
 ######################################################################
 
@@ -240,7 +240,9 @@ class box {
     function box_body($text)
     {
 	$this->box_body_begin();
-	echo "      <font color=\"$this->box_body_font_color\">$text</font>\n";
+	echo "            <font color=\"".$this->box_body_font_color."\">\n";
+        echo '            '.$text;
+        echo "            </font>\n";
 	$this->box_body_end();
     }
 
