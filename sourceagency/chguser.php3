@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: chguser.php3,v 1.11 2002/05/10 12:00:40 grex Exp $
+# $Id: chguser.php3,v 1.12 2002/05/10 12:01:33 grex Exp $
 #
 ######################################################################
 
@@ -141,7 +141,7 @@ $bx->box_column('left', '50%', '', timestr(mktimestamp($db->f('modification_usr'
 $bx->box_next_row_of_columns();
 
 $bx->box_column('right', '50%', '', '<b>'.$t->translate('Permisions').':</b>');
-$bx->box_column('left', '50%', '', timestr($db->f('perms')));
+$bx->box_column('left', '50%', '', $db->f('perms'));
 
 $bx->box_next_row_of_columns();
 
