@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: constants.php,v 1.27 2002/06/26 09:48:45 riessen Exp $
+# $Id: constants.php,v 1.28 2002/07/17 12:38:07 riessen Exp $
 #
 ######################################################################
 
@@ -35,10 +35,14 @@ function getmicrotime(){
 
 // extension to the in_array function which takes regular expressions
 function in_array_regexp( $rexp, &$array ) {
-    while ( list ($key, $val) = each ($array)) {
-        if ( ereg( $rexp, $val ) ) {
-            return TRUE;
+    if ( is_array( $array ) ) {
+        while ( list ($key, $val) = each ($array)) {
+            if ( ereg( $rexp, $val ) ) {
+                return TRUE;
+            }
         }
+    } else {
+        return ( ereg( $rexp, $array ) );
     }
     return FALSE;
 }
