@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: admprojectslib.inc,v 1.6 2002/04/08 21:32:47 grex Exp $
+# $Id: admprojectslib.inc,v 1.7 2002/04/22 17:30:51 grex Exp $
 #
 ######################################################################
 
@@ -116,8 +116,8 @@ function show_admprojects()
 
 	    /* initialization */
             $configured_output = '<b>No</b><br>'; 
-            // TODO: should use reg exp instead of ==: user may have
-            // TODO: multiple permissions
+            // WISH: should use reg exp instead of ==: user may have
+            // WISH: multiple permissions
             if ($db->f('perms') == 'sponsor') {
                 switch ($configured) {
                     case 3: {
