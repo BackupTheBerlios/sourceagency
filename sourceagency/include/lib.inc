@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.10 2001/11/09 18:22:23 riessen Exp $
+# $Id: lib.inc,v 1.11 2001/11/14 12:25:10 riessen Exp $
 #
 ######################################################################
 
@@ -299,7 +299,7 @@ function checkcnt($id, $ipaddr, $type) {
 
 function draw_top_bar( $project_title, $page, $proid = "", 
                        $project_status = 0 ) {
-  global $t;
+  global $t, $g_step_text, $g_step_count;
   require("config.inc"); // needed for th_XXXXX variables
   $btop = new box("100%",$th_box_frame_color,1,$th_box_title_bgcolor,
                   $th_box_title_font_color,$th_box_title_align,
@@ -320,6 +320,7 @@ function draw_top_bar( $project_title, $page, $proid = "",
   // The current page has border = 1
 
   if ( empty( $proid ) ) {
+    // NOI18N the following links are all not translated
     htmlp_image("ic/agrey.png",abs(!strcmp("summary",$page)),
                24,24,"Summary");
     htmlp_image("ic/bgrey.png",abs(!strcmp("news",$page)),
@@ -331,6 +332,7 @@ function draw_top_bar( $project_title, $page, $proid = "",
     htmlp_image("ic/egrey.png",abs(!strcmp("history",$page)),
                24,24,"Project History");
   } else {
+    // NOI18N alternative image names are not translated
     htmlp_link("summary.php3",array("proid" => $proid),
                html_image("ic/a.png",abs(!strcmp("summary",$page)),
                           36,36,"Summary"));
@@ -350,21 +352,20 @@ function draw_top_bar( $project_title, $page, $proid = "",
 
   // Blank space that
   // limits actions from states
-
   htmlp_image("blank.gif",0,36,36,"");
 
   // Project steps
   // In grey future steps
 
-  // FIXME: number of steps (7) is hardcoded here
-  for( $i = 1; $i < 7; $i++) {
+  for( $i = 1; $i < $g_step_count + 1; $i++) {
+      $alt_text = $t->translate( $g_step_text[ $i ] );
 	if ($i <= $project_status ) {
 		htmlp_link("step$i.php3",array("proid" => $proid),
                            html_image("ic/$i.png",abs(!strcmp($i,$page)),
-                                      36,36,"Step $i"));
+                                      36,36,$alt_text));
 	} else {
 		htmlp_image("ic/".$i."grey.png",abs(!strcmp($i,$page)),
-                            24,24,"Step $i");
+                            24,24,$alt_text);
 	}
   }
 
