@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: commentslib.inc,v 1.2 2001/11/07 18:48:52 riessen Exp $
+# $Id: commentslib.inc,v 1.3 2001/11/09 20:33:31 riessen Exp $
 #
 ######################################################################
 
@@ -60,8 +60,11 @@
 function comments_show($proid,$type_cmt,$number,$cmt_id,$ref) {
   global $t, $bx, $db, $sess;
 
-  if (isset($number) && !empty($number)) $number_selection = "AND number='$number'";
-  else $number_selection = "AND number='0'";
+  if (isset($number) && !empty($number)) {
+    $number_selection = "AND number='$number'";
+  } else {
+    $number_selection = "AND number='0'";
+  }
 
   if (isset($cmt_id) && !empty($cmt_id)) $id_selection = "AND id='$cmt_id'";
   else $id_selection = "";
@@ -69,11 +72,15 @@ function comments_show($proid,$type_cmt,$number,$cmt_id,$ref) {
   if (isset($ref) && !empty($ref)) $ref_selection = "AND ref='$ref'";
   else $ref_selection = "AND ref='0'";
 
-  $db->query("SELECT * FROM comments,auth_user WHERE proid='$proid' AND type='$type_cmt' ".$number_selection." ".$id_selection." ".$ref_selection." AND user_cmt=username ORDER BY creation_cmt ASC");
+  $db->query("SELECT * FROM comments,auth_user WHERE proid='$proid' "
+             ."AND type='$type_cmt' ".$number_selection." ".$id_selection
+             ." ".$ref_selection." AND user_cmt=username ORDER BY "
+             ."creation_cmt ASC");
   while($db->next_record()) {
 	htmlp_anchor($db->f("id"));
     	$bx->box_begin();
-    	$bx->box_title($t->translate("Comment")." #".$db->f("id").": ".stripslashes($db->f("subject_cmt")));
+    	$bx->box_title($t->translate("Comment")." #".$db->f("id").": "
+                       .stripslashes($db->f("subject_cmt")));
     	$bx->box_body_begin();
     	$timestamp = mktimestamp($db->f("creation_cmt"));
         echo "<b>";
@@ -84,12 +91,16 @@ function comments_show($proid,$type_cmt,$number,$cmt_id,$ref) {
    	$bx->box_body_end();
    	$bx->box_end();
 
-	lib_comment_it($proid,$db->f("type"),$db->f("number"),$db->f("id"),"Re:".$db->f("subject_cmt"),"Comment it!");
+	lib_comment_it($proid,$db->f("type"),$db->f("number"),$db->f("id"),
+                       "Re:".$db->f("subject_cmt"),"Comment it!");
 
 	$db_ref = new DB_SourceAgency;
-	$db_ref->query("SELECT ref FROM comments WHERE proid='$proid' AND type='".$db->f("type")."' AND id='".$db->f("ref")."'");
+	$db_ref->query("SELECT ref FROM comments WHERE proid='$proid' "
+                       ."AND type='".$db->f("type")."' AND id='"
+                       .$db->f("ref")."'");
 	$db_ref->next_record();
-	lib_previous_comment($proid,$db->f("type"),$db->f("number"),$db_ref->f("ref"),"Previous");
+	lib_previous_comment($proid,$db->f("type"),$db->f("number"),
+                             $db_ref->f("ref"),"Previous");
 
   	lib_show_comments_on_it($proid,$type_cmt,$number,$db->f("id"));
   }
@@ -109,39 +120,23 @@ function comments_form($proid) {
 
   $bx->box_columns_begin(2);
 
-  $bx->box_column ("right","30%","","<b>".stripslashes($t->translate("Subject"))."</b> (128): ");
-  $bx->box_column ("left","70%","",html_input_text("subject",40,128,stripslashes($subject)));
-
-/*
-
-// This is only debugging information
+  $bx->box_column ("right","30%","","<b>"
+                   .stripslashes($t->translate("Subject"))."</b> (128): ");
+  $bx->box_column ("left","70%","",html_input_text("subject",40,128,
+                                                   stripslashes($subject)));
 
   $bx->box_next_row_of_columns();
 
-  $bx->box_column ("right","30%","","<b>".$t->translate("Type")."</b>:");
-  $bx->box_column ("left","70%","",$type);
-
-  $bx->box_next_row_of_columns();
-
-  $bx->box_column ("right","30%","","<b>".$t->translate("Number")."</b>:");
-  $bx->box_column ("left","70%","",$number);
-
-  $bx->box_next_row_of_columns();
-
-  $bx->box_column ("right","30%","","<b>".$t->translate("Ref")."</b>:");
-  $bx->box_column ("left","70%","",$ref);
-
-*/
-
-  $bx->box_next_row_of_columns();
-
-  $bx->box_column ("right","30%","","<b>".stripslashes($t->translate("Body"))."</b> (*): ");
-  $bx->box_column ("left","70%","",html_textarea("text",40,7,"virtual",255,stripslashes($text)));
+  $bx->box_column ("right","30%","","<b>"
+                   .stripslashes($t->translate("Body"))."</b> (*): ");
+  $bx->box_column ("left","70%","",html_textarea("text",40,7,"virtual",255,
+                                                 stripslashes($text)));
 
   $bx->box_next_row_of_columns();
 
   $bx->box_column ("right","30%","","&nbsp;");
-  $bx->box_column ("left","70%","",html_form_submit("Preview","preview").html_form_submit("Submit","submit"));
+  $bx->box_column ("left","70%","",html_form_submit("Preview","preview")
+                   .html_form_submit("Submit","submit"));
   htmlp_form_end();
   $bx->box_columns_end();
 
@@ -159,7 +154,8 @@ function comments_preview($proid) {
 	$timestamp = time();
         echo "<b>";
 	$db_local = new DB_SourceAgency;
-	$db_local->query("SELECT email_usr FROM auth_user WHERE username='".$auth->auth["uname"]."'");
+	$db_local->query("SELECT email_usr FROM auth_user WHERE username='"
+                         .$auth->auth["uname"]."'");
 	$db_local->next_record();
 	lib_pnick($auth->auth["uname"]);
         echo " - ".timestr($timestamp)."</b>\n";
@@ -173,27 +169,41 @@ function comments_preview($proid) {
 function comments_insert($proid,$user,$type_cmt,$number,$ref,$subject,$text) {
   global $db;
 
-  $db->query("SELECT * FROM comments WHERE proid='$proid' AND type='$type_cmt' AND number='$number'");
+  $db->query("SELECT * FROM comments WHERE proid='$proid' AND "
+             ."type='$type_cmt' AND number='$number'");
   $db->next_record();
   $id = $db->num_rows()+1;
 
-  $db->query("INSERT comments SET proid='$proid',user_cmt='$user',type='$type_cmt',number='$number',id='$id',ref='$ref',subject_cmt='$subject',text_cmt='$text'");
+  $db->query("INSERT comments SET proid='$proid',user_cmt='$user',"
+             ."type='$type_cmt',number='$number',id='$id',ref='$ref',"
+             ."subject_cmt='$subject',text_cmt='$text'");
 
   include("monitorlib.inc");
   include("config.inc");
-  monitor_mail($proid,"comments", "New Comment", "New Comment on project $proid\n Subject: $subject\n by $user\n\n You can see it at: $sys_urlcomments.php3?proid=$proid&type=$type_cmt&numbe=$number&id=$id");
+  // FIXME: is 'numbe=' a typo in the following url?
+  monitor_mail($proid,"comments", "New Comment", "New Comment on project "
+               ."$proid\n Subject: $subject\n by $user\n\n You can see it "
+               ."at: $sys_urlcomments.php3?proid=$proid&type=$type_cmt&"
+               ."numbe=$number&id=$id");
 
   comments_show($proid,$type_cmt,$number,$id,$ref);
 }
 
-function comments_modify($proid,$user,$type_cmt,$number,$cmt_id,$ref,$subject,$text) {
+function comments_modify($proid,$user,$type_cmt,$number,$cmt_id,
+                         $ref,$subject,$text) {
   global $db;
 
-  $db->query("UPDATE comments SET user_cmt='devel', subject_cmt='$subject', text_cmt='$text' WHERE proid='$proid' AND type='$type_cmt'  AND number='$number' AND id='$cmt_id' AND ref='$ref'");
+  $db->query("UPDATE comments SET user_cmt='devel', subject_cmt='$subject', "
+             ."text_cmt='$text' WHERE proid='$proid' AND type='$type_cmt'  "
+             ."AND number='$number' AND id='$cmt_id' AND ref='$ref'");
 
   include("monitorlib.inc");
   include("config.inc");
-  monitor_mail($proid,"comments", "Comment modified", "Modification on a comment on project $proid\n Subject: $subject\n by $user\n\n You can see it at: $sys_urlcomments.php3?proid=$proid&type=$type_cmt&numbe=$number&id=$id");
+  // FIXME: is 'numbe=' a typo in the following
+  monitor_mail($proid,"comments", "Comment modified", "Modification on a "
+               ."comment on project $proid\n Subject: $subject\n by "
+               ."$user\n\n You can see it at: $sys_urlcomments.php3?"
+               ."proid=$proid&type=$type_cmt&numbe=$number&id=$id");
 
   comments_show($proid,$type_cmt,$number,$cmt_id,$ref);
 }
@@ -211,18 +221,22 @@ function comments_modify_form($proid) {
 
   $bx->box_columns_begin(2);
 
-  $bx->box_column ("right","30%","","<b>".stripslashes($t->translate("Subject"))."</b> (128): ");
-  $bx->box_column ("left","70%","",html_input_text("subject",40,128,stripslashes($subject)));
+  $bx->box_column ("right","30%","","<b>"
+                   .stripslashes($t->translate("Subject"))."</b> (128): ");
+  $bx->box_column ("left","70%","",html_input_text("subject",40,128,
+                                                   stripslashes($subject)));
 
   $bx->box_next_row_of_columns();
 
-  $bx->box_column ("right","30%","","<b>".stripslashes($t->translate("Body"))."</b> (*): ");
-  $bx->box_column ("left","70%","",html_textarea("text",40,7,"virtual",255,stripslashes($text)));
-
+  $bx->box_column ("right","30%","","<b>".stripslashes($t->translate("Body"))
+                   ."</b> (*): ");
+  $bx->box_column ("left","70%","",html_textarea("text",40,7,"virtual",255,
+                                                 stripslashes($text)));
   $bx->box_next_row_of_columns();
 
   $bx->box_column ("right","30%","","&nbsp;");
-  $bx->box_column ("left","70%","",html_form_submit("Preview","preview").html_form_submit("Submit","submit"));
+  $bx->box_column ("left","70%","",html_form_submit("Preview","preview")
+                   .html_form_submit("Submit","submit"));
   htmlp_form_end();
   $bx->box_columns_end();
 
@@ -234,7 +248,10 @@ function comments_missing_parameters() {
   global $t;
 
   require("config.inc");
-  $be = new box("",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_error_font_color,$th_box_body_align);
+  $be = new box("80%",$th_box_frame_color,$th_box_frame_width,
+                $th_box_title_bgcolor,$th_box_title_font_color,
+                $th_box_title_align,$th_box_body_bgcolor,
+                $th_box_error_font_color,$th_box_body_align);
 
   $be->box_full($t->translate("Error"), $t->translate("Missing Parameters"));
 }
