@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.22 2002/06/06 08:18:16 riessen Exp $
+# $Id: unit_test.php,v 1.23 2002/06/06 12:52:34 riessen Exp $
 #
 ######################################################################
 
@@ -150,7 +150,9 @@ extends TestCase
             $this->_testFor_string_length( &$this->test_text, $str, 
                                                         &$this->test_msg );
         } else {
-            $this->_check_length( $len, strlen( $str ), $msg . ' (string)');
+            // if the length is zero, then display the text in the message
+            $this->_check_length( $len, strlen( $str ), 
+                        $msg . ' (string)' . ($len == 0 ? ' ['.$str.']' : ''));
         }
     }
 
