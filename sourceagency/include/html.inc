@@ -17,18 +17,15 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: html.inc,v 1.6 2001/11/20 16:38:58 riessen Exp $
+# $Id: html.inc,v 1.7 2001/11/29 15:36:25 grex Exp $
 #
 ######################################################################
-
-// falta mirar si es local o global !!!
-// funciona si no tiene addquery?
 
 function html_link($address, $query, $text) {
     global $sess;
     
-    // FIXME??: should html_link do a translate on the text parameter
-    // FIXME??: or should it assume that text has been translated?
+    // this functions supposes that the text parameter it gets is already translated!
+
     if (!isset($query) || empty($query)) {
         $output = "<a href=\"".$sess->url($address)."\">".$text."</a>\n";
     } else {
@@ -41,7 +38,7 @@ function html_link($address, $query, $text) {
 function htmlp_link($address, $query, $text) {
     print html_link( $address, $query, $text );
 }
-
+ 
 function html_anchor($name) {
     return ( "<a name=\"".$name."\"></a>\n" );
 }
@@ -117,6 +114,16 @@ function html_input_text($name, $size, $maxlength, $value) {
 }
 function htmlp_input_text($name, $size, $maxlength, $value) {
     print html_input_text( $name, $size, $maxlength, $value );
+}
+
+
+function html_input_password($name, $size, $maxlength, $value) {
+    return ( "<input type=\"password\" name=\"".$name."\" size=\""
+             .$size."\" maxlength=\"".$maxlength."\" value=\""
+             .$value."\">\n" );
+}
+function htmlp_input_password($name, $size, $maxlength, $value) {
+    print html_input_password( $name, $size, $maxlength, $value );
 }
 
 
