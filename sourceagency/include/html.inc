@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: html.inc,v 1.3 2001/11/08 16:17:41 riessen Exp $
+# $Id: html.inc,v 1.4 2001/11/19 17:40:59 riessen Exp $
 #
 ######################################################################
 
@@ -25,75 +25,105 @@
 // funciona si no tiene addquery?
 
 function html_link($address, $query, $text) {
-	global $sess;
-
-	if (!isset($query) || empty($query)) $output = "<a href=\"".$sess->url($address)."\">".$text."</a>";
-	else $output = "<a href=\"".$sess->url($address).$sess->add_query($query)."\">".$text."</a>";
-
-	return($output);
+    global $sess;
+    
+    // FIXME??: should html_link do a translate on the text parameter
+    // FIXME??: or should it assume that text has been translated?
+    if (!isset($query) || empty($query)) {
+        $output = "<a href=\"".$sess->url($address)."\">".$text."</a>\n";
+    } else {
+        $output = "<a href=\"".$sess->url($address)
+             .$sess->add_query($query)."\">".$text."</a>\n";
+    }
+    
+    return $output;
+}
+function htmlp_link($address, $query, $text) {
+    print html_link( $address, $query, $text );
 }
 
 function html_anchor($name) {
-
-	$output = "<a name=\"".$name."\"></a>\n";
-
-	return($output);
+    return ( "<a name=\"".$name."\"></a>\n" );
+}
+function htmlp_anchor($name) {
+    print html_anchor( $name );
 }
 
 
 function html_image($file, $border, $width, $height, $alternate) {
-
-	$output = "<img src=\"images/".$file."\" border=\"".$border."\" width=\"".$width."\" height=\"".$height."\" alt=\"".$alternate."\">";
-
-	return($output);
+    return ( "<img src=\"images/".$file."\" border=\""
+             .$border."\" width=\"".$width."\" height=\""
+             .$height."\" alt=\"".$alternate."\">\n" );
+}
+function htmlp_image($file, $border, $width, $height, $alternate) {
+    print html_image( $file, $border, $width, $height, $alternate );
 }
 
 function html_form_action($file, $query, $type) {
-	global $sess;
+    global $sess;
+    
+    if ($file == "PHP_SELF") {
+        $output = ( "<form action=\"".$sess->self_url()
+                    .$sess->add_query($query)."\" method=\"".$type."\">");
 
-        if ($file == "PHP_SELF") $output = "<form action=\"".$sess->self_url().$sess->add_query($query)."\" method=\"".$type."\">";
-
-	else $output = "<form action=\"".$sess->url($file).$sess->add_query($query)."\" method=\"".$type."\">";
-
-	return($output);
+    } else {
+        $output = ( "<form action=\"".$sess->url($file)
+                    .$sess->add_query($query)."\" method=\"".$type."\">" );
+    }
+    return($output);
+}
+function htmlp_form_action($file, $query, $type) {
+    print html_form_action( $file, $query, $type );
 }
 	
 function html_form_hidden($name, $value) {
-
-	$output = "<input type=\"hidden\" name=\"".$name."\" value=\"".$value."\">";
-
-	return($output);
+    // FIXME: might be necessary to escape the value (and name) so that
+    // FIXME: they do not contain any quotes
+    return ( "<input type=\"hidden\" name=\"".$name
+             ."\" value=\"".$value."\">");
+}
+function htmlp_form_hidden($name, $value) {
+    print html_form_hidden( $name, $value );
 }
 
 function html_select($name) {
-
-	$output = "<select name=\"".$name."\">\n";
-
-	return($output);
+    return "<select name=\"".$name."\">\n";
+}
+function htmlp_select($name) {
+    print html_select( $name );
 }
 
 function html_select_option($value,$selected,$text) {
 
-	$output = "<option ";
-	if ($selected) $output .= "selected ";
-	$output .= "value=\"".$value."\">".$text."\n";
-
-	return($output);
+    $output = "<option ";
+    $output .= ( $selected ? "selected " : "" );
+//      if ($selected) {
+//          $output .= "selected ";
+//      }
+    $output .= "value=\"".$value."\">".$text."\n";
+    return($output);
+}
+function htmlp_select_option($value,$selected,$text) {
+    print html_select_option( $value, $selected, $text );
 }
 
 function html_select_end() {
-
-	$output = "</select>\n";
-
-	return($output);
+    return "</select>\n";
+}
+function htmlp_select_end() {
+    print html_select_end();
 }
 
 function html_input_text($name, $size, $maxlength, $value) {
-
-	$output = "<input type=\"text\" name=\"".$name."\" size=\"".$size."\" maxlength=\"".$maxlength."\" value=\"".$value."\">";
-
-	return($output);
+    return ( "<input type=\"text\" name=\"".$name."\" size=\""
+             .$size."\" maxlength=\"".$maxlength."\" value=\""
+             .$value."\">" );
 }
+function htmlp_input_text($name, $size, $maxlength, $value) {
+
+	print "<input type=\"text\" name=\"".$name."\" size=\"".$size."\" maxlength=\"".$maxlength."\" value=\"".$value."\">\n";
+}
+
 
 function html_form_submit($value,$name) {
 
@@ -135,62 +165,12 @@ function html_form_end() {
 	return($output);
 }
 
-function htmlp_link($address, $query, $text) {
-	global $sess;
 
-	if (!isset($query) || empty($query)) print "<a href=\"".$sess->url($address)."\">".$text."</a>\n";
-	else print "<a href=\"".$sess->url($address).$sess->add_query($query)."\">".$text."</a>\n";
 
-}
-
-function htmlp_anchor($name) {
-
-	print "<a name=\"".$name."\"></a>\n";
-
-}
-
-function htmlp_image($file, $border, $width, $height, $alternate) {
-
-	print "<img src=\"images/".$file."\" border=\"".$border."\" width=\"".$width."\" height=\"".$height."\" alt=\"".$alternate."\">\n";
-
-}
-
-function htmlp_form_action($file, $query, $type) {
-	global $sess;
-
-        if ($file == "PHP_SELF") print "<form action=\"".$sess->self_url().$sess->add_query($query)."\" method=\"".$type."\">";
-
-	else print "<form action=\"".$sess->url($file).$sess->add_query($query)."\" method=\"".$type."\">";
-
-}
 	
-function htmlp_form_hidden($name, $value) {
 
-	print "<input type=\"hidden\" name=\"".$name."\" value=\"".$value."\">\n";
 
-}
 
-function htmlp_select($name) {
-
-	print "<select name=\"".$name."\">\n";
-}
-
-function htmlp_select_option($value,$selected,$text) {
-
-	print "<option ";
-	if ($selected) print "selected ";
-	print "value=\"".$value."\">".$text."\n";
-}
-
-function htmlp_select_end() {
-
-	print "</select>\n";
-}
-
-function htmlp_input_text($name, $size, $maxlength, $value) {
-
-	print "<input type=\"text\" name=\"".$name."\" size=\"".$size."\" maxlength=\"".$maxlength."\" value=\"".$value."\">\n";
-}
 
 
 function htmlp_textarea($name,$columns,$rows,$wrap,$maxlength,$value) {
