@@ -17,7 +17,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: comments_mod.php3,v 1.2 2001/11/09 20:34:08 riessen Exp $
+# $Id: comments_mod.php3,v 1.3 2001/11/19 17:52:44 riessen Exp $
 #
 ######################################################################  
 
@@ -56,8 +56,8 @@ if (check_permission($proid,$page)) {
   } else {
 
       // FIXME: where do i get xxxx from ?????
-      print "Comments can be modified by xxxx.\n";
-      print "<br><p>\n";
+//        print "Comments can be modified by xxxx.\n";
+//        print "<br><p>\n";
 
       if ((!isset($preview) || empty($preview)) 
           && (!isset($submit) || empty($submit))) {
