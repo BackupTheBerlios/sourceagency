@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.11 2002/02/01 08:40:52 riessen Exp $
+# $Id: TestLib.php,v 1.12 2002/02/11 18:11:26 riessen Exp $
 #
 ######################################################################
 
@@ -413,34 +413,32 @@ extends UnitTest
 
     function testLib_show_description() {
         $db_config = new mock_db_configure( 2 );
-        $db_q = array( 0 => ("SELECT * FROM *"),
-                       1 => ("SELECT X FROM Y") );
+        $db_q = array( 0 => "SELECT %s FROM %s" );
 
-        $db_config->add_query( $db_q[0], 0 );
-        $db_config->add_query( $db_q[1], 1 );
+        $db_config->add_query( sprintf( $db_q[0], "*", "*"), 0 );
+        $db_config->add_query( sprintf( $db_q[0], "X", "Y"), 1 );
 
-        $row = array();
-        $row[0] = $this->_generate_array( array( "proid", "description",
-                                                 "description_creation",
-                                                 "volume", "description_user",
-                                                 "project_title", "type"), 1);
+        $row = $this->_generate_records( array( "proid", "description",
+                                                "description_creation",
+                                                "volume", "description_user",
+                                                "project_title", "type"), 1 );
         $db_config->add_record( $row[0], 0 );
         $db_config->add_num_row( 1, 0 );
         $db_config->add_num_row( 0, 1 );
 
-        capture_start();
-        lib_show_description( $db_q[0] );
+        capture_reset_and_start();
+        lib_show_description( sprintf( $db_q[0], "*", "*") );
         $text = capture_stop_and_get();
-        $pats = array( 0=>("<b>by description_user_1<\/b>"),
+        $pats = array( 0=>("<b>by description_user_0<\/b>"),
                        1=>("<a href=\"summary.php3\?proid="
-                           ."proid_1\">project_title_1<\/a>" ),
-                       2=>("<b>Description<\/b>: description_1"),
-                       3=>("<b>Volume<\/b>: volume_1" ));
+                           ."proid_0\">project_title_0<\/a>" ),
+                       2=>("<b>Description<\/b>: description_0"),
+                       3=>("<b>Volume<\/b>: volume_0" ));
         $this->_testFor_patterns($text, $pats, 4 );
         $this->_testFor_length( 656 );
 
         capture_reset_and_start();
-        lib_show_description( $db_q[1] );
+        lib_show_description( sprintf( $db_q[0], "X", "Y") );
         $text = capture_stop_and_get();
         $this->_testFor_length( 0 );
 
