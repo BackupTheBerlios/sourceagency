@@ -17,11 +17,11 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: German-lang.inc,v 1.19 2002/05/07 10:34:03 grex Exp $
+# $Id: German-lang.inc,v 1.20 2002/05/07 10:37:02 grex Exp $
 #
 ######################################################################
 
-if ( function_exists( "translate_real" ) ) {
+if ( function_exists( 'translate_real' ) ) {
   return;
 }
 
@@ -50,7 +50,7 @@ function translate_real($phrase) {
         case 'Change a License URL': $tmp = 'Lizenz URL ändern'; break;
         case 'Change': $tmp = 'Ändern'; break;
         case 'Comments': $tmp = 'Kommentare'; break;
-        case "Configure the information access to the project's data": $tmp = "Information zugriffsrechte ändern für diese Projekt"; break;
+        case "Configure the information access to the project's data": $tmp = 'Information zugriffsrechte ändern für diese Projekt'; break;
         case 'Configure the project parameters': $tmp = 'Konfiguriere Parameter für das Projekt'; break;
         case 'Confirm Password': $tmp = 'Passwort bestätigen'; break;
         case 'Consultancy': $tmp = 'Beratung'; break;
@@ -210,7 +210,7 @@ function translate_real($phrase) {
         case 'What is this?': $tmp = 'Was ist das?'; break;
         case 'You are logged in as': $tmp = 'Sie sind einloggt als'; break;
         case 'You have been logged in as': $tmp = 'Sie waren eingeloggt als'; break;
-        case "You'll find here all what has been posted to the project (news, comments, content suggestions, etc.) in chronological order": $tmp = "Alle Neuigkeiten, Kommentare, usw. sind in zeitliche Reihenfolge hier aufgeliste"; break;
+        case "You'll find here all what has been posted to the project (news, comments, content suggestions, etc.) in chronological order": $tmp = 'Alle Neuigkeiten, Kommentare, usw. sind in zeitliche Reihenfolge hier aufgeliste'; break;
         case 'Your authentication is valid until': $tmp = 'Ihre Authentifikation ist gültig bis'; break;
         case 'Your authentication was valid until': $tmp = 'Ihre Authentifikation war gültig bis'; break;
         case 'accepted sponsoring collaborations': $tmp = 'angenommmene finanzille Beteiligung'; break;
@@ -240,7 +240,7 @@ function translate_real($phrase) {
         case 'rated': $tmp = 'bewertet'; break;
         case 'sponsoring': $tmp = 'Finanzielle Unterstützung'; break;
         case 'status': $tmp = 'Status'; break;
-        case 'step': $tmp = "schritt"; break;
+        case 'step': $tmp = 'Schritt'; break;
         case 'step1_edit': $tmp = 'Neue Berater vorschlagen'; break;
         case 'step3_edit': $tmp = 'Neue Meilensteine definieren'; break;
         case 'summary': $tmp = 'Zusammenfassung'; break;
@@ -250,31 +250,31 @@ function translate_real($phrase) {
         case 'with': $tmp = 'mit'; break;
 
             /** explanations for the various steps a project has **/
-        case "step_1_explanation": {
-            $tmp = "Hilfe für Sponsoren um einen richtigen Projektverlauf zu folgen."; 
+        case 'step_1_explanation': {
+            $tmp = 'Hilfe für Sponsoren um einen richtigen Projektverlauf zu folgen.'; 
             break;
         }
-        case "step_2_explanation": {
-            $tmp = ( "Dieses Projekt kann verschiedene Spezifikationen haben. "
-                     ."Entwickler können ihre eigenen Entwicklungsangebote "
-                     ."zu diese Spezifikationen anbieten." );
+        case 'step_2_explanation': {
+            $tmp = ( 'Dieses Projekt kann verschiedene Spezifikationen haben. '
+                     .'Entwickler können ihre eigenen Entwicklungsangebote '
+                     .'zu diese Spezifikationen anbieten.' );
             break;
         }
-        case "step_3_explanation": {
-	    $tmp = "Von den Entwicklern angebotene Projektmeilensteine.";
+        case 'step_3_explanation': {
+	    $tmp = 'Von den Entwicklern angebotene Projektmeilensteine.';
             break;
         }
-        case "step_4_explanation": {
-            $tmp = ( "Entwickler können sich selbst als Sachverst&auml;dige anbieten. "
-                     ."Sponsoren und Projektentwickler werden dann einen w&auml;hlen." );
+        case 'step_4_explanation': {
+            $tmp = ( 'Entwickler können sich selbst als Sachverst&auml;dige anbieten. '
+                     .'Sponsoren und Projektentwickler werden dann einen w&auml;hlen.' );
             break;
         }
-        case "step_5_explanation": {
-  	    $tmp = ( "Meilensteinabgabe und andere Aufgaben, die mit dem Projektnachgehen zu tun haben." );
+        case 'step_5_explanation': {
+  	    $tmp = ( 'Meilensteinabgabe und andere Aufgaben, die mit dem Projektnachgehen zu tun haben.' );
             break;
         }
-        case "step_6_explanation": {
-            $tmp = "Schlussbewertung zwischen Sponsoren und Entwickler.";
+        case 'step_6_explanation': {
+            $tmp = 'Schlussbewertung zwischen Sponsoren und Entwickler.';
             break;
         }
         

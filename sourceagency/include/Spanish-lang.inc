@@ -17,11 +17,11 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: Spanish-lang.inc,v 1.3 2002/05/07 10:28:53 grex Exp $
+# $Id: Spanish-lang.inc,v 1.4 2002/05/07 10:35:25 grex Exp $
 #
 ######################################################################
 
-if ( function_exists( "translate_real" ) ) {
+if ( function_exists( 'translate_real' ) ) {
   return;
 }
 
@@ -50,7 +50,7 @@ function translate_real($phrase) {
         case 'Change a License URL': $tmp = 'Modificar URL de licencia'; break;
         case 'Change': $tmp = 'Modificar'; break;
         case 'Comments': $tmp = 'Comentarios'; break;
-        case "Configure the information access to the project's data": $tmp = "Configure el acceso a la información para este proyecto"; break;
+        case "Configure the information access to the project's data": $tmp = 'Configure el acceso a la información para este proyecto'; break;
         case 'Configure the project parameters': $tmp = 'Configure los parámetros para este proyecto'; break;
         case 'Confirm Password': $tmp = 'Confirme la contraseña'; break;
         case 'Consultancy': $tmp = 'Consultoría'; break;
@@ -240,7 +240,7 @@ function translate_real($phrase) {
         case 'rated': $tmp = 'puntuado'; break;
         case 'sponsoring': $tmp = 'patrocinio'; break;
         case 'status': $tmp = 'estado'; break;
-        case 'step': $tmp = "paso"; break;
+        case 'step': $tmp = 'paso'; break;
         case 'step1_edit': $tmp = 'Proposici&oaacute;n de consultores'; break;
         case 'step3_edit': $tmp = 'Definici&oacute;n de hitos'; break;
         case 'summary': $tmp = 'Resumen'; break;
@@ -250,33 +250,33 @@ function translate_real($phrase) {
         case 'with': $tmp = 'con'; break;
 
             /** explanations for the various steps a project has **/
-        case "step_1_explanation": {
+        case 'step_1_explanation': {
             $tmp = 'Ayude a que los patrocinadores puedan tener un proceso correcto.';
             break;
         }
-        case "step_2_explanation": {
-            $tmp = ( "Este proyecto puede tener diferentes especificaciones. "
-                     ."Los desarrolladores pueden hacer sus porpuestas de desarrollo "
-                     ."a esas especificaciones." );
+        case 'step_2_explanation': {
+            $tmp = ( 'Este proyecto puede tener diferentes especificaciones. '
+                     .'Los desarrolladores pueden hacer sus porpuestas de desarrollo '
+                     .'a esas especificaciones.' );
             break;
         }
-        case "step_3_explanation": {
-            $tmp = "Hitos del proyecto propuestas por los desarrolladores.";
+        case 'step_3_explanation': {
+            $tmp = 'Hitos del proyecto propuestas por los desarrolladores.';
             break;
         }
-        case "step_4_explanation": {
-            $tmp = ( "Los desarrolladores pueden proponerse como &aacute;rbitros. Los "
-                     ."patrocinadores y los desarrolladores del proyecto elegir&aacute;n "
-                     ."a uno de ellos.");
+        case 'step_4_explanation': {
+            $tmp = ( 'Los desarrolladores pueden proponerse como &aacute;rbitros. Los '
+                     .'patrocinadores y los desarrolladores del proyecto elegir&aacute;n '
+                     .'a uno de ellos.');
             break;
         }
-        case "step_5_explanation": {
-            $tmp = ( "Entrega de hitos y otras tareas relacionadas con el"
-                     ."seguimiento del proyecto." );
+        case 'step_5_explanation': {
+            $tmp = ( 'Entrega de hitos y otras tareas relacionadas con el'
+                     .'seguimiento del proyecto.' );
             break;
         }
-        case "step_6_explanation": {
-            $tmp = "Puntuaci&oacute;n final entre desarrolladores y patrocinadores.";
+        case 'step_6_explanation': {
+            $tmp = 'Puntuaci&oacute;n final entre desarrolladores y patrocinadores.';
             break;
         }
         
