@@ -5,7 +5,8 @@
 # ================================================
 #
 # Copyright (c) 2001 by
-#             Gregorio Robles (grex@scouts-es.org)
+#             Gregorio Robles (grex@scouts-es.org) and
+#             Gerrit Riessen (Gerrit.Riessen@open-source-consultants.de)
 #
 # BerliOS SourceAgency: http://sourceagency.berlios.de
 # BerliOS - The OpenSource Mediator: http://www.berlios.de
@@ -25,44 +26,39 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
                   "perm" => "SourceAgency_Perm"));
 }
 
-require("header.inc");
-require("contentlib.inc");
-require("developinglib.inc");
-require("decisionslib.inc");
+require('header.inc');
+require('contentlib.inc');
+require('developinglib.inc');
+require('decisionslib.inc');
 
-$bx = new box("100%",$th_box_frame_color,$th_box_frame_width,
+$bx = new box('100%',$th_box_frame_color,$th_box_frame_width,
               $th_box_title_bgcolor,$th_box_title_font_color,
               $th_box_title_align,$th_box_body_bgcolor,
               $th_box_body_font_color,$th_box_body_align);
 
 start_content();
-$page = "content suggestions";
+$page = 'content suggestions';
 
 if (check_proid($proid)) {
-  top_bar($proid,$page);
+    top_bar($proid,$page);
 
-  print ( "Project technical content suggestions. They can be made "
-          . "either by developers or by a sponsor (if the sponsor is "
-          . "owner of the project).\n" );
+    print ( 'Project technical content suggestions. They can be made '
+            . 'either by developers or by a sponsor (if the sponsor is '
+            . "owner of the project).\n" );
 
-  print ( "<p align=right>[<b> ". html_link("step2_edit.php3",
-                                            array("proid" => $proid),
-                                            "Suggest a Technical Content")
-          ." </b>] &nbsp;<p>\n" );
+    print ( '<p align=right>[<b> '. html_link('step2_edit.php3',
+                                              array('proid' => $proid),
+                                              'Suggest a Technical Content')
+            ." </b>] &nbsp;<p>\n" );
 
-  if ( is_not_set_or_empty( $proposals ) ) {
-      // FIXME: where is $proposals used? can it be removed?
-      $proposals = "no";
-  }
-  show_content( $proid, $show_proposals, $which_proposals );
+    show_content($proid, $show_proposals, $which_proposals);
 
-  if (is_accepted_sponsor($proid)) {
-      create_decision_link( $proid );
-  }
-
+    if (is_accepted_sponsor($proid)) {
+        create_decision_link($proid);
+    }
 }
 
 end_content();
-require("footer.inc");
+require('footer.inc');
 page_close();
 ?>
