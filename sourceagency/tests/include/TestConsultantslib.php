@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestConsultantslib.php,v 1.2 2002/05/13 13:04:07 riessen Exp $
+// $Id: TestConsultantslib.php,v 1.3 2002/05/15 09:33:09 riessen Exp $
 
 include_once( "../constants.php" );
 
@@ -196,10 +196,10 @@ extends UnitTest
 
         // show_consultants also uses the global db and show_consultants
         // is called by consultants_insert.
-        $db_config->ignore_errors( MKDB_ALL_ERRORS, 0 );
+        $db_config->ignore_all_errors( 0 );
         // instance 1 is created by monitor_mail(...) which is also called
         // by consultants_insert
-        $db_config->ignore_errors( MKDB_ALL_ERRORS, 1 );
+        $db_config->ignore_all_errors( 1 );
 
         $db = new DB_SourceAgency;
 
