@@ -26,6 +26,7 @@ if (isset($auth) && !empty($auth->auth["perm"])) {
 }
 
 require("header.inc");
+require("followuplib.inc");
 
 $bx = new box("100%",$th_box_frame_color,$th_box_frame_width,$th_box_title_bgcolor,$th_box_title_font_color,$th_box_title_align,$th_box_body_bgcolor,$th_box_body_font_color,$th_box_body_align);
 
@@ -42,9 +43,10 @@ if (check_proid($proid)) {
 
   print "You can see in a view what is this project about.<p>\n";
 
-  if(is_main_developer($proid)) htmlp_link("step5_devel.php3",array("proid"=>$proid),"Main developer");
-  elseif(is_referee($proid)) htmlp_link("step5_referee.php3",array("proid"=>$proid),"Referee");
-  elseif(is_accepted_sponsor($proid)) htmlp_link("step5_sponsor.php3",array("proid"=>$proid),"Project sponsor");
+  $milestone_number = followup_current_milestone($proid);
+  $count = followup_current_count($proid,$milestone_number);
+
+  followup_milestone_schedule($proid,$milestone_number,$count);
 
   followup($proid);
 
