@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.26 2002/06/14 09:14:11 riessen Exp $
+# $Id: unit_test.php,v 1.27 2002/06/20 12:06:55 riessen Exp $
 #
 ######################################################################
 
@@ -324,6 +324,17 @@ extends TestCase
     // _checkFor_ methods are intended to be a combination of several
     // _testFor_ methods and allow for the testing of often occuring
     // _testFor_ sequences
+    
+    function _checkFor_error_box( $title, $body ) {
+        global $t;
+        include( 'config.inc' ); 
+        $this->_testFor_box_title($t->translate($title),
+                                  $th_box_title_font_color,
+                                  $th_box_title_bgcolor,
+                                  $th_box_title_align );
+        $this->_testFor_box_body( $t->translate($body), 
+                                  $th_box_error_font_color );
+    }
     
     function _checkFor_a_box( $title, $title_template='%s' ) {
         $this->push_msg( $this->test_msg . " (_checkFor_a_box)");
