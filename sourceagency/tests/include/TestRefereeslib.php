@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestRefereeslib.php,v 1.4 2002/06/26 10:29:52 riessen Exp $
+// $Id: TestRefereeslib.php,v 1.5 2002/07/02 10:40:59 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -40,7 +40,8 @@ extends UnitTest
     }
 
     function testReferees_form() {
-        $this->_test_to_be_completed();
+        global $bx, $t, $sess, $auth;
+        
     }
 
     function testReferees_insert() {

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestSecurity.php,v 1.24 2002/06/26 10:29:52 riessen Exp $
+# $Id: TestSecurity.php,v 1.25 2002/07/02 10:40:59 riessen Exp $
 #
 ######################################################################
 
@@ -37,10 +37,10 @@ if ( !defined("BEING_INCLUDED" ) ) {
 class UnitTestSecurity
 extends UnitTest
 {
-    var $query;
+    var $queries;
 
     function UnitTestSecurity( $name ) {
-        $this->query = 
+        $this->queries = 
              array( "is_accepted_developer" =>
                     ("SELECT * FROM developing WHERE proid='%s' AND "
                      ."status='A' AND developer='%s'"),
@@ -110,7 +110,9 @@ extends UnitTest
                     'allowed_actions_3' =>
                     ("SELECT COUNT(*) FROM milestones WHERE proid='proid'"),
                     'allowed_actions_4' =>
-                    ("SELECT COUNT(*) FROM referees WHERE proid='proid'")
+                    ("SELECT COUNT(*) FROM referees WHERE proid='proid'"),
+                    'check_permission' =>
+                    ("SELECT * FROM description WHERE proid='%s'")
                  );
         $this->UnitTest( $name );
     }
@@ -126,7 +128,7 @@ extends UnitTest
 
         $db_config = new mock_db_configure( 1 );
 
-        $db_q = array( 0 => $this->query["valid_proid"] );
+        $db_q = array( 0 => $this->queries["valid_proid"] );
         $dat = $this->_generate_records( array( "proid", "page" ), 3 );
 
         $db_config->add_query( sprintf( $db_q[0], $dat[0]["proid"] ), 0 );
@@ -206,7 +208,7 @@ extends UnitTest
 
         $db_config = new mock_db_configure( 7 );
         
-        $db_q = array( 0 => $this->query['check_proid']);
+        $db_q = array( 0 => $this->queries['check_proid']);
         
         $dat = $this->_generate_records( array( "proid" ), 7 );
         $rows = $this->_generate_records( array( "status" ), 7 );
@@ -305,7 +307,7 @@ extends UnitTest
         //******* tests 1 to 9: test action number = 0 and 1 *********
         //************************************************************
         // test one: project status = 0, action_number = 0, no consultants
-        $db_config->add_query($this->query['allowed_actions_1'], 0 );
+        $db_config->add_query($this->queries['allowed_actions_1'], 0 );
         $rows=$this->_generate_records(array("consultants"), 1 );
         $rows[0]["consultants"] = "No";
         $db_config->add_record( $rows[0], 0 );
@@ -322,7 +324,7 @@ extends UnitTest
         $text_0_0 = $this->get_text();
 
         // test two: project status = -1, action number = 0, no consultants
-        $db_config->add_query($this->query['allowed_actions_1'], 1 );
+        $db_config->add_query($this->queries['allowed_actions_1'], 1 );
         $rows[0]["consultants"] = "No";
         $db_config->add_record( $rows[0], 1 );
         capture_reset_and_start();
@@ -330,7 +332,7 @@ extends UnitTest
         $this->assertEquals( $text_0_0, capture_stop_and_get(), "test 2" );
 
         // test three: project status = 0, action number = 1, no consultants
-        $db_config->add_query($this->query['allowed_actions_1'], 2 );
+        $db_config->add_query($this->queries['allowed_actions_1'], 2 );
         $rows[0]["consultants"] = "No";
         $db_config->add_record( $rows[0], 2 );
         capture_reset_and_start();
@@ -338,10 +340,10 @@ extends UnitTest
         $this->assertEquals( $text_0_0, capture_stop_and_get(), "test 3" );
 
         // test four: project status = 0, action number = 1, yes consultants
-        $db_config->add_query($this->query['allowed_actions_1'], 3 );
+        $db_config->add_query($this->queries['allowed_actions_1'], 3 );
         $rows[0]["consultants"] = "Yes";
         $db_config->add_record( $rows[0], 3 );
-        $db_config->add_query( $this->query['allowed_actions_1b'], 3 );
+        $db_config->add_query( $this->queries['allowed_actions_1b'], 3 );
         $row0=$this->_generate_records(array("COUNT(*)"), 1 );
         $db_config->add_record( $row0[0], 3 );
         capture_reset_and_start();
@@ -349,7 +351,7 @@ extends UnitTest
         $this->assertEquals( $text_0_0, capture_stop_and_get(), "test 4" );
 
         // test five: project status = 1, action_number = 1, no consultants
-        $db_config->add_query($this->query['allowed_actions_1'], 4 );
+        $db_config->add_query($this->queries['allowed_actions_1'], 4 );
         $rows[0]["consultants"] = "No";
         $db_config->add_record( $rows[0], 4 );
         capture_reset_and_start();
@@ -365,7 +367,7 @@ extends UnitTest
         $text_1_1 = $this->get_text();
 
         // test six: project status = 2, action num = 1, no consultants
-        $db_config->add_query($this->query['allowed_actions_1'], 5 );
+        $db_config->add_query($this->queries['allowed_actions_1'], 5 );
         $rows[0]["consultants"] = "No";
         $db_config->add_record( $rows[0], 5 );
         capture_reset_and_start();
@@ -373,10 +375,10 @@ extends UnitTest
         $this->assertEquals( $text_1_1, capture_stop_and_get(), "test 6" );
 
         // test seven: project status = 1, action num = 1, yes consultants
-        $db_config->add_query($this->query['allowed_actions_1'], 6 );
+        $db_config->add_query($this->queries['allowed_actions_1'], 6 );
         $rows[0]["consultants"] = "Yes";
         $db_config->add_record( $rows[0], 6 );
-        $db_config->add_query( $this->query['allowed_actions_1b'], 6 );
+        $db_config->add_query( $this->queries['allowed_actions_1b'], 6 );
         $row0=$this->_generate_records(array("COUNT(*)"), 1 );
         $db_config->add_record( $row0[0], 6 );
         capture_reset_and_start();
@@ -390,10 +392,10 @@ extends UnitTest
         $text_1_1_yes = $this->get_text();
 
         // test eight: project status = 2, action num = 1, yes consultants
-        $db_config->add_query($this->query['allowed_actions_1'], 7 );
+        $db_config->add_query($this->queries['allowed_actions_1'], 7 );
         $rows[0]["consultants"] = "Yes";
         $db_config->add_record( $rows[0], 7 );
-        $db_config->add_query( $this->query['allowed_actions_1b'], 7 );
+        $db_config->add_query( $this->queries['allowed_actions_1b'], 7 );
         $row0=$this->_generate_records(array("COUNT(*)"), 1 );
         $db_config->add_record( $row0[0], 7 );
         capture_reset_and_start();
@@ -401,10 +403,10 @@ extends UnitTest
         $this->assertEquals( $text_1_1_yes, capture_stop_and_get(), "test 8" );
 
         // test nine: project status = 2, action num = 0, yes consultants
-        $db_config->add_query($this->query['allowed_actions_1'], 8 );
+        $db_config->add_query($this->queries['allowed_actions_1'], 8 );
         $rows[0]["consultants"] = "Yes";
         $db_config->add_record( $rows[0], 8 );
-        $db_config->add_query( $this->query['allowed_actions_1b'], 8 );
+        $db_config->add_query( $this->queries['allowed_actions_1b'], 8 );
         $row0=$this->_generate_records(array("COUNT(*)"), 1 );
         $db_config->add_record( $row0[0], 8 );
         capture_reset_and_start();
@@ -415,10 +417,10 @@ extends UnitTest
         //********** tests 10 to 12: test action number = 2 **********
         //************************************************************
         // test 10: project status 1, action number 2
-        $db_config->add_query($this->query['allowed_actions_2'], 9 );
+        $db_config->add_query($this->queries['allowed_actions_2'], 9 );
         $rows=$this->_generate_records(array("COUNT(*)"), 2 );
         $db_config->add_record( $rows[0], 9 );
-        $db_config->add_query( $this->query['allowed_actions_2b'], 9 );
+        $db_config->add_query( $this->queries['allowed_actions_2b'], 9 );
         $db_config->add_record( $rows[1], 9 );
         capture_reset_and_start();
         allowed_actions( 1, 2, "proid" );
@@ -432,10 +434,10 @@ extends UnitTest
         $this->_testFor_string_length( 265 );
 
         // test 11: project status 2, action number 2
-        $db_config->add_query($this->query['allowed_actions_2'], 10 );
+        $db_config->add_query($this->queries['allowed_actions_2'], 10 );
         $rows=$this->_generate_records(array("COUNT(*)"), 2 );
         $db_config->add_record( $rows[0], 10 );
-        $db_config->add_query( $this->query['allowed_actions_2b'], 10 );
+        $db_config->add_query( $this->queries['allowed_actions_2b'], 10 );
         $db_config->add_record( $rows[1], 10 );
         capture_reset_and_start();
         allowed_actions( 2, 2, "proid" );
@@ -452,10 +454,10 @@ extends UnitTest
         $text_2_2 = $this->get_text();
 
         // test 12: project status 3, action number 2
-        $db_config->add_query($this->query['allowed_actions_2'], 11 );
+        $db_config->add_query($this->queries['allowed_actions_2'], 11 );
         $rows=$this->_generate_records(array("COUNT(*)"), 2 );
         $db_config->add_record( $rows[0], 11 );
-        $db_config->add_query( $this->query['allowed_actions_2b'], 11 );
+        $db_config->add_query( $this->queries['allowed_actions_2b'], 11 );
         $db_config->add_record( $rows[1], 11 );
         capture_reset_and_start();
         allowed_actions( 3, 2, "proid" );
@@ -465,7 +467,7 @@ extends UnitTest
         //********** tests 13 to 15: test action number = 3 **********
         //************************************************************
         // test 13: project status 2, action number 3
-        $db_config->add_query($this->query['allowed_actions_3'], 12 );
+        $db_config->add_query($this->queries['allowed_actions_3'], 12 );
         $rows=$this->_generate_records(array("COUNT(*)"), 2 );
         $db_config->add_record( $rows[0], 12 );
         capture_reset_and_start();
@@ -480,7 +482,7 @@ extends UnitTest
         $this->_testFor_string_length( 175 );
 
         // test 14: project status 3, action number 3
-        $db_config->add_query($this->query['allowed_actions_3'], 13 );
+        $db_config->add_query($this->queries['allowed_actions_3'], 13 );
         $rows = $this->_generate_records(array("COUNT(*)"), 1 );
         $db_config->add_record( $rows[0], 13 );
         capture_reset_and_start();
@@ -496,7 +498,7 @@ extends UnitTest
         $text_3_3 = $this->get_text();
 
         // test 15: project status 4, action number 3
-        $db_config->add_query($this->query['allowed_actions_3'], 14 );
+        $db_config->add_query($this->queries['allowed_actions_3'], 14 );
         $rows = $this->_generate_records(array("COUNT(*)"), 1 );
         $db_config->add_record( $rows[0], 14 );
         capture_reset_and_start();
@@ -507,7 +509,7 @@ extends UnitTest
         //********** tests 16 to 18: test action number = 4 **********
         //************************************************************
         // test 16: project status 3, action number 4
-        $db_config->add_query($this->query['allowed_actions_4'], 15 );
+        $db_config->add_query($this->queries['allowed_actions_4'], 15 );
         $rows=$this->_generate_records(array("COUNT(*)"), 1 );
         $db_config->add_record( $rows[0], 15 );
         capture_reset_and_start();
@@ -522,7 +524,7 @@ extends UnitTest
         $this->_testFor_string_length( 225 );
 
         // test 17: project status 4, action number 4
-        $db_config->add_query($this->query['allowed_actions_4'], 16 );
+        $db_config->add_query($this->queries['allowed_actions_4'], 16 );
         $rows=$this->_generate_records(array("COUNT(*)"), 1 );
         $db_config->add_record( $rows[0], 16 );
         capture_reset_and_start();
@@ -536,7 +538,7 @@ extends UnitTest
         $text_4_4 = $this->get_text();
 
         // test 18: project status 5, action number 4
-        $db_config->add_query($this->query['allowed_actions_4'], 17 );
+        $db_config->add_query($this->queries['allowed_actions_4'], 17 );
         $rows=$this->_generate_records(array("COUNT(*)"), 1 );
         $db_config->add_record( $rows[0], 17 );
         capture_reset_and_start();
@@ -610,8 +612,59 @@ extends UnitTest
 
         $this->_check_db( $db_config );
     }
+
     function testCheck_permission() {
-        $this->_test_to_be_completed();
+        global $perm, $auth, $t;
+
+        $uname = 'this is the username';
+        $auth->set_uname( $uname );
+        $fname = 'check_permission';
+        $qs=array( 0 => $this->queries[$fname] );
+        $db_config = new mock_db_configure( 4 );
+        $args=$this->_generate_records( array( 'proid', 'page' ), 10 );
+        $d1=$this->_generate_records( array( 'description_user', 'status'),10);
+
+        // test one: user is an editor
+        $perm->add_perm( 'editor' );
+        $this->assertEquals( 1, $this->capture_call( $fname, 0, $args[0] ) );
+        
+        // test two: num_rows == 0
+        $perm->remove_perm( 'editor' );
+        $db_config->add_query( sprintf( $qs[0], $args[1]['proid']), 0 );
+        $db_config->add_num_row( 0, 0 );
+        $db_config->add_query( sprintf( $qs[0], $args[1]['proid']), 1 );
+        $db_config->add_num_row( 0, 1 );
+        $this->assertEquals( 0, $this->capture_call( $fname, 2959, $args[1]));
+        $this->_checkFor_error_box( $t->translate( 'Permission denied' ),
+                                    $t->translate( 'Project does not exist'));
+                                                   
+        // test three: user is not project initiator and project is not defined
+        $auth->set_perm( '' ); //ensures that is_project_initiator == 0
+        $db_config->add_query( sprintf( $qs[0], $args[2]['proid']), 2 );
+        $d1[0]['status'] = 0;
+        $d1[0]['description_user'] = $uname;
+        $db_config->add_record( $d1[0], 2 );
+        $db_config->add_num_row( 1, 2 );
+        $db_config->add_num_row( 1, 2 );
+        $this->assertEquals( 0, $this->capture_call( $fname, 699, $args[2] ) );
+        $this->_checkFor_error_box( $t->translate( 'Error' ),
+                                    $t->translate( 'No project id or project '
+                                                   .'pending' ) );
+
+        // test four: this shouldn't happen: check_permission doesn't return
+        // anything.
+        $auth->set_perm( '' ); //ensures that is_project_initiator == 0
+        $db_config->add_query( sprintf( $qs[0], $args[3]['proid']), 3 );
+        $d1[1]['status'] = 0;
+        $d1[1]['description_user'] = $uname . "NOT EQUAL";
+        $db_config->add_record( $d1[1], 3 );
+        $db_config->add_num_row( 1, 3 );
+        $db_config->add_num_row( 1, 3 );
+        $this->assertEquals('', $this->capture_call( $fname, 0, $args[3]));
+        
+        // TODO: test the rest of the function. The various checks for the
+        // TODO: specific pages is not checked.
+        $this->_check_db( $db_config );
     }
 
     // this is a general function for testing some of the is_...() functions
@@ -620,7 +673,7 @@ extends UnitTest
     function _test_is_something( $funct, $query = false, $proid_dat = false ){
 
         $db_config = new mock_db_configure( 2 );
-        $db_q = array( 0 => $this->query[ $query ? $query : $funct ] );
+        $db_q = array( 0 => $this->queries[ $query ? $query : $funct ] );
         $dat = $this->_generate_records( array("proid", "uname" ), 4 );
 
         if ( $proid_dat ) {
@@ -678,7 +731,7 @@ extends UnitTest
     function testAlready_involved_in_this_step() {
         
         $db_config = new mock_db_configure( 8 ); // 4 pages, 2 cases each
-        $db_q=array(0=>$this->query['already_involved_in_this_step']);
+        $db_q=array(0=>$this->queries['already_involved_in_this_step']);
         
         $pages=array( 0=>"sponsoring_edit", 1=>"step1_edit",
                       2=>"developing_edit", 3=>"step4_edit" );
@@ -710,7 +763,7 @@ extends UnitTest
     function testAlready_involved_in_this_content() {
 
         $db_config = new mock_db_configure( 2 );
-        $db_q=array(0=>$this->query['already_involved_in_this_content']);
+        $db_q=array(0=>$this->queries['already_involved_in_this_content']);
         $dat=$this->_generate_records( array( "proid", "page", "username",
                                               "content_id"), 2 );
 
@@ -733,7 +786,7 @@ extends UnitTest
 
         $db_config = new mock_db_configure( 23 );
 
-        $db_q=array(0=>$this->query['security_accept_by_view']);
+        $db_q=array(0=>$this->queries['security_accept_by_view']);
 
         $args=$this->_generate_records( array("proid", "page" ), 11 );
         $rows=$this->_generate_records( array("news"), 1 );
@@ -911,7 +964,7 @@ extends UnitTest
 
     function testStep5_iteration() {
         $db_config = new mock_db_configure( 3 );
-        $db_q=array(0=>$this->query['step5_iteration']);
+        $db_q=array(0=>$this->queries['step5_iteration']);
         $dat=$this->_generate_records(array("proid"), 3 );
         $rows=$this->_generate_records(array("milestone_number",
                                              "iteration"), 8 );
@@ -1062,7 +1115,7 @@ extends UnitTest
     function testIs_milestone_possible() {
 
         $db_config = new mock_db_configure( 2 );
-        $db_q=array(0=>$this->query['is_milestone_possible']);
+        $db_q=array(0=>$this->queries['is_milestone_possible']);
 
         $dat=$this->_generate_records( array( "proid", "uname" ), 3 );
         $rows=$this->_generate_records( array( "SUM(payment)" ), 3 );
@@ -1118,7 +1171,7 @@ extends UnitTest
 
     function testOther_specifications_allowed() {
         $db_config = new mock_db_configure( 2 );
-        $db_q=array(0=>$this->query['other_specifications_allowed']);
+        $db_q=array(0=>$this->queries['other_specifications_allowed']);
 
         $dat=$this->_generate_records(array("proid"),2);
         $rows=$this->_generate_records(array("other_tech_contents"),2);
@@ -1141,7 +1194,7 @@ extends UnitTest
     function testNo_other_proposal_yet() {
         $db_config = new mock_db_configure( 3 );
 
-        $db_q = array( 0 => $this->query["no_other_proposal_yet"] );
+        $db_q = array( 0 => $this->queries["no_other_proposal_yet"] );
         $db_d = $this->_generate_records( array( "proid" ), 3 );
 
         $db_config->add_query( sprintf( $db_q[0], $db_d[0]["proid"] ), 0 );
@@ -1160,7 +1213,7 @@ extends UnitTest
 
     function testOther_developing_proposals_allowed() {
         $db_config = new mock_db_configure( 3 );
-        $db_q = array( 0 =>$this->query["other_developing_proposals_allowed"]);
+        $db_q = array( 0 =>$this->queries["other_developing_proposals_allowed"]);
         $db_d=$this->_generate_records( array( "proid" ), 3 );
         $rows=$this->_generate_records(array("other_developing_proposals"),2);
         
@@ -1190,7 +1243,7 @@ extends UnitTest
 
     function testNo_other_specification_yet() {
         $db_config = new mock_db_configure( 3 );
-        $db_q = array( 0 => $this->query["no_other_specification_yet"] );
+        $db_q = array( 0 => $this->queries["no_other_specification_yet"] );
 
         $db_d=$this->_generate_records( array( "proid" ), 3 );
         
@@ -1241,8 +1294,8 @@ extends UnitTest
         $db_config = new mock_db_configure( 4 );
 
         $db_q = array( // Arg: 1=proid, 2=proid, 3=developer name
-                       0 => $this->query["is_main_developer"],
-                       1 => $this->query["is_accepted_developer"]);
+                       0 => $this->queries["is_main_developer"],
+                       1 => $this->queries["is_accepted_developer"]);
         
         $db_config->add_query( sprintf( $db_q[1], $d["r0"], $d["u0"]),0);
         $db_config->add_query( sprintf( $db_q[0], $d["r0"], $d["u0"]),1);
@@ -1281,10 +1334,10 @@ extends UnitTest
 
         $db_config = new mock_db_configure( 10 );
 
-        $db_q = array( 0 => $this->query["is_main_developer"],
-                       1 => $this->query["is_first_sponsor_or_dev"],
-                       2 => $this->query["is_accepted_sponsor"],
-                       3 => $this->query["is_accepted_developer"] );
+        $db_q = array( 0 => $this->queries["is_main_developer"],
+                       1 => $this->queries["is_first_sponsor_or_dev"],
+                       2 => $this->queries["is_accepted_sponsor"],
+                       3 => $this->queries["is_accepted_developer"] );
         $args = $this->_generate_records( array("proid"), 4 );
 
         // case 1: is_main_developer => true
@@ -1337,11 +1390,25 @@ extends UnitTest
     }
 
     function testGenerate_failed_box() {
-        $this->_test_to_be_completed();
+        global $t;
+        $fname = 'generate_failed_box';
+        $args = $this->_generate_records( array( 'error', 'msg' ), 10 );
+
+        $this->assertEquals( '', $this->capture_call( $fname, 674, $args[0] ));
+        
+        $this->_checkFor_error_box( $t->translate( $args[0]['error'] ), 
+                                     $t->translate( $args[0]['msg'] ) );
     }
 
     function testGenerate_permission_denied_box() {
-        $this->_test_to_be_completed();
+        global $t;
+        $msg = 'this is the message';
+        $fname = 'generate_permission_denied_box';
+        
+        $this->assertEquals('',$this->capture_call($fname, 698, array($msg)));
+        
+        $this->_checkFor_error_box( $t->translate('Permission denied'), 
+                                                      $t->translate( $msg ) );
     }
 }
 

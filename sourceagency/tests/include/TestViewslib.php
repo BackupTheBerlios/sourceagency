@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestViewslib.php,v 1.12 2002/06/26 10:29:52 riessen Exp $
+// $Id: TestViewslib.php,v 1.13 2002/07/02 10:40:59 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -272,7 +272,65 @@ extends UnitTest
     }
 
     function testViews_show() {
-        $this->_test_to_be_completed();
+        global $t, $bx, $db, $sess;
+        
+        $db_config = new mock_db_configure( 3 );
+        $qs=array(0=>( "SELECT * FROM views,description WHERE views.proid"
+                       ."=description.proid AND views.proid='%s'" ),
+                  1=>("SELECT * FROM comments,auth_user WHERE proid='%s' AND "
+                      ."type='%s' AND number='%s' AND ref='%s' AND user_cmt"
+                      ."=username ORDER BY creation_cmt ASC"));
+        $args=$this->_generate_records( array( 'proid' ), 2 );
+        $d=$this->_generate_records( array('creation', 'description_user',
+                                           'configure', 'news', 'comments',
+                                           'history', 'step3', 'step4',
+                                           'step5', 'cooperation','views'),1);
+        // test one: no records
+        $db_config->add_query( sprintf( $qs[0], $args[0]['proid'] ), 0 );
+        $db_config->add_num_row( 0, 0 );
+
+        // test two: one record
+        $db_config->add_query( sprintf( $qs[0], $args[1]['proid'] ), 1 );
+        $db_config->add_num_row( 1, 1 );
+        $db_config->add_record( $d[0], 1 );
+        $db_config->add_record( false, 1 );
+        $db_config->add_query(sprintf($qs[1],$args[1]['proid'],'Views','0',
+                                                                     '0'), 2 );
+        $db_config->add_num_row( 0, 2 );
+        
+        // test one
+        $db = new DB_SourceAgency;
+        $this->capture_call( 'views_show', 46, $args[0] );
+        $this->assertEquals( "<p>The views have not been configured yet.<p>\n",
+                             $this->get_text(), 'Line: '.__LINE__ );
+
+        // test two
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $this->capture_call( 'views_show', 4698
+                             + strlen(timestr(mktimestamp($d[0]['creation']))),
+                             $args[1] );
+
+        $this->_checkFor_a_box( 'Project Information Access' );
+        $this->_testFor_lib_nick( $d[0]['description_user' ] );
+        $str = " - ".timestr(mktimestamp( $d[0]['creation'] ) )."</b>";
+        $this->_testFor_pattern( $this->_to_regexp( $str ) );
+
+        $titles=array( "View Project Configuration", "Write and Modify news",
+                       "Write comments", "See Project History",
+                       "See Step 3 (Milestones)", "See Step 4 (Referees)",
+                       "See Step 5 (Project Follow-up)", 
+                       "See Developing Cooperation Proposals",
+                       "Project Permission Access" );
+        $this->_checkFor_column_titles( $titles, 'right', '30%', '',
+                                                            '<b>%s</b>: ');
+        $this->_testFor_lib_comment_it( $args[1]['proid'],"Views",
+                                        "","0","","Comments on the views?");
+        $values=array($d[0]["views"], $d[0]["cooperation"],$d[0]["step5"],
+                      $d[0]["step4"],$d[0]["step3"],$d[0]["history"],
+                      $d[0]["comments"],$d[0]["news"],$d[0]["configure"]);
+        $this->_checkFor_column_values( $values );
+        $this->_check_db( $db_config );
     }
 
 }

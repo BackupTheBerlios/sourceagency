@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestPersonallib.php,v 1.31 2002/06/26 10:29:52 riessen Exp $
+# $Id: TestPersonallib.php,v 1.32 2002/07/02 10:40:59 riessen Exp $
 #
 ######################################################################
 
@@ -1130,11 +1130,84 @@ extends UnitTest
     }
 
     function testPersonal_ratings_long() {
-        $this->_test_to_be_completed();
+        global $bx, $t;
+        $fname = 'personal_ratings_long';
+        $args = $this->_generate_records( array( 'username' ), 2 );
+        $q = ( "SELECT * FROM ratings,description WHERE to_whom='%s' "
+               ."AND ratings.proid=description.proid");
+        $d1=$this->_generate_records( array( 'rating', 'on_what', 'by_whom',
+                                             'proid', 'project_title'), 10);
+        $db_config = new mock_db_configure( 2 );
+
+        // test one: no data
+        $db_config->add_query( sprintf( $q, $args[0]['username']), 0 );
+        $db_config->add_num_row( 0, 0 );
+        $bx = $this->_create_default_box();
+        $this->capture_call( $fname, 698, $args[0] );
+        $this->_checkFor_a_box('All the rating on ','%s'.$args[0]['username']);
+        $str = $t->translate( 'No rating yet' ) . "\n";
+        $this->_testFor_pattern( $this->_to_regexp( $str ) );
+
+        // test two: one piece of data
+        $db_config->add_query( sprintf( $q, $args[1]['username']), 1 );
+        $db_config->add_num_row( 1, 1 );
+        $db_config->add_record( $d1[0], 1 );
+        $db_config->add_record( false, 1 );
+        $bx = $this->_create_default_box();
+        $this->capture_call( $fname, 827, $args[1] );
+        $this->_checkFor_a_box('All the rating on ','%s'.$args[1]['username']);
+        $str = ( $t->translate('Rated').' <b>'.$d1[0]['rating']
+                 . '</b> '.$t->translate('in').' <b>'.$d1[0]['on_what']
+                 . '</b> '.$t->translate('by').' <b>'.$d1[0]['by_whom']
+                 . '</b> '.$t->translate('on project').' '
+                 . html_link('summary.php3', array('proid' => $d1[0]['proid']),
+                             $d1[0]['project_title'])
+                 . "<br>\n");
+        $this->_testFor_pattern( $this->_to_regexp( $str ) );
+
+        $this->_check_db( $db_config );
     }
 
     function testPersonal_ratings_short() {
-        $this->_test_to_be_completed();
+        global $bx, $t;
+        
+        $fname = 'personal_ratings_short';
+        $q = "SELECT rating FROM ratings WHERE to_whom='%s'";
+        $db_config = new mock_db_configure( 2 );
+        $args=$this->_generate_records( array( 'username' ), 10 );
+        $d1=$this->_generate_records( array( 'rating' ), 10 );
+        
+        // test one: no records
+        $db_config->add_query( sprintf( $q, $args[0]['username']), 0 );
+        $db_config->add_num_row( 0, 0 );
+        $bx = $this->_create_default_box();
+        $this->capture_call( $fname, 676, $args[0] );
+        $this->_checkFor_a_box( 'Rating' );
+        $str = $t->translate( 'Not rated yet' );
+        $this->_testFor_pattern( $this->_to_regexp( $str ) );
+
+        // test two: records 
+        $db_config->add_query( sprintf( $q, $args[1]['username']), 1 );
+        $db_config->add_num_row( 1, 1 );
+        $avg = 0;
+        for ( $idx = 0; $idx < count( $d1 ); $idx++ ) {
+            $d1[$idx]['rating'] = $idx;
+            $db_config->add_record( $d1[$idx], 1 );
+            $avg += $idx;
+        }
+        $avg /= count( $d1 );
+        $db_config->add_record( false, 1 );
+        $bx = $this->_create_default_box();
+        $this->capture_call( $fname, 810, $args[1] );
+        $this->_checkFor_a_box( 'Rating' );
+        $str = ( $t->translate( 'Global personal rating: ' ). $avg
+                  . " (rated ".count($d1)." times)<p align=right>\n");
+        $this->_testFor_pattern( $this->_to_regexp( $str ) );
+        $this->_testFor_html_link( 'personal_ratings.php3',
+                                   array('username' => $args[1]['username']),
+                                   $t->translate('See complete ratings...'));
+        
+        $this->_check_db( $db_config );
     }
     
 }

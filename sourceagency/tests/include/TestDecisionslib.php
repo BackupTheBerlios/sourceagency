@@ -1,11 +1,11 @@
-c<?php
+<?php
 // TestDecisionslib.php
 // 
 // Author: Gerrit Riessen, gerrit.riessen@open-source-consultants.de
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestDecisionslib.php,v 1.8 2002/06/26 10:29:52 riessen Exp $
+// $Id: TestDecisionslib.php,v 1.9 2002/07/02 10:40:59 riessen Exp $
 
 include_once( '../constants.php' );
 

@@ -19,7 +19,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: statslib.inc,v 1.2 2001/11/08 16:17:41 riessen Exp $
+# $Id: statslib.inc,v 1.3 2002/07/02 10:40:59 riessen Exp $
 #
 ######################################################################
 
@@ -31,7 +31,7 @@
 ## $var gives what should be listed
 ## $message has the title of the box
 ## $position gives the starting position for the top
-
+/** FIXME: not used, can be removed ?? **/
 function statslib_top($query,$var,$message,$position) {
   global $sess, $db, $bx, $t;
   $max = 1; 		// max is a number which gives the top 1!!
@@ -117,7 +117,7 @@ function stats_subtitle($message) {
 ## $count gives the number of times it appears
 ## $url gives the corresponding url
 ## if $url = 0 then no url is displayed
-
+/** FIXME: is this function ever used????? */
 function stats_display($what,$count,$url) {
   $max= 400;		// max is a number to ensure the maximum lenght of the graph
   $length = 575; 	// length is the maximal lenght of the image
@@ -135,7 +135,7 @@ function stats_display($what,$count,$url) {
 ## $count gives the number of times it appears
 ## $url gives the corresponding url
 ## $total gives the total sum of all the studied items
-
+/** FIXME: is this function ever used????? */
 function stats_display_alt($what,$count,$url,$total) {
   $epsilon = 0.0001;    // To avoid having division by zero
   if (empty($total) || !isset($total) || $total == 0) {$total=1; $count=0;}

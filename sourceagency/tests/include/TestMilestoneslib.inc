@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMilestoneslib.inc,v 1.25 2002/06/26 10:29:52 riessen Exp $
+# $Id: TestMilestoneslib.inc,v 1.26 2002/07/02 10:40:59 riessen Exp $
 #
 ######################################################################
 
@@ -39,7 +39,37 @@ if ( !defined("BEING_INCLUDED" ) ) {
 class UnitTestMilestoneslib
 extends UnitTest
 {
+    var $queries;
+
     function UnitTestMilestoneslib( $name ) {
+        $this->queries =
+             array( 'select_milestone_number' =>
+                    ("SELECT number FROM milestones WHERE proid='%s' "
+                     . "ORDER BY number"),
+                    'milestones_insert_1' =>
+                    ("INSERT milestones SET proid='%s',devid='%s',"
+                     . "number='%s',goals='%s',release='%s',"
+                     . "product='%s',payment='%s',status='P',"
+                     . "creation=NOW()"),
+                    'milestones_insert_2' =>
+                    ("SELECT * FROM milestones WHERE number='%s' AND proid"
+                     ."='%s'"),
+                    'show_milestones_1' =>
+                    ("SELECT * FROM sponsoring WHERE proid='%s' AND sponsor"
+                     ."='%s'"),
+                    'show_milestones_2' =>
+                    ("SELECT developer FROM developing WHERE proid='%s' AND "
+                     ."devid='%s'"),
+                    'show_milestones_3' =>
+                    ("SELECT * FROM milestones WHERE proid='%s'  AND "
+                     ."devid='%s' ORDER BY number"),
+                    'show_milestones_4' =>
+                    ("SELECT * FROM milestones WHERE proid='%s' AND "
+                     . "status='A' AND devid='%s' ORDER BY number"),
+                    'select_milestone_payment' =>
+                    ("SELECT payment,number FROM milestones WHERE "
+                     . "proid='%s' AND devid='%s'"));
+        
         $this->UnitTest( $name );
     }
 
@@ -93,14 +123,10 @@ extends UnitTest
         global $bx, $t;
 
         $db_config = new mock_db_configure( 6 );
-        $db_q = array( 0 => ("SELECT * FROM sponsoring WHERE proid='%s' "
-                             . "AND sponsor='%s'"),
-                       1 => ("SELECT developer FROM developing WHERE "
-                             ."proid='%s' AND devid='%s'"),
-                       2 => ("SELECT * FROM milestones WHERE proid='%s' "
-                             . " AND devid='%s' ORDER BY number"),
-                       3 => ("SELECT * FROM milestones WHERE proid='%s' AND "
-                             . "status='A' AND devid='%s' ORDER BY number"));
+        $db_q = array( 0 => $this->queries['show_milestones_1'],
+                       1 => $this->queries['show_milestones_2'],
+                       2 => $this->queries['show_milestones_3'],
+                       3 => $this->queries['show_milestones_4']);
 
         $dat = array(0 => $this->_generate_array(array("proid","devid",
                                                        "sponsor"), 0),
@@ -211,12 +237,8 @@ extends UnitTest
 
         $db_config = new mock_db_configure( 4 );
         
-        $db_q = array( 0 => ("INSERT milestones SET proid='%s',devid='%s',"
-                             . "number='%s',goals='%s',release='%s',"
-                             . "product='%s',payment='%s',status='P',"
-                             . "creation=NOW()"),
-                       1 => ("SELECT * FROM milestones WHERE number='%s' "
-                             . "AND proid='%s'" ));
+        $db_q = array( 0 => $this->queries['milestones_insert_1'],
+                       1 => $this->queries['milestones_insert_2']);
 
         $ln = ( "<p align=right>[[] <a href=\"step3_edit[.]php3[?]proid=%s"
                 ."[&]a=1\" class=\"\"><b>Propose Milestones<\/b><\/a> []]"
@@ -317,8 +339,7 @@ extends UnitTest
     function testSelect_milestone_number() {
         $db_config = new mock_db_configure( 3 );
 
-        $db_q = array( 0 => ("SELECT number FROM milestones WHERE proid='%s' "
-                             . "ORDER BY number"));
+        $db_q = array( 0 => $this->queries['select_milestone_number']);
 
         $dat = $this->_generate_records( array("proid","devid"), 3 );
         
@@ -383,8 +404,7 @@ extends UnitTest
     function testSelect_milestone_payment() {
         $db_config = new mock_db_configure( 3 );
 
-        $db_q = array( 0 => ("SELECT payment,number FROM milestones WHERE "
-                             . "proid='%s' AND devid='%s'"));
+        $db_q = array( 0 => $this->queries['select_milestone_payment']);
 
         $args = $this->_generate_records( array("proid","devid","selected",
                                                 "number"), 3 );
@@ -462,7 +482,67 @@ extends UnitTest
     }
 
     function testForm_milestones() {
-        $this->_test_to_be_completed();
+        global $auth, $bx, $t, $sess;
+        global $number, $goals, $release_day, $release_month,
+            $release_year, $product, $payment;
+        
+        $qs=array( 0 => $this->queries['select_milestone_payment'],
+                   1 => $this->queries['select_milestone_number']);
+        $db_config = new mock_db_configure( 4 );
+        
+        $number = 'this st the number';
+        $goals = 'these are the goals';
+        $release_day = 21;
+        $release_month = 11;
+        $release_year = 2002;
+        $product = 'thsi si the projdty';
+        $payment = 'this isthe patment';
+        $args=$this->_generate_array( array( 'proid', 'devid' ), 10 );
+        
+        /** select_milestone_number call **/
+        $db_config->add_query( sprintf( $qs[1], $args['proid']), 0 );
+        $db_config->add_query( sprintf( $qs[1], $args['proid']), 2 );
+        for ( $idx = 0; $idx < 7; $idx++ ) {
+            $db_config->add_num_row( 0, 0 );
+            $db_config->add_num_row( 0, 2 );
+        }
+        /** select_milestone_payment call **/
+        $db_config->add_query(sprintf($qs[0],$args['proid'],$args['devid']),1);
+        $db_config->add_query(sprintf($qs[0],$args['proid'],$args['devid']),3);
+        $db_config->add_record( false, 1 );
+        $db_config->add_record( false, 3 );
+        
+        $bx = $this->_create_default_box();
+        $this->capture_call( 'form_milestones', 
+                             7129 + strlen( $sess->self_url() ), $args );
+        $this->_checkFor_a_box( 'Proposing milestones' );
+        $this->_checkFor_a_form( 'PHP_SELF', array('proid' => $args['proid']),
+                                 'POST');
+        $this->_testFor_html_form_hidden('devid',$args['devid']);
+        $this->_checkFor_columns( 2 );
+        $this->_checkFor_submit_preview_buttons();
+        $tv=array( array( 'Number', '<b>%s</b>: ' )
+                   => select_milestone_number($args['proid'],$args['devid'],
+                                                                  $number),
+                   array( 'Goals', '<b>%s</b> (255): ') 
+                   => html_textarea('goals',40,7,'virtual',255,
+                                  $goals),
+                   array( 'Release Date', '<b>%s</b>: ' )
+                   => select_date('release',$release_day,
+                                $release_month,$release_year),
+                   array( 'Product', '<b>%s</b>: ' )
+                   => select_from_config('product','milestone_product_array',
+                                       $product),
+                   array( 'Payment', '<b>%s %</b>: ' )
+                   => select_milestone_payment($args['proid'],
+                                                  $args['devid'],$payment,''));
+        while ( list( $key, $val ) = each ( $tv ) ) {
+            $this->_checkFor_column_titles( array( $key[0] ), 'right', 
+                                            '30%','', $key[1] );
+            $this->_checkFor_column_values( array( $val ) );
+        }
+        
+        $this->_check_db( $db_config ); 
     }
 
     function testMilestones_modify() {

@@ -20,7 +20,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: lib.inc,v 1.44 2002/06/26 09:57:26 riessen Exp $
+# $Id: lib.inc,v 1.45 2002/07/02 10:40:59 riessen Exp $
 #
 ######################################################################
 
@@ -911,46 +911,45 @@ function summary_news($proid)
     $db_summ_news->query("SELECT * FROM news,auth_user WHERE "
                          . "proid='$proid' AND user_news=username "
                          . "ORDER BY creation_news DESC LIMIT 3");
-    
-    
     print "<br>\n";
     
-    while ($db_summ_news->next_record()) {
-  	$db_comments_on_news = new DB_SourceAgency;
-	$db_comments_on_news->query("SELECT * FROM comments WHERE "
-                                    . "proid='$proid' AND type='News' "
-                                    . "AND number='" 
-                                    . $db_summ_news->f("creation_news") . "'");
-
-	print '&nbsp;';
-	htmlp_link('news.php3',array('proid' => $proid),
-                   '<b>' . $db_summ_news->f('subject_news') . '</b><br>');
-
-        $timestamp = mktimestamp($db_summ_news->f('creation_news'));
-
-        print ( "<b><font size=\"-1\">&nbsp;"
-                . lib_nick($db_summ_news->f('user_news')) . ' - '
-                . timestr_comment($timestamp) . "</b></font><br>\n" );
-
-	if ($db_comments_on_news->num_rows() > 0) {
-            print ( "&nbsp;<font size=-1>[ "
-                    . $db_comments_on_news->num_rows() . " ");
-            htmlp_link('comments.php3',
-                       array('proid'  => $proid, 
-                             'type'   => 'News', 
-                             'number' => $db_summ_news->f('creation_news'),
-                             'ref'    => '0'), 
-                       $t->translate('comments'));
-            print( $t->translate(' on it')." ]</font>\n" );
-	}
-	print "<p>\n";
-    }
-
     if ($db_summ_news->num_rows() == 0) {
 	print ("&nbsp;"
                .$t->translate("There have not been posted any news by the "
                               . "project owner(s)")
                .".\n" );
+    } else {
+        while ($db_summ_news->next_record()) {
+            $db_comments_on_news = new DB_SourceAgency;
+            $db_comments_on_news->query("SELECT * FROM comments WHERE "
+                                        . "proid='$proid' AND type='News' "
+                                        . "AND number='" 
+                                        . $db_summ_news->f("creation_news") 
+                                        . "'");
+            
+            print '&nbsp;';
+            htmlp_link('news.php3',array('proid' => $proid),
+                       '<b>' . $db_summ_news->f('subject_news') . '</b><br>');
+            
+            $timestamp = mktimestamp($db_summ_news->f('creation_news'));
+            
+            print ( "<b><font size=\"-1\">&nbsp;"
+                    . lib_nick($db_summ_news->f('user_news')) . ' - '
+                    . timestr_comment($timestamp) . "</b></font><br>\n" );
+            
+            if ($db_comments_on_news->num_rows() > 0) {
+                print ( "&nbsp;<font size=-1>[ "
+                        . $db_comments_on_news->num_rows() . " ");
+                htmlp_link('comments.php3',
+                           array('proid'  => $proid, 
+                                 'type'   => 'News', 
+                                 'number' => $db_summ_news->f('creation_news'),
+                                 'ref'    => '0'), 
+                           $t->translate('comments'));
+                print( $t->translate(' on it')." ]</font>\n" );
+            }
+            print "<p>\n";
+        }
     }
 
     print ( "<p align=right><a href=\"" . $sess->url("news_edit.php3")
@@ -1192,7 +1191,7 @@ function show_project_participants($proid, $participant_type)
                . "proid='$proid' AND status='A'" );
     $db->query($query);
     while($db->next_record()) {
-        echo '<p><b>$participant_type:</b> ' 
+        echo '<p><b>'.$participant_type.':</b> ' 
             . $db->f($participant_type) . "\n";
     }
     

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: personallib.inc,v 1.18 2002/05/03 11:14:56 riessen Exp $
+# $Id: personallib.inc,v 1.19 2002/07/02 10:40:59 riessen Exp $
 #
 ######################################################################
 
@@ -53,6 +53,7 @@ function personal_ratings_short($username)
     $bx->box_title($t->translate( 'Rating' ) );
     $bx->box_body_begin();
     $i=0;
+    $sum=0;
 
     $db_local = new DB_SourceAgency;
     $db_local->query("SELECT rating FROM ratings WHERE "

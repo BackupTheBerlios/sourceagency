@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestLib.php,v 1.28 2002/06/26 10:29:52 riessen Exp $
+# $Id: TestLib.php,v 1.29 2002/07/02 10:40:59 riessen Exp $
 #
 ######################################################################
 
@@ -39,7 +39,72 @@ if ( !defined("BEING_INCLUDED" ) ) {
 class UnitTestLib
 extends UnitTest
 {
+    var $queries;
+
     function UnitTestLib( $name ) {
+        $this->queries =
+             array( 'calendar_box_1' =>
+                    ("SELECT * FROM description,auth_user WHERE "
+                     . "proid='%s' AND description_user = username"),
+                    'calendar_box_2' =>
+                    ("SELECT SUM(budget) FROM sponsoring WHERE "
+                     . "proid='%s' AND status='A'"),
+                    'licensep' =>
+                    ("SELECT * FROM licenses ORDER BY license ASC"),
+                    'lib_show_description' =>
+                    ("SELECT %s FROM %s"),
+                    'lib_show_comments_on_it' =>
+                    ("SELECT * FROM comments,auth_user WHERE proid='%s' AND "
+                     ."type='%s' AND number='%s' AND ref='%s' AND user_cmt"
+                     ."=username ORDER BY creation_cmt ASC"),
+                    'lib_get_project_step' =>
+                    ("SELECT status FROM description WHERE proid='%s'"),
+                    'show_project_milestones_1' =>
+                    ("SELECT devid FROM developing WHERE proid='%s' "
+                     ."AND status='A'"),
+                    'show_project_milestones_2' => /** show_milestones **/
+                    ("SELECT * FROM sponsoring WHERE proid='%s' "
+                     . "AND sponsor='%s'"),
+                    'show_project_milestones_3' => /** show_milestones **/
+                    ("SELECT developer FROM developing WHERE proid='%s' "
+                     ."AND devid='%s'"),
+                    'show_project_milestones_4' => /** show_milestones **/
+                    ("SELECT * FROM milestones WHERE proid='%s' "
+                     ."AND status='A' AND devid='%s' ORDER BY number"),
+                    'show_project_participants' =>
+                    ("SELECT %s FROM %s WHERE proid='%s' AND status='A'"),
+                    'lib_die' =>
+                    ("SELECT email_usr FROM auth_user WHERE perms "
+                     ."LIKE '%admin%'"),
+                    'lib_insertion_information' => /* is_sponsor/is_develop */
+                    ("SELECT * FROM auth_user WHERE perms LIKE '%%%s%%'"
+                     ." AND username='%s'"),
+                    'lib_count_total' =>
+                    ("SELECT COUNT(*) FROM %s %s"),
+                    'summary_1' =>
+                    ("SELECT * FROM description WHERE proid='%s'"),
+                    'summary_2' =>
+                    ("SELECT COUNT(*) FROM news WHERE proid='%s'"),
+                    'summary_3' =>
+                    ("SELECT COUNT(*) FROM comments WHERE proid='%s' "
+                     . "AND type='general'"),
+                    'summary_4' =>
+                    ("SELECT COUNT(*) FROM comments WHERE proid='%s' "
+                     . "AND type!='general'"),
+                    'summary_5' =>
+                    ("SELECT COUNT(*) FROM sponsoring WHERE proid='%s' "
+                     . "AND status='A'"),
+                    'summary_6' =>
+                    ("SELECT COUNT(*) FROM sponsoring WHERE proid='%s' "
+                     . "AND status='P'"),
+                    'summary_news_1' =>
+                    ("SELECT * FROM news,auth_user WHERE proid='%s' AND "
+                     ."user_news=username ORDER BY creation_news DESC "
+                     ."LIMIT 3"),
+                    'summary_news_2' =>
+                    ("SELECT * FROM comments WHERE proid='%s' AND type='News' "
+                     . "AND number='%s'")
+                 );
         $this->UnitTest( $name );
     }
 
@@ -173,32 +238,18 @@ extends UnitTest
         $this->assertEquals( 999856813, mktimestamp( "20010907120013" ) );
     }
 
+    function _test_timestr( $fname, &$tests ) {
+        while ( list( $tstamp, $str ) = each( $tests ) ) {
+            $this->assertEquals( $str, $this->capture_call( $fname, 0, 
+                                                       array($tstamp)), 
+                         'test function: "'.$fname.'" time stamp: '.$tstamp);
+        }
+    }
     function testTimestr() {
         setlocale( LC_TIME, "de_DE" );
-        $this->assertEquals( "Montag, 15. Oktober 2001, 19:09:48 CEST",
-                             timestr( 1003165788 ) );
-        $this->assertEquals( "Montag, 15. Oktober 2001, 19:09:58 CEST",
-                             timestr( 1003165798 ) );
-        
-        $this->assertEquals( "15. Oktober 2001",
-                             timestr_middle( 1003165798 ) );
-        $this->assertEquals( "16. Oktober 2001",
-                             timestr_middle( 1003187798 ) );
-        
-        $this->assertEquals( "Mon,15.Okt,19:09:48",
-                             timestr_short( 1003165788 ) );
-        $this->assertEquals( "Mon,15.Okt,19:09:58",
-                             timestr_short( 1003165798 ) );
-        
-        $this->assertEquals( "15. Okt 2001, 19:09",
-                             timestr_comment( 1003165788 ) );
-        $this->assertEquals( "15. Okt 2001, 19:09",
-                             timestr_comment( 1003165798 ) );
-        
-        $this->assertEquals( "15. Okt",
-                             timestr_shortest( 1003165788 ) );
-        $this->assertEquals( "15. Okt",
-                             timestr_shortest( 1003165798 ) );
+        $tests = array(1003165788 =>"Montag, 15. Oktober 2001, 19:09:48 CEST",
+                       1003165798 =>"Montag, 15. Oktober 2001, 19:09:58 CEST");
+        $this->_test_timestr( 'timestr', $tests );
     }
     
     function testTypestr() {
@@ -248,10 +299,8 @@ extends UnitTest
         // 4 instances required: 2 for the no budget case, and 2 for the
         // budget is set case.
         $db_config = new mock_db_configure( 4 );
-        $db_q = array( 0 => ("SELECT * FROM description,auth_user WHERE "
-                             . "proid='%s' AND description_user = username"),
-                       1 => ("SELECT SUM(budget) FROM sponsoring WHERE "
-                             . "proid='%s' AND status='A'"));
+        $db_q = array( 0 => $this->queries['calendar_box_1'],
+                       1 => $this->queries['calendar_box_2']);
         $dat = array( "r0" => "proid1", "e0" => 1,
                       "r1" => "proid1", "e1" => 0,
                       "r2" => "proid2", "e2" => 1,
@@ -335,7 +384,7 @@ extends UnitTest
 
     function testLicensep() {
         $db_config = new mock_db_configure( 2 );
-        $db_q = array( 0 => ("SELECT * FROM licenses ORDER BY license ASC") );
+        $db_q = array( 0 => $this->queries['licensep'] );
 
         $db_config->add_query( $db_q[0], 0 );
         $db_config->add_num_row( 1, 0 );
@@ -384,7 +433,7 @@ extends UnitTest
         global $bx;
 
         $db_config = new mock_db_configure( 2 );
-        $db_q = array( 0 => "SELECT %s FROM %s" );
+        $db_q = array( 0 => $this->queries['lib_show_description'] );
 
         $db_config->add_query( sprintf( $db_q[0], "*", "*"), 0 );
         $db_config->add_query( sprintf( $db_q[0], "X", "Y"), 1 );
@@ -421,10 +470,7 @@ extends UnitTest
         // because lib_show_comments_on_it is a recursive function, this
         // test method is kind of complex.
         $db_config = new mock_db_configure( 5 );
-        $db_q = array( 0 => ("SELECT * FROM comments,auth_user WHERE "
-                             ."proid='%s' AND type='%s' AND number='%s' "
-                             . "AND ref='%s' AND user_cmt=username "
-                             . "ORDER BY creation_cmt ASC") );
+        $db_q = array( 0 => $this->queries['lib_show_comments_on_it'] );
         // data for 2 calls 
         $dat = $this->_generate_records( array( "proid", "cmt_type","num", 
                                                 "cmt_id"), 2 );
@@ -563,7 +609,7 @@ extends UnitTest
             if ( $idx % 2 ) {
                 $args[$idx]['where'] = '';
             }
-            $q = sprintf( "SELECT COUNT(*) FROM %s %s", $args[$idx]['table'],
+            $q = sprintf( $this->queries[$m], $args[$idx]['table'],
                           ( $idx % 2 ? '' : 'WHERE '.$args[$idx]['where']));
             $db_config->add_query( $q, $idx );
             $db_config->add_record( $d[$idx], $idx );
@@ -576,8 +622,7 @@ extends UnitTest
         global $db, $t;
         // mailuser queries the database
         $db_config = new mock_db_configure( 1 );
-        $db_config->add_query( "SELECT email_usr FROM auth_user WHERE perms "
-                               ."LIKE '%admin%'" );
+        $db_config->add_query( $this->queries['lib_die'] );
         $db_config->add_record( FALSE );
 
         $db = new DB_SourceAgency;
@@ -595,7 +640,7 @@ extends UnitTest
         global $db;
 
         $db_config = new mock_db_configure( 3 );
-        $q = "SELECT status FROM description WHERE proid='%s'";
+        $q = $this->queries['lib_get_project_step'];
         $args = $this->_generate_records( array( 'proid' ), 2 );
         $d = $this->_generate_records( array( 'status' ), 1 );
 
@@ -605,8 +650,7 @@ extends UnitTest
         $db_config->add_num_row( 1, 2 );
         $db_config->add_record( $d[0], 2 );
 
-        $db_config->add_query( "SELECT email_usr FROM auth_user WHERE perms "
-                               ."LIKE '%admin%'", 0 );
+        $db_config->add_query( $this->queries['lib_die'], 0 );
         $db_config->add_record( FALSE, 0 );
         
         // test one, no data
@@ -642,7 +686,7 @@ extends UnitTest
         $d = $this->_generate_records( array( 'status' ), 25 );
         $args = $this->_generate_records(array('proid','step_num'),count($d));
         $db_config = new mock_db_configure( count($d) );
-        $q = "SELECT status FROM description WHERE proid='%s'";
+        $q = $this->queries['lib_get_project_step'];
 
         for ( $idx = count($d)/-2; $idx < count($d)/2; $idx++ ) {
             $jdx = $idx + count($d)/2;
@@ -664,7 +708,7 @@ extends UnitTest
         $d = $this->_generate_records( array( 'status' ), 10 );
         $args = $this->_generate_records(array('proid','step_num'),count($d));
         $db_config = new mock_db_configure( count($d) );
-        $q = "SELECT status FROM description WHERE proid='%s'";
+        $q = $this->queries['lib_get_project_step'];
 
         for ( $idx = count($d)/-2; $idx < count($d)/2; $idx++ ) {
             $jdx = $idx + count($d)/2;
@@ -689,6 +733,7 @@ extends UnitTest
     function testLib_insertion_information() {
         global $bx, $t, $auth;
 
+        $fname = 'lib_insertion_information';
         $title_text = 'Project Insertion process';
         $sponsor_text=('You are logged in in SourceAgency as sponsor <p>In '
                        .'order to insert a project, you will have to follow '
@@ -705,14 +750,14 @@ extends UnitTest
 
         $auth->set_uname( 'this is the username' );
         $db_config = new mock_db_configure( 6 );
-        $q = ( "SELECT * FROM auth_user WHERE perms LIKE '%%%s%%'"
-               ." AND username='%s'" );
+        /** security functions is_sponsor and is_developer **/
+        $q = $this->queries[$fname];
 
         // first test, nothing is printed because user is neither 
         // sponsor nor developer
         $auth->set_perm( "" );
         $bx = $this->_create_default_box();
-        $this->capture_call( 'lib_insertion_information', 0 );
+        $this->capture_call( $fname, 0 );
         
         // second test, user is sponsor
         $auth->set_perm( "always" );
@@ -721,7 +766,7 @@ extends UnitTest
         $db_config->add_num_row( 1, 0 );
         $db_config->add_query(sprintf( $q,'devel',$auth->auth['uname']),1);
         $db_config->add_num_row( 0, 1 );
-        $this->capture_call( 'lib_insertion_information', 1085);
+        $this->capture_call( $fname, 1085);
         $this->_checkFor_box_full( $t->translate($title_text),
                                    $t->translate($sponsor_text));
         $this->reverse_next_test();
@@ -734,7 +779,7 @@ extends UnitTest
         $db_config->add_num_row( 0, 2 );
         $db_config->add_query(sprintf( $q,'devel',$auth->auth['uname']),3);
         $db_config->add_num_row( 1, 3 );
-        $this->capture_call( 'lib_insertion_information', 978);
+        $this->capture_call( $fname, 978);
         $this->_checkFor_box_full( $t->translate($title_text),
                                    $t->translate($devel_text));
         $this->reverse_next_test();
@@ -748,7 +793,7 @@ extends UnitTest
         $db_config->add_num_row( 1, 4 );
         $db_config->add_query(sprintf( $q,'devel',$auth->auth['uname']),5);
         $db_config->add_num_row( 1, 5 );
-        $this->capture_call( 'lib_insertion_information', 2063);
+        $this->capture_call( $fname, 2063);
         $this->_checkFor_box_full( $t->translate($title_text),
                                    $t->translate($devel_text));
         $this->_checkFor_box_full( $t->translate($title_text),
@@ -793,7 +838,7 @@ extends UnitTest
     }
 
     function testLib_show_more() {
-        /** corresponding function is never used and can be removed **/
+        /** TODO: corresponding function is never used and can be removed **/
     }
 
     function testLib_previous_comment() {
@@ -854,14 +899,10 @@ extends UnitTest
 
     function testShow_project_milestones() {
         $db_config = new mock_db_configure( 3 );
-        $qs=array( 0=>( "SELECT devid FROM developing WHERE proid='%s' "
-                        ."AND status='A'" ),
-                   1=>( "SELECT * FROM sponsoring WHERE proid='%s' "
-                        . "AND sponsor='%s'" ),
-                   2=>( "SELECT developer FROM developing WHERE proid='%s' "
-                        ."AND devid='%s'" ),
-                   3=>( "SELECT * FROM milestones WHERE proid='%s' "
-                        ."AND status='A' AND devid='%s' ORDER BY number" ));
+        $qs=array( 0=> $this->queries['show_project_milestones_1'],
+                   1=> $this->queries['show_project_milestones_2'],
+                   2=> $this->queries['show_project_milestones_3'],
+                   3=> $this->queries['show_project_milestones_4']);
         $proid = 'this si the proid';
         $d = array( 'devid' => 'this is the dived' );
         $d2 = array( 'developer' => 'this ios the developer' );
@@ -880,35 +921,356 @@ extends UnitTest
     }
 
     function testShow_project_participants() {
-        $this->_test_to_be_completed();
+        global $t, $bx, $db;
+        
+        $fname = 'show_project_participants';
+        $q = $this->queries[$fname];
+
+        $db_config = new mock_db_configure( 6 );
+
+        $args=$this->_generate_records(array('proid', 'participant_type'),10);
+        // test one: participant_type = 'sponsor'
+        $pt_types = array( 'sponsor' => 'sponsoring', 
+                           'developer' => 'developing', 
+                           'referee' => 'referees' );
+        $idx = 0;
+        while ( list( $pt_type, $table ) = each( $pt_types ) ) {
+            $this->push_msg( $pt_type . " test one" );
+            $args[$idx]['participant_type'] = $pt_type;
+            $db_config->add_query( sprintf( $q, $pt_type, $table, 
+                                                $args[$idx]['proid']), $idx );
+            $db_config->add_record( false, $idx );
+            /** test for no data **/
+            $db = new DB_SourceAgency;
+            $bx = $this->_create_default_box();
+            $this->capture_call( $fname, 667 + strlen($pt_type), $args[$idx] );
+            $this->_checkFor_a_box( $pt_type );
+            $idx++;
+            $this->pop_msg();
+
+            /** test with data **/
+            $this->push_msg( $pt_type . " test two" );
+            $args[$idx]['participant_type'] = $pt_type;
+            $db_config->add_query( sprintf( $q, $pt_type, $table, 
+                                                $args[$idx]['proid']), $idx );
+            $d=$this->_generate_records( array( $pt_type ), $idx * 10);
+            $elen = 0;
+            for ( $jdx = 0; $jdx < count( $d ); $jdx++ ) {
+                $elen += strlen( $d[$jdx][$pt_type] );
+                $db_config->add_record( $d[$jdx], $idx );
+            }
+            $db_config->add_record( false, $idx );
+
+            $db = new DB_SourceAgency;
+            $bx = $this->_create_default_box();
+            $this->capture_call( $fname, 
+                                 667 + strlen($pt_type) + $elen
+                                 + ((strlen($pt_type)+13)*count($d)),
+                                 $args[$idx] );
+            $this->_checkFor_a_box( $pt_type );
+            for ( $jdx = 0; $jdx < count( $d ); $jdx++ ) {
+                $str = '<p><b>'.$pt_type.':</b> ' . $d[$jdx][$pt_type] . "\n";
+                $this->_testFor_pattern( $this->_to_regexp( $str ) );
+            }
+            $idx++;
+            $this->pop_msg();
+        }
+
+        $this->_check_db( $db_config );
+    }
+
+    function _checkFor_step_information( $step, $proid, $explanation ) {
+        global $t;
+        $this->_testFor_box_begin();
+        $this->_testFor_box_body_begin();
+        $this->_testFor_box_body_end();
+        $this->_testFor_box_end();
+        $this->_checkFor_columns( 2 );
+        $str = ( '<b>'.$t->translate('Step information').'</b>: '
+                 . $t->translate('Step')." $step<br>\n" 
+                 . $t->translate( $explanation ) );
+        $this->_testFor_box_column( '','','', $str );
+        $str = html_link('step'.$step.'.php3', array('proid' => $proid),
+                         html_image('ic/'.$step.'.png',0,48,48, $step));
+        $this->_testFor_box_column( '','','', $str );
     }
 
     function testStep_information() {
-        $this->_test_to_be_completed();
-    }
+        global $bx, $g_step_explanation;
 
-    function testSummary() {
-        $this->_test_to_be_completed();
-    }
+        $args=$this->_generate_records( array('proid','step'), 10 );
+        $g_step_explation = array();
 
-    function testSummary_news() {
-        $this->_test_to_be_completed();
+        for ( $idx = 0; $idx < count( $args ); $idx++ ) {
+            $g_step_explanation[ $args[$idx]['step'] ] = $args[$idx]['step']
+                 . " explanation for the step ";
+            $bx = $this->_create_default_box();
+            $this->capture_call('step_information', 1157, $args[$idx] );
+            $this->_checkFor_step_information( $args[$idx]['step'], 
+                                     $args[$idx]['proid'],
+                                     $g_step_explanation[$args[$idx]['step']]);
+        }
     }
 
     function testTimestr_comment() {
-        $this->_test_to_be_completed();
+        setlocale( LC_TIME, "de_DE" );
+        $tests = array(1003165788 =>"15. Okt 2001, 19:09",
+                       1003165798 =>"15. Okt 2001, 19:09");
+        $this->_test_timestr( 'timestr_comment', $tests );
     }
 
     function testTimestr_middle() {
-        $this->_test_to_be_completed();
+        setlocale( LC_TIME, "de_DE" );
+        $tests = array(1003187798 =>"16. Oktober 2001",
+                       1003165798 =>"15. Oktober 2001");
+        $this->_test_timestr( 'timestr_middle', $tests );
     }
 
     function testTimestr_short() {
-        $this->_test_to_be_completed();
+        setlocale( LC_TIME, "de_DE" );
+        $tests = array(1003165788 =>"Mon,15.Okt,19:09:48",
+                       1003165798 =>"Mon,15.Okt,19:09:58");
+        $this->_test_timestr( 'timestr_short', $tests );
     }
 
     function testTimestr_shortest() {
-        $this->_test_to_be_completed();
+        setlocale( LC_TIME, "de_DE" );
+        $tests = array(1003165788 =>"15. Okt",
+                       1003165798 =>"15. Okt");
+        $this->_test_timestr( 'timestr_shortest', $tests );
+    }
+
+    function testSummary() {
+        global $bx, $sess, $t, $g_step_count, $g_step_explanation;
+        
+        $g_step_count = -1; /** avoid calling allowed_actions **/
+        $g_step_explanation['status_0'] = 'this is the step explanation';
+
+        $db_config = new mock_db_configure( 4 );
+
+        $qs = array( 0 => $this->queries['summary_1'],
+                     1 => $this->queries['summary_2'],
+                     2 => $this->queries['summary_3'],
+                     3 => $this->queries['summary_4'],
+                     4 => $this->queries['summary_5'],
+                     5 => $this->queries['summary_6'],
+                     6 => $this->queries['summary_news_1'],
+                     7 => $this->queries['calendar_box_1'],
+                     8 => $this->queries['calendar_box_2']);
+        
+        $args=$this->_generate_records( array('proid'), 10 );
+        $d1 = $this->_generate_records( array('status'), 10 );
+        $d2 = $this->_generate_records( array('COUNT(*)'), 10 );
+        $d3 = $this->_generate_records( array("description_user", "volume",
+                                              "type","description_creation",
+                                              "perms"), 10);
+        $d4 = $this->_generate_records( array( 'SUM(budget)' ), 10 );
+        
+        $db_config->add_query( sprintf( $qs[0], $args[0]['proid']), 0 );
+        $db_config->add_record( $d1[0], 0 );
+        $db_config->add_query( sprintf( $qs[1], $args[0]['proid']), 0 );
+        $db_config->add_record( $d2[0], 0 );
+        $db_config->add_query( sprintf( $qs[2], $args[0]['proid']), 0 );
+        $db_config->add_record( $d2[1], 0 );
+        $db_config->add_query( sprintf( $qs[3], $args[0]['proid']), 0 );
+        $db_config->add_record( $d2[2], 0 );
+        $db_config->add_query( sprintf( $qs[4], $args[0]['proid']), 0 );
+        $db_config->add_record( $d2[3], 0 );
+        $db_config->add_query( sprintf( $qs[5], $args[0]['proid']), 0 );
+        $db_config->add_record( $d2[4], 0 );
+        $db_config->add_query( sprintf( $qs[7], $args[0]['proid']), 1 );
+        $db_config->add_record( $d3[0], 1 );
+        $db_config->add_query( sprintf( $qs[8], $args[0]['proid']), 2 );
+        $db_config->add_num_row( 0, 2 );
+        $db_config->add_record( false, 2 );
+        $db_config->add_query( sprintf( $qs[6], $args[0]['proid']), 3 );
+        $db_config->add_num_row( 0, 3 );
+
+        $bx = $this->_create_default_box();
+        $this->capture_call( 'summary', 10970, $args[0] );
+
+        $bt=array( 'General Actions (anytime and anywhere)',
+                   'Step specific actions (only at its time)',
+                   'Step information', 'Be informed', 'Project Information',
+                   'Actions by involved users', 'Latest News' );
+        foreach ( $bt as $box_title ) {
+            $this->_checkFor_a_box( $box_title );
+        }
+        $this->_checkFor_columns( 2, 'top' );
+        $this->_testFor_box_column_start( 'right', '65%' );
+        $this->_testFor_box_column_start( 'right', '35%' );
+
+        $strings = array (
+            html_link('news.php3',array('proid' => $args[0]['proid']),
+                      html_image('ic/b.png',0,48,48,
+                                 $t->translate('News')) . '&nbsp;'
+                      . $t->translate('News')),
+            ( '( <B>' . $d2[0]['COUNT(*)'] . '</B> '
+              . $t->translate('news for this project') . " )<hr>\n" ),
+            html_link('comments.php3',array('proid' => $args[0]['proid']),
+                      html_image('ic/c.png',0,48,48,
+                                 $t->translate('Comments'))
+                      . '&nbsp;'.$t->translate('General Comments')),
+            ( '( <B>'.$d2[1]['COUNT(*)'].'</B> '
+              . $t->translate('general comments')),
+            ( ', <B>'.$d2[2]['COUNT(*)'] . '</B> '
+              . $t->translate('other comments on this project'). " )<hr>\n"),
+            html_link('sponsoring.php3',array('proid' => $args[0]['proid']),
+                      html_image('ic/d.png',0,48,48,$t->translate('News'))
+                      . '&nbsp;'.$t->translate('Sponsoring collaboration')),
+            ( '( <B>' . $d2[3]['COUNT(*)'] . '</B> '
+              . $t->translate('accepted sponsoring collaborations') .', '),
+            (' <B>' .$d2[4]['COUNT(*)'] . '</B> '
+             .$t->translate('non-accepted sponsoring proposals for this '
+                            .'project') .' )<BR><I>'
+             .$t->translate('This is interesting if you are a sponsor '
+                            .'and you are interested in joining this project')
+             .".</I><hr>\n"),
+            html_link('history.php3',array('proid' => $args[0]['proid']),
+                      html_image('ic/e.png',0,48,48,'News').'&nbsp;'
+                      .$t->translate('Project History')),
+            ('<BR><i>'
+             .$t->translate("You'll find here all what has been posted to "
+                            .'the project (news, comments, content suggestions'
+                            .', etc.) in chronological order')
+             ."</i>.<br>&nbsp;\n" ),
+            ( '<br>' . html_link('monitor_edit.php3',array('proid' => 
+                                                           $args[0]['proid']),
+                                 html_image('ic/check.png',0,16,15,
+                                            'ic/check.png')
+                                 . ' '.$t->translate('Monitor This Project'))
+              . ' '. $t->translate('Receive an email update when something '
+                                   .'happens in this project')
+              . "<p>\n" ),
+            ('<br>' . html_link('configure.php3',array('proid' => 
+                                                       $args[0]['proid']),
+                                html_image('ic/check.png',0,16,15,
+                                           'ic/check.png') . ' '
+                                .$t->translate('Project configurations'))
+             . ' ' .$t->translate('Configure the project parameters')
+             .".\n&nbsp;<p>" ),
+            
+            ( html_link('views.php3',array('proid' => $args[0]['proid']),
+                        html_image('ic/check.png',0,16,15,'ic/check.png') . ' '
+                        .$t->translate('Information access configuration'))
+              . ' ' . $t->translate('Configure the information access to the '
+                                    ."project's data")
+              .".\n&nbsp;<p>" ),
+
+            ( html_link('decisions.php3',array('proid' => $args[0]['proid']),
+                        html_image('ic/check.png',0,16,15,'ic/check.png')
+                        . ' '
+                        .$t->translate('Decisions on this step'))
+              . ' '
+              .$t->translate('Sponsors can make the current decision '
+                             .'following this link')
+              .".\n&nbsp;<p><br>" )
+            );
+
+        foreach ( $strings as $str ) {
+            $this->_testFor_pattern( $this->_to_regexp( $str ) );
+        }
+                 
+        $this->_check_db( $db_config );
+        // reset g_step_count, g_step_explanation
+        require( 'config.inc' );
+    }
+        
+    function testSummary_news() {
+        global $sess, $t;
+        $fname = 'summary_news';
+        $db_config = new mock_db_configure( 5 );
+        $qs = array( 0 => $this->queries[$fname.'_1'],
+                     1 => $this->queries[$fname.'_2'] );
+        $args = $this->_generate_records( array( 'proid' ), 10 );
+        $d1 = $this->_generate_records( array( 'creation_news', 'subject_news',
+                                               'user_news'), 10 );
+
+        // test one
+        $db_config->add_query( sprintf( $qs[0], $args[0]['proid'] ), 0 );
+        $db_config->add_num_row( 0, 0 );
+        // test two
+        $db_config->add_query( sprintf( $qs[0], $args[1]['proid'] ), 1 );
+        $db_config->add_num_row( 1, 1 );
+        $db_config->add_record( $d1[0], 1 );
+        $db_config->add_record( false, 1 );
+        $db_config->add_query( sprintf( $qs[1], $args[1]['proid'], 
+                                               $d1[0]['creation_news']), 2 );
+        $db_config->add_num_row( 0, 2 );
+        // test three
+        $db_config->add_query( sprintf( $qs[0], $args[2]['proid'] ), 3 );
+        $db_config->add_num_row( 1, 3 );
+        $db_config->add_record( $d1[1], 3 );
+        $db_config->add_record( false, 3 );
+        $db_config->add_query( sprintf( $qs[1], $args[2]['proid'], 
+                                              $d1[1]['creation_news']), 4 );
+        $db_config->add_num_row( 1, 4 );
+        $db_config->add_num_row( 1, 4 );
+
+        $this->capture_call( $fname, 189, $args[0] );
+	$strings = array(
+            ("&nbsp;"
+             .$t->translate("There have not been posted any news by the "
+                            . "project owner(s)")
+             .".\n" ),
+            ( "<p align=right><a href=\"" . $sess->url("news_edit.php3")
+              . $sess->add_query(array("proid" => $args[0]['proid']))
+              . "\"><FONT SIZE=\"-1\">["
+              .$t->translate("Submit News")
+              ."]</FONT></a>&nbsp;&nbsp;"
+              . "<br>&nbsp;\n"));
+        foreach ( $strings as $str ) {
+            $this->_testFor_pattern( $this->_to_regexp( $str ) );
+        }
+
+        $this->capture_call( $fname, 269, $args[1] );
+	$strings = array(
+            html_link('news.php3',array('proid' => $args[1]['proid']),
+                      '<b>' . $d1[0]['subject_news'] . '</b><br>'),
+            ( "<b><font size=\"-1\">&nbsp;". lib_nick($d1[0]['user_news']) 
+              . ' - '
+              . timestr_comment(mktimestamp($d1[0]['creation_news']) )
+              . "</b></font><br>\n" ),
+            
+            ( "<p align=right><a href=\"" . $sess->url("news_edit.php3")
+              . $sess->add_query(array("proid" => $args[1]['proid']))
+              . "\"><FONT SIZE=\"-1\">["
+              .$t->translate("Submit News")
+              ."]</FONT></a>&nbsp;&nbsp;"
+              . "<br>&nbsp;\n"));
+        foreach ( $strings as $str ) {
+            $this->_testFor_pattern( $this->_to_regexp( $str ) );
+        }
+
+        $this->capture_call( $fname, 407, $args[2] );
+	$strings = array(
+            html_link('news.php3',array('proid' => $args[2]['proid']),
+                      '<b>' . $d1[1]['subject_news'] . '</b><br>'),
+            ( "<b><font size=\"-1\">&nbsp;". lib_nick($d1[1]['user_news']) 
+              . ' - '
+              . timestr_comment(mktimestamp($d1[1]['creation_news']) )
+              . "</b></font><br>\n" ),
+            
+            ( "<p align=right><a href=\"" . $sess->url("news_edit.php3")
+              . $sess->add_query(array("proid" => $args[2]['proid']))
+              . "\"><FONT SIZE=\"-1\">["
+              .$t->translate("Submit News")
+              ."]</FONT></a>&nbsp;&nbsp;"
+              . "<br>&nbsp;\n"),
+            ( "&nbsp;<font size=-1>[ 1 "
+              . html_link('comments.php3',
+                          array('proid'  => $args[2]['proid'], 
+                                'type'   => 'News', 
+                                'number' => $d1[1]['creation_news'],
+                                'ref'    => '0'), 
+                          $t->translate('comments'))
+              . $t->translate(' on it')." ]</font>\n"));
+            
+        foreach ( $strings as $str ) {
+            $this->_testFor_pattern( $this->_to_regexp( $str ) );
+        }
+
+        $this->_check_db( $db_config );
     }
 
     function testTop_bar() {
@@ -916,6 +1278,10 @@ extends UnitTest
     }
 
     function testFollowup() {
+        $this->_test_to_be_completed();
+    }
+
+    function test_draw_top_bar() {
         $this->_test_to_be_completed();
     }
 }

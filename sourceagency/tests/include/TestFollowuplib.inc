@@ -16,9 +16,9 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestFollowuplib.inc,v 1.16 2002/06/26 10:29:52 riessen Exp $
+# $Id: TestFollowuplib.inc,v 1.17 2002/07/02 10:40:59 riessen Exp $
 #
-######################################################################\
+#######################################################################
 
 include_once( "../constants.php" );
 
@@ -366,15 +366,412 @@ extends UnitTest
                             $this->capture_call($func_name,0,array('severe')));
         $exp[3] = $o;
     }
+    
+    function _config_db_followup_milestone_schedule( &$db_config, $inst_nr, 
+       $proid, $milestone_number, $days_left, $current_iteration, $count,
+       $uname, $is_main_developer, $is_accepted_sponsor, $is_referee ){
+        $qs=array( 0=>("SELECT release FROM milestones WHERE number='%s' AND "
+                       ."proid='%s'" ),
+                   1=>("SELECT milestone_number,iteration FROM follow_up "
+                       ."WHERE proid='%s'"),
+                   2=>("SELECT * FROM configure WHERE proid='%s' AND "
+                       ."developer='%s'"),
+                   3=>("SELECT * FROM sponsoring WHERE proid='%s' AND status"
+                       ."='A' AND sponsor='%s'"),
+                   4=>("SELECT * FROM referees WHERE proid='%s' AND referee"
+                       ."='%s'"),
+                   5=>( "SELECT * FROM developing WHERE proid='%s' AND "
+                        ."status='A' AND developer='%s'"));
+
+        $d=$this->_generate_records( array('release'), 10 );
+        $d2=$this->_generate_records(array('milestone_number','iteration'),10);
+
+        /** first query **/
+        $db_config->add_query( sprintf( $qs[0], $milestone_number,
+                                             $proid), $inst_nr );
+        $di = getdate( time() + ($days_left * 3600 * 24) );
+        $d[0]['release']=date_to_timestamp($di['mday'],$di['mon'],$di['year']);
+        $db_config->add_record( $d[0], $inst_nr );
+
+        /** current_iteration query **/
+        $inst_nr++;
+        $db_config->add_query( sprintf( $qs[1], $proid), $inst_nr );
+        $db_config->add_num_row( 1, $inst_nr );
+        $d2[0]['milestone_number'] = 1;
+        $d2[0]['iteration'] = $current_iteration;
+        $db_config->add_record( $d2[0], $inst_nr );
+
+        if ( $current_iteration == 0 ) {
+            /** need to add a query for the is_main_developer call **/
+            $inst_nr++;
+            $db_config->add_query( sprintf($qs[5],$proid,$uname), $inst_nr);
+            $db_config->add_num_row( 1, $inst_nr );
+            $inst_nr++;
+            $db_config->add_query( sprintf($qs[2], $proid, $uname), $inst_nr);
+            $db_config->add_num_row( ($is_main_developer ? 1 : 0), $inst_nr);
+        }
+
+        if ( $current_iteration == 1 || $current_iteration == 3 ) {
+            /** setup database for a is_accepted_sponsor call **/
+            $inst_nr++;
+            $db_config->add_query(sprintf( $qs[3], $proid, $uname ), $inst_nr);
+            $db_config->add_num_row( ($is_accepted_sponsor ? 1:0), $inst_nr);
+        }
+        
+        if ( $current_iteration == 2 ) {
+            /** setup database for a is_referee call **/
+            $inst_nr++;
+            $db_config->add_query(sprintf( $qs[4], $proid, $uname ), $inst_nr);
+            $db_config->add_num_row( ($is_referee ? 1:0), $inst_nr);
+        }
+
+        return ++$inst_nr;
+    }
+
+    function _checkFor_followup_milestone_schedule( $proid, $milestone_number, 
+        $days_left, $current_iteration, $count, $is_main_developer, 
+        $is_accepted_sponsor, $is_referee ) {
+
+        $this->_checkFor_a_box( 'Current Milestone Schedule Status' );
+
+        $str = ("<p>Sponsors have deciced that milestone number "
+                ."<b>$milestone_number</b> requires minor modifications "
+                ."in order to achieve their requirements.");
+        if ( $count == 1 ) {
+            $this->reverse_next_test();
+        }
+        $this->_testFor_pattern( $this->_to_regexp( $str ) );
+
+        $str = ("<p>The milestone has not been posted by the main developer");
+        if ( $current_iteration != 0 ) {
+            $this->reverse_next_test();
+        }
+        $this->_testFor_pattern( $this->_to_regexp( $str ) );
+
+        $str= ( "<p>Number of days left until <b>milestone number "
+                ."$milestone_number</b> is released: <b>"
+                .floor($days_left)." days</b>.<p>" );
+        if ( $current_iteration != 0 || $days_left <= 1 ) {
+            $this->reverse_next_test();
+        }
+        $this->_testFor_pattern( $this->_to_regexp( $str ) );
+
+        $str =( "<p>Milestone number <b>$milestone_number</b> should have "
+                ."been released <b>".ceil(-$days_left)."</b> days ago.<p>");
+        if ( $current_iteration != 0 || $days_left >= -0.5 ) {
+            $this->reverse_next_test();
+        }
+        $this->_testFor_pattern( $this->_to_regexp( $str ) ); 
+        
+        $str =("<p>Milestone number <b>$milestone_number</b> should be "
+               ."released <b>today</b>.<p>");
+        if ( $current_iteration != 0 || $days_left < -0.5 || $days_left > 1) {
+            $this->reverse_next_test();
+        }
+        $this->_testFor_pattern( $this->_to_regexp( $str ) ); 
+        
+        $str = ("You are the main developer. You can post the milestone "
+                .html_link("step5_devel.php3",array("proid"=>$proid),
+                           "in this page") );
+        if ( $current_iteration != 0 || !$is_main_developer ) {
+            $this->reverse_next_test();
+        }
+        $this->_testFor_pattern( $this->_to_regexp( $str ) ); 
+
+        $str = ("<p>The milestone number <b>$milestone_number</b> has been "
+                ."posted. Sponsors are studying whether to accept it or not.");
+        if ( $current_iteration != 1 ) {
+            $this->reverse_next_test();
+        }
+        $this->_testFor_pattern( $this->_to_regexp( $str ) ); 
+        
+        $str = ("<p>You are an accepted sponsor for this project. You can "
+                ."decide whether the milestone fullfil its goals or not "
+                .html_link("step5_sponsor.php3",array("proid"=>$proid),
+                           "in this page"));
+        if ( $current_iteration != 1 || !$is_accepted_sponsor ) {
+            $this->reverse_next_test();
+        }
+        $this->_testFor_pattern( $this->_to_regexp( $str ) ); 
+
+        $str = ("<p>Sponsors have rejected the current milestone (milestone "
+                ."number <b>$milestone_number</b>).\n<p>The referee is "
+                ."studying it and will give a final decision soon.\n");
+        if ( $current_iteration != 2 ) {
+            $this->reverse_next_test();
+        }
+        $this->_testFor_pattern( $this->_to_regexp( $str ) ); 
+        
+        $str = ("<p>You are this project's referee. You can decide whether "
+                ."the milestone fullfil its goals or not "
+                .html_link("step5_referee.php3",array("proid"=>$proid),
+                           "in this page"));
+        if ( $current_iteration != 2 || !$is_referee ) {
+            $this->reverse_next_test();
+        }
+        $this->_testFor_pattern( $this->_to_regexp( $str ) ); 
+
+        $str = ("The referee has decided that the milestone number <b>"
+                ."$milestone_number</b> posted by the developer does not "
+                ."fulfill the promised goals.\n<p>Sponsors are deciding "
+                ."what is going to happen to the project.\n");
+        if ( $current_iteration != 3 ) {
+            $this->reverse_next_test();
+        }
+        $this->_testFor_pattern( $this->_to_regexp( $str ) ); 
+        
+        $str =( "<p>You are an accepted sponsor for this project. You can "
+                ."decide what will happen to this project "
+                .html_link("step5_sponsor.php3",array("proid"=>$proid),
+                           "in this page"));
+        if ( $current_iteration != 3 || !$is_accepted_sponsor ) {
+            $this->reverse_next_test();
+        }
+        $this->_testFor_pattern( $this->_to_regexp( $str ) ); 
+        
+        $str = "The follow_up process is finished. Now it is time for rating.";
+        if ( $current_iteration != 5 ) {
+            $this->reverse_next_test();
+        }
+        $this->_testFor_pattern( $this->_to_regexp( $str ) ); 
+    }
 
     function testFollowup_milestone_schedule() {
-        $this->_test_to_be_completed();
+        global $db, $bx, $auth;
+
+        $db_config = new mock_db_configure( 218 );
+        $db_inst_nr = 0;
+
+        $uname = 'this si the username';
+        $auth->set_uname( $uname );
+        $auth->set_perm( 'hell yes!' );
+
+        /**
+           length ---------------------------------.
+           is_referee --------------------------.  |
+           is_accepted_sponsor --------------.  |  |
+           is_main_developer -------------.  |  |  |
+           days_left ----------------.    |  |  |  |
+           count ----------------.   |    |  |  |  |
+           current_iteration -.  |   |    |  |  |  |
+                              |  |   |    |  |  |  |
+                              V  V  VVVV  V  V  V  V 
+        */
+        $tests = array( array(0, 0, -1.5, 1, 0, 0, 1102 ),
+                        array(0, 0,  1.5, 1, 0, 0, 1111 ),
+                        array(0, 0,  0.5, 1, 0, 0, 1090 ),
+                        array(0, 0,  1.5, 0, 0, 0, 990 ),
+                        array(0, 0,  0.5, 0, 0, 0, 969 ),
+                        array(0, 0, -1.5, 0, 0, 0, 981 ),
+                        array(0, 1, -1.5, 1, 0, 0, 961 ),
+                        array(0, 1,  1.5, 1, 0, 0, 970 ),
+                        array(0, 1,  0.5, 1, 0, 0, 949 ),
+                        array(0, 1,  1.5, 0, 0, 0, 849 ),
+                        array(0, 1,  0.5, 0, 0, 0, 828 ),
+                        array(0, 1, -1.5, 0, 0, 0, 840 ),
+                        /** current iteration == 1 **/
+                        array(1, 0,    0, 0, 1, 0, 1126 ),
+                        array(1, 1,    0, 0, 1, 0, 985 ),
+                        array(1, 0,    0, 0, 0, 0, 947 ),
+                        array(1, 1,    0, 0, 0, 0, 806 ),
+                        array(1, 0,    1, 1, 1, 1, 1126 ),
+                        array(1, 1,    1, 1, 1, 0, 985 ),
+                        array(1, 0,    1, 0, 0, 1, 947 ),
+                        array(1, 1,    1, 0, 0, 0, 806 ),
+                        array(1, 0,    0, 1, 1, 1, 1126 ),
+                        array(1, 1,    0, 1, 1, 0, 985 ),
+                        array(1, 0,    0, 0, 0, 1, 947 ),
+                        array(1, 1,    0, 0, 0, 0, 806 ),
+                        /** current iteration == 2 **/
+                        array(2, 0,    0, 0, 0, 1, 1156 ),
+                        array(2, 1,    0, 0, 0, 1, 1015 ),
+                        array(2, 0,    0, 0, 0, 0, 991 ),
+                        array(2, 1,    0, 0, 0, 0, 850 ),
+                        array(2, 0,    1, 1, 1, 1, 1156 ),
+                        array(2, 1,    1, 1, 0, 1, 1015 ),
+                        array(2, 0,    1, 0, 1, 0, 991 ),
+                        array(2, 1,    1, 0, 0, 0, 850 ),
+                        array(2, 0,    0, 1, 1, 1, 1156 ),
+                        array(2, 1,    0, 1, 0, 1, 1015 ),
+                        array(2, 0,    0, 0, 1, 0, 991 ),
+                        array(2, 1,    0, 0, 0, 0, 850 ),
+                        array(2, 0,    1, 1, 1, 1, 1156 ),
+                        array(2, 1,    1, 1, 0, 1, 1015 ),
+                        array(2, 0,    1, 0, 1, 0, 991 ),
+                        array(2, 1,    1, 0, 0, 0, 850 ),
+                        /** current iteration == 3 **/
+                        array(3, 0,    0, 0, 1, 0, 1197 ),
+                        array(3, 1,    0, 0, 1, 0, 1056 ),
+                        array(3, 0,    0, 0, 0, 0, 1032 ),
+                        array(3, 1,    0, 0, 0, 0, 891 ),
+                        array(3, 0,    1, 1, 1, 1, 1197 ),
+                        array(3, 1,    1, 1, 1, 0, 1056 ),
+                        array(3, 0,    1, 0, 0, 1, 1032 ),
+                        array(3, 1,    1, 0, 0, 0, 891 ),
+                        array(3, 0,    0, 1, 1, 1, 1197 ),
+                        array(3, 1,    0, 1, 1, 0, 1056 ),
+                        array(3, 0,    0, 0, 0, 1, 1032 ),
+                        array(3, 1,    0, 0, 0, 0, 891 ),
+                        array(3, 0,    1, 1, 1, 1, 1197 ),
+                        array(3, 1,    1, 1, 1, 0, 1056 ),
+                        array(3, 0,    1, 0, 0, 1, 1032 ),
+                        array(3, 1,    1, 0, 0, 0, 891 ),
+                        /** current iteration == 4 **/
+                        array(4, 1,    0, 0, 1, 0, 689 ),
+                        array(4, 0,    0, 0, 1, 0, 830 ),
+                        array(4, 0,    1, 0, 1, 0, 830 ),
+                        array(4, 0,    1, 0, 1, 0, 830 ),
+                        array(4, 0,    0, 1, 1, 0, 830 ),
+                        array(4, 1,    0, 1, 1, 0, 689 ),
+                        array(4, 0,    1, 1, 1, 0, 830 ),
+                        array(4, 1,    1, 1, 1, 0, 689 ),
+                        array(4, 0,    0, 0, 0, 0, 830 ),
+                        array(4, 1,    0, 0, 0, 1, 689 ),
+                        array(4, 0,    1, 0, 0, 0, 830 ),
+                        array(4, 1,    1, 0, 0, 0, 689 ),
+                        array(4, 0,    0, 1, 0, 0, 830 ),
+                        /** current iteration == 5 **/
+                        array(5, 0,    0, 0, 0, 0, 891 ),
+                        array(5, 1,    0, 0, 0, 0, 750 ),
+                        array(5, 0,    1, 0, 0, 1, 891 ),
+                        array(5, 1,    0, 1, 0, 1, 750 ),
+                        array(5, 0,    0, 0, 1, 0, 891 ),
+                        array(5, 1,    1, 1, 0, 1, 750 )
+                     );
+        foreach ( $tests as $tst ) {
+            $current_iteration = $tst[0];
+            $count = $tst[1];
+            $days_left = $tst[2];
+            $is_main_developer = $tst[3];
+            $is_accepted_sponsor = $tst[4];
+            $is_referee = $tst[5];
+            $exp_length = $tst[6];
+            
+            $this->push_msg( "C=$count, CI=$current_iteration, "
+                             ."DL=$days_left, MD=$is_main_developer, "
+                             ."AS=$is_accepted_sponsor, R=$is_referee");
+            $args = $this->_generate_array(array('proid', 'milestone_number',
+                                                 'count'), 8 );
+            $args['count'] = $count;
+            $db_inst_nr = 
+                 $this->_config_db_followup_milestone_schedule( 
+                     $db_config, $db_inst_nr, $args['proid'], 
+                     $args['milestone_number'], $days_left,
+                     $current_iteration, $args['count'],  
+                     $uname, $is_main_developer, $is_accepted_sponsor,
+                     $is_referee);
+          
+            $db = new DB_SourceAgency;
+            $bx = $this->_create_default_box();
+            $this->capture_call( 'followup_milestone_schedule', $exp_length, 
+                                 $args );
+
+            $this->_checkFor_followup_milestone_schedule(
+                $args['proid'],$args['milestone_number'], $days_left,  
+                $current_iteration, $args['count'], $is_main_developer, 
+                $is_accepted_sponsor, $is_referee );
+            
+            $this->pop_msg();
+        }
+        
+        $this->_check_db( $db_config );
     }
+
     function testFollowup_devel_form() {
-        $this->_test_to_be_completed();
+        global $bx, $db, $t, $sess, $milestone_number, $location, $count;
+
+        $proid = 'this ist he projc';
+        $milestone_number = 'this sit he milestonenumber';
+        $location = 'thsi is the location';
+        $count = 'this isthe count';
+
+        $q = "SELECT * FROM milestones WHERE proid='%s' AND number='%s'";
+        $d = $this->_generate_array( array( 'goals','release','product',
+                                            'payment' ), 1 );
+        $db_config = new mock_db_configure( 1 );
+        $db_config->add_query( sprintf( $q, $proid, $milestone_number ), 0 );
+        $db_config->add_record( $d, 0 );
+        
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $this->capture_call( 'followup_devel_form', 
+                             4827 + strlen($sess->self_url()), array($proid));
+
+        $this->_checkFor_a_box( 'Milestone Delivery' );
+        $this->_checkFor_a_form( 'PHP_SELF', array('proid'=>$proid), 'POST' );
+        $this->_checkFor_columns( 2 );
+        $this->_checkFor_submit_preview_buttons();
+        
+        $tv=array('Milestone Number'=>$milestone_number,
+                  'Goals'=>$d['goals'],
+                  'Release date' =>timestr_middle(mktimestamp($d['release'])),
+                  'Product'=>$d['product'],
+                  'Payment'=>$d['payment'].'%',
+                  array('Location','<b>%s</b> (255): ')
+                             =>html_input_text("location",40,255,$location),
+                  'Count'=> $count.(" <i>(this is the number of times you "
+                                    ."have submitted this milestone)</i>"));
+        while ( list( $key, $val ) = each( $tv ) ) {
+            if ( is_array( $key ) ) {
+                $this->_checkFor_column_titles( array( $key[0] ),
+                                                'right','30%','',$key[1]);
+            } else {
+                $this->_checkFor_column_titles(array($key), 'right','30%','',
+                                                         '<b>%s</b>: ');
+            }
+            $this->_checkFor_column_values( array( $val ) );
+        }
+        
+        $this->_check_db( $db_config );
     }
+
     function testFollowup_referee_form() {
-        $this->_test_to_be_completed();
+        global $bx, $t, $db, $sess;
+        global $milestone_number, $location, $count, $decision;
+
+        $proid = 'this is the proid';
+        $milestone_number = 'this is the milestone number';
+        $location = 'this ios teh location';
+        $count = 'thsi is the count';
+        $decision = 'this  is the decision';
+
+        $q = "SELECT * FROM milestones WHERE proid='%s' AND number='%s'";
+        $d = $this->_generate_array( array('goals','release','product',
+                                           'payment'), 1 );
+
+        $db_config = new mock_db_configure( 1 );
+        $db_config->add_query( sprintf( $q, $proid, $milestone_number ), 0 );
+        $db_config->add_record( $d, 0 );
+        
+        $db = new DB_SourceAgency;
+        $bx = $this->_create_default_box();
+        $this->capture_call( 'followup_referee_form', 
+                             5290 + strlen($sess->self_url()), array($proid));
+        
+        $this->_checkFor_a_box( 'Milestone Delivery - Referee Decision' );
+        $this->_checkFor_a_form( 'PHP_SELF', array('proid' => $proid ),'POST');
+        $this->_checkFor_columns( 2 );
+
+        $tv=array('Milestone Number'=>$milestone_number,
+                  'Goals'=>$d['goals'],
+                  'Release date' =>timestr_middle(mktimestamp($d['release'])),
+                  'Product'=>$d['product'],
+                  'Payment'=>$d['payment'].'%',
+                  'Location'=>html_link($location, array(), $location),
+                  'Count'=> $count,
+                  'Decision' => followup_referee_decision($decision));
+        while ( list( $key, $val ) = each( $tv ) ) {
+            if ( is_array( $key ) ) {
+                $this->_checkFor_column_titles( array( $key[0] ),
+                                                'right','30%','',$key[1]);
+            } else {
+                $this->_checkFor_column_titles(array($key), 'right','30%','',
+                                                         '<b>%s</b>: ');
+            }
+            $this->_checkFor_column_values( array( $val ) );
+        }
+
+        $this->_check_db( $db_config );
     }
 
     function _testFor_common_patterns( $title, $row=array(), $col=array() ) {

@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestInsertlib.inc,v 1.13 2002/06/26 10:29:52 riessen Exp $
+# $Id: TestInsertlib.inc,v 1.14 2002/07/02 10:40:59 riessen Exp $
 #
 ######################################################################
 
@@ -223,8 +223,36 @@ extends UnitTest
     }
 
     function testEverything_filled() {
-        $this->_test_to_be_completed();
+        $fname = 'everything_filled';
+        $args = $this->_generate_records( array('project_title',
+                                                'description' ), 3 );
+        // test one
+        $this->assertEquals( 1, $this->capture_call( $fname, 0, $args[0] ) );
+        // test two
+        $args[1]['project_title'] = '';
+        $this->assertEquals( 0, $this->capture_call( $fname, 841, $args[1] ) );
+        // test three
+        $project_title = 'this is the project title'; 
+        unset( $project_title );
+        $description = 'tis is the description';
+        capture_reset_and_start();
+        $this->assertEquals( 0, $fname( $project_title, $description ) );
+        $this->set_text( capture_stop_and_get() );
+        $this->_testFor_string_length( 1005 );
+
+        // test four
+        $args[2]['description'] = '';
+        $this->assertEquals( 0, $this->capture_call( $fname, 851, $args[2]));
+        // test three
+        $description = 'this is the project title'; 
+        unset( $description );
+        $project_title = 'tis is the description';
+        capture_reset_and_start();
+        $this->assertEquals( 0, $fname( $project_title, $description ) );
+        $this->set_text( capture_stop_and_get() );
+        $this->_testFor_string_length( 1013 );
     }
+
     function testInsert_into_database() {
         // TODO: need to implement the affected rows method of mock_database
         // TODO: in order to implement the test method for insert_into_database

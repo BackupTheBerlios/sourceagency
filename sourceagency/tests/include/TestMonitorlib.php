@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: TestMonitorlib.php,v 1.15 2002/06/26 10:29:52 riessen Exp $
+# $Id: TestMonitorlib.php,v 1.16 2002/07/02 10:40:59 riessen Exp $
 #
 ######################################################################
 
@@ -208,18 +208,6 @@ extends UnitTest
         $this->_checkFor_submit_preview_buttons( );
     }
 
-    function testMailuser() {
-        $this->_test_to_be_completed();
-    }
-
-    function testMonitor_insert() {
-        $this->_test_to_be_completed();
-    }
-
-    function testMonitor_modify() {
-        $this->_test_to_be_completed();
-    }
-
     function testSelect_importance() {
         foreach( array( 'fubar','low','medium','high', 'snafu' ) as $val ) {
             $this->set_text( select_importance( $val ) );
@@ -235,6 +223,26 @@ extends UnitTest
         }
     }
 
+    function testMailuser() {
+        global $db;
+        
+        $q = "SELECT email_usr FROM auth_user WHERE perms LIKE '%%%s%%'";
+        $db_config = new mock_db_configure( 1 );
+        $args=$this->_generate_array( array( 'perms','subj','message' ), 10);
+        $db_config->add_query( sprintf( $q, $args['perms']), 0 );
+        $db_config->add_record( false, 0 );
+        $db = new DB_SourceAgency;
+        $this->capture_call( 'mailuser', 0, $args );
+        $this->_check_db( $db_config );
+    }
+
+    function testMonitor_insert() {
+        $this->_test_to_be_completed();
+    }
+
+    function testMonitor_modify() {
+        $this->_test_to_be_completed();
+    }
 }
 
 define_test_suite( __FILE__ );

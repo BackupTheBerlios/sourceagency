@@ -18,7 +18,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: security.inc,v 1.23 2002/05/15 09:32:04 riessen Exp $
+# $Id: security.inc,v 1.24 2002/07/02 10:40:59 riessen Exp $
 #
 ######################################################################
 
@@ -254,7 +254,7 @@ function check_proid($proid)
  */
 function check_permission($proid, $page)
 {
-    global $perm, $auth;
+    global $perm, $auth, $t;
 
     if (isset($perm) && ($perm->have_perm("editor"))) {
         return 1;
@@ -273,7 +273,7 @@ function check_permission($proid, $page)
     /* We look if no special conditions happen */  
     if ($db_check->num_rows() == 0 || empty($proid) 
         || (($db_check->f("status") == 0 || $db_check->f("status") == "-1") 
-        && !is_project_initiator($proid))) {
+                                      && !is_project_initiator($proid))) {
         if (isset($auth) && !strcmp($db_check->f("description_user"),
                               $auth->auth["uname"])) {
             // WISH: config.inc should be not required another 
@@ -284,9 +284,11 @@ function check_permission($proid, $page)
                           $th_box_title_bgcolor,$th_box_title_font_color,
                           $th_box_title_align,$th_box_body_bgcolor,
                           $th_box_error_font_color,$th_box_body_align);
-            $be->box_full("Error", "No project id or project pending");
+            $be->box_full($t->translate("Error"), 
+                          $t->translate("No project id or project pending"));
             return 0;
         }
+        /** FIXME: nothing is returned here **/
     } else {
         /* Access conditions depending on the page */
         switch($page) {
@@ -308,7 +310,7 @@ function check_permission($proid, $page)
             if (is_project_initiator($proid)) {
                 return 1;
             } elseif (security_accept_by_view($proid,$page)) {
-                  return 1;
+                return 1;
             } else {
                 return permission_denied($proid,$page);
             }

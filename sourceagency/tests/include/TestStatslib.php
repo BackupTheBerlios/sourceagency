@@ -5,7 +5,7 @@
 // Copyright (C) 2002 Gerrit Riessen
 // This code is licensed under the GNU Public License.
 // 
-// $Id: TestStatslib.php,v 1.4 2002/06/14 09:14:12 riessen Exp $
+// $Id: TestStatslib.php,v 1.5 2002/07/02 10:40:59 riessen Exp $
 
 include_once( '../constants.php' );
 
@@ -29,11 +29,11 @@ extends UnitTest
     }
 
     function testStats_display() {
-        $this->_test_to_be_completed();
+        /** FIXME: corresponding is not used, can it be removed? **/
     }
 
     function testStats_display_alt() {
-        $this->_test_to_be_completed();
+        /** FIXME: corresponding is not used, can it be removed? **/
     }
 
     function testStats_end() {
@@ -46,7 +46,7 @@ extends UnitTest
     }
 
     function testStatslib_top() {
-        $this->_test_to_be_completed();
+        /** FIXME: corresponding function is never used, it can be removed? **/
     }
 
     function testStats_subtitle() {
