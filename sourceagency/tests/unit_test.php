@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: unit_test.php,v 1.9 2002/05/13 10:31:42 riessen Exp $
+# $Id: unit_test.php,v 1.10 2002/05/16 15:03:36 riessen Exp $
 #
 ######################################################################
 
@@ -71,8 +71,13 @@ extends TestCase
     // function that can be called if a test is to be completed but
     // has yet to be completed
     function _test_to_be_completed( $msg = false ) {
-      $this->fail( '<font color="red">Test to be completed' 
-                   .( $msg ? ' ('.$msg.')' : '') . '</font>' );
+      if ( defined( "PHPUNIT_TO_BE_COMPLETED" ) ) {
+        $this->fail( '<font color="red">'. PHPUNIT_TO_BE_COMPLETED
+                     .( $msg ? ' ('.$msg.')' : '') . '</font>' );
+      } else {
+        $this->fail( '<font color="red">Test has not been completed'
+                     .( $msg ? ' ('.$msg.')' : '') . '</font>' );
+      }
     }
 
     function _check_db( $db_config ) {
