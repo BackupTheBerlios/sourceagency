@@ -16,7 +16,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: milestoneslib.inc,v 1.10 2002/03/20 11:09:28 riessen Exp $
+# $Id: milestoneslib.inc,v 1.11 2002/03/20 11:55:36 riessen Exp $
 #
 ######################################################################
 
@@ -334,7 +334,7 @@ function select_milestone_number($proid,$devid,$selected) {
 
   $db = new DB_SourceAgency;
   $db->query("SELECT number FROM milestones WHERE proid='$proid' ".
-             "AND devid='$devid' ORDER BY number");
+             "ORDER BY number");
 
   if ($db->num_rows() == 0) {
       $array[] = 0;
