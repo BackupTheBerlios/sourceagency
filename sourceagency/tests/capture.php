@@ -15,7 +15,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 or later of the GPL.
 #
-# $Id: capture.php,v 1.2 2002/07/22 12:03:53 riessen Exp $
+# $Id: capture.php,v 1.3 2002/07/22 12:31:26 riessen Exp $
 #
 ######################################################################
 
@@ -61,8 +61,9 @@ function capture_reset_text() {
 
 // stop the capturing and return the captured text
 function capture_stop_and_get() {
-  capture_stop();
-  return capture_text_get();
+    global $g_cap_text;
+    capture_stop();
+    return $g_cap_text;
 }
 
 // short cut: one call instead of two
